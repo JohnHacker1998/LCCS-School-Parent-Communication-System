@@ -93,6 +93,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\Academic_Director\Academic_DirectorAreaRegistration.cs" />
+    <Compile Include="Areas\Homeroom_Teacher\Homeroom_TeacherAreaRegistration.cs" />
+    <Compile Include="Areas\Parent\ParentAreaRegistration.cs" />
+    <Compile Include="Areas\Registrar\RegistrarAreaRegistration.cs" />
+    <Compile Include="Areas\Unit_Leader\Unit_LeaderAreaRegistration.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -100,6 +105,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
+    <Content Include="Areas\Academic_Director\Views\web.config" />
+    <Content Include="Areas\Registrar\Views\web.config" />
+    <Content Include="Areas\Homeroom_Teacher\Views\web.config" />
+    <Content Include="Areas\Unit_Leader\Views\web.config" />
+    <Content Include="Areas\Parent\Views\web.config" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -110,6 +120,21 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Academic_Director\Controllers\" />
+    <Folder Include="Areas\Academic_Director\Data\" />
+    <Folder Include="Areas\Academic_Director\Views\Shared\" />
+    <Folder Include="Areas\Homeroom_Teacher\Controllers\" />
+    <Folder Include="Areas\Homeroom_Teacher\Data\" />
+    <Folder Include="Areas\Homeroom_Teacher\Views\Shared\" />
+    <Folder Include="Areas\Parent\Controllers\" />
+    <Folder Include="Areas\Parent\Data\" />
+    <Folder Include="Areas\Parent\Views\Shared\" />
+    <Folder Include="Areas\Registrar\Controllers\" />
+    <Folder Include="Areas\Registrar\Data\" />
+    <Folder Include="Areas\Registrar\Views\Shared\" />
+    <Folder Include="Areas\Unit_Leader\Controllers\" />
+    <Folder Include="Areas\Unit_Leader\Data\" />
+    <Folder Include="Areas\Unit_Leader\Views\Shared\" />
     <Folder Include="Controllers\" />
     <Folder Include="Models\" />
   </ItemGroup>
