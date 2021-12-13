@@ -126,6 +126,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Additional Class\Collection.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\Academic_Director\Academic_DirectorAreaRegistration.cs" />
     <Compile Include="Areas\Homeroom_Teacher\Homeroom_TeacherAreaRegistration.cs" />
