@@ -13,25 +13,29 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
 {
     public class Collection
     {
-
+        //function for adding a user in to the identity
         public Boolean RegisterUser(RegisterViewModel registerViewModel,String role)
         {
-
+            //basic objects for database and identity
             var appDbContext = new ApplicationDbContext();
             var userStore = new ApplicationUserStore(appDbContext);
             var userManager = new ApplicationUserManager(userStore);
 
             var passwordHash = Crypto.HashPassword(registerViewModel.password);
 
+            //populate user information
             var user = new ApplicationUser()
             {
-                UserName = registerViewModel.userName,
+                UserName = registerViewModel.username,
                 PasswordHash = passwordHash,
+                Email = registerViewModel.email,
                 fullName= registerViewModel.fullName
             };
 
+            //create user
             IdentityResult result = userManager.Create(user);
 
+            //add asssociated role to the user
             if (result.Succeeded)
             {
                 userManager.AddToRole(user.Id,role);
@@ -41,8 +45,11 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
                 return false;
         }
 
+
+        //function to generate random username 
         public String generateUserName()
         {
+            //create pull of characters
             List<char> alphabet = new List<char>();
             for (char c = 'a'; c <= 'z'; c++)
             {
@@ -56,7 +63,8 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             {
                 alphabet.Add(c);
             }
-            
+
+            //generate random username from pull of characters(lengeth 7)
             StringBuilder sb = new StringBuilder();
             Random rnd = new Random();
             int j = 0;
@@ -70,8 +78,10 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             return userName;
         }
 
+        //function to generate random password 
         public String generatePassword()
         {
+            //create pull of characters
             List<char> alphabet = new List<char>();
             for (char c = 'a'; c <= 'z'; c++)
             {
@@ -90,6 +100,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
                 alphabet.Add(c);
             }
 
+            //generate random username from pull of characters(lengeth 10)
             StringBuilder sb = new StringBuilder();
             Random rnd = new Random();
             int j = 0;
@@ -103,22 +114,26 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             return password;
         }
 
+        //function to send email to specific user
         public void sendMail(string userName,string body)
         {
+            //create the mail message(populate)
             MailMessage message = new MailMessage("placeholder Email", userName);
             message.Subject = "Lccs School-Parent Communication Credential";
             message.Body = body;
             message.IsBodyHtml = false;
 
-            SmtpClient sm = new SmtpClient();
-            sm.EnableSsl = true;
-            sm.Host = "smtp.gmail.com";
-            sm.Port = 587;
+            //define the host
+            SmtpClient smtp = new SmtpClient();
+            smtp.EnableSsl = true;
+            smtp.Host = "smtp.gmail.com";
+            smtp.Port = 587;
 
-            NetworkCredential nc = new NetworkCredential("placeholder Email", "placeholder password");
-            sm.UseDefaultCredentials = true;
-            sm.Credentials = nc;
-            sm.Send(message);
+            //send mail using sender credential
+            NetworkCredential networkCredential = new NetworkCredential("placeholder Email", "placeholder password");
+            smtp.UseDefaultCredentials = true;
+            smtp.Credentials = networkCredential;
+            smtp.Send(message);
         }
         
 }

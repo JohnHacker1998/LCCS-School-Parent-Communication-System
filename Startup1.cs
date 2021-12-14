@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using LCCS_School_Parent_Communication_System.Identity;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
 using Owin;
 
