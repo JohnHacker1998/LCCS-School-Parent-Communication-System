@@ -1,7 +1,13 @@
-﻿using System;
+﻿using LCCS_School_Parent_Communication_System.Identity;
+using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Text;
 using System.Web;
+using System.Web.Helpers;
 
 namespace LCCS_School_Parent_Communication_System.Additional_Class
 {
@@ -64,7 +70,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             return userName;
         }
 
-        public String generateUserName()
+        public String generatePassword()
         {
             List<char> alphabet = new List<char>();
             for (char c = 'a'; c <= 'z'; c++)
@@ -95,6 +101,24 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             string password = sb.ToString();
 
             return password;
+        }
+
+        public void sendMail(string userName,string body)
+        {
+            MailMessage message = new MailMessage("placeholder Email", userName);
+            message.Subject = "Lccs School-Parent Communication Credential";
+            message.Body = body;
+            message.IsBodyHtml = false;
+
+            SmtpClient sm = new SmtpClient();
+            sm.EnableSsl = true;
+            sm.Host = "smtp.gmail.com";
+            sm.Port = 587;
+
+            NetworkCredential nc = new NetworkCredential("placeholder Email", "placeholder password");
+            sm.UseDefaultCredentials = true;
+            sm.Credentials = nc;
+            sm.Send(message);
         }
         
 }
