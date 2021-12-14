@@ -7,7 +7,7 @@ namespace LCCS_School_Parent_Communication_System.viewModels
 {
     public class RegisterViewModel
     {
-        public string userName { get; set;}
+        public string username { get; set;}
         public string password { get; set; }
         public string fullName { get; set; }
         public string email { get; set; }

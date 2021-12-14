@@ -15,7 +15,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
     public class Collection
     {
         //function for adding a user in to the identity
-        public Boolean RegisterUser(RegisterViewModel registerViewModel,String role)
+        public String RegisterUser(RegisterViewModel registerViewModel,String role)
         {
             //basic objects for database and identity
             var appDbContext = new ApplicationDbContext();
@@ -40,10 +40,10 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             if (result.Succeeded)
             {
                 userManager.AddToRole(user.Id,role);
-                return true;
+                return user.Id;
             }
 
-                return false;
+                return null;
         }
 
 
