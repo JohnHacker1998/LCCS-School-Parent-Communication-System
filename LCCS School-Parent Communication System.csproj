@@ -122,6 +122,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -133,6 +134,7 @@
     <Compile Include="Areas\Parent\ParentAreaRegistration.cs" />
     <Compile Include="Areas\Registrar\RegistrarAreaRegistration.cs" />
     <Compile Include="Areas\Unit_Leader\Unit_LeaderAreaRegistration.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -140,12 +142,13 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
-    <Compile Include="Migrations\202112132003262_addedFullName.cs" />
-    <Compile Include="Migrations\202112132003262_addedFullName.designer.cs">
-      <DependentUpon>202112132003262_addedFullName.cs</DependentUpon>
+    <Compile Include="Migrations\202112132120241_addedFullName.cs" />
+    <Compile Include="Migrations\202112132120241_addedFullName.designer.cs">
+      <DependentUpon>202112132120241_addedFullName.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="viewModels\LoginViewModel.cs" />
     <Compile Include="Startup1.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +159,9 @@
     <Content Include="Areas\Unit_Leader\Views\web.config" />
     <Content Include="Areas\Parent\Views\web.config" />
     <None Include="packages.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -180,12 +186,12 @@
     <Folder Include="Areas\Unit_Leader\Controllers\" />
     <Folder Include="Areas\Unit_Leader\Data\" />
     <Folder Include="Areas\Unit_Leader\Views\Shared\" />
-    <Folder Include="Controllers\" />
     <Folder Include="Models\" />
+    <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202112132003262_addedFullName.resx">
-      <DependentUpon>202112132003262_addedFullName.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202112132120241_addedFullName.resx">
+      <DependentUpon>202112132120241_addedFullName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
