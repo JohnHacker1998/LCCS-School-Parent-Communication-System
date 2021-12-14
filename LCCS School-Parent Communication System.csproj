@@ -130,9 +130,14 @@
     <Compile Include="Additional Class\Collection.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\Academic_Director\Academic_DirectorAreaRegistration.cs" />
+    <Compile Include="Areas\Academic_Director\Controllers\ADHomeController.cs" />
+    <Compile Include="Areas\Homeroom_Teacher\Controllers\HTHomeController.cs" />
     <Compile Include="Areas\Homeroom_Teacher\Homeroom_TeacherAreaRegistration.cs" />
+    <Compile Include="Areas\Parent\Controllers\PHomeController.cs" />
     <Compile Include="Areas\Parent\ParentAreaRegistration.cs" />
+    <Compile Include="Areas\Registrar\Controllers\RHomeController.cs" />
     <Compile Include="Areas\Registrar\RegistrarAreaRegistration.cs" />
+    <Compile Include="Areas\Unit_Leader\Controllers\ULHomeController.cs" />
     <Compile Include="Areas\Unit_Leader\Unit_LeaderAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Global.asax.cs">
@@ -150,6 +155,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="viewModels\LoginViewModel.cs" />
     <Compile Include="Startup1.cs" />
+    <Compile Include="viewModels\RegisterViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -158,6 +164,9 @@
     <Content Include="Areas\Homeroom_Teacher\Views\web.config" />
     <Content Include="Areas\Unit_Leader\Views\web.config" />
     <Content Include="Areas\Parent\Views\web.config" />
+    <Content Include="Areas\Academic_Director\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Academic_Director\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Academic_Director\Views\ADHome\Index.cshtml" />
     <None Include="packages.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -171,21 +180,19 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Academic_Director\Controllers\" />
     <Folder Include="Areas\Academic_Director\Data\" />
-    <Folder Include="Areas\Academic_Director\Views\Shared\" />
-    <Folder Include="Areas\Homeroom_Teacher\Controllers\" />
     <Folder Include="Areas\Homeroom_Teacher\Data\" />
+    <Folder Include="Areas\Homeroom_Teacher\Views\HTHome\" />
     <Folder Include="Areas\Homeroom_Teacher\Views\Shared\" />
-    <Folder Include="Areas\Parent\Controllers\" />
     <Folder Include="Areas\Parent\Data\" />
+    <Folder Include="Areas\Parent\Views\PHome\" />
     <Folder Include="Areas\Parent\Views\Shared\" />
-    <Folder Include="Areas\Registrar\Controllers\" />
     <Folder Include="Areas\Registrar\Data\" />
+    <Folder Include="Areas\Registrar\Views\RHome\" />
     <Folder Include="Areas\Registrar\Views\Shared\" />
-    <Folder Include="Areas\Unit_Leader\Controllers\" />
     <Folder Include="Areas\Unit_Leader\Data\" />
     <Folder Include="Areas\Unit_Leader\Views\Shared\" />
+    <Folder Include="Areas\Unit_Leader\Views\ULHome\" />
     <Folder Include="Models\" />
     <Folder Include="Views\Login\" />
   </ItemGroup>
