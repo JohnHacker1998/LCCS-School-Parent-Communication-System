@@ -8,6 +8,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Web;
 using System.Web.Helpers;
+using LCCS_School_Parent_Communication_System.viewModels;
 
 namespace LCCS_School_Parent_Communication_System.Additional_Class
 {
@@ -27,7 +28,8 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             {
                 UserName = registerViewModel.userName,
                 PasswordHash = passwordHash,
-                fullName= registerViewModel.fullName
+                fullName = registerViewModel.fullName,
+                Email = registerViewModel.email
             };
 
             IdentityResult result = userManager.Create(user);
