@@ -127,8 +127,8 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Additional Class\AcademicDirector.cs" />
     <Compile Include="Additional Class\Collection.cs" />
-    <Compile Include="Additional Class\RegistrarMethods.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\Academic_Director\Academic_DirectorAreaRegistration.cs" />
     <Compile Include="Areas\Academic_Director\Controllers\ADHomeController.cs" />

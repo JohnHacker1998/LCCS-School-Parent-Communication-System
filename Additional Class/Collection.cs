@@ -46,6 +46,17 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
                 return null;
         }
 
+        public async void DeleteUser(string id)
+        {
+            //basic objects for database and identity
+            var appDbContext = new ApplicationDbContext();
+            var userStore = new ApplicationUserStore(appDbContext);
+            var userManager = new ApplicationUserManager(userStore);
+
+            var user = await userManager.FindByIdAsync(id);
+            var result = await userManager.DeleteAsync(user);
+        }
+
 
         //function to generate random username 
         public String generateUserName()
