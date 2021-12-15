@@ -9,6 +9,7 @@ using System.Text;
 using System.Web;
 using System.Web.Helpers;
 using LCCS_School_Parent_Communication_System.viewModels;
+using System.Threading.Tasks;
 
 namespace LCCS_School_Parent_Communication_System.Additional_Class
 {
@@ -44,17 +45,6 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             }
 
                 return null;
-        }
-
-        public async void DeleteUser(string id)
-        {
-            //basic objects for database and identity
-            var appDbContext = new ApplicationDbContext();
-            var userStore = new ApplicationUserStore(appDbContext);
-            var userManager = new ApplicationUserManager(userStore);
-
-            var user = await userManager.FindByIdAsync(id);
-            var result = await userManager.DeleteAsync(user);
         }
 
 
@@ -147,7 +137,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             smtp.Credentials = networkCredential;
             smtp.Send(message);
         }
-/*        public async void DeleteUser(string id)
+        public async Task<string> DeleteUser(string id)
         {
             //basic objects for database and identity
             var appDbContext = new ApplicationDbContext();
@@ -157,7 +147,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             var user = await userManager.FindByIdAsync(id);
             var result = await userManager.DeleteAsync(user);
 
-
+            return "yes";
         }
 */
 

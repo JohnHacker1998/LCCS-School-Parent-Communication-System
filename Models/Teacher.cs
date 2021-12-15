@@ -19,5 +19,14 @@ namespace LCCS_School_Parent_Communication_System.Models
         public string subject{ get; set; }
 
         public virtual ApplicationUser user { get; set; }
+
+        public Teacher(int x)
+        {
+            user = new ApplicationUser();
+        }
+        public Teacher()
+        {
+
+        }
     }
 }

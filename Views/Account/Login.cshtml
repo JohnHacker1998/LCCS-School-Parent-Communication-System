@@ -5,9 +5,9 @@
 
 
 <h2>Login</h2>
-@if (User.Identity.IsAuthenticated == false)
-{
-    using (Html.BeginForm("Login", "Account", FormMethod.Post))
+@*@if (User.Identity.IsAuthenticated == false)
+{*@
+    @using (Html.BeginForm("Login", "Account", FormMethod.Post))
     {
         @Html.LabelFor(a => a.username, "Username");
         @Html.TextBoxFor(a => a.username, new { @class = "textb", @required = "required" });
@@ -17,6 +17,6 @@
 
 
     }
-}
+@*}*@
 
 
