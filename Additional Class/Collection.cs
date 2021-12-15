@@ -18,14 +18,15 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
         //function for adding a user in to the identity
         public String RegisterUser(RegisterViewModel registerViewModel,String role)
         {
-            //basic objects for database and identity
+            //basic objects for creation of user
             var appDbContext = new ApplicationDbContext();
             var userStore = new ApplicationUserStore(appDbContext);
             var userManager = new ApplicationUserManager(userStore);
 
+            //hash password to store on the table
             var passwordHash = Crypto.HashPassword(registerViewModel.password);
 
-            //populate user information
+            //create Application user object
             var user = new ApplicationUser()
             {
                 UserName = registerViewModel.username,
@@ -48,10 +49,10 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
         }
 
 
-        //function to generate random username 
+        //function to generate random username for new user 
         public String generateUserName()
         {
-            //create pull of characters
+            //create poll of characters to be used by random function
             List<char> alphabet = new List<char>();
             for (char c = 'a'; c <= 'z'; c++)
             {
@@ -66,15 +67,18 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
                 alphabet.Add(c);
             }
 
-            //generate random username from pull of characters(lengeth 7)
+            //generate random username from poll of characters(lengeth 7)
             StringBuilder sb = new StringBuilder();
             Random rnd = new Random();
+
+            //pick random character from alphabet and append to string builder
             int j = 0;
             while (j <= 7)
             {
                 sb.Append(alphabet[rnd.Next(0, alphabet.Count)]);
                 j++;
             }
+
             string userName = sb.ToString();
 
             return userName;
@@ -83,7 +87,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
         //function to generate random password 
         public String generatePassword()
         {
-            //create pull of characters
+            //create poll of characters for creating random password
             List<char> alphabet = new List<char>();
             for (char c = 'a'; c <= 'z'; c++)
             {
@@ -102,30 +106,34 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
                 alphabet.Add(c);
             }
 
-            //generate random username from pull of characters(lengeth 10)
+            //generate random password from the poll of characters(lengeth 10)
             StringBuilder sb = new StringBuilder();
             Random rnd = new Random();
+
+            //pick random character from alphabet and append to string builder
             int j = 0;
             while (j <= 10)
             {
                 sb.Append(alphabet[rnd.Next(0, alphabet.Count)]);
                 j++;
             }
+
             string password = sb.ToString();
 
             return password;
         }
 
-        //function to send email to specific user
-        public void sendMail(string userName,string body)
+        //function to send email to user
+        public void sendMail(string email,string userName,string password)
         {
-            //create the mail message(populate)
-            MailMessage message = new MailMessage("lideta.catholic.cathedral@gmail.com", userName);
+           
+            //create the mail message
+            MailMessage message = new MailMessage("lideta.catholic.cathedral@gmail.com", email);
             message.Subject = "Lccs School-Parent Communication Credential";
-            message.Body = body;
+            message.Body = "Welcome to Lideta Catholic Catedral School.\nYour School-Parent Communication System account has been created.\n\n\tYour Username is: " + userName + "\n\tpassword is: " + password + "\n\nBe careful with the uppercase and lowercase, they matter"; ;
             message.IsBodyHtml = false;
 
-            //define the host
+            //define the host and port number
             SmtpClient smtp = new SmtpClient();
             smtp.EnableSsl = true;
             smtp.Host = "smtp.gmail.com";
@@ -137,19 +145,27 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             smtp.Credentials = networkCredential;
             smtp.Send(message);
         }
+
+        //function to delete user account
         public async Task<string> DeleteUser(string id)
         {
-            //basic objects for database and identity
+            //basic objects for accessing information
             var appDbContext = new ApplicationDbContext();
             var userStore = new ApplicationUserStore(appDbContext);
             var userManager = new ApplicationUserManager(userStore);
 
+            //delete user account using user id
             var user = await userManager.FindByIdAsync(id);
             var result = await userManager.DeleteAsync(user);
 
-            return "yes";
+            //check if the deletion is successful
+            if (result.Succeeded)
+            {
+                return "successful";
+            }
+
+            return "failed";
         }
-*/
 
     }
 }
