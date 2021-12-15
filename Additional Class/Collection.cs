@@ -15,7 +15,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
     public class Collection
     {
         //function for adding a user in to the identity
-        public Boolean RegisterUser(RegisterViewModel registerViewModel,String role)
+        public String RegisterUser(RegisterViewModel registerViewModel,String role)
         {
             //basic objects for database and identity
             var appDbContext = new ApplicationDbContext();
@@ -40,10 +40,21 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             if (result.Succeeded)
             {
                 userManager.AddToRole(user.Id,role);
-                return true;
+                return user.Id;
             }
 
-                return false;
+                return null;
+        }
+
+        public async void DeleteUser(string id)
+        {
+            //basic objects for database and identity
+            var appDbContext = new ApplicationDbContext();
+            var userStore = new ApplicationUserStore(appDbContext);
+            var userManager = new ApplicationUserManager(userStore);
+
+            var user = await userManager.FindByIdAsync(id);
+            var result = await userManager.DeleteAsync(user);
         }
 
 

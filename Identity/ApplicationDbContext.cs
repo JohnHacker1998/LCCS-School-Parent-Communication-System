@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
+﻿using LCCS_School_Parent_Communication_System.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
@@ -12,5 +14,7 @@ namespace LCCS_School_Parent_Communication_System.Identity
         {
 
         }
+
+        public DbSet<Teacher> Teacher { get; set; } 
     }
 }

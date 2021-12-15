@@ -164,6 +164,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Additional Class\AcademicDirector.cs" />
     <Compile Include="Additional Class\Collection.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\Academic_Director\Academic_DirectorAreaRegistration.cs" />
@@ -193,10 +194,12 @@
       <DependentUpon>202112140926496_FirstLogin.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Teacher.cs" />
     <Compile Include="Models\RegistrarModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="viewModels\LoginViewModel.cs" />
     <Compile Include="Startup1.cs" />
+    <Compile Include="viewModels\RegisterTeacherViewModel.cs" />
     <Compile Include="viewModels\RegisterViewModel.cs" />
     <Compile Include="viewModels\RegistrarManagementViewModel.cs" />
     <Compile Include="viewModels\RoleViewModel.cs" />
@@ -212,6 +215,7 @@
     <Content Include="Areas\Academic_Director\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Academic_Director\Views\ADHome\Index.cshtml" />
     <Content Include="Areas\Academic_Director\Views\ADHome\manageRegistrar.cshtml" />
+    <Content Include="Areas\Academic_Director\Views\ADHome\RegisterTeacher.cshtml" />
     <None Include="packages.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />

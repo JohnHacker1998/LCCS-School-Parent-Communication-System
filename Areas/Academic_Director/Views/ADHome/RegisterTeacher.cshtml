@@ -1,0 +1,75 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.RegisterTeacherViewModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>RegisterTeacher</title>
+</head>
+<body>
+
+    @*@if (ViewBag.registrar == false)
+    {
+    <form method="post" asp-action="RegisterTeacher">
+        <label asp-for="email" />
+        <input type="text" asp-for="email" value=@Model.email />
+        <label asp-for="fullName" />
+        <input type="text" asp-for="fullName" value=@Model.fullName />
+        <label asp-for="grade" />
+        <input type="text" asp-for="grade" value=@Model.grade />
+        <label asp-for="subject" />
+        <input type="text" asp-for="subject" value=@Model.subject />
+
+        <input type="submit" name="register" value="Register" />
+        <input type="submit" name="search" value="Search" />
+        <input type="submit" name="update" value="Update" />
+    </form>
+    }
+    else
+    {*@
+
+<form method="post" asp-action="RegisterTeacher">
+    <label asp-for="email" />
+    <input type="text" asp-for="email" />
+    <label asp-for="fullName" />
+    <input type="text" asp-for="fullName" />
+    <label asp-for="grade" />
+    <input type="text" asp-for="grade" />
+    <label asp-for="subject" />
+    <input type="text" asp-for="subject" />
+
+    <input type="submit" name="register" value="Register" />
+    <input type="submit" name="search" value="Search" />
+    <input type="submit" name="update" value="Update" />
+</form>
+
+    @*}*@
+
+    @if (ViewBag.search == true)
+    {
+    <table>
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Grade</th>
+            <th>Subject</th>
+            <th></th>
+        </tr>
+        @foreach (var list in Model.teacherList)
+        {
+            <tr>
+                <td>@list.user.fullName</td>
+                <td>@list.user.Email</td>
+                <td>@list.grade</td>
+                <td>@list.subject</td>
+                <td><form method="post" asp-route-Id=@list.user.Id asp-action="RegisterTeacher">
+                    <input type="submit" value="Edit" name="edit"/>
+                    <input type="submit" value="Delete" name="delete" />
+                    </form></td>
+            </tr>
+        }
+    </table>
+    }
+</body>
+</html>
