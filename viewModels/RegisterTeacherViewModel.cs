@@ -9,6 +9,7 @@ namespace LCCS_School_Parent_Communication_System.viewModels
 {
     public class RegisterTeacherViewModel
     {
+        
         [Required(ErrorMessage = "Please enter Full Name")]
         [Display(Name = "Full Name")]
         public String fullName { get; set; }
@@ -25,5 +26,6 @@ namespace LCCS_School_Parent_Communication_System.viewModels
         public string subject { get; set; }
 
         public List<Teacher> teacherList { get; set; }
+
     }
 }

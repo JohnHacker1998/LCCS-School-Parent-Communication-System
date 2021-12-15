@@ -19,9 +19,10 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
         public void UpdateTeacher(Teacher teacher)
         {
             ApplicationDbContext context = new ApplicationDbContext();
-            var teacherUP = context.Teacher.Find(teacher.teacherId);
-            teacherUP.user.fullName = teacher.user.fullName;
+            Teacher teacherUP = new Teacher(1);
+            teacherUP = context.Teacher.Find(teacher.teacherId);
             teacherUP.subject = teacher.subject;
+            teacherUP.user.fullName = teacher.user.fullName;
             teacherUP.grade = teacher.grade;
             context.SaveChanges();
         }
@@ -29,7 +30,9 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
         {
             ApplicationDbContext context = new ApplicationDbContext();
             Teacher teacher = new Teacher();
+            teacher = context.Teacher.Find(id);
             context.Teacher.Remove(teacher);
+            context.SaveChanges();
         }
     }
 }

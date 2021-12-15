@@ -33,7 +33,7 @@ namespace LCCS_School_Parent_Communication_System.Controllers
                 var authenticationManager = HttpContext.GetOwinContext().Authentication;
                 var userIdentity = userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
                 authenticationManager.SignIn(new AuthenticationProperties(), userIdentity);
-                int x=0;
+                
                 if (userManager.IsInRole(user.Id, "AcademicDirector")){
                     return RedirectToAction("Index", "ADHome", new { area = "Academic_Director" });
                 }
