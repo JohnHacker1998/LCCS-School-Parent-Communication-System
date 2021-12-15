@@ -147,7 +147,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             smtp.Credentials = networkCredential;
             smtp.Send(message);
         }
-        public async void DeleteUser(string id)
+/*        public async void DeleteUser(string id)
         {
             //basic objects for database and identity
             var appDbContext = new ApplicationDbContext();
@@ -159,7 +159,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
 
 
         }
-
+*/
 
     }
 }

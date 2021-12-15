@@ -13,7 +13,7 @@ namespace LCCS_School_Parent_Communication_System.Models
     {
 
         [Key]
-        [ForeignKey("ApplicationUser")]
+        [ForeignKey("user")]
         public string teacherId { get; set; }
         public int grade { get; set; }
         public string subject{ get; set; }

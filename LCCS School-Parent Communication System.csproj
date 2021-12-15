@@ -193,6 +193,10 @@
     <Compile Include="Migrations\202112140926496_FirstLogin.designer.cs">
       <DependentUpon>202112140926496_FirstLogin.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112151009575_teacherTable.cs" />
+    <Compile Include="Migrations\202112151009575_teacherTable.designer.cs">
+      <DependentUpon>202112151009575_teacherTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Teacher.cs" />
     <Compile Include="Models\RegistrarModel.cs" />
@@ -250,6 +254,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112140926496_FirstLogin.resx">
       <DependentUpon>202112140926496_FirstLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112151009575_teacherTable.resx">
+      <DependentUpon>202112151009575_teacherTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

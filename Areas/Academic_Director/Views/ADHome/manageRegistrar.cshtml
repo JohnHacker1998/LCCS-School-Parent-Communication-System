@@ -11,12 +11,11 @@
     @Html.LabelFor(a => a.email, "Email");
     @Html.TextBoxFor(a => a.email);
 
-<input type="submit" value="Register" id="register" />
+<input type="submit" value="Register" name="register" />
 }
 @*@if ((Model.registrarList != null) && (!Model.registrarList.Any())) {*@
 <table>
     <tr>
-        <th>User ID</th>
         <th>Username</th>
         <th>Full Name</th>
         <th>Email</th>
@@ -25,11 +24,13 @@
     @foreach (var usr in Model.registrarList)
     {
       <tr>
-        <td>@usr.Id</td>
         <td>@usr.UserName</td>
         <td>@usr.fullName</td>
         <td>@usr.Email</td>
-        <td>@Html.ActionLink("Delete","deleteRegistrar","ADHome",new {theID=usr.Id}, new { style = "color:green" })</td>
+          @Html.BeginForm("manageRegistrar","ADHome",new { theID = usr.Id }, FormMethod.Post){ 
+        <td><input type="submit" value="Delete" name="delete" /></td>
+          }
+         
       </tr>
            }
         

@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using LCCS_School_Parent_Communication_System.viewModels;
+using Microsoft.AspNet.Identity;
 
 namespace LCCS_School_Parent_Communication_System.Additional_Class
 {
@@ -30,6 +32,37 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             ApplicationDbContext context = new ApplicationDbContext();
             Teacher teacher = new Teacher();
             context.Teacher.Remove(teacher);
+        }
+        public RegistrarManagementViewModel listRegistrar()
+        {
+            var appDbContext = new ApplicationDbContext();
+
+            var userStore = new ApplicationUserStore(appDbContext);
+            var userManager = new ApplicationUserManager(userStore);
+            ApplicationUser user = new ApplicationUser();
+            RegistrarManagementViewModel rvm = new RegistrarManagementViewModel();
+
+            List<ApplicationUser> users = new List<ApplicationUser>();
+            users = appDbContext.Users.ToList();
+
+            foreach (var k in users)
+            {
+                if (userManager.IsInRole(k.Id, "Registrar"))
+                {
+                    rvm.registrarList.Add(new ApplicationUser
+                    {
+                        Id = k.Id,
+                        fullName = k.fullName,
+                        UserName = k.UserName,
+                        Email = k.Email
+
+                    });
+                }
+
+            }
+
+           
+            return rvm;
         }
     }
 }

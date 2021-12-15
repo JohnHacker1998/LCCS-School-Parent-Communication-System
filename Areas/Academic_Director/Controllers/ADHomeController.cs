@@ -8,13 +8,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using LCCS_School_Parent_Communication_System.viewModels;
-using LCCS_School_Parent_Communication_System.Additional_Class;
-using LCCS_School_Parent_Communication_System.Identity;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+
 
 namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Controllers
 {
@@ -122,49 +119,46 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
        
         public ActionResult manageRegistrar()
         {
-            var appDbContext = new ApplicationDbContext();
+            RegistrarManagementViewModel rmvm = new RegistrarManagementViewModel();
+            AcademicDirector ad = new AcademicDirector();
             
-            var userStore = new ApplicationUserStore(appDbContext);
-            var userManager = new ApplicationUserManager(userStore);
-            ApplicationUser user = new ApplicationUser();
-            RegistrarManagementViewModel rvm = new RegistrarManagementViewModel();
-
-            List<ApplicationUser> users = new List<ApplicationUser>();
-            users = appDbContext.Users.ToList();
-            
-            foreach(var k in users)
-            {
-                if (userManager.IsInRole(k.Id, "Registrar"))
-                {
-                    rvm.registrarList.Add(new ApplicationUser { 
-                        Id=k.Id,
-                        fullName= k.fullName,
-                        UserName=k.UserName,
-                        Email= k.Email 
-                        
-                    });
-                }
-                           
-            }
-         
-            int x = 0; 
-            return View(rvm);
+           rmvm=ad.listRegistrar();
+           
+            return View(rmvm);
         }
     
         [HttpPost]
-        public ActionResult manageRegistrar(RegistrarManagementViewModel rmv){
+        public async Task<ActionResult> manageRegistrar(RegistrarManagementViewModel rmv,string register,string delete,string theID){
             RegisterViewModel rv = new RegisterViewModel();
             Collection c = new Collection();
-            rv.username = c.generateUserName();
-            rv.password = c.generatePassword();
-            rv.email = rmv.email;
-            rv.fullName = rmv.fullName;
-            c.RegisterUser(rv, "Registrar");
-            string messageBody = "Registrar Account Username:" + rv.username + "Password=" + rv.password;
-            //   c.sendMail(rv.username, messageBody);
-            return View();
+            if (register != null)
+            {
+                rv.username = c.generateUserName();
+                rv.password = c.generatePassword();
+                rv.email = rmv.email;
+                rv.fullName = rmv.fullName;
+                c.RegisterUser(rv, "Registrar");
+                string messageBody = "Registrar Account Username:" + rv.username + "Password=" + rv.password;
+                //   c.sendMail(rv.username, messageBody);
+            }
+            else if (delete != null)
+            {
+                var appDbContext = new ApplicationDbContext();
+                var userStore = new ApplicationUserStore(appDbContext);
+                var userManager = new ApplicationUserManager(userStore);
+
+                var user = await userManager.FindByIdAsync(theID);
+                var result = await userManager.DeleteAsync(user);
+            }
+
+            RegistrarManagementViewModel rmvm = new RegistrarManagementViewModel();
+            AcademicDirector ad = new AcademicDirector();
+
+            rmvm = ad.listRegistrar();
+
+            return View(rmvm);
         }
-        public async Task<ActionResult> deleteRegistrar(string theID)
+       /* public async Task<ActionResult> deleteRegistrar(string theID)
         {
            // Collection collection = new Collection();
             int x = 0;
@@ -175,9 +169,10 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
             var user = await userManager.FindByIdAsync(theID);
             var result = await userManager.DeleteAsync(user);
-            
-            return RedirectToAction("Index");
-        }
+
+           
+            return View("manageRegistrar");
+        }*/
 
     }
 }
