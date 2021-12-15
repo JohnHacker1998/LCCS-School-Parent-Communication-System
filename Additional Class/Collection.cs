@@ -119,7 +119,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
         public void sendMail(string userName,string body)
         {
             //create the mail message(populate)
-            MailMessage message = new MailMessage("placeholder Email", userName);
+            MailMessage message = new MailMessage("lideta.catholic.cathedral@gmail.com", userName);
             message.Subject = "Lccs School-Parent Communication Credential";
             message.Body = body;
             message.IsBodyHtml = false;
@@ -131,11 +131,24 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             smtp.Port = 587;
 
             //send mail using sender credential
-            NetworkCredential networkCredential = new NetworkCredential("placeholder Email", "placeholder password");
+            NetworkCredential networkCredential = new NetworkCredential("lideta.catholic.cathedral@gmail.com", "Lccs@pi$s@65");
             smtp.UseDefaultCredentials = true;
             smtp.Credentials = networkCredential;
             smtp.Send(message);
         }
-        
-}
+        public async void DeleteUser(string id)
+        {
+            //basic objects for database and identity
+            var appDbContext = new ApplicationDbContext();
+            var userStore = new ApplicationUserStore(appDbContext);
+            var userManager = new ApplicationUserManager(userStore);
+
+            var user = await userManager.FindByIdAsync(id);
+            var result = await userManager.DeleteAsync(user);
+
+
+        }
+
+
+    }
 }

@@ -1,0 +1,41 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.RegistrarManagementViewModel
+@{
+    ViewBag.Title = "manageRegistrar";
+}
+
+<h2>manageRegistrar</h2>
+@using (Html.BeginForm("manageRegistrar", "ADHome", new { area = "Academic_Director" }, FormMethod.Post))
+{
+    @Html.LabelFor(a => a.fullName, "Full Name");
+    @Html.TextBoxFor(a => a.fullName);
+    @Html.LabelFor(a => a.email, "Email");
+    @Html.TextBoxFor(a => a.email);
+
+<input type="submit" value="Register" id="register" />
+}
+@*@if ((Model.registrarList != null) && (!Model.registrarList.Any())) {*@
+<table>
+    <tr>
+        <th>User ID</th>
+        <th>Username</th>
+        <th>Full Name</th>
+        <th>Email</th>
+    </tr>
+
+    @foreach (var usr in Model.registrarList)
+    {
+      <tr>
+        <td>@usr.Id</td>
+        <td>@usr.UserName</td>
+        <td>@usr.fullName</td>
+        <td>@usr.Email</td>
+        <td>@Html.ActionLink("Delete","deleteRegistrar","ADHome",new {theID=usr.Id}, new { style = "color:green" })</td>
+      </tr>
+           }
+        
+
+    </table>
+    
+
+@*}*@
+

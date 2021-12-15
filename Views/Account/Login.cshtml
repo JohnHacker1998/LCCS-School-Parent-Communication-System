@@ -5,16 +5,18 @@
 
 
 <h2>Login</h2>
-
-@using (Html.BeginForm("Login", "Account", FormMethod.Post))
+@if (User.Identity.IsAuthenticated == false)
 {
-    @Html.LabelFor(a => a.username, "Username");
-    @Html.TextBoxFor(a => a.username, new { @class = "textb", @required = "required" });
-    @Html.LabelFor(a => a.password, "Password");
-    @Html.PasswordFor(a => a.password);
-    <input type="submit" value="Log in" id="submit" />
+    using (Html.BeginForm("Login", "Account", FormMethod.Post))
+    {
+        @Html.LabelFor(a => a.username, "Username");
+        @Html.TextBoxFor(a => a.username, new { @class = "textb", @required = "required" });
+        @Html.LabelFor(a => a.password, "Password");
+        @Html.PasswordFor(a => a.password);
+        <input type="submit" value="Log in" id="submit" />
 
 
+    }
 }
 
 

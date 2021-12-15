@@ -4,6 +4,7 @@ using LCCS_School_Parent_Communication_System.Identity;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
+using Microsoft.Owin.Security.Cookies;
 using Owin;
 
 [assembly: OwinStartup(typeof(LCCS_School_Parent_Communication_System.Startup1))]
@@ -12,13 +13,17 @@ namespace LCCS_School_Parent_Communication_System
 {
     public class Startup1
     {
+        
         public void Configuration(IAppBuilder app)
         {
+            app.UseCookieAuthentication(new CookieAuthenticationOptions() { AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie, LoginPath = new PathString("/Account/Login") });
             // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=316888
+            this.CreateRolesAndUsers();
         }
 
         public void CreateRolesAndUsers()
         {
+            
             ApplicationDbContext context = new ApplicationDbContext();
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             var appDbContext = new ApplicationDbContext();
@@ -74,12 +79,21 @@ namespace LCCS_School_Parent_Communication_System
             }
 
             //Create Student Role
-            if (!roleManager.RoleExists("Student"))
+            if (!roleManager.RoleExists("Registrar"))
             {
                 var role = new IdentityRole();
-                role.Name = "Student";
+                role.Name = "Registrar";
                 roleManager.Create(role);
             }
+
+            //Create Student Role
+            if (!roleManager.RoleExists("Parent"))
+            {
+                var role = new IdentityRole();
+                role.Name = "Parent";
+                roleManager.Create(role);
+            }
+
         }
     }
 }

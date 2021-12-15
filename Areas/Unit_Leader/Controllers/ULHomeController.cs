@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
 {
-    [Authorize(Roles = "Unit_Leader")]
+    [Authorize(Roles = "UnitLeader")]
 
     public class ULHomeController : Controller
     {
