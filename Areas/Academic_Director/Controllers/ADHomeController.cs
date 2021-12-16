@@ -131,7 +131,9 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         }
        
         public ActionResult manageRegistrar()
+
         {
+            //displaying list of users with registrar role
             RegistrarManagementViewModel rmvm = new RegistrarManagementViewModel();
             AcademicDirector ad = new AcademicDirector();
             
@@ -144,32 +146,36 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         public async Task<ActionResult> manageRegistrar(RegistrarManagementViewModel rmv,string register,string delete,string theID){
             RegisterViewModel rv = new RegisterViewModel();
             Collection c = new Collection();
-            if (register != null)
-            {
-                rv.username = c.generateUserName();
-                rv.password = c.generatePassword();
-                rv.email = rmv.email;
-                rv.fullName = rmv.fullName;
-                c.RegisterUser(rv, "Registrar");
-                string messageBody = "Registrar Account Username:" + rv.username + "Password=" + rv.password;
-                //   c.sendMail(rv.username, messageBody);
-            }
-            else if (delete != null)
-            {
-                var appDbContext = new ApplicationDbContext();
-                var userStore = new ApplicationUserStore(appDbContext);
-                var userManager = new ApplicationUserManager(userStore);
-
-                var user = await userManager.FindByIdAsync(theID);
-                var result = await userManager.DeleteAsync(user);
-            }
-
             RegistrarManagementViewModel rmvm = new RegistrarManagementViewModel();
             AcademicDirector ad = new AcademicDirector();
+            //checking the validity of the inputs
+            if (ModelState.IsValid)
+            {
+                //checking if register button is clicked
+                if (register != null)
+                {
 
+                    rv.username = c.generateUserName();
+                    rv.password = c.generatePassword();
+                    rv.email = rmv.email;
+                    rv.fullName = rmv.fullName;
+                    c.RegisterUser(rv, "Registrar");
+                    string messageBody = "Registrar Account Username:" + rv.username + "Password=" + rv.password;
+                    //   c.sendMail(rv.username, messageBody);
+                }               
+
+            }
+            //checking if delete button is clicked
+            if (delete != null)
+            {
+                string status = await c.DeleteUser(theID);
+            }
+            //refreshing the list of users with registrar role.
             rmvm = ad.listRegistrar();
 
             return View(rmvm);
         }
+       
+
     }
 }

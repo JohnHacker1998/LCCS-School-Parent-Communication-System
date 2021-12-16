@@ -3,13 +3,17 @@
     ViewBag.Title = "manageRegistrar";
 }
 
-<h2>manageRegistrar</h2>
+<h2>Manage Registrar</h2>
 @using (Html.BeginForm("manageRegistrar", "ADHome", new { area = "Academic_Director" }, FormMethod.Post))
 {
-    @Html.LabelFor(a => a.fullName, "Full Name");
+    @Html.ValidationSummary(true);
+    @Html.LabelFor(a => a.fullName);
     @Html.TextBoxFor(a => a.fullName);
-    @Html.LabelFor(a => a.email, "Email");
+    @Html.ValidationMessageFor(a => a.fullName);
+    @Html.LabelFor(a => a.email);
     @Html.TextBoxFor(a => a.email);
+    @Html.ValidationMessageFor(a => a.email);
+
 
 <input type="submit" value="Register" name="register" />
 }
@@ -23,20 +27,24 @@
 
     @foreach (var usr in Model.registrarList)
     {
-      <tr>
-        <td>@usr.UserName</td>
-        <td>@usr.fullName</td>
-        <td>@usr.Email</td>
-          @Html.BeginForm("manageRegistrar","ADHome",new { theID = usr.Id }, FormMethod.Post){ 
-        <td><input type="submit" value="Delete" name="delete" /></td>
-          }
-         
-      </tr>
+<tr>
+    <td>@usr.UserName</td>
+    <td>@usr.fullName</td>
+    <td>@usr.Email</td>
+    <td>
+        @using (Html.BeginForm("manageRegistrar", "ADHome", new { theID = usr.Id }, FormMethod.Post))
+        {
+            <input type="submit" value="Delete" name="delete"/>
+
+        }
+    </td>
+</tr>
            }
-        
+
+
 
     </table>
-    
+
 
 @*}*@
 
