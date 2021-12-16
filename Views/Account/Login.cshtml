@@ -11,8 +11,10 @@
     {
         @Html.LabelFor(a => a.username, "Username");
         @Html.TextBoxFor(a => a.username, new { @class = "textb", @required = "required" });
+        @Html.ValidationMessageFor(a => a.username);
         @Html.LabelFor(a => a.password, "Password");
         @Html.PasswordFor(a => a.password);
+        @Html.ValidationMessageFor(a => a.password);
         <input type="submit" value="Log in" id="submit" />
 
 

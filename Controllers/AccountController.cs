@@ -26,38 +26,43 @@ namespace LCCS_School_Parent_Communication_System.Controllers
             var userStore = new ApplicationUserStore(appDbContext);
             var userManager = new ApplicationUserManager(userStore);
             
-            var user = userManager.Find(lv.username, lv.password);
-            if (user!=null)
+            
+            if (ModelState.IsValid)
             {
+                var user = userManager.Find(lv.username, lv.password);
+                if (user != null)
+                {
+                    var authenticationManager = HttpContext.GetOwinContext().Authentication;
+                    var userIdentity = userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+                    authenticationManager.SignIn(new AuthenticationProperties(), userIdentity);
 
-                var authenticationManager = HttpContext.GetOwinContext().Authentication;
-                var userIdentity = userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-                authenticationManager.SignIn(new AuthenticationProperties(), userIdentity);
-                
-                if (userManager.IsInRole(user.Id, "AcademicDirector")){
-                    return RedirectToAction("Index", "ADHome", new { area = "Academic_Director" });
-                }
-                else if (userManager.IsInRole(user.Id, "UnitLeader"))
-                {
-                    return RedirectToAction("Index", "ULHome", new { area = "Unit_Leader" });
-                }
-                else if (userManager.IsInRole(user.Id, "HomeroomTeacher"))
-                {
-                    return RedirectToAction("Index", "HTHome", new { area = "Homeroom_Teacher" });
-                }
-                else if (userManager.IsInRole(user.Id, "Parent"))
-                {
-                    return RedirectToAction("Index", "PHome", new { area = "Parent" });
-                }
-                else if(userManager.IsInRole(user.Id,"Registrar"))
-                {
-                    return RedirectToAction("Index", "RHome", new { area = "Registrar" });
-                }
-                else
-                {
-                    return View();
+                    if (userManager.IsInRole(user.Id, "AcademicDirector"))
+                    {
+                        return RedirectToAction("Index", "ADHome", new { area = "Academic_Director" });
+                    }
+                    else if (userManager.IsInRole(user.Id, "UnitLeader"))
+                    {
+                        return RedirectToAction("Index", "ULHome", new { area = "Unit_Leader" });
+                    }
+                    else if (userManager.IsInRole(user.Id, "HomeroomTeacher"))
+                    {
+                        return RedirectToAction("Index", "HTHome", new { area = "Homeroom_Teacher" });
+                    }
+                    else if (userManager.IsInRole(user.Id, "Parent"))
+                    {
+                        return RedirectToAction("Index", "PHome", new { area = "Parent" });
+                    }
+                    else if (userManager.IsInRole(user.Id, "Registrar"))
+                    {
+                        return RedirectToAction("Index", "RHome", new { area = "Registrar" });
+                    }
+                    else
+                    {
+                        return View();
+                    }
                 }
 
+                ModelState.AddModelError("myerror", "Incorrect username or password.");
             }
             else
             {

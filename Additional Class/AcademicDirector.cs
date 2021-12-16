@@ -38,8 +38,8 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
         }
         public RegistrarManagementViewModel listRegistrar()
         {
+            //function for listing every user with registrar role 
             var appDbContext = new ApplicationDbContext();
-
             var userStore = new ApplicationUserStore(appDbContext);
             var userManager = new ApplicationUserManager(userStore);
             ApplicationUser user = new ApplicationUser();
