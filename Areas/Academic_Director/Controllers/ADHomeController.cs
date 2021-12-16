@@ -175,6 +175,54 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
             return View(rmvm);
         }
+        
+        public ActionResult manageAcademicYear()
+        {
+            AcademicYearViewModel academicYearViewModel = new AcademicYearViewModel();
+            AcademicDirector ad = new AcademicDirector();
+            academicYearViewModel.academicList = new List<AcademicYear>();
+            academicYearViewModel= ad.listAcademicYear();
+
+            return View(academicYearViewModel);
+        }
+        [HttpPost]
+        public ActionResult manageAcademicYear(AcademicYearViewModel ayvm, string add,string update,string select,string acadYN)
+        {
+            AcademicYear ay = new AcademicYear();
+            ApplicationDbContext db = new ApplicationDbContext();
+            if (ModelState.IsValid)
+            {
+                if (add != null)
+                {
+                    ay.academicYearName = ayvm.yearStart.ToString("MMMM") + ayvm.yearStart.Year.ToString();
+                    ay.duration = ayvm.yearStart.ToShortDateString()+"-"+ayvm.yearEnd.ToShortDateString();
+                    ay.quarterOne = ayvm.quarterOneStart.ToShortDateString() + "-" + ayvm.quarterOneEnd.ToShortDateString();
+                    ay.quarterTwo = ayvm.quarterTwoStart.ToShortDateString() + "-" + ayvm.quarterTwoEnd.ToShortDateString();
+                    ay.quarterThree = ayvm.quarterThreeStart.ToShortDateString() + "-" + ayvm.quarterThreeEnd.ToShortDateString();
+                    ay.quarterFour = ayvm.quarterFourStart.ToShortDateString() + "-" + ayvm.quarterFourEnd.ToShortDateString();
+                    db.AcademicYear.Add(ay);
+                    db.SaveChanges();
+                }
+                /*else if (select != null)
+                {
+                    var academicYear = db.AcademicYear.Where(a => a.academicYearName == acadYN).ToList();
+                    foreach(var k in academicYear)
+                    {
+                        k.
+                    }
+                }*/
+            }
+            else
+            {
+
+            }
+            AcademicYearViewModel academicYearViewModel = new AcademicYearViewModel();
+            AcademicDirector ad = new AcademicDirector();
+            academicYearViewModel.academicList = new List<AcademicYear>();
+            academicYearViewModel = ad.listAcademicYear();
+
+            return View(academicYearViewModel);
+        }
        
 
     }

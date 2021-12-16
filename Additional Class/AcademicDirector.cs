@@ -81,5 +81,14 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
            
             return rvm;
         }
+        public AcademicYearViewModel listAcademicYear()
+        {
+           
+            ApplicationDbContext db = new ApplicationDbContext();
+            AcademicYearViewModel ayVM = new AcademicYearViewModel();
+            ayVM.academicList = new List<AcademicYear>();
+            ayVM.academicList = db.AcademicYear.ToList();
+            return ayVM;
+        }
     }
 }

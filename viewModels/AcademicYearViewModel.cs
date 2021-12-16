@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-
+using LCCS_School_Parent_Communication_System.Models;
 namespace LCCS_School_Parent_Communication_System.viewModels
 {
     public class AcademicYearViewModel
@@ -47,5 +47,7 @@ namespace LCCS_School_Parent_Communication_System.viewModels
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime quarterFourEnd { get; set; }
+
+        public List<AcademicYear> academicList { get; set; }
     }
 }

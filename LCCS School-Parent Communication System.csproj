@@ -510,6 +510,10 @@
     <Compile Include="Migrations\202112160745381_tblAYear_tblSection.designer.cs">
       <DependentUpon>202112160745381_tblAYear_tblSection.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112160908061_latestChanges.cs" />
+    <Compile Include="Migrations\202112160908061_latestChanges.designer.cs">
+      <DependentUpon>202112160908061_latestChanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AcademicYear.cs" />
     <Compile Include="Models\Section.cs" />
@@ -535,6 +539,7 @@
     <Content Include="Areas\Academic_Director\Views\ADHome\Index.cshtml" />
     <Content Include="Areas\Academic_Director\Views\ADHome\manageRegistrar.cshtml" />
     <Content Include="Areas\Academic_Director\Views\ADHome\RegisterTeacher.cshtml" />
+    <Content Include="Areas\Academic_Director\Views\ADHome\manageAcademicYear.cshtml" />
     <None Include="packages.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -572,6 +577,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112160745381_tblAYear_tblSection.resx">
       <DependentUpon>202112160745381_tblAYear_tblSection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112160908061_latestChanges.resx">
+      <DependentUpon>202112160908061_latestChanges.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
