@@ -9,50 +9,32 @@
 </head>
 <body>
 
-    @*@if (ViewBag.registrar == false)
-        {
-        <form method="post" asp-action="RegisterTeacher">
-            <label asp-for="email" />
-            <input type="text" asp-for="email" value=@Model.email />
-            <label asp-for="fullName" />
-            <input type="text" asp-for="fullName" value=@Model.fullName />
-            <label asp-for="grade" />
-            <input type="text" asp-for="grade" value=@Model.grade />
-            <label asp-for="subject" />
-            <input type="text" asp-for="subject" value=@Model.subject />
-
-            <input type="submit" name="register" value="Register" />
-            <input type="submit" name="search" value="Search" />
-            <input type="submit" name="update" value="Update" />
-        </form>
-        }
-        else
-        {*@
-
     @using (Html.BeginForm("RegisterTeacher", "ADHome", FormMethod.Post))
     {
         @Html.LabelFor(lbl => lbl.email)
         @Html.TextBoxFor(tb => tb.email, new { placeholder = "example@gmail.com", @class = "form-control" })
-
+        @Html.ValidationMessageFor(vm => vm.email)
+        <br />
         @Html.LabelFor(lbl => lbl.fullName)
         @Html.TextBoxFor(tb => tb.fullName, new { @class = "form-control" })
-
+        @Html.ValidationMessageFor(vm => vm.fullName)
+        <br />
         @Html.LabelFor(lbl => lbl.grade)
         @Html.TextBoxFor(tb => tb.grade, new { @class = "form-control" })
-
+        @Html.ValidationMessageFor(vm => vm.grade)
+        <br />
         @Html.LabelFor(lbl => lbl.subject)
         @Html.TextBoxFor(tb => tb.subject, new { @class = "form-control" })
-
+        @Html.ValidationMessageFor(vm => vm.subject)
+        <br />
+        @Html.ValidationSummary(false,"please fix the errors to procced to the next step")
+        <br />
+        <hr />
         <input type="submit" name="register" value="Register" />
         <input type="submit" name="search" value="Search" />
         <input type="submit" name="update" value="Update" />
     }
 
-
-
-
-
-    @*}*@
 
     @if (ViewBag.search == true)
     {
@@ -78,10 +60,10 @@
                             <input type="submit" value="Delete" name="delete" />
                         }
 
-                        </td>
-                        </tr >
+                    </td>
+                </tr>
             }
-            </table>
-        }
-        </body>
+        </table>
+    }
+</body>
 </html>

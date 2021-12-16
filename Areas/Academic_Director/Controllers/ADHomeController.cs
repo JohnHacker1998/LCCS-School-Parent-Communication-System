@@ -24,98 +24,111 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
         public ActionResult RegisterTeacher()
         {
-            //ApplicationDbContext context = new ApplicationDbContext();
-            //RegisterTeacherViewModel registerTeacherViewModel = new RegisterTeacherViewModel();
-            //if (Id != null)
-            //{
-            //    ViewBag.register = false;
-            //    Teacher teacher = new Teacher();
-            //    teacher = context.Teacher.Find(Id);
-            //    registerTeacherViewModel.teacherList.Add(teacher);
-            //}
             return View();
         }
 
         [HttpPost]
         public async Task<ActionResult> RegisterTeacher(RegisterTeacherViewModel registerTeacherViewModel,string register,string search,string update,string edit,string delete,string id)
         {
-            ApplicationDbContext context = new ApplicationDbContext();
-            Collection collection = new Collection();
-            AcademicDirector academicDirector = new AcademicDirector();
-            Teacher teacher = new Teacher();
-            ApplicationUser user = new ApplicationUser();
-            RegisterViewModel registerViewModel = new RegisterViewModel();
-
-            ViewBag.register = true;
-            ViewBag.search = false;
-
-            if (register != null)
+            //check if their are no errors arise from user input
+            if (ModelState.IsValid)
             {
-                
-                registerViewModel.fullName = registerTeacherViewModel.fullName;
-                registerViewModel.email = registerTeacherViewModel.email;
-                registerViewModel.username = collection.generateUserName();
-                registerViewModel.password = collection.generatePassword();
+                //basic objects
+                ApplicationDbContext context = new ApplicationDbContext();
+                Collection collection = new Collection();
+                AcademicDirector academicDirector = new AcademicDirector();
+                Teacher teacher = new Teacher();
+                ApplicationUser user = new ApplicationUser();
+                RegisterViewModel registerViewModel = new RegisterViewModel();
 
-                string Id = collection.RegisterUser(registerViewModel, "Teacher");
+                ViewBag.search = false;
 
-                if (Id != null)
+                if (register != null)
                 {
-                    teacher.teacherId = Id;
-                    teacher.grade = registerTeacherViewModel.grade;
-                    teacher.subject = registerTeacherViewModel.subject;
 
-                    academicDirector.registerTeacher(teacher);
+                    //populate RegisterViewModel with the inserted data for registration
+                    registerViewModel.fullName = registerTeacherViewModel.fullName;
+                    registerViewModel.email = registerTeacherViewModel.email;
+                    registerViewModel.username = collection.generateUserName();
+                    registerViewModel.password = collection.generatePassword();
+
+                    //create teacher user account using the provided information
+                    string Id = collection.RegisterUser(registerViewModel, "Teacher");
+
+                    if (Id != null)
+                    {
+                        //record other teacher informations
+                        teacher.teacherId = Id;
+                        teacher.grade = registerTeacherViewModel.grade;
+                        teacher.subject = registerTeacherViewModel.subject;
+
+                        academicDirector.registerTeacher(teacher);
+
+                        //email code goes here------------------------------
+
+                        ViewBag.registerStatus = "Registration Completed Successfully";
+                    }
+                    else
+                    {
+                        ViewBag.registerStatus = "Registration Failed";
+                    }
                 }
-            }
-            else if (search != null)
-            {
-                ViewBag.search = true;
-                registerTeacherViewModel.teacherList = context.Teacher.Where(t => t.user.fullName.StartsWith(registerTeacherViewModel.fullName)).ToList();
-            }
-            else if (update != null)
-            {
-                Teacher teacherUp = new Teacher(1);
-                teacherUp.grade = registerTeacherViewModel.grade;
-                teacherUp.user.fullName = registerTeacherViewModel.fullName;
-                teacherUp.subject = registerTeacherViewModel.subject;
-                var teacherList= context.Teacher.Where(t=> t.user.Email==registerTeacherViewModel.email).ToList();
-                foreach (var getId in teacherList)
+                else if (search != null)
                 {
-                    teacherUp.teacherId = getId.teacherId;
+                    //search teacher using teacher name
+                    ViewBag.search = true;
+                    registerTeacherViewModel.teacherList = context.Teacher.Where(t => t.user.fullName.StartsWith(registerTeacherViewModel.fullName)).ToList();
                 }
-                academicDirector.UpdateTeacher(teacherUp);
-            }
-            else if (edit !=null)
-            {
-                
-                registerTeacherViewModel.teacherList = new List<Teacher>();
-                ViewBag.disableEmail = "disabled";
-                teacher = context.Teacher.Find(id);
-                registerTeacherViewModel.fullName=teacher.user.fullName;
-                registerTeacherViewModel.subject = teacher.subject;
-                registerTeacherViewModel.grade = teacher.grade;
-                registerTeacherViewModel.email = teacher.user.Email;
-                registerTeacherViewModel.teacherList.Add(teacher);
-                
+                else if (update != null)
+                {
+                    //update teacher record 
+                    //assign the new data to teacher object
+                    Teacher teacherUp = new Teacher(1);
+                    teacherUp.grade = registerTeacherViewModel.grade;
+                    teacherUp.user.fullName = registerTeacherViewModel.fullName;
+                    teacherUp.subject = registerTeacherViewModel.subject;
+                    var teacherList = context.Teacher.Where(t => t.user.Email == registerTeacherViewModel.email).ToList();
+                    foreach (var getId in teacherList)
+                    {
+                        teacherUp.teacherId = getId.teacherId;
+                    }
 
-            }
-            else if (delete != null)
-            {
-                academicDirector.DeleteTeacher(id);
-                string status=await collection.DeleteUser(id);
+                    academicDirector.UpdateTeacher(teacherUp);
+
+                    ViewBag.updateStatus = "Update Completed Successfully";
+                }
+                else if (edit != null)
+                {
+                    //populate the selected teacher data in to the update form
+                    registerTeacherViewModel.teacherList = new List<Teacher>();
+                    teacher = context.Teacher.Find(id);
+                    registerTeacherViewModel.fullName = teacher.user.fullName;
+                    registerTeacherViewModel.subject = teacher.subject;
+                    registerTeacherViewModel.grade = teacher.grade;
+                    registerTeacherViewModel.email = teacher.user.Email;
+                    registerTeacherViewModel.teacherList.Add(teacher);
+
+                    ViewBag.disableEmail = "disabled";
+                }
+                else if (delete != null)
+                {
+                    //delete the selected user using teacher id
+                    academicDirector.DeleteTeacher(id);
+                    string status = await collection.DeleteUser(id);
+
+                    if (status == "successful")
+                    {
+                        ViewBag.deleteStatus = "Deletion Completed Successfully";
+                    }
+                    else
+                    {
+                        ViewBag.deleteStatus = "Deletion Failed";
+                    }
+
+                }
             }
             return View(registerTeacherViewModel);
         }
-
-        //public ActionResult UpdateTeacher(string Id)
-        //{
-        //    //populate the new data
-        //    //create update user function
-        //    //call the function
-
-        //    return RedirectToAction("RegisterTeacher", "ADHome", new { Areas = "Academic_Director", Id = Id });
-        //}
        
         public ActionResult manageRegistrar()
 
