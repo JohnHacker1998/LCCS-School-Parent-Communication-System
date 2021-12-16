@@ -7,13 +7,13 @@ namespace LCCS_School_Parent_Communication_System.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class TeacherTable : IMigrationMetadata
+    public sealed partial class tblAYear_tblSection : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(TeacherTable));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(tblAYear_tblSection));
         
         string IMigrationMetadata.Id
         {
-            get { return "202112150928434_TeacherTable"; }
+            get { return "202112160745381_tblAYear_tblSection"; }
         }
         
         string IMigrationMetadata.Source

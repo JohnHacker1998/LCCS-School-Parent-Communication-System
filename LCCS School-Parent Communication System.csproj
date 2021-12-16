@@ -506,11 +506,13 @@
     <Compile Include="Migrations\202112140926496_FirstLogin.designer.cs">
       <DependentUpon>202112140926496_FirstLogin.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202112150928434_TeacherTable.cs" />
-    <Compile Include="Migrations\202112150928434_TeacherTable.designer.cs">
-      <DependentUpon>202112150928434_TeacherTable.cs</DependentUpon>
+    <Compile Include="Migrations\202112160745381_tblAYear_tblSection.cs" />
+    <Compile Include="Migrations\202112160745381_tblAYear_tblSection.designer.cs">
+      <DependentUpon>202112160745381_tblAYear_tblSection.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AcademicYear.cs" />
+    <Compile Include="Models\Section.cs" />
     <Compile Include="Models\Teacher.cs" />
     <Compile Include="Models\RegistrarModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -567,8 +569,8 @@
     <EmbeddedResource Include="Migrations\202112140926496_FirstLogin.resx">
       <DependentUpon>202112140926496_FirstLogin.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112150928434_TeacherTable.resx">
-      <DependentUpon>202112150928434_TeacherTable.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202112160745381_tblAYear_tblSection.resx">
+      <DependentUpon>202112160745381_tblAYear_tblSection.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
