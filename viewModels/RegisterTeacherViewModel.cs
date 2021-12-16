@@ -13,8 +13,9 @@ namespace LCCS_School_Parent_Communication_System.viewModels
         [Required(ErrorMessage = "Please enter Full Name")]
         [Display(Name = "Full Name")]
         public String fullName { get; set; }
-        [Required(ErrorMessage = "Please enter Email")]
+        [Required(ErrorMessage = "Email is Required")]
         [Display(Name = "Email")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public String email { get; set; }
 
         [Required(ErrorMessage = "Please enter Grade")]

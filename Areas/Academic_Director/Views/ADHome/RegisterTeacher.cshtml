@@ -12,23 +12,25 @@
     @using (Html.BeginForm("RegisterTeacher", "ADHome", FormMethod.Post))
     {
         @Html.LabelFor(lbl => lbl.email)
-        @Html.TextBoxFor(tb => tb.email, new { placeholder = "example@gmail.com", @class = "form-control" })
+        @Html.EditorFor(tb => tb.email, new { placeholder = "example@gmail.com", disabled=@ViewBag.disableEmail , @class = "form-control" })
         @Html.ValidationMessageFor(vm => vm.email)
         <br />
         @Html.LabelFor(lbl => lbl.fullName)
-        @Html.TextBoxFor(tb => tb.fullName, new { @class = "form-control" })
+        @Html.EditorFor(tb => tb.fullName, new { @class = "form-control" })
         @Html.ValidationMessageFor(vm => vm.fullName)
         <br />
         @Html.LabelFor(lbl => lbl.grade)
-        @Html.TextBoxFor(tb => tb.grade, new { @class = "form-control" })
+        @Html.EditorFor(tb => tb.grade, new { type = "number", min = "9", max = "12", step = "1", @class = "form-control" })
         @Html.ValidationMessageFor(vm => vm.grade)
         <br />
         @Html.LabelFor(lbl => lbl.subject)
-        @Html.TextBoxFor(tb => tb.subject, new { @class = "form-control" })
+        @Html.EditorFor(tb => tb.subject, new { @class = "form-control" })
         @Html.ValidationMessageFor(vm => vm.subject)
         <br />
-        @Html.ValidationSummary(false,"please fix the errors to procced to the next step")
-        <br />
+        <hr />
+        @Html.ValidationSummary(false, "please fix the errors to procced to the next step")
+        @ViewBag.registerStatus
+        @ViewBag.updateStatus
         <hr />
         <input type="submit" name="register" value="Register" />
         <input type="submit" name="search" value="Search" />
