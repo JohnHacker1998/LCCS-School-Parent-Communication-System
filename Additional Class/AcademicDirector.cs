@@ -50,6 +50,34 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             context.Teacher.Remove(teacher);
             context.SaveChanges();
         }
+
+        public Boolean validateDuration(AcademicYearViewModel academicYearViewModel)
+        {
+
+            if(DateTime.Compare(academicYearViewModel.yearStart,academicYearViewModel.yearEnd)!=0 && DateTime.Compare(academicYearViewModel.quarterOneStart, academicYearViewModel.quarterOneEnd) != 0 &&
+                DateTime.Compare(academicYearViewModel.quarterTwoStart, academicYearViewModel.quarterTwoEnd) != 0 && DateTime.Compare(academicYearViewModel.quarterThreeStart, academicYearViewModel.quarterThreeEnd) != 0 &&
+                DateTime.Compare(academicYearViewModel.quarterFourStart, academicYearViewModel.quarterFourEnd) != 0)
+            {
+                if(DateTime.Compare(academicYearViewModel.quarterOneStart, academicYearViewModel.quarterOneEnd) < 0 && DateTime.Compare(academicYearViewModel.quarterTwoStart, academicYearViewModel.quarterTwoEnd) < 0 &&
+                    DateTime.Compare(academicYearViewModel.quarterThreeStart, academicYearViewModel.quarterThreeEnd) < 0 && DateTime.Compare(academicYearViewModel.quarterFourStart, academicYearViewModel.quarterFourEnd) < 0 &&
+                    DateTime.Compare(academicYearViewModel.yearStart, academicYearViewModel.yearEnd) < 0)
+                {
+                    if(DateTime.Compare(academicYearViewModel.quarterOneEnd, academicYearViewModel.quarterTwoStart) < 0 && DateTime.Compare(academicYearViewModel.quarterTwoEnd, academicYearViewModel.quarterThreeStart) < 0 &&
+                    DateTime.Compare(academicYearViewModel.quarterThreeEnd, academicYearViewModel.quarterFourStart) < 0 && (DateTime.Compare(academicYearViewModel.quarterFourEnd, academicYearViewModel.yearEnd) < 0 || DateTime.Compare(academicYearViewModel.quarterFourEnd, academicYearViewModel.yearEnd) == 0))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+
+
+
+
+
         public RegistrarManagementViewModel listRegistrar()
         {
             //function for listing every user with registrar role 
