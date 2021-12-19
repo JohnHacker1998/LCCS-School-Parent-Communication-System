@@ -9,9 +9,6 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using System.Threading.Tasks;
 using System;
-using System.Runtime;
-using System.Globalization;
-using System;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Controllers
@@ -572,8 +569,18 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
             return View(sectionViewModel);
         }
-        
 
 
+        public ActionResult StudentManagement()
+        {
+            return View();
         }
+        [HttpPost]
+        public ActionResult StudentManagement(int id)
+        {
+            return View();
+        }
+
+
+    }
 }
