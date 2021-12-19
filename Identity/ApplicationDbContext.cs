@@ -15,6 +15,8 @@ namespace LCCS_School_Parent_Communication_System.Identity
 
         }
 
-        public DbSet<Teacher> Teacher { get; set; } 
+        public DbSet<Teacher> Teacher { get; set; }
+        public DbSet<AcademicYear> AcademicYear { get; set; }
+        public DbSet<Section> Section { get; set; }
     }
 }

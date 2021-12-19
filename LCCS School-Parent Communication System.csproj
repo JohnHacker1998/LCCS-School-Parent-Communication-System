@@ -20,8 +20,10 @@
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
     <IISExpressSSLPort>44376</IISExpressSSLPort>
-    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
-    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressAnonymousAuthentication>
+    </IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>
+    </IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
@@ -510,6 +512,10 @@
     <Compile Include="Migrations\202112160745381_tblAYear_tblSection.designer.cs">
       <DependentUpon>202112160745381_tblAYear_tblSection.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112180658152_section.cs" />
+    <Compile Include="Migrations\202112180658152_section.designer.cs">
+      <DependentUpon>202112180658152_section.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AcademicYear.cs" />
     <Compile Include="Models\Section.cs" />
@@ -522,6 +528,7 @@
     <Compile Include="viewModels\RegisterTeacherViewModel.cs" />
     <Compile Include="viewModels\RegisterViewModel.cs" />
     <Compile Include="viewModels\RegistrarManagementViewModel.cs" />
+    <Compile Include="viewModels\SectionViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -535,6 +542,7 @@
     <Content Include="Areas\Academic_Director\Views\ADHome\Index.cshtml" />
     <Content Include="Areas\Academic_Director\Views\ADHome\manageRegistrar.cshtml" />
     <Content Include="Areas\Academic_Director\Views\ADHome\RegisterTeacher.cshtml" />
+    <Content Include="Areas\Academic_Director\Views\ADHome\SectionManagement.cshtml" />
     <None Include="packages.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -572,6 +580,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112160745381_tblAYear_tblSection.resx">
       <DependentUpon>202112160745381_tblAYear_tblSection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112180658152_section.resx">
+      <DependentUpon>202112180658152_section.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
