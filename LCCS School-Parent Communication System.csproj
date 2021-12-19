@@ -20,10 +20,8 @@
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
     <IISExpressSSLPort>44376</IISExpressSSLPort>
-    <IISExpressAnonymousAuthentication>
-    </IISExpressAnonymousAuthentication>
-    <IISExpressWindowsAuthentication>
-    </IISExpressWindowsAuthentication>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
@@ -520,25 +518,9 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
-    <Compile Include="Migrations\202112132120241_addedFullName.cs" />
-    <Compile Include="Migrations\202112132120241_addedFullName.designer.cs">
-      <DependentUpon>202112132120241_addedFullName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202112140926496_FirstLogin.cs" />
-    <Compile Include="Migrations\202112140926496_FirstLogin.designer.cs">
-      <DependentUpon>202112140926496_FirstLogin.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202112160745381_tblAYear_tblSection.cs" />
-    <Compile Include="Migrations\202112160745381_tblAYear_tblSection.designer.cs">
-      <DependentUpon>202112160745381_tblAYear_tblSection.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202112160908061_latestChanges.cs" />
-    <Compile Include="Migrations\202112160908061_latestChanges.designer.cs">
-      <DependentUpon>202112160908061_latestChanges.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202112180658152_section.cs" />
-    <Compile Include="Migrations\202112180658152_section.designer.cs">
-      <DependentUpon>202112180658152_section.cs</DependentUpon>
+    <Compile Include="Migrations\202112191021022_tillTblStudentandParent.cs" />
+    <Compile Include="Migrations\202112191021022_tillTblStudentandParent.designer.cs">
+      <DependentUpon>202112191021022_tillTblStudentandParent.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AcademicYear.cs" />
@@ -551,6 +533,7 @@
     <Compile Include="viewModels\AcademicYearViewModel.cs" />
     <Compile Include="viewModels\LoginViewModel.cs" />
     <Compile Include="Startup1.cs" />
+    <Compile Include="viewModels\parentViewModel.cs" />
     <Compile Include="viewModels\RegisterTeacherViewModel.cs" />
     <Compile Include="viewModels\RegisterViewModel.cs" />
     <Compile Include="viewModels\RegistrarManagementViewModel.cs" />
@@ -601,20 +584,8 @@
     <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202112132120241_addedFullName.resx">
-      <DependentUpon>202112132120241_addedFullName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112140926496_FirstLogin.resx">
-      <DependentUpon>202112140926496_FirstLogin.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112160745381_tblAYear_tblSection.resx">
-      <DependentUpon>202112160745381_tblAYear_tblSection.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112160908061_latestChanges.resx">
-      <DependentUpon>202112160908061_latestChanges.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112180658152_section.resx">
-      <DependentUpon>202112180658152_section.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202112191021022_tillTblStudentandParent.resx">
+      <DependentUpon>202112191021022_tillTblStudentandParent.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

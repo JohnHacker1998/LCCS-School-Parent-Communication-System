@@ -3,23 +3,10 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class section : DbMigration
+    public partial class tillTblStudentandParent : DbMigration
     {
         public override void Up()
         {
-            CreateTable(
-                "dbo.AcademicYears",
-                c => new
-                    {
-                        academicYearName = c.String(nullable: false, maxLength: 128),
-                        quarterOne = c.String(),
-                        quarterTwo = c.String(),
-                        quarterThree = c.String(),
-                        quarterFour = c.String(),
-                        duration = c.String(),
-                    })
-                .PrimaryKey(t => t.academicYearName);
-            
             CreateTable(
                 "dbo.Sections",
                 c => new
@@ -44,7 +31,6 @@
             DropIndex("dbo.Sections", new[] { "teacherId" });
             DropIndex("dbo.Sections", new[] { "academicYearId" });
             DropTable("dbo.Sections");
-            DropTable("dbo.AcademicYears");
         }
     }
 }
