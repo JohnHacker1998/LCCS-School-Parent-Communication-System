@@ -1,0 +1,64 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.RegisterTeacherViewModel
+@{
+    ViewBag.Title = "unitLeaderManagement";
+}
+
+<h2>unitLeaderManagement</h2>
+
+
+<table>
+    <tr>
+        <th>Full Name</th>
+        <th>Subject</th>
+        <th>Grade</th>
+    </tr>
+    @foreach (var k in Model.retrevedTeacherList)
+    {
+        <tr>
+            <td>@k.user.fullName</td>
+            <td>@k.subject</td>
+            <td>@k.grade</td>
+            <td>
+                @using (Html.BeginForm("unitLeaderManagement", "ADHome", new {teacherID= @k.teacherId }, FormMethod.Post))
+                {
+                    <input type="submit" value="Select" name="selectToAssign" />
+                }
+            </td>
+        </tr>
+    }
+
+</table>
+@using (Html.BeginForm("unitLeaderManagement", "ADHome", FormMethod.Post))
+{
+    @Html.LabelFor(a => a.grade);
+    @Html.EditorFor(a => a.grade, new { htmlAttributes = new { @min = 1, @max = 12 } });
+
+    @Html.LabelFor(a => a.fullName);
+    @Html.EditorFor(a => a.fullName);
+
+    @Html.LabelFor(a => a.subject);
+    @Html.EditorFor(a => a.subject);
+
+    <input type="submit" value="Assign" name="assign" />
+    <input type="submit" value="Update" name="update" />
+
+
+}
+<h1>UnitLeaders List</h1>
+<table>
+    <tr>
+        <th>Full Name</th>
+        <th>Subject</th>
+        <th>Grade</th>
+    </tr>
+    @foreach (var k in Model.teacherList)
+    {
+        <tr>
+            <td>@k.user.fullName</td>
+            <td>@k.subject</td>
+            <td>@k.grade</td>
+            
+        </tr>
+    }
+
+</table>

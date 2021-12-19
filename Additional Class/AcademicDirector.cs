@@ -51,22 +51,31 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             context.SaveChanges();
         }
 
-        //function to validate the durations specified by the academic director
-        public Boolean validateDuration(AcademicYearViewModel academicYearViewModel)
+        public Boolean validateDuration(AcademicYearViewModel ayvm)
         {
-            //check if start an d end dates are not the same
-            if(DateTime.Compare(academicYearViewModel.yearStart,academicYearViewModel.yearEnd)!=0 && DateTime.Compare(academicYearViewModel.quarterOneStart, academicYearViewModel.quarterOneEnd) != 0 &&
-                DateTime.Compare(academicYearViewModel.quarterTwoStart, academicYearViewModel.quarterTwoEnd) != 0 && DateTime.Compare(academicYearViewModel.quarterThreeStart, academicYearViewModel.quarterThreeEnd) != 0 &&
-                DateTime.Compare(academicYearViewModel.quarterFourStart, academicYearViewModel.quarterFourEnd) != 0)
+            DateTime yearStartOne = Convert.ToDateTime(ayvm.yearStart);
+            DateTime yearEndOne = Convert.ToDateTime(ayvm.yearEnd);
+            DateTime zquarterOneStart = Convert.ToDateTime(ayvm.quarterOneStart);
+            DateTime zquarterOneEnd = Convert.ToDateTime(ayvm.quarterOneEnd);
+            DateTime zquarterTwoStart = Convert.ToDateTime(ayvm.quarterTwoStart);
+            DateTime zquarterTwoEnd = Convert.ToDateTime(ayvm.quarterTwoEnd);
+            DateTime zquarterThreeStart = Convert.ToDateTime(ayvm.quarterThreeStart);
+            DateTime zquarterThreeEnd = Convert.ToDateTime(ayvm.quarterThreeEnd);
+            DateTime zquarterFourStart = Convert.ToDateTime(ayvm.quarterFourStart);
+            DateTime zquarterFourEnd = Convert.ToDateTime(ayvm.quarterFourEnd);
+
+            if (DateTime.Compare(yearStartOne, yearEndOne) != 0 && DateTime.Compare(zquarterOneStart, zquarterOneEnd) != 0 &&
+                DateTime.Compare(zquarterTwoStart, zquarterTwoEnd) != 0 && DateTime.Compare(zquarterThreeStart, zquarterThreeEnd) != 0 &&
+                DateTime.Compare(zquarterFourStart, zquarterFourEnd) != 0)
             {
-                //check if start dates are earlier than the end date
-                if(DateTime.Compare(academicYearViewModel.quarterOneStart, academicYearViewModel.quarterOneEnd) < 0 && DateTime.Compare(academicYearViewModel.quarterTwoStart, academicYearViewModel.quarterTwoEnd) < 0 &&
-                    DateTime.Compare(academicYearViewModel.quarterThreeStart, academicYearViewModel.quarterThreeEnd) < 0 && DateTime.Compare(academicYearViewModel.quarterFourStart, academicYearViewModel.quarterFourEnd) < 0 &&
-                    DateTime.Compare(academicYearViewModel.yearStart, academicYearViewModel.yearEnd) < 0)
+
+                if (DateTime.Compare(zquarterOneStart, zquarterOneEnd) < 0 && DateTime.Compare(zquarterTwoStart, zquarterTwoEnd) < 0 &&
+                    DateTime.Compare(zquarterThreeStart, zquarterThreeEnd) < 0 && DateTime.Compare(zquarterFourStart, zquarterFourEnd) < 0 &&
+                    DateTime.Compare(yearStartOne, yearEndOne) < 0)
                 {
-                    //check if the dates dont overlap and quarter dates are within the year boundary
-                    if(DateTime.Compare(academicYearViewModel.quarterOneEnd, academicYearViewModel.quarterTwoStart) < 0 && DateTime.Compare(academicYearViewModel.quarterTwoEnd, academicYearViewModel.quarterThreeStart) < 0 &&
-                    DateTime.Compare(academicYearViewModel.quarterThreeEnd, academicYearViewModel.quarterFourStart) < 0 && (DateTime.Compare(academicYearViewModel.quarterFourEnd, academicYearViewModel.yearEnd) < 0 || DateTime.Compare(academicYearViewModel.quarterFourEnd, academicYearViewModel.yearEnd) == 0))
+
+                    if (DateTime.Compare(zquarterOneEnd, zquarterTwoStart) < 0 && DateTime.Compare(zquarterTwoEnd, zquarterThreeStart) < 0 &&
+                    DateTime.Compare(zquarterThreeEnd, zquarterFourStart) < 0 && (DateTime.Compare(zquarterFourEnd, yearEndOne) < 0 || DateTime.Compare(zquarterFourEnd, yearEndOne) == 0))
                     {
                         return true;
                     }
@@ -183,8 +192,49 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
 
             }
 
-           
+
             return rvm;
+        }
+        public bool IsTeacherorUnitLeader(string uid, string role)
+        {
+            //function for listing every user with registrar role 
+            var appDbContext = new ApplicationDbContext();
+            var userStore = new ApplicationUserStore(appDbContext);
+            var userManager = new ApplicationUserManager(userStore);
+            ApplicationUser user = new ApplicationUser();
+            RegisterTeacherViewModel rvm = new RegisterTeacherViewModel();
+
+            List<ApplicationUser> users = new List<ApplicationUser>();
+            users = appDbContext.Users.ToList();
+            if (role == "Teacher") {
+
+                if (userManager.IsInRole(uid, "Teacher"))
+                {
+                    return true;
+                }
+
+
+            }
+            else if (role == "UnitLeader")
+            {
+
+                if (userManager.IsInRole(uid, "UnitLeader"))
+                {
+                    return true;
+                }
+
+            }
+            return false;
+        }
+
+        public AcademicYearViewModel listAcademicYear()
+        {
+           
+            ApplicationDbContext db = new ApplicationDbContext();
+            AcademicYearViewModel ayVM = new AcademicYearViewModel();
+            ayVM.academicList = new List<AcademicYear>();
+            ayVM.academicList = db.AcademicYear.ToList();
+            return ayVM;
         }
     }
 }

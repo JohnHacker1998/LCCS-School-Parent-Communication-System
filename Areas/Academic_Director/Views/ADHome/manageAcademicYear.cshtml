@@ -1,0 +1,98 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.AcademicYearViewModel
+@{
+    ViewBag.Title = "manageAcademicYear";
+
+
+}
+
+<h2>manageAcademicYear</h2>
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            minDate: new Date(),
+
+
+        });
+    });
+</script>
+
+@using (Html.BeginForm("manageAcademicYear", "ADHome", FormMethod.Post))
+{
+    @Html.HiddenFor(a => a.yearStartTemp);
+    @Html.LabelFor(a => a.yearStart);
+    @Html.EditorFor(a => a.yearStart, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
+    @Html.ValidationMessageFor(a => a.yearStart);
+    @Html.LabelFor(a => a.yearEnd);
+    @Html.EditorFor(a => a.yearEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
+    @Html.ValidationMessageFor(a => a.yearEnd);
+    @Html.LabelFor(a => a.quarterOneStart);
+    @Html.EditorFor(a => a.quarterOneStart, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
+    @Html.ValidationMessageFor(a => a.quarterOneStart);
+    @Html.LabelFor(a => a.quarterOneEnd);
+    @Html.EditorFor(a => a.quarterOneEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
+    @Html.ValidationMessageFor(a => a.quarterOneEnd);
+    @Html.LabelFor(a => a.quarterTwoStart);
+    @Html.EditorFor(a => a.quarterTwoStart, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
+    @Html.ValidationMessageFor(a => a.quarterTwoStart);
+    @Html.LabelFor(a => a.quarterTwoEnd);
+    @Html.EditorFor(a => a.quarterTwoEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
+    @Html.ValidationMessageFor(a => a.quarterTwoEnd);
+    @Html.LabelFor(a => a.quarterThreeStart);
+    @Html.EditorFor(a => a.quarterThreeStart, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
+    @Html.ValidationMessageFor(a => a.quarterThreeStart);
+    @Html.LabelFor(a => a.quarterThreeEnd);
+    @Html.EditorFor(a => a.quarterThreeEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
+    @Html.ValidationMessageFor(a => a.quarterThreeEnd);
+    @Html.LabelFor(a => a.quarterFourStart);
+    @Html.EditorFor(a => a.quarterFourStart, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
+    @Html.ValidationMessageFor(a => a.quarterFourStart);
+    @Html.LabelFor(a => a.quarterFourEnd);
+    @Html.EditorFor(a => a.quarterFourEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
+    @Html.ValidationMessageFor(a => a.quarterFourEnd);
+    <input type="submit" value="Add" name="add" />
+    <input type="submit" value="Update" name="update" />
+
+
+
+}
+<table>
+    <tr>
+        <th>Academic Year Name</th>
+        <th>Q1</th>
+        <th>Q2</th>
+        <th>Q3</th>
+        <th>Q4</th>
+        <th>Academic Year End</th>
+
+    </tr>
+
+    @foreach (var k in Model.academicList)
+    {
+        <tr>
+            <td>@k.academicYearName</td>
+            <td>@k.quarterOne</td>
+            <td>@k.quarterTwo</td>
+            <td>@k.quarterThree</td>
+            <td>@k.quarterFour</td>
+            <td>@k.duration</td>
+            <td>
+                @using (Html.BeginForm("manageAcademicYear", "ADHome", new { acadYN = k.academicYearName }, FormMethod.Post))
+                {
+                    <input type="submit" name="select" value="Select" />
+                }
+            </td>
+
+        </tr>
+
+    }
+</table>
+
+
+
+
+

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.Optimization;
+using LCCS_School_Parent_Communication_System;
 
 namespace LCCS_School_Parent_Communication_System
 {
@@ -13,6 +15,7 @@ namespace LCCS_School_Parent_Communication_System
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBuldles(BundleTable.Bundles);
         }
     }
 }
