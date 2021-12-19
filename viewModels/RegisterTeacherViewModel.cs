@@ -1,4 +1,5 @@
-﻿using LCCS_School_Parent_Communication_System.Models;
+﻿using LCCS_School_Parent_Communication_System.Identity;
+using LCCS_School_Parent_Communication_System.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -28,5 +29,6 @@ namespace LCCS_School_Parent_Communication_System.viewModels
 
         public List<Teacher> teacherList { get; set; }
 
+        public List<Teacher> retrevedTeacherList { get; set; }
     }
 }

@@ -8,7 +8,10 @@ using System.Linq;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using System.Threading.Tasks;
-
+using System.Runtime;
+using System.Globalization;
+using System;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Controllers
 {
@@ -190,39 +193,234 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         {
             AcademicYear ay = new AcademicYear();
             ApplicationDbContext db = new ApplicationDbContext();
-            if (ModelState.IsValid)
-            {
-                if (add != null)
-                {
-                    ay.academicYearName = ayvm.yearStart.ToString("MMMM") + ayvm.yearStart.Year.ToString();
-                    ay.duration = ayvm.yearStart.ToShortDateString()+"-"+ayvm.yearEnd.ToShortDateString();
-                    ay.quarterOne = ayvm.quarterOneStart.ToShortDateString() + "-" + ayvm.quarterOneEnd.ToShortDateString();
-                    ay.quarterTwo = ayvm.quarterTwoStart.ToShortDateString() + "-" + ayvm.quarterTwoEnd.ToShortDateString();
-                    ay.quarterThree = ayvm.quarterThreeStart.ToShortDateString() + "-" + ayvm.quarterThreeEnd.ToShortDateString();
-                    ay.quarterFour = ayvm.quarterFourStart.ToShortDateString() + "-" + ayvm.quarterFourEnd.ToShortDateString();
-                    db.AcademicYear.Add(ay);
-                    db.SaveChanges();
-                }
-                /*else if (select != null)
-                {
-                    var academicYear = db.AcademicYear.Where(a => a.academicYearName == acadYN).ToList();
-                    foreach(var k in academicYear)
-                    {
-                        k.
-                    }
-                }*/
-            }
-            else
-            {
-
-            }
-            AcademicYearViewModel academicYearViewModel = new AcademicYearViewModel();
             AcademicDirector ad = new AcademicDirector();
+            AcademicYearViewModel academicYearViewModel = new AcademicYearViewModel();
             academicYearViewModel.academicList = new List<AcademicYear>();
             academicYearViewModel = ad.listAcademicYear();
 
+
+            if (ModelState.IsValid || select!=null)
+            {
+                DateTime tempStart = Convert.ToDateTime(ayvm.yearStartTemp);
+                DateTime yearStartOne = Convert.ToDateTime(ayvm.yearStart);
+                DateTime yearEndOne = Convert.ToDateTime(ayvm.yearEnd);
+                DateTime zquarterOneStart = Convert.ToDateTime(ayvm.quarterOneStart);
+                DateTime zquarterOneEnd = Convert.ToDateTime(ayvm.quarterOneEnd);
+                DateTime zquarterTwoStart = Convert.ToDateTime(ayvm.quarterTwoStart);
+                DateTime zquarterTwoEnd = Convert.ToDateTime(ayvm.quarterTwoEnd);
+                DateTime zquarterThreeStart = Convert.ToDateTime(ayvm.quarterThreeStart);
+                DateTime zquarterThreeEnd = Convert.ToDateTime(ayvm.quarterThreeEnd);
+                DateTime zquarterFourStart = Convert.ToDateTime(ayvm.quarterFourStart);
+                DateTime zquarterFourEnd = Convert.ToDateTime(ayvm.quarterFourEnd);
+                if (add != null)
+                {
+                    if (ad.validateDuration(ayvm))
+                    {
+                        ay.academicYearName = yearStartOne.ToString("MMMM") + yearEndOne.Year.ToString();
+                        ay.duration = yearStartOne.ToShortDateString() + "-" + yearEndOne.ToShortDateString();
+                        ay.quarterOne = zquarterOneStart.ToShortDateString() + "-" + zquarterOneEnd.ToShortDateString();
+                        ay.quarterTwo = zquarterTwoStart.ToShortDateString() + "-" + zquarterTwoEnd.ToShortDateString();
+                        ay.quarterThree = zquarterThreeStart.ToShortDateString() + "-" + zquarterThreeEnd.ToShortDateString();
+                        ay.quarterFour = zquarterFourStart.ToShortDateString() + "-" + zquarterFourEnd.ToShortDateString();
+                        db.AcademicYear.Add(ay);
+                        db.SaveChanges();
+                    }
+
+                }
+
+                else if (update != null)
+                {
+
+                    string k = tempStart.ToString("MMMM") + tempStart.Year.ToString();
+                    ay = db.AcademicYear.Find(tempStart.ToString("MMMM") + tempStart.Year.ToString());
+                    string[] splitItems = ay.duration.Split('-');
+                    DateTime originalYearStart = Convert.ToDateTime(splitItems[0]);
+                    yearStartOne = originalYearStart;
+                    int x = 0;
+                    if (ad.validateDuration(ayvm))
+                    {
+                        int y = 0;
+                        ay.duration = yearStartOne.ToShortDateString() + "-" + yearEndOne.ToShortDateString();
+                        ay.quarterOne = zquarterOneStart.ToShortDateString() + "-" + zquarterOneEnd.ToShortDateString();
+                        ay.quarterTwo = zquarterTwoStart.ToShortDateString() + "-" + zquarterTwoEnd.ToShortDateString();
+                        ay.quarterThree = zquarterThreeStart.ToShortDateString() + "-" + zquarterThreeEnd.ToShortDateString();
+                        ay.quarterFour = zquarterFourStart.ToShortDateString() + "-" + zquarterFourEnd.ToShortDateString();
+                        db.SaveChanges();
+                    }
+                }
+                else if (select != null)
+                {
+                    var academicYear = db.AcademicYear.Where(a => a.academicYearName == acadYN).ToList();
+
+                    foreach (var kd in academicYear)
+                    {
+
+                        string[] splitItems = kd.duration.Split('-');
+                        yearStartOne = Convert.ToDateTime(splitItems[0]);
+                        yearEndOne = Convert.ToDateTime(splitItems[1]);
+                        Array.Clear(splitItems, 0, splitItems.Length);
+                        splitItems = kd.quarterOne.Split('-');
+                        zquarterOneStart = Convert.ToDateTime(splitItems[0]);
+                        zquarterOneEnd = Convert.ToDateTime(splitItems[1]);
+                        Array.Clear(splitItems, 0, splitItems.Length);
+                        splitItems = kd.quarterTwo.Split('-');
+                        zquarterTwoStart = Convert.ToDateTime(splitItems[0]);
+                        zquarterTwoEnd = Convert.ToDateTime(splitItems[1]);
+                        Array.Clear(splitItems, 0, splitItems.Length);
+                        splitItems = kd.quarterTwo.Split('-');
+                        zquarterThreeStart = Convert.ToDateTime(splitItems[0]);
+                        zquarterThreeEnd = Convert.ToDateTime(splitItems[1]);
+                        Array.Clear(splitItems, 0, splitItems.Length);
+                        splitItems = kd.quarterTwo.Split('-');
+                        zquarterFourStart = Convert.ToDateTime(splitItems[0]);
+                        zquarterFourEnd = Convert.ToDateTime(splitItems[1]);
+                    }
+                    academicYearViewModel.yearStartTemp = yearStartOne.ToShortDateString();
+                    academicYearViewModel.yearStart = yearStartOne.ToShortDateString();
+                    academicYearViewModel.yearEnd = yearEndOne.ToShortDateString();
+                    academicYearViewModel.quarterOneStart = zquarterOneStart.ToShortDateString();
+                    academicYearViewModel.quarterOneEnd = zquarterOneEnd.ToShortDateString();
+                    academicYearViewModel.quarterTwoStart = zquarterTwoStart.ToShortDateString();
+                    academicYearViewModel.quarterTwoEnd = zquarterTwoEnd.ToShortDateString();
+                    academicYearViewModel.quarterThreeStart = zquarterThreeStart.ToShortDateString();
+                    academicYearViewModel.quarterThreeEnd = zquarterThreeEnd.ToShortDateString();
+                    academicYearViewModel.quarterFourStart = zquarterFourStart.ToShortDateString();
+                    academicYearViewModel.quarterFourEnd = zquarterFourEnd.ToShortDateString();
+
+
+
+                }
+            }
+         
+
+           
+            
+          
             return View(academicYearViewModel);
         }
+        public ActionResult unitLeaderManagement()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            AcademicDirector ad = new AcademicDirector();
+            RegisterTeacherViewModel rvm = new RegisterTeacherViewModel();
+            rvm.teacherList = new List<Teacher>();
+            rvm.retrevedTeacherList = new List<Teacher>();
+
+            List<Teacher> temp1 = new List<Teacher>();
+            List<Teacher> temp2 = new List<Teacher>();
+            temp1 = db.Teacher.ToList();
+            foreach(var k in temp1)
+            {
+                if (ad.IsTeacherorUnitLeader(k.user.Id, "Teacher"))
+                {
+                    rvm.retrevedTeacherList.Add(k);
+                } 
+
+            }
+            temp2 = db.Teacher.ToList();
+            foreach(var k in temp2)
+            {
+                if (ad.IsTeacherorUnitLeader(k.user.Id, "UnitLeader"))
+                {
+                    rvm.teacherList.Add(k);
+                }
+            }
+            return View(rvm);
+        }
+        [HttpPost]
+        public ActionResult unitLeaderManagement(RegisterTeacherViewModel rvm,string selectToAssign,string assign,string update,string teacherID)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            AcademicDirector ad = new AcademicDirector();
+            IdentityUserRole ir = new IdentityUserRole();
+            var userStore = new ApplicationUserStore(db);
+            var userManager = new ApplicationUserManager(userStore);
+            ApplicationUser appUser = new ApplicationUser();
+            List<Teacher> temp1 = new List<Teacher>();
+            List<Teacher> temp2 = new List<Teacher>();
+            List<Teacher> temp3 = new List<Teacher>();
+            List<Teacher> temp4 = new List<Teacher>();
+
+            // RegisterTeacherViewModel rvm = new RegisterTeacherViewModel();
+            rvm.teacherList = new List<Teacher>();
+            rvm.retrevedTeacherList = new List<Teacher>();
+            List<Teacher> retrieveAssignment = new List<Teacher>();
+            if (selectToAssign != null)
+            {
+               retrieveAssignment = db.Teacher.Where(a => a.teacherId == teacherID).ToList();
+                foreach(var k in retrieveAssignment)
+                {
+                    rvm.fullName = k.user.fullName;
+                    rvm.grade = k.grade;
+                    rvm.subject = k.subject;
+                }
+            }
+            else if (assign != null)
+            {
+                retrieveAssignment = db.Teacher.Where(a => a.grade == rvm.grade && a.subject==rvm.subject && a.user.fullName==rvm.fullName).ToList();
+                foreach(var k in retrieveAssignment)
+                {
+                    teacherID = k.user.Id;
+                }
+                appUser = userManager.FindById(teacherID);
+                var oldRoleId = appUser.Roles.SingleOrDefault().RoleId;
+                
+                var oldRoleName = db.Roles.SingleOrDefault(r => r.Id == oldRoleId).Name;
+                userManager.RemoveFromRole(appUser.Id, oldRoleName);
+                userManager.AddToRole(appUser.Id, "UnitLeader");
+
+
+
+            }
+            else if (update != null)
+            {
+                retrieveAssignment = db.Teacher.Where(a => a.grade == rvm.grade && a.subject == rvm.subject && a.user.fullName == rvm.fullName).ToList();
+                foreach (var k in retrieveAssignment)
+                {
+                    teacherID = k.user.Id;
+                }
+                temp3 = db.Teacher.ToList();
+                foreach (var k in temp3)
+                {
+                    if (ad.IsTeacherorUnitLeader(k.user.Id, "UnitLeader"))
+                    {
+                        if (k.grade == rvm.grade)
+                        {
+                            userManager.RemoveFromRole(k.user.Id, "UnitLeader");
+                            userManager.AddToRole(k.user.Id, "Teacher");
+                            userManager.RemoveFromRole(teacherID, "Teacher");
+                            userManager.AddToRole(teacherID, "UnitLeader");
+                        }
+                       
+                    }
+                    
+                }
+
+
+            }
+            
+            temp1 = db.Teacher.ToList();
+            foreach (var k in temp1)
+            {
+                if (ad.IsTeacherorUnitLeader(k.user.Id, "Teacher"))
+                {
+                    rvm.retrevedTeacherList.Add(k);
+                }
+
+            }
+            temp2 = db.Teacher.ToList();
+            foreach (var k in temp2)
+            {
+                if (ad.IsTeacherorUnitLeader(k.user.Id, "UnitLeader"))
+                {
+                    rvm.teacherList.Add(k);
+                }
+            }
+            return View(rvm);
+            
+        }
+
+        
        
 
     }

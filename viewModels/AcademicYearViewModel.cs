@@ -4,49 +4,63 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using LCCS_School_Parent_Communication_System.Models;
+
 namespace LCCS_School_Parent_Communication_System.viewModels
+
 {
     public class AcademicYearViewModel
     {
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime yearStart { get; set; }
+        public string yearStartTemp { get; set; }
+      [Required(ErrorMessage ="Please fill the form.")]
+    //[DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+    [Display(Name ="Year Start")]
+        public string yearStart { get; set; }
 
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime yearEnd { get; set; }
+        [Required(ErrorMessage = "Please fill the form.")]
+        //  [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Year End")]
+        public string yearEnd { get; set; }
 
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime quarterOneStart { get; set; }
+        [Required(ErrorMessage = "Please fill the form.")]
+        [Display(Name = "Q1 Start")]
+        //[DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        public string quarterOneStart { get; set; }
 
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime quarterOneEnd { get; set; }
+        [Required(ErrorMessage = "Please fill the form.")]
+        [Display(Name = "Q1 Ending")]
+        //[DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        public string quarterOneEnd { get; set; }
 
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime quarterTwoStart { get; set; }
+        [Required(ErrorMessage = "Please fill the form.")]
+        [Display(Name = "Q2 Start")]
+        //[DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        public string quarterTwoStart { get; set; }
 
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime quarterTwoEnd { get; set; }
+        [Required(ErrorMessage = "Please fill the form.")]
+        [Display(Name = "Q2 Ending")]
+        //[DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        public string quarterTwoEnd { get; set; }
 
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime quarterThreeStart { get; set; }
+        [Required(ErrorMessage = "Please fill the form.")]
+        [Display(Name ="Q3 Start")]
+        // [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        public string quarterThreeStart { get; set; }
+        [Display(Name ="Q3 Ending")]
 
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime quarterThreeEnd { get; set; }
+        [Required(ErrorMessage = "Please fill the form.")]
+        //[DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        public string quarterThreeEnd { get; set; }
+        
 
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime quarterFourStart { get; set; }
+        [Required(ErrorMessage = "Please fill the form.")]
+        [Display(Name = "Q4 Start")]
+        //[DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        public string quarterFourStart { get; set; }
+        [Required(ErrorMessage = "Please fill the form.")]
+        [Display(Name = "Q4 Ending")]
 
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime quarterFourEnd { get; set; }
+        //  [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        public string quarterFourEnd { get; set; }
 
         public List<AcademicYear> academicList { get; set; }
     }
