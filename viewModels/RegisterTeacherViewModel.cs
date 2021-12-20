@@ -13,14 +13,15 @@ namespace LCCS_School_Parent_Communication_System.viewModels
         
         [Required(ErrorMessage = "Please enter Full Name")]
         [Display(Name = "Full Name")]
-        public String fullName { get; set; }
+        public string fullName { get; set; }
         [Required(ErrorMessage = "Email is Required")]
-        [Display(Name = "Email")]
+        [Display(Name = "Email Address")]
+        [DataType(DataType.EmailAddress, ErrorMessage = "E-mail is not valid")]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
-        public String email { get; set; }
+        public string email { get; set; }
 
         [Required(ErrorMessage = "Please enter Grade")]
-        [Range(9, 12, ErrorMessage = "Please enter correct value")]
+        [Range(9, 12, ErrorMessage = "Please enter Grade in the range of 9-12")]
         [Display(Name = "Grade")]
         public int grade { get; set; }
         [Required(ErrorMessage = "Please enter Subject")]

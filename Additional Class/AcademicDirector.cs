@@ -161,6 +161,35 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
         }
 
 
+        public List<string> populateSection()
+        {
+            ApplicationDbContext context = new ApplicationDbContext();
+            List<string> section = new List<string>();
+
+            var academicYears = context.AcademicYear.ToList();
+
+            foreach (var getActive in academicYears)
+            {
+                string[] duration = getActive.duration.Split('-');
+                if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
+                {
+                    var getSection = context.Section.Where(s => s.academicYearId == getActive.academicYearName).ToList();
+
+                    if (getSection.Count != 0)
+                    {
+                        foreach (var getSectionName in getSection)
+                        {
+                            section.Add(getSectionName.sectionName);
+                            
+                        }
+                    }
+                }
+            }
+
+            return section;
+        }
+
+
 
 
 

@@ -13,8 +13,7 @@
 <body>
     @using (Html.BeginForm("SectionManagement", "ADHome", FormMethod.Post))
     {
-        if (ViewBag.search && ViewBag.found)
-        {
+        
             @Html.LabelFor(lbl => lbl.grade)
             @Html.EditorFor(tb => tb.grade, new { type = "number", min = "9", max = "12", step = "1", @class = "form-control" })
             @Html.ValidationMessageFor(vm => vm.grade)
@@ -23,11 +22,13 @@
             @Html.DropDownListFor(tb => tb.letter, new SelectList(Model.letter))
             @Html.ValidationMessageFor(vm => vm.letter)
             <br />
+        if (ViewBag.search && ViewBag.found)
+        {
             @Html.LabelFor(lbl => lbl.teachers)
             <select id="teachers" name="teachers">
                 @foreach (var i in Model.teachers)
                 {
-                    <option value=i>@i</option>
+                    <option value=@i>@i</option>
                 }
             </select>
             @Html.ValidationMessageFor(vm => vm.teachers)
@@ -38,33 +39,25 @@
                 {
                     if (i == ViewBag.academicYear)
                     {
-                        <option value=i selected>@i</option>
+                        <option value=@i selected>@i</option>
                     }
                     else
                     {
-                        <option value=i>@i</option>
+                        <option value=@i>@i</option>
                     }
                 }
             </select>
-                }
-                else
-                {
-                @Html.LabelFor(lbl => lbl.grade)
-                @Html.EditorFor(tb => tb.grade, new { type = "number", min = "9", max = "12", step = "1", @class = "form-control" })
-                @Html.ValidationMessageFor(vm => vm.grade)
-                <br />
-                @Html.LabelFor(lbl => lbl.letter)
-                @Html.DropDownListFor(tb => tb.letter, new SelectList(Model.letter))
-                @Html.ValidationMessageFor(vm => vm.letter)
-                <br />
-                @Html.LabelFor(lbl => lbl.teachers)
+        }
+        else
+        {
+            @Html.LabelFor(lbl => lbl.teachers)
                 @Html.DropDownListFor(tb => tb.teachers, new SelectList(Model.teachers), "Select Teacher")
                 @Html.ValidationMessageFor(vm => vm.teachers)
-                <br />
+                < br />
                 @Html.LabelFor(lbl => lbl.academicYears)
                 @Html.DropDownListFor(tb => tb.academicYears, new SelectList(Model.academicYears), "Select Acadamic Year")
                 @Html.ValidationMessageFor(vm => vm.academicYears)
-                }
+        }
 
 
                 <br />

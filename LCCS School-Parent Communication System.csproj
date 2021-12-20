@@ -490,6 +490,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="Areas\Academic_Director\Views\ADHome\unitLeaderManagement.cshtml" />
+    <Content Include="Areas\Academic_Director\Views\ADHome\StudentManagement.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -520,25 +521,9 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
-    <Compile Include="Migrations\202112132120241_addedFullName.cs" />
-    <Compile Include="Migrations\202112132120241_addedFullName.designer.cs">
-      <DependentUpon>202112132120241_addedFullName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202112140926496_FirstLogin.cs" />
-    <Compile Include="Migrations\202112140926496_FirstLogin.designer.cs">
-      <DependentUpon>202112140926496_FirstLogin.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202112160745381_tblAYear_tblSection.cs" />
-    <Compile Include="Migrations\202112160745381_tblAYear_tblSection.designer.cs">
-      <DependentUpon>202112160745381_tblAYear_tblSection.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202112160908061_latestChanges.cs" />
-    <Compile Include="Migrations\202112160908061_latestChanges.designer.cs">
-      <DependentUpon>202112160908061_latestChanges.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202112180658152_section.cs" />
-    <Compile Include="Migrations\202112180658152_section.designer.cs">
-      <DependentUpon>202112180658152_section.cs</DependentUpon>
+    <Compile Include="Migrations\202112200632060_allinone.cs" />
+    <Compile Include="Migrations\202112200632060_allinone.designer.cs">
+      <DependentUpon>202112200632060_allinone.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AcademicYear.cs" />
@@ -555,6 +540,7 @@
     <Compile Include="viewModels\RegisterViewModel.cs" />
     <Compile Include="viewModels\RegistrarManagementViewModel.cs" />
     <Compile Include="viewModels\SectionViewModel.cs" />
+    <Compile Include="viewModels\StudentViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -601,20 +587,8 @@
     <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202112132120241_addedFullName.resx">
-      <DependentUpon>202112132120241_addedFullName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112140926496_FirstLogin.resx">
-      <DependentUpon>202112140926496_FirstLogin.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112160745381_tblAYear_tblSection.resx">
-      <DependentUpon>202112160745381_tblAYear_tblSection.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112160908061_latestChanges.resx">
-      <DependentUpon>202112160908061_latestChanges.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112180658152_section.resx">
-      <DependentUpon>202112180658152_section.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202112200632060_allinone.resx">
+      <DependentUpon>202112200632060_allinone.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

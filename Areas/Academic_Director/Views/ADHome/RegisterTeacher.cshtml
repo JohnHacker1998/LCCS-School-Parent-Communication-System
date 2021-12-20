@@ -20,7 +20,7 @@
         @Html.ValidationMessageFor(vm => vm.fullName)
         <br />
         @Html.LabelFor(lbl => lbl.grade)
-        @Html.EditorFor(tb => tb.grade, new { htmlAttributes = new{ type = "number", @min = 9, @max = 12, step = 1 }, @class = "form-control" })
+        @Html.EditorFor(tb => tb.grade, new { htmlAttributes = new{ type = "number", @min = 9, @max = 12, step = 1}, @class = "form-control" })
         @Html.ValidationMessageFor(vm => vm.grade)
         <br />
         @Html.LabelFor(lbl => lbl.subject)
@@ -34,7 +34,7 @@
         <hr />
         <input type="submit" name="register" value="Register" />
         <input type="submit" name="search" value="Search" />
-        <input type="submit" name="update" value="Update" />
+        <input type="submit" name="update" value="Update" @ViewBag.upHidden/>
     }
 
 

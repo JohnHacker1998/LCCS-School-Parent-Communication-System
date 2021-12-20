@@ -1,0 +1,82 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.StudentViewModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>StudentManagement</title>
+</head>
+<body>
+    @using (Html.BeginForm("StudentManagement", "ADHome", FormMethod.Post))
+    {
+
+        @Html.HiddenFor(tb => tb.Id)
+
+        @Html.LabelFor(lbl => lbl.fullName)
+        @Html.EditorFor(tb => tb.fullName)
+        @Html.ValidationMessageFor(vm => vm.fullName)
+
+
+        if (ViewBag.edit)
+        {
+            @Html.LabelFor(lbl => lbl.sectionName)
+            <select id="sectionName" name="sectionName">
+                @foreach (var i in Model.sectionName)
+                {
+                    if (i == ViewBag.section)
+                    {
+                        <option value=@i selected>@i</option>
+                    }
+                    else
+                    {
+                        <option value=@i>@i</option>
+                    }
+                }
+            </select>
+        }
+        else
+        {
+            @Html.LabelFor(lbl => lbl.sectionName)
+            @Html.DropDownListFor(tb => tb.sectionName, new SelectList(Model.sectionName))
+            @Html.ValidationMessageFor(vm => vm.sectionName)
+        }
+
+
+        <input type="submit" name="register" value="Register" />
+        <input type="submit" name="search" value="Search" />
+        <input type="submit" name="update" value="Update" />
+    }
+
+
+    @if (ViewBag.search == true)
+    {
+        <table>
+            <tr>
+                <th>Full Name</th>
+                <th>Section</th>
+                <th>Academic Year</th>
+                <th></th>
+            </tr>
+            @foreach (var list in Model.student)
+            {
+                <tr>
+                    <td>@list.fullName</td>
+                    <td>@list.sectionName</td>
+                    <td>@list.academicYear</td>
+                    <td>
+                        @using (Html.BeginForm("StudentManagement", "ADHome", new { id = @list.studentId }, FormMethod.Post))
+                        {
+                            <input type="submit" value="Edit" name="edit" />
+                            <input type="submit" value="Delete" name="delete" />
+                        }
+
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+
+
+</body>
+</html>

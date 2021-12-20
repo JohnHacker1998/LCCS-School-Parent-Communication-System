@@ -25,6 +25,13 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
         public ActionResult RegisterTeacher()
         {
+
+            //handel viewbag
+            //check if the fullname and email duplicate
+            //check if username exists
+            ViewBag.search = false;
+            ViewBag.upHidden = "hidden";
+
             return View();
         }
 
@@ -36,6 +43,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             {
                 //basic objects
                 ApplicationDbContext context = new ApplicationDbContext();
+                var userStore = new ApplicationUserStore(context);
+                var userManager = new ApplicationUserManager(userStore);
                 Collection collection = new Collection();
                 AcademicDirector academicDirector = new AcademicDirector();
                 Teacher teacher = new Teacher();
@@ -43,14 +52,23 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 RegisterViewModel registerViewModel = new RegisterViewModel();
 
                 ViewBag.search = false;
+                ViewBag.upHidden = "hidden";
 
                 if (register != null)
                 {
+                    //check for duplicate-------------------------------------------------
 
+
+                    //
                     //populate RegisterViewModel with the inserted data for registration
                     registerViewModel.fullName = registerTeacherViewModel.fullName;
                     registerViewModel.email = registerTeacherViewModel.email;
-                    registerViewModel.username = collection.generateUserName();
+                    do
+                    {
+                        registerViewModel.username = collection.generateUserName();
+                    }
+                    while (userManager.FindByName(registerViewModel.username) != null);
+                    
                     registerViewModel.password = collection.generatePassword();
 
                     //create teacher user account using the provided information
@@ -573,12 +591,164 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
         public ActionResult StudentManagement()
         {
-            return View();
+            //populate the list of section name
+            ApplicationDbContext context = new ApplicationDbContext();
+            StudentViewModel studentViewModel = new StudentViewModel();
+            AcademicDirector academicDirector = new AcademicDirector();
+            studentViewModel.sectionName = new List<string>();
+            //to get active academic years
+            //we need to get the academic year id
+            //then if and for loop
+
+            //var academicYears = context.AcademicYear.ToList();
+
+            //foreach (var getActive in academicYears)
+            //{
+            //    string[] duration = getActive.duration.Split('-');
+            //    if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
+            //    {
+            //        var getSection = context.Section.Where(s => s.academicYearId == getActive.academicYearName).ToList();
+
+            //        foreach(var getSectionName in getSection)
+            //        {
+            //            studentViewModel.sectionName.Add(getSectionName.sectionName);
+            //        }
+
+            //    }
+            //}
+
+
+            studentViewModel.sectionName=academicDirector.populateSection();
+
+            ViewBag.edit = false;
+            ViewBag.search = false;
+
+            return View(studentViewModel);
         }
         [HttpPost]
-        public ActionResult StudentManagement(int id)
+        public ActionResult StudentManagement(StudentViewModel studentViewModel,string sectionName,string register, string search, string update, string delete,string edit,int id)
         {
-            return View();
+            ApplicationDbContext context = new ApplicationDbContext();
+            AcademicDirector academicDirector = new AcademicDirector();
+            Student student = new Student();
+            studentViewModel.sectionName = new List<string>();
+            ViewBag.edit = false;
+            ViewBag.search = false;
+
+            if (register != null)
+            {
+
+                //AcademicYear academicYear = new AcademicYear();
+
+                //academicyear
+                var academicYears = context.AcademicYear.ToList();
+                foreach (var getAcadamicYear in academicYears)
+                {
+                    string[] duration = getAcadamicYear.duration.Split('-');
+                    if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
+                    {
+                        var sectionRecord = context.Section.Where(s => s.sectionName == sectionName && s.academicYearId == getAcadamicYear.academicYearName).ToList();
+                        if (sectionRecord.Count != 0)
+                        {
+                            student.academicYear = getAcadamicYear.academicYearName;
+                            break;
+                        }
+
+
+                    }
+                }
+
+                student.fullName = studentViewModel.fullName;
+                student.sectionName = sectionName;
+
+                context.Student.Add(student);
+                context.SaveChanges();
+
+                studentViewModel.sectionName = academicDirector.populateSection();
+
+            }
+            else if (search != null)
+            {
+
+                studentViewModel.student = new List<Student>();
+                studentViewModel.student = context.Student.Where(s => s.fullName.StartsWith(studentViewModel.fullName)).ToList();
+
+                studentViewModel.sectionName = academicDirector.populateSection();
+                ViewBag.search = true;
+
+            }
+            else if (edit != null)
+            {
+                //populate the data using the id passed
+                ViewBag.edit = true;
+
+                student = context.Student.Find(id);
+                studentViewModel.Id = student.studentId;
+                studentViewModel.fullName = student.fullName;
+                studentViewModel.sectionName = new List<string>();
+
+                studentViewModel.sectionName = academicDirector.populateSection();
+
+                var sectionExist = studentViewModel.sectionName.Find(f => f.Equals(student.sectionName));
+
+                if (sectionExist == null)
+                {
+                    studentViewModel.sectionName.Add(student.sectionName);
+                }
+
+                ViewBag.section = student.sectionName;
+            }
+            else if (update != null)
+            {
+                //updaate the normal way
+                var studentUp = context.Student.Find(studentViewModel.Id);
+
+                studentUp.fullName = studentViewModel.fullName;
+
+                var academicYears = context.AcademicYear.ToList();
+
+                foreach (var getActive in academicYears)
+                {
+                    string[] duration = getActive.duration.Split('-');
+                    if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
+                    {
+                        var getSection = context.Section.Where(s => s.academicYearId == getActive.academicYearName && s.sectionName==studentUp.sectionName).ToList();
+
+                        if (getSection.Count != 0)
+                        {
+                            studentUp.sectionName = sectionName;
+                            studentUp.academicYear = getActive.academicYearName;
+                            context.SaveChanges();
+                        }
+                        
+                    }
+                }
+
+                studentViewModel.sectionName = academicDirector.populateSection();
+            }
+            else if (delete != null)
+            {
+                ApplicationDbContext contextExtra = new ApplicationDbContext();
+
+                var parentDelete = contextExtra.Parent.Where(p => p.studentId == id).ToList(); ;
+                var studentDelete = context.Student.Find(id);
+
+                if (parentDelete.Count != 0)
+                {
+                    foreach (var getParent in parentDelete)
+                    {
+                        contextExtra.Parent.Remove(getParent);
+                        contextExtra.SaveChanges();
+                    }
+                }
+     
+                context.Student.Remove(studentDelete);
+                context.SaveChanges();
+
+                studentViewModel.sectionName = academicDirector.populateSection();
+
+            }
+            return View(studentViewModel);
         }
 
 
