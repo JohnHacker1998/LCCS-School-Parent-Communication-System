@@ -20,10 +20,8 @@
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
     <IISExpressSSLPort>44376</IISExpressSSLPort>
-    <IISExpressAnonymousAuthentication>
-    </IISExpressAnonymousAuthentication>
-    <IISExpressWindowsAuthentication>
-    </IISExpressWindowsAuthentication>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
@@ -490,6 +488,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="Areas\Academic_Director\Views\ADHome\unitLeaderManagement.cshtml" />
+    <Content Include="Areas\Academic_Director\Views\ADHome\parentManagement.cshtml" />
     <Content Include="Areas\Academic_Director\Views\ADHome\StudentManagement.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
@@ -521,6 +520,18 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
+    <Compile Include="Migrations\202112191021022_tillTblStudentandParent.cs" />
+    <Compile Include="Migrations\202112191021022_tillTblStudentandParent.designer.cs">
+      <DependentUpon>202112191021022_tillTblStudentandParent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112191138491_updatedStudent.cs" />
+    <Compile Include="Migrations\202112191138491_updatedStudent.designer.cs">
+      <DependentUpon>202112191138491_updatedStudent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112191248169_addedParentStudentDbset.cs" />
+    <Compile Include="Migrations\202112191248169_addedParentStudentDbset.designer.cs">
+      <DependentUpon>202112191248169_addedParentStudentDbset.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\202112200632060_allinone.cs" />
     <Compile Include="Migrations\202112200632060_allinone.designer.cs">
       <DependentUpon>202112200632060_allinone.cs</DependentUpon>
@@ -536,6 +547,7 @@
     <Compile Include="viewModels\AcademicYearViewModel.cs" />
     <Compile Include="viewModels\LoginViewModel.cs" />
     <Compile Include="Startup1.cs" />
+    <Compile Include="viewModels\parentViewModel.cs" />
     <Compile Include="viewModels\RegisterTeacherViewModel.cs" />
     <Compile Include="viewModels\RegisterViewModel.cs" />
     <Compile Include="viewModels\RegistrarManagementViewModel.cs" />
@@ -587,6 +599,14 @@
     <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\202112191021022_tillTblStudentandParent.resx">
+      <DependentUpon>202112191021022_tillTblStudentandParent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112191138491_updatedStudent.resx">
+      <DependentUpon>202112191138491_updatedStudent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112191248169_addedParentStudentDbset.resx">
+      <DependentUpon>202112191248169_addedParentStudentDbset.cs</DependentUpon>
     <EmbeddedResource Include="Migrations\202112200632060_allinone.resx">
       <DependentUpon>202112200632060_allinone.cs</DependentUpon>
     </EmbeddedResource>

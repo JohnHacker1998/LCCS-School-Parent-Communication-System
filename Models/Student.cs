@@ -15,10 +15,8 @@ namespace LCCS_School_Parent_Communication_System.Models
         public string fullName { get; set; }
 
         public string sectionName { get; set; }
-        [ForeignKey("academic")]
-        public string academicYear { get; set; }
-        public virtual AcademicYear academic { get; set; }
-
-
+        [ForeignKey("academicYear")]
+        public string academicYearId { get; set; }
+        public virtual AcademicYear academicYear { get; set; }
     }
 }

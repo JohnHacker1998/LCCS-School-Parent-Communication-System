@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 using System.Threading.Tasks;
 using System;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Web.Helpers;
 
 namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Controllers
 {
@@ -167,20 +168,26 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             Collection c = new Collection();
             RegistrarManagementViewModel rmvm = new RegistrarManagementViewModel();
             AcademicDirector ad = new AcademicDirector();
+            ViewBag.Message = " ";
             //checking the validity of the inputs
             if (ModelState.IsValid)
             {
                 //checking if register button is clicked
                 if (register != null)
                 {
-
+                  if(c.checkUserExistence(rmv.email, rmv.fullName)){ 
                     rv.username = c.generateUserName();
                     rv.password = c.generatePassword();
                     rv.email = rmv.email;
                     rv.fullName = rmv.fullName;
                     c.RegisterUser(rv, "Registrar");
                     string messageBody = "Registrar Account Username:" + rv.username + "Password=" + rv.password;
-                    //   c.sendMail(rv.username, messageBody);
+                        //   c.sendMail(rv.username, messageBody);
+                    }
+                    else
+                    {
+                        ViewBag.Message = "User exists";
+                    }
                 }               
 
             }
@@ -201,7 +208,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             AcademicDirector ad = new AcademicDirector();
             academicYearViewModel.academicList = new List<AcademicYear>();
             academicYearViewModel= ad.listAcademicYear();
-
+            
             return View(academicYearViewModel);
         }
         [HttpPost]
@@ -213,7 +220,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             AcademicYearViewModel academicYearViewModel = new AcademicYearViewModel();
             academicYearViewModel.academicList = new List<AcademicYear>();
             academicYearViewModel = ad.listAcademicYear();
-
+            ViewBag.Message = " ";
+            ViewBag.durationMessage = " ";
 
             if (ModelState.IsValid || select!=null)
             {
@@ -230,9 +238,12 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 DateTime zquarterFourEnd = Convert.ToDateTime(ayvm.quarterFourEnd);
                 if (add != null)
                 {
+                    AcademicYear ayear = new AcademicYear();
+                    ayear = db.AcademicYear.Where(a => a.academicYearName == yearStartOne.ToString("MMMM") + yearStartOne.Year.ToString()).Single();
+                    if (ayear != null) { 
                     if (ad.validateDuration(ayvm))
                     {
-                        ay.academicYearName = yearStartOne.ToString("MMMM") + yearEndOne.Year.ToString();
+                        ay.academicYearName = yearStartOne.ToString("MMMM") + yearStartOne.Year.ToString();
                         ay.duration = yearStartOne.ToShortDateString() + "-" + yearEndOne.ToShortDateString();
                         ay.quarterOne = zquarterOneStart.ToShortDateString() + "-" + zquarterOneEnd.ToShortDateString();
                         ay.quarterTwo = zquarterTwoStart.ToShortDateString() + "-" + zquarterTwoEnd.ToShortDateString();
@@ -240,6 +251,15 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                         ay.quarterFour = zquarterFourStart.ToShortDateString() + "-" + zquarterFourEnd.ToShortDateString();
                         db.AcademicYear.Add(ay);
                         db.SaveChanges();
+                    }
+                        else
+                        {
+                            ViewBag.durationMessage = "Duration is invalid";
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.Message="Academic Year Exists";
                     }
 
                 }
@@ -252,10 +272,9 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                     string[] splitItems = ay.duration.Split('-');
                     DateTime originalYearStart = Convert.ToDateTime(splitItems[0]);
                     yearStartOne = originalYearStart;
-                    int x = 0;
+               
                     if (ad.validateDuration(ayvm))
                     {
-                        int y = 0;
                         ay.duration = yearStartOne.ToShortDateString() + "-" + yearEndOne.ToShortDateString();
                         ay.quarterOne = zquarterOneStart.ToShortDateString() + "-" + zquarterOneEnd.ToShortDateString();
                         ay.quarterTwo = zquarterTwoStart.ToShortDateString() + "-" + zquarterTwoEnd.ToShortDateString();
@@ -355,9 +374,9 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             List<Teacher> temp1 = new List<Teacher>();
             List<Teacher> temp2 = new List<Teacher>();
             List<Teacher> temp3 = new List<Teacher>();
-            List<Teacher> temp4 = new List<Teacher>();
+            ViewBag.Message = " ";
+            //
 
-            // RegisterTeacherViewModel rvm = new RegisterTeacherViewModel();
             rvm.teacherList = new List<Teacher>();
             rvm.retrevedTeacherList = new List<Teacher>();
             List<Teacher> retrieveAssignment = new List<Teacher>();
@@ -382,10 +401,22 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 var oldRoleId = appUser.Roles.SingleOrDefault().RoleId;
                 
                 var oldRoleName = db.Roles.SingleOrDefault(r => r.Id == oldRoleId).Name;
+                var teacherList = db.Teacher.Where(a => a.grade == a.grade);
+                int status = 0;
+                foreach(var i in teacherList)
+                {
+                    if (ad.IsTeacherorUnitLeader(i.teacherId, "UnitLeader")){
+                        status = status + 1;
+                    }
+                }
+                if (status == 0) { 
                 userManager.RemoveFromRole(appUser.Id, oldRoleName);
                 userManager.AddToRole(appUser.Id, "UnitLeader");
-
-
+                }
+                else
+                {
+                    ViewBag.Message = "Unit leader of the grade already exists.";
+                }
 
             }
             else if (update != null)
@@ -749,6 +780,110 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
             }
             return View(studentViewModel);
+        }
+        public ActionResult parentManagement()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            parentViewModel parent = new parentViewModel();
+            parent.parentList = new List<Models.Parent>();
+            parent.parentList = db.Parent.ToList();
+            parent.studentList = new List<Student>();
+            
+            return View(parent);
+        }
+        [HttpPost]
+        public async Task<ActionResult> parentManagement(string add,string delete,string select,string search,parentViewModel pv,string id,string pid)
+        {
+            ViewBag.Message = " ";
+            ApplicationDbContext db = new ApplicationDbContext();
+            ApplicationUser au = new ApplicationUser();
+            pv.studentList = new List<Student>();
+            pv.parentList = new List<Models.Parent>();
+            Student st = new Student();
+            Models.Parent p = new Models.Parent();
+            Collection c = new Collection();
+            RegisterViewModel rv = new RegisterViewModel();
+            Models.Parent parent = new Models.Parent();
+            var userStore = new ApplicationUserStore(db);
+            var userManager = new ApplicationUserManager(userStore);
+
+            if (ModelState.IsValid || delete!=null || select!=null || search!=null) { 
+            if (search != null)
+            {
+                    if (pv.studentFullName != null)
+                    {
+                        ViewBag.startStudent = true;
+                        //searching a student information using a student name
+                        pv.studentList = db.Student.Where(a => a.fullName.StartsWith(pv.studentFullName)).ToList();
+                    }
+                    else
+                    {
+                        ViewBag.startStudent = false;
+                    }
+                
+                    if (pv.fullName != null)
+                    {
+                        ViewBag.startParent = true;
+                        pv.parentList = db.Parent.Where(a => a.user.fullName.StartsWith(pv.fullName)).ToList();
+                    }
+                    else
+                    {
+                        ViewBag.startParent = false;
+                    }
+                }
+            else if (select != null)
+            {
+                int translatedID = int.Parse(id);
+                st = db.Student.Where(a => a.studentId == translatedID).Single();
+                pv.studentFullName = st.fullName;
+                pv.studentId = translatedID;
+                
+            }
+            else if (add != null)
+            {
+                    //adding the parent information to registerViewModel rv  abd adding to identity user table
+                    List<Models.Parent> l = new List<Models.Parent>();
+                    l = db.Parent.Where(a => a.studentId == pv.studentId).ToList();
+                   
+                    if (l.Count < 2)
+                    {
+                        rv.email = pv.email;
+                        rv.fullName = pv.fullName;
+                        rv.username = c.generateUserName();
+                        rv.password = c.generatePassword();
+
+                        string ide = c.RegisterUser(rv, "Parent");
+
+                        if (ide != null)
+                        {
+                            //adding parent to the parent table 
+                            parent.parentId = ide;
+                            parent.studentId = pv.studentId;
+                            db.Parent.Add(parent);
+                            db.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.Message="More than two parents cannot be added.";
+                    }
+                    
+                              
+               
+            }
+            else if (delete != null)
+            {
+
+                //deleting the parent information from the identity user and from the parent table.
+                p = db.Parent.Find(pid);
+                db.Parent.Remove(p);
+                db.SaveChanges();
+                
+                string status = await c.DeleteUser(pid);
+               
+            }
+            }
+            return View(pv);
         }
 
 

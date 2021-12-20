@@ -1,0 +1,82 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.parentViewModel
+@{
+    ViewBag.Title = "parentManagement";
+}
+
+<h2>parentManagement</h2>
+@using (Html.BeginForm("parentManagement", "ADHome", FormMethod.Post))
+{
+    @Html.HiddenFor(a => a.studentId);
+
+    @Html.LabelFor(a => a.studentFullName);
+    @Html.TextBoxFor(a => a.studentFullName);
+    @Html.ValidationMessageFor(a => a.studentFullName);
+
+    @Html.LabelFor(a => a.fullName);
+    @Html.TextBoxFor(a => a.fullName);
+    @Html.ValidationMessageFor(a => a.fullName);
+
+    @Html.LabelFor(a => a.email);
+    @Html.TextBoxFor(a => a.email);
+    @Html.ValidationMessageFor(a => a.email);
+    <input type="submit" name="search" value="Search" />
+
+    <input type="submit" name="add" value="Add" />
+
+}
+<div class="alert alert-danger" role="alert">
+    @ViewBag.Message
+</div>
+@if (@ViewBag.startStudent == true)
+{
+    <h1>Student List</h1>
+
+    <table>
+        <tr>
+            <th>Full Name</th>
+            <th>Section</th>
+
+        </tr>
+        @foreach (var k in Model.studentList)
+        {
+            <tr>
+                <td>@k.fullName</td>
+                <td>@k.sectionName</td>
+                <td>
+                    @using (Html.BeginForm("parentManagement", "ADHome", new { id = k.studentId.ToString() }, FormMethod.Post))
+                    {
+                        <input type="submit" name="select" value="Select" />
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+@if (@ViewBag.startParent == true)
+{
+    <h1>Parent List</h1>
+    <table>
+        <tr>
+            <th>Full Name</th>
+            <th>Student Name</th>
+            <th>Email</th>
+        </tr>
+
+        @foreach (var k in Model.parentList)
+        {
+            <tr>
+                <td>@k.user.fullName</td>
+                <td>@k.student.fullName</td>
+                <td>@k.user.Email</td>
+                <td>
+                    @using (Html.BeginForm("parentManagement", "ADHome", new { pid = k.parentId }, FormMethod.Post))
+                    {
+                        <input type="submit" name="delete" value="Delete" />
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+
+}
