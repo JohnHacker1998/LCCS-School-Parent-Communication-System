@@ -11,7 +11,7 @@ namespace LCCS_School_Parent_Communication_System.Models
     public class Parent
     {
         [ForeignKey("student")]
-        public string studentId { get; set; }
+        public int studentId { get; set; }
         [Key]
         [ForeignKey("user")]
         public string parentId { get; set; }

@@ -488,6 +488,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="Areas\Academic_Director\Views\ADHome\unitLeaderManagement.cshtml" />
+    <Content Include="Areas\Academic_Director\Views\ADHome\parentManagement.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -521,6 +522,14 @@
     <Compile Include="Migrations\202112191021022_tillTblStudentandParent.cs" />
     <Compile Include="Migrations\202112191021022_tillTblStudentandParent.designer.cs">
       <DependentUpon>202112191021022_tillTblStudentandParent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112191138491_updatedStudent.cs" />
+    <Compile Include="Migrations\202112191138491_updatedStudent.designer.cs">
+      <DependentUpon>202112191138491_updatedStudent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112191248169_addedParentStudentDbset.cs" />
+    <Compile Include="Migrations\202112191248169_addedParentStudentDbset.designer.cs">
+      <DependentUpon>202112191248169_addedParentStudentDbset.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AcademicYear.cs" />
@@ -586,6 +595,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202112191021022_tillTblStudentandParent.resx">
       <DependentUpon>202112191021022_tillTblStudentandParent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112191138491_updatedStudent.resx">
+      <DependentUpon>202112191138491_updatedStudent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112191248169_addedParentStudentDbset.resx">
+      <DependentUpon>202112191248169_addedParentStudentDbset.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

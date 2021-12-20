@@ -166,6 +166,20 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
 
             return "failed";
         }
+        public bool checkUserExistence(string email,string fullname)
+        {
+            var appDbContext = new ApplicationDbContext();
+            var userStore = new ApplicationUserStore(appDbContext);
+            var userManager = new ApplicationUserManager(userStore);
+            var appuser = new ApplicationUser();
+
+            appuser = appDbContext.Users.Where(a => a.Email == email && a.fullName == fullname).Single();
+            if (appuser == null)
+            {
+                return true;
+            }
+            return false;
+        }
         
 
     }

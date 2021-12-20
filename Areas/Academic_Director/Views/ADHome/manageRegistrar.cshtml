@@ -17,7 +17,12 @@
 
 <input type="submit" value="Register" name="register" />
 }
-@*@if ((Model.registrarList != null) && (!Model.registrarList.Any())) {*@
+<div class="alert alert-danger" role="alert">
+    @ViewBag.Message
+
+</div>
+
+
 <table>
     <tr>
         <th>Username</th>
@@ -44,7 +49,3 @@
 
 
     </table>
-
-
-@*}*@
-
