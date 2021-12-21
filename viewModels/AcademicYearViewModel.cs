@@ -17,6 +17,7 @@ namespace LCCS_School_Parent_Communication_System.viewModels
         public string yearStart { get; set; }
 
         [Required(ErrorMessage = "Please fill the form.")]
+       
         //  [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Year End")]
         public string yearEnd { get; set; }
@@ -63,5 +64,8 @@ namespace LCCS_School_Parent_Communication_System.viewModels
         public string quarterFourEnd { get; set; }
 
         public List<AcademicYear> academicList { get; set; }
+
+      
+
     }
 }

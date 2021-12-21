@@ -68,15 +68,17 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
                 DateTime.Compare(zquarterTwoStart, zquarterTwoEnd) != 0 && DateTime.Compare(zquarterThreeStart, zquarterThreeEnd) != 0 &&
                 DateTime.Compare(zquarterFourStart, zquarterFourEnd) != 0)
             {
-
+                int y = 0;
                 if (DateTime.Compare(zquarterOneStart, zquarterOneEnd) < 0 && DateTime.Compare(zquarterTwoStart, zquarterTwoEnd) < 0 &&
                     DateTime.Compare(zquarterThreeStart, zquarterThreeEnd) < 0 && DateTime.Compare(zquarterFourStart, zquarterFourEnd) < 0 &&
                     DateTime.Compare(yearStartOne, yearEndOne) < 0)
                 {
+                    
 
                     if (DateTime.Compare(zquarterOneEnd, zquarterTwoStart) < 0 && DateTime.Compare(zquarterTwoEnd, zquarterThreeStart) < 0 &&
                     DateTime.Compare(zquarterThreeEnd, zquarterFourStart) < 0 && (DateTime.Compare(zquarterFourEnd, yearEndOne) < 0 || DateTime.Compare(zquarterFourEnd, yearEndOne) == 0))
                     {
+
                         return true;
                     }
                 }
@@ -288,5 +290,22 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             ayVM.academicList = db.AcademicYear.ToList();
             return ayVM;
         }
+        /*public bool IsAcceptableAcademicYear(DateTime start)
+        {
+            
+            ApplicationDbContext context = new ApplicationDbContext();
+            var allAcadamicYears = context.AcademicYear.ToList();
+            foreach (var getAcadamicYear in allAcadamicYears)
+            {
+                string[] duration = getAcadamicYear.duration.Split('-');
+                if ((start.Month.ToString==DateTime.Parse(duration[1]).Month) > 0)){
+                    return false;
+                }
+               
+            }
+            return true;
+        }*/
+
+
     }
 }
