@@ -85,6 +85,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             return false;
         }
 
+        //function to populate form data(alphabet leters, teacher and academic year)
         public SectionViewModel populateFormData()
         {
             //basic objects
@@ -102,25 +103,34 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             //retrive all teachers that have teacher role from teacher table and populate it to sectionViewModel
             var allTeachers = context.Teacher.ToList();
 
-            foreach (var getNames in allTeachers)
+            if(allTeachers.Count!= 0)
             {
-                if (userManager.IsInRole(getNames.teacherId, "Teacher"))
+                foreach (var getNames in allTeachers)
                 {
-                    sectionViewModel.teachers.Add(getNames.user.fullName);
+                    //check role
+                    if (userManager.IsInRole(getNames.teacherId, "Teacher"))
+                    {
+                        sectionViewModel.teachers.Add(getNames.user.fullName);
+                    }
                 }
             }
-
+            
             //retrive all Academic Years that are already active and populate it to sectionViewModel
             var allAcadamicYears = context.AcademicYear.ToList();
-            foreach (var getAcadamicYear in allAcadamicYears)
+
+            if (allAcadamicYears.Count != 0)
             {
-                string[] duration = getAcadamicYear.duration.Split('-');
-                if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
+                foreach (var getAcadamicYear in allAcadamicYears)
                 {
-                    sectionViewModel.academicYears.Add(getAcadamicYear.academicYearName);
+                    //check today is in between start and end date of the specific academic year
+                    string[] duration = getAcadamicYear.duration.Split('-');
+                    if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
+                    {
+                        sectionViewModel.academicYears.Add(getAcadamicYear.academicYearName);
+                    }
                 }
             }
-
+            
             //populate section letters with alphabet letters
             for (char c = 'A'; c <= 'Z'; c++)
             {
@@ -130,55 +140,68 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             return sectionViewModel;
         }
 
+        //function to populate section record
         public SectionViewModel searchSection(int grade,string letter)
         {
+            //basic objects
             ApplicationDbContext context = new ApplicationDbContext();
-            var allAcadamicYears = context.AcademicYear.ToList();
             var sectionViewModel = new SectionViewModel();
             sectionViewModel.teachers = new List<string>();
             sectionViewModel.academicYears = new List<string>();
-            foreach (var getAcadamicYear in allAcadamicYears)
-            {
-                string[] duration = getAcadamicYear.duration.Split('-');
-                if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
-                {
-                    var sectionRecord = context.Section.Where(s => s.sectionName == grade.ToString() + letter && s.academicYearId==getAcadamicYear.academicYearName).ToList();
 
-                    if (sectionRecord.Count != 0)
+            //get all academic Years and check for section record existance
+            var allAcadamicYears = context.AcademicYear.ToList();
+
+            if (allAcadamicYears.Count != 0)
+            {
+                foreach (var getAcadamicYear in allAcadamicYears)
+                {
+                    //get start and end dates of a given academic year to check if today is in the middle
+                    string[] duration = getAcadamicYear.duration.Split('-');
+                    if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
                     {
-                        foreach (var data in sectionRecord)
+                        //search for section in a given academic year
+                        var sectionRecord = context.Section.Where(s => s.sectionName == grade.ToString() + letter && s.academicYearId == getAcadamicYear.academicYearName).FirstOrDefault();
+
+                        //check if it exists
+                        if (sectionRecord != null)
                         {
-                            sectionViewModel.teachers.Add(data.teacher.user.fullName);
-                            sectionViewModel.academicYears.Add(data.academicYearId);
-                            break;
+                            //populate the list and return
+                            sectionViewModel.teachers.Add(sectionRecord.teacher.user.fullName);
+                            sectionViewModel.academicYears.Add(sectionRecord.academicYearId);
+                            return sectionViewModel;
                         }
-                        return sectionViewModel;
                     }
                 }
             }
-
+            
             return null;
         }
 
-
+        //function to populate section list in the UI
         public List<string> populateSection()
         {
+            //basic objects
             ApplicationDbContext context = new ApplicationDbContext();
             List<string> section = new List<string>();
 
+            //get all academic years
             var academicYears = context.AcademicYear.ToList();
-
             foreach (var getActive in academicYears)
             {
+                //get start and end dates to check if today is in the middle
                 string[] duration = getActive.duration.Split('-');
                 if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
                 {
+                    //get sections on a given academic year
                     var getSection = context.Section.Where(s => s.academicYearId == getActive.academicYearName).ToList();
 
+                    //check if sections exist in the academic year
                     if (getSection.Count != 0)
                     {
                         foreach (var getSectionName in getSection)
                         {
+                            //populate section list
                             section.Add(getSectionName.sectionName);
                             
                         }

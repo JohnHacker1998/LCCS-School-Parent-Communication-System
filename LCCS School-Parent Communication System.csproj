@@ -20,8 +20,10 @@
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
     <IISExpressSSLPort>44376</IISExpressSSLPort>
-    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
-    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressAnonymousAuthentication>
+    </IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>
+    </IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
@@ -520,21 +522,9 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
-    <Compile Include="Migrations\202112191021022_tillTblStudentandParent.cs" />
-    <Compile Include="Migrations\202112191021022_tillTblStudentandParent.designer.cs">
-      <DependentUpon>202112191021022_tillTblStudentandParent.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202112191138491_updatedStudent.cs" />
-    <Compile Include="Migrations\202112191138491_updatedStudent.designer.cs">
-      <DependentUpon>202112191138491_updatedStudent.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202112191248169_addedParentStudentDbset.cs" />
-    <Compile Include="Migrations\202112191248169_addedParentStudentDbset.designer.cs">
-      <DependentUpon>202112191248169_addedParentStudentDbset.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202112200632060_allinone.cs" />
-    <Compile Include="Migrations\202112200632060_allinone.designer.cs">
-      <DependentUpon>202112200632060_allinone.cs</DependentUpon>
+    <Compile Include="Migrations\202112201711218_sectionaddmigration.cs" />
+    <Compile Include="Migrations\202112201711218_sectionaddmigration.designer.cs">
+      <DependentUpon>202112201711218_sectionaddmigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AcademicYear.cs" />
@@ -599,16 +589,8 @@
     <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202112191021022_tillTblStudentandParent.resx">
-      <DependentUpon>202112191021022_tillTblStudentandParent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112191138491_updatedStudent.resx">
-      <DependentUpon>202112191138491_updatedStudent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112191248169_addedParentStudentDbset.resx">
-      <DependentUpon>202112191248169_addedParentStudentDbset.cs</DependentUpon>
-    <EmbeddedResource Include="Migrations\202112200632060_allinone.resx">
-      <DependentUpon>202112200632060_allinone.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202112201711218_sectionaddmigration.resx">
+      <DependentUpon>202112201711218_sectionaddmigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

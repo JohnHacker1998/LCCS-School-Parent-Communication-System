@@ -12,7 +12,7 @@
     @using (Html.BeginForm("RegisterTeacher", "ADHome", FormMethod.Post))
     {
         @Html.LabelFor(lbl => lbl.email)
-        @Html.EditorFor(tb => tb.email, new { placeholder = "example@gmail.com", disabled=@ViewBag.disableEmail , @class = "form-control" })
+        @Html.EditorFor(tb => tb.email, new { htmlAttributes=new {@readonly=ViewBag.disableEmail }, placeholder = "example@gmail.com", @class = "form-control" })
         @Html.ValidationMessageFor(vm => vm.email)
         <br />
         @Html.LabelFor(lbl => lbl.fullName)
@@ -20,7 +20,7 @@
         @Html.ValidationMessageFor(vm => vm.fullName)
         <br />
         @Html.LabelFor(lbl => lbl.grade)
-        @Html.EditorFor(tb => tb.grade, new { htmlAttributes = new{ type = "number", @min = 9, @max = 12, step = 1}, @class = "form-control" })
+        @Html.EditorFor(tb => tb.grade, new { htmlAttributes = new { type = "number", @min = 9, @max = 12, step = 1 }, @class = "form-control" })
         @Html.ValidationMessageFor(vm => vm.grade)
         <br />
         @Html.LabelFor(lbl => lbl.subject)
@@ -28,13 +28,17 @@
         @Html.ValidationMessageFor(vm => vm.subject)
         <br />
         <hr />
-        @Html.ValidationSummary(true, "please fix the errors to procced to the next step")
         @ViewBag.registerStatus
         @ViewBag.updateStatus
+        @ViewBag.duplicate
+        @ViewBag.searchFound
+        @ViewBag.fullName
+        @ViewBag.role
+        @Html.ValidationSummary(true, "please fix the errors to procced to the next step")
         <hr />
         <input type="submit" name="register" value="Register" />
         <input type="submit" name="search" value="Search" />
-        <input type="submit" name="update" value="Update" @ViewBag.upHidden/>
+        <input type="submit" name="update" value="Update" @ViewBag.upHidden />
     }
 
 
