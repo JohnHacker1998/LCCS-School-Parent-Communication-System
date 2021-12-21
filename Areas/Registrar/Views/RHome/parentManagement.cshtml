@@ -4,9 +4,10 @@
 }
 
 <h2>parentManagement</h2>
-@using (Html.BeginForm("parentManagement", "ADHome", FormMethod.Post))
+@using (Html.BeginForm("parentManagement", "RHome", FormMethod.Post))
 {
     @Html.HiddenFor(a => a.studentId);
+    @Html.TextBoxFor(a => a.studentId, new { htmlAttributes = new { @readonly = true } });
 
     @Html.LabelFor(a => a.studentFullName);
     @Html.TextBoxFor(a => a.studentFullName);
@@ -22,11 +23,15 @@
     <input type="submit" name="search" value="Search" />
 
     <input type="submit" name="add" value="Add" />
-
+    @Html.ValidationSummary(true, "please fix the errors to procced to the next step")
 }
 <div class="alert alert-danger" role="alert">
     @ViewBag.Message
 </div>
+<div class="alert alert-danger" role="alert">
+    @ViewBag.existenceMessage
+</div>
+
 @if (@ViewBag.startStudent == true)
 {
     <h1>Student List</h1>
@@ -43,7 +48,7 @@
                 <td>@k.fullName</td>
                 <td>@k.sectionName</td>
                 <td>
-                    @using (Html.BeginForm("parentManagement", "ADHome", new { id = k.studentId.ToString() }, FormMethod.Post))
+                    @using (Html.BeginForm("parentManagement", "RHome", new { id = k.studentId.ToString() }, FormMethod.Post))
                     {
                         <input type="submit" name="select" value="Select" />
                     }
@@ -70,7 +75,7 @@
                 <td>@k.student.fullName</td>
                 <td>@k.user.Email</td>
                 <td>
-                    @using (Html.BeginForm("parentManagement", "ADHome", new { pid = k.parentId }, FormMethod.Post))
+                    @using (Html.BeginForm("parentManagement", "RHome", new { pid = k.parentId }, FormMethod.Post))
                     {
                         <input type="submit" name="delete" value="Delete" />
                     }

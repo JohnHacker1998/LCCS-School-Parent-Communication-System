@@ -488,8 +488,11 @@
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="Areas\Academic_Director\Views\ADHome\unitLeaderManagement.cshtml" />
-    <Content Include="Areas\Academic_Director\Views\ADHome\parentManagement.cshtml" />
     <Content Include="Areas\Academic_Director\Views\ADHome\StudentManagement.cshtml" />
+    <Content Include="Areas\Registrar\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Registrar\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Registrar\Views\RHome\Index.cshtml" />
+    <Content Include="Areas\Registrar\Views\RHome\parentManagement.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -520,21 +523,9 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
-    <Compile Include="Migrations\202112191021022_tillTblStudentandParent.cs" />
-    <Compile Include="Migrations\202112191021022_tillTblStudentandParent.designer.cs">
-      <DependentUpon>202112191021022_tillTblStudentandParent.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202112191138491_updatedStudent.cs" />
-    <Compile Include="Migrations\202112191138491_updatedStudent.designer.cs">
-      <DependentUpon>202112191138491_updatedStudent.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202112191248169_addedParentStudentDbset.cs" />
-    <Compile Include="Migrations\202112191248169_addedParentStudentDbset.designer.cs">
-      <DependentUpon>202112191248169_addedParentStudentDbset.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202112200632060_allinone.cs" />
-    <Compile Include="Migrations\202112200632060_allinone.designer.cs">
-      <DependentUpon>202112200632060_allinone.cs</DependentUpon>
+    <Compile Include="Migrations\202112201307273_allInOne.cs" />
+    <Compile Include="Migrations\202112201307273_allInOne.designer.cs">
+      <DependentUpon>202112201307273_allInOne.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AcademicYear.cs" />
@@ -591,24 +582,14 @@
     <Folder Include="Areas\Parent\Views\PHome\" />
     <Folder Include="Areas\Parent\Views\Shared\" />
     <Folder Include="Areas\Registrar\Data\" />
-    <Folder Include="Areas\Registrar\Views\RHome\" />
-    <Folder Include="Areas\Registrar\Views\Shared\" />
     <Folder Include="Areas\Unit_Leader\Data\" />
     <Folder Include="Areas\Unit_Leader\Views\Shared\" />
     <Folder Include="Areas\Unit_Leader\Views\ULHome\" />
     <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202112191021022_tillTblStudentandParent.resx">
-      <DependentUpon>202112191021022_tillTblStudentandParent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112191138491_updatedStudent.resx">
-      <DependentUpon>202112191138491_updatedStudent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112191248169_addedParentStudentDbset.resx">
-      <DependentUpon>202112191248169_addedParentStudentDbset.cs</DependentUpon>
-    <EmbeddedResource Include="Migrations\202112200632060_allinone.resx">
-      <DependentUpon>202112200632060_allinone.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202112201307273_allInOne.resx">
+      <DependentUpon>202112201307273_allInOne.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -169,11 +169,8 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
         public bool checkUserExistence(string email,string fullname)
         {
             var appDbContext = new ApplicationDbContext();
-            var userStore = new ApplicationUserStore(appDbContext);
-            var userManager = new ApplicationUserManager(userStore);
-            var appuser = new ApplicationUser();
-
-            appuser = appDbContext.Users.Where(a => a.Email == email && a.fullName == fullname).Single();
+           
+           var appuser = appDbContext.Users.Where(a => a.Email == email || a.fullName == fullname).FirstOrDefault();
             if (appuser == null)
             {
                 return true;

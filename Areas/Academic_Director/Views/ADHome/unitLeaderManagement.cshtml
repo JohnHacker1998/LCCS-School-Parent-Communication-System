@@ -19,7 +19,7 @@
             <td>@k.subject</td>
             <td>@k.grade</td>
             <td>
-                @using (Html.BeginForm("unitLeaderManagement", "ADHome", new {teacherID= @k.teacherId }, FormMethod.Post))
+                @using (Html.BeginForm("unitLeaderManagement", "ADHome", new { teacherID = @k.teacherId }, FormMethod.Post))
                 {
                     <input type="submit" value="Select" name="selectToAssign" />
                 }
@@ -32,16 +32,18 @@
 {
     @Html.LabelFor(a => a.grade);
     @Html.EditorFor(a => a.grade, new { htmlAttributes = new { @min = 1, @max = 12 } });
-
+    @Html.ValidationMessageFor(a => a.grade);
     @Html.LabelFor(a => a.fullName);
     @Html.EditorFor(a => a.fullName);
-
+    @Html.ValidationMessageFor(a=>a.fullName)
     @Html.LabelFor(a => a.subject);
     @Html.EditorFor(a => a.subject);
+    @Html.ValidationMessageFor(a => a.subject);
 
     <input type="submit" value="Assign" name="assign" />
     <input type="submit" value="Update" name="update" />
 
+    @Html.ValidationSummary(true, "please fix the errors to procced to the next step")
 
 }
 <div class="alert alert-danger" role="alert">
@@ -62,7 +64,7 @@
             <td>@k.user.fullName</td>
             <td>@k.subject</td>
             <td>@k.grade</td>
-            
+
         </tr>
     }
 
