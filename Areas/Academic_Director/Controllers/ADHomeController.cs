@@ -29,10 +29,9 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         {
 
             //handel viewbag
-            //check if the fullname and email duplicate
-            //check if username exists
             ViewBag.search = false;
             ViewBag.upHidden = "hidden";
+            ViewBag.disableEmail = " ";
 
             return View();
         }
@@ -41,7 +40,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         public async Task<ActionResult> RegisterTeacher(RegisterTeacherViewModel registerTeacherViewModel,string register,string search,string update,string edit,string delete,string id)
         {
             //check if their are no errors arise from user input
-            if (ModelState.IsValid)
+            if (ModelState.IsValid || (search!=null && ModelState.IsValidField("fullName")) || edit!=null || delete!=null)
             {
                 //basic objects
                 ApplicationDbContext context = new ApplicationDbContext();
@@ -53,99 +52,175 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 ApplicationUser user = new ApplicationUser();
                 RegisterViewModel registerViewModel = new RegisterViewModel();
 
+                //viewbag attributes for UI rendering 
                 ViewBag.search = false;
                 ViewBag.upHidden = "hidden";
+                ViewBag.disableEmail = " ";
 
+                //check if register button is clicked
                 if (register != null)
                 {
-                    //check for duplicate-------------------------------------------------
-
-
-                    //
-                    //populate RegisterViewModel with the inserted data for registration
-                    registerViewModel.fullName = registerTeacherViewModel.fullName;
-                    registerViewModel.email = registerTeacherViewModel.email;
-                    do
+                    //check for a duplicate record
+                    if (collection.checkUserExistence(registerTeacherViewModel.email, registerTeacherViewModel.fullName))
                     {
-                        registerViewModel.username = collection.generateUserName();
-                    }
-                    while (userManager.FindByName(registerViewModel.username) != null);
-                    
-                    registerViewModel.password = collection.generatePassword();
+                        //populate RegisterViewModel with the inserted data for registration
+                        registerViewModel.fullName = registerTeacherViewModel.fullName;
+                        registerViewModel.email = registerTeacherViewModel.email;
+                        do
+                        {
+                            //check if the username is unique if not regenerate
+                            registerViewModel.username = collection.generateUserName();
+                        }
+                        while (userManager.FindByName(registerViewModel.username) != null);
 
-                    //create teacher user account using the provided information
-                    string Id = collection.RegisterUser(registerViewModel, "Teacher");
+                        registerViewModel.password = collection.generatePassword();
 
-                    if (Id != null)
-                    {
-                        //record other teacher informations
-                        teacher.teacherId = Id;
-                        teacher.grade = registerTeacherViewModel.grade;
-                        teacher.subject = registerTeacherViewModel.subject;
+                        //create teacher user account using the provided information
+                        string Id = collection.RegisterUser(registerViewModel, "Teacher");
 
-                        academicDirector.registerTeacher(teacher);
+                        //check if the user registration is completed successfully and record to teacher table  
+                        if (Id != null)
+                        {
+                            //record other teacher informations
+                            teacher.teacherId = Id;
+                            teacher.grade = registerTeacherViewModel.grade;
+                            teacher.subject = registerTeacherViewModel.subject;
 
-                        //email code goes here------------------------------
+                            academicDirector.registerTeacher(teacher);
 
-                        ViewBag.registerStatus = "Registration Completed Successfully";
+                            //send user credential through email to the new user
+                            collection.sendMail(registerViewModel.email, registerViewModel.username, registerViewModel.password);
+
+                            //sucessful message
+                            ViewBag.registerStatus = "Registration Completed Successfully";
+                        }
+                        else
+                        {
+                            //faliure message due to identity register failure
+                            ViewBag.registerStatus = "Registration Failed";
+                        }
                     }
                     else
                     {
-                        ViewBag.registerStatus = "Registration Failed";
+                        //failure message due to duplicate user
+                        ViewBag.duplicate = "Teacher Record Exists with the Same Email Address or Full Name";
                     }
                 }
+                //check if search button is clicked
                 else if (search != null)
                 {
-                    //search teacher using teacher name
+                    //remove unwanted error messages
+                    ModelState.Remove("email");
+                    ModelState.Remove("grade");
+                    ModelState.Remove("subject");
+
+                    //viewbag element for UI 
                     ViewBag.search = true;
+
+                    //search teacher using teacher name
                     registerTeacherViewModel.teacherList = context.Teacher.Where(t => t.user.fullName.StartsWith(registerTeacherViewModel.fullName)).ToList();
+
+                    //check if record exist or not
+                    if (registerTeacherViewModel.teacherList.Count == 0)
+                    {
+                        ViewBag.search = false;
+                        ViewBag.searchFound = "Record Not Found";
+                    }
                 }
+                //check if update button is clicked
                 else if (update != null)
                 {
-                    //update teacher record 
-                    //assign the new data to teacher object
+                    //teacher object
                     Teacher teacherUp = new Teacher(1);
-                    teacherUp.grade = registerTeacherViewModel.grade;
-                    teacherUp.user.fullName = registerTeacherViewModel.fullName;
-                    teacherUp.subject = registerTeacherViewModel.subject;
-                    var teacherList = context.Teacher.Where(t => t.user.Email == registerTeacherViewModel.email).ToList();
-                    foreach (var getId in teacherList)
+
+                    //assign the new data to teacherUp object
+                    var getId = context.Teacher.Where(t => t.user.Email == registerTeacherViewModel.email).FirstOrDefault();
+                    teacherUp.teacherId = getId.teacherId;
+                    
+                    var checkFullName = context.Users.Where(u => u.fullName == registerTeacherViewModel.fullName && u.Id != teacherUp.teacherId).FirstOrDefault();
+                    
+                    //check if no duplicate name exist
+                    if (checkFullName == null)
                     {
-                        teacherUp.teacherId = getId.teacherId;
-                    }
+                        teacherUp.grade = registerTeacherViewModel.grade;
+                        teacherUp.user.fullName = registerTeacherViewModel.fullName;
+                        teacherUp.subject = registerTeacherViewModel.subject;
 
-                    academicDirector.UpdateTeacher(teacherUp);
+                        //update teacher record 
+                        academicDirector.UpdateTeacher(teacherUp);
 
-                    ViewBag.updateStatus = "Update Completed Successfully";
-                }
-                else if (edit != null)
-                {
-                    //populate the selected teacher data in to the update form
-                    registerTeacherViewModel.teacherList = new List<Teacher>();
-                    teacher = context.Teacher.Find(id);
-                    registerTeacherViewModel.fullName = teacher.user.fullName;
-                    registerTeacherViewModel.subject = teacher.subject;
-                    registerTeacherViewModel.grade = teacher.grade;
-                    registerTeacherViewModel.email = teacher.user.Email;
-                    registerTeacherViewModel.teacherList.Add(teacher);
-
-                    ViewBag.disableEmail = "disabled";
-                }
-                else if (delete != null)
-                {
-                    //delete the selected user using teacher id
-                    academicDirector.DeleteTeacher(id);
-                    string status = await collection.DeleteUser(id);
-
-                    if (status == "successful")
-                    {
-                        ViewBag.deleteStatus = "Deletion Completed Successfully";
+                        //update successful message
+                        ViewBag.updateStatus = "Update Completed Successfully";
+                        //ViewBag.upHidden = "hidden";
+                        ViewBag.disableEmail = false;
                     }
                     else
                     {
-                        ViewBag.deleteStatus = "Deletion Failed";
+                        //error message for duplicate Full Name
+                        ViewBag.fullName = "Full Name Already Taken By Another Account";
                     }
+                }
+                //check if edit button is clicked
+                else if (edit != null)
+                {
+                    //remove unwanted error messages
+                    ModelState.Clear();
 
+                    //check teacher role before editing
+                    if (!(userManager.IsInRole(id, "UnitLeader") || userManager.IsInRole(id, "HoomRoom")))
+                    {
+                        //populate the selected teacher data in to the update form
+                        registerTeacherViewModel.teacherList = new List<Teacher>();
+                        teacher = context.Teacher.Find(id);
+                        registerTeacherViewModel.fullName = teacher.user.fullName;
+                        registerTeacherViewModel.subject = teacher.subject;
+                        registerTeacherViewModel.grade = teacher.grade;
+                        registerTeacherViewModel.email = teacher.user.Email;
+                        registerTeacherViewModel.teacherList.Add(teacher);
+
+                        //viewbag elements
+                        ViewBag.disableEmail = true;
+                        ViewBag.upHidden = " ";
+                    }
+                    else
+                    {
+                        //error message for additional role
+                        ViewBag.role = "Unable To Edit Because Teacher has Another Role Associated";
+                        ViewBag.upHidden = "hidden";
+                    }
+                    
+                }
+                //check if delete button is clicked
+                else if (delete != null)
+                {
+                    //viewbag elements
+                    ViewBag.search = false;
+                    ViewBag.upHidden = "hidden";
+
+                    //check role
+                    if (!(userManager.IsInRole(id, "UnitLeader") && userManager.IsInRole(id, "HoomRoom")))
+                    {
+                        //delete the selected user using teacher id
+                        academicDirector.DeleteTeacher(id);
+                        string status = await collection.DeleteUser(id);
+
+                        if (status == "successful")
+                        {
+                            //sucess message
+                            ViewBag.deleteStatus = "Deletion Completed Successfully";
+                        }
+                        else
+                        {
+                            //failure message
+                            ViewBag.deleteStatus = "Deletion Failed";
+                        }
+                    }
+                    else
+                    {
+                        //error message due to additional role
+                        ViewBag.role = "Unable To Delete Because Teacher has Another Role Associated";
+                        
+                    }
                 }
             }
             return View(registerTeacherViewModel);
@@ -572,8 +647,14 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
         public ActionResult SectionManagement()
         {
+            //Academic Director object
             AcademicDirector academicDirector = new AcademicDirector();
+
+            //viewbag element
             ViewBag.search = false;
+            ViewBag.upHidden = "hidden";
+            ViewBag.read = false;
+
             return View(academicDirector.populateFormData());
         }
 
@@ -589,7 +670,10 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             var userManager = new ApplicationUserManager(userStore);
             SectionViewModel sectionViewModelExtra = new SectionViewModel();
 
+            //viewbag element used in UI
             ViewBag.search = false;
+            ViewBag.upHidden = "hidden";
+            ViewBag.read = false;
 
             //check if Add button is clicked
             if (add != null)
@@ -599,22 +683,9 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 if (sectionViewModelExtra==null)
                 {
                     //get teacher Id and academic year Id 
-                    var findTeacher = context.Teacher.Where(t => t.user.fullName == teachers);
-                    //var findAcadamicYear = context.AcademicYear.Where(a => a.academicYearName == academicYears);
-
-                    //get teacherId
-                    foreach (var getTeacherId in findTeacher)
-                    {
-                        section.teacherId = getTeacherId.teacherId;
-                    }
-
-                    //get Academic Year Id
-
+                    var findTeacher = context.Teacher.Where(t => t.user.fullName == teachers).FirstOrDefault();
+                    section.teacherId = findTeacher.teacherId;
                     section.academicYearId = academicYears;
-                    //foreach (var getAcadamicYearName in findAcadamicYear)
-                    //{
-                    //    section.academicYearId = getAcadamicYearName.academicYearName;
-                    //}
 
                     //concatenate grade and section letter as a sectionName
                     section.sectionName = sectionViewModel.grade.ToString() + letter;
@@ -627,20 +698,36 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                     userManager.RemoveFromRole(section.teacherId, "Teacher");
                     userManager.AddToRole(section.teacherId, "HomeRoom");
 
+                    //populate selection list
                     sectionViewModel = academicDirector.populateFormData();
+
+                    //success message
+                    ViewBag.add = "Section Created Successfully";
+                }
+                else
+                {
+                    //error message
+                    ViewBag.add = "The Section Already Exist on Either Selected or Other Active Academic Year";
                 }
             }
             //check if search button is clicked
             else if (search != null)
             {
-                ViewBag.search = true;
+                //remove unwanted errors
+                ModelState.Remove("teachers");
+                ModelState.Remove("academicYears");
+
                 //search section record
                 sectionViewModelExtra = academicDirector.searchSection(sectionViewModel.grade,letter);
 
                 //check if the record exists
                 if (sectionViewModelExtra != null)
                 {
-                    ViewBag.found = true;
+                    //viewbag attribute for UI usage
+                    ViewBag.search = true;
+                    ViewBag.upHidden = " ";
+                    ViewBag.read= true;
+
                     //populate other selections in the sectionViewModel
                     sectionViewModel = academicDirector.populateFormData();
 
@@ -658,62 +745,85 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 }
                 else
                 {
-                    ViewBag.found = false;
+                    //record not found error message
+                    ViewBag.found = "Section Not Found";
                     sectionViewModel = academicDirector.populateFormData();
 
                 }
-
-                //if not found populate the list views 
-                //if exist add the data firdt and add the other list
             }
             else if (update != null)
             {
                 //check if it exists (also the year)and update
-                var sectionRecord = context.Section.Where(s => s.sectionName == sectionViewModel.grade.ToString() + letter && s.academicYearId == academicYears).ToList();
-                
+                var sectionRecord = context.Section.Where(s => s.sectionName == sectionViewModel.grade.ToString() + letter && s.academicYearId == academicYears).FirstOrDefault();
+
                 if (sectionRecord != null)
                 {
-                    foreach (var data in sectionRecord)
-                    {
-                        
-                        userManager.RemoveFromRole(data.teacherId, "HoomRoom");
-                        userManager.AddToRole(data.teacherId, "Teacher");
-                        var newTeacherId = context.Teacher.Where(t => t.user.fullName == teachers).ToList();
+                    //demote role from HoomRoom to Teacher
+                    userManager.RemoveFromRole(sectionRecord.teacherId, "HoomRoom");
+                    userManager.AddToRole(sectionRecord.teacherId, "Teacher");
+                    var newTeacherId = context.Teacher.Where(t => t.user.fullName == teachers).FirstOrDefault();
 
-                        foreach(var getId in newTeacherId)
-                        {
-                            var updateRecord = context.Section.Find(data.sectionId);
-                            updateRecord.teacherId = getId.teacherId;
+                    //get section to update using sectionId
+                    var updateRecord = context.Section.Find(sectionRecord.sectionId);
+                    updateRecord.teacherId = newTeacherId.teacherId;
 
-                            context.SaveChanges();
-                            userManager.RemoveFromRole(getId.teacherId, "Teacher");
-                            userManager.AddToRole(getId.teacherId, "HomeRoom");
-                        }
-                        
-                    }
+                    //update section
+                    context.SaveChanges();
+
+                    //promote role from Teacher to HoomRoom
+                    userManager.RemoveFromRole(newTeacherId.teacherId, "Teacher");
+                    userManager.AddToRole(newTeacherId.teacherId, "HomeRoom");
+
                 }
 
-                
+                //update success message 
+                ViewBag.update = "Update Completed Successfully";
+                ViewBag.read = false;
+                ViewBag.upHidden = "hidden";
+
+                //populate form selection options 
+                sectionViewModel = academicDirector.populateFormData();
+
             }
             else if (delete != null)
             {
-                //delete if it exists
-                var sectionRecord = context.Section.Where(s => s.sectionName == sectionViewModel.grade.ToString() + sectionViewModel.letter && s.academicYearId == academicYears.ToString());
+                //remove unwanted errors
+                ModelState.Remove("teachers");
+                ModelState.Remove("academicYears");
 
-                if (sectionRecord != null)
+                //search section record
+                sectionViewModelExtra = academicDirector.searchSection(sectionViewModel.grade, letter);
+
+                if (sectionViewModelExtra != null)
                 {
-
-                    foreach(var deleteSectionId in sectionRecord)
+                    //check if their are no students enrolled in the section
+                    Student student = new Student();
+                    var checkStudent = context.Student.Where(s => s.sectionName == sectionViewModelExtra.grade.ToString() + sectionViewModelExtra.letter[0].ToString() && s.academicYearId == sectionViewModelExtra.academicYears[0]).ToList();
+                    if (checkStudent.Count == 0)
                     {
-                        var deleteSection = context.Section.Find(deleteSectionId.sectionId);
-                        context.Section.Remove(deleteSection);
+                        //delete section
+                        var sectionRecord = context.Section.Where(s => s.sectionName == sectionViewModelExtra.grade.ToString() + sectionViewModelExtra.letter[0].ToString() && s.academicYearId == sectionViewModelExtra.academicYears[0]).FirstOrDefault();
+                        context.Section.Remove(sectionRecord);
                         context.SaveChanges();
+
+                        //demote role from HoomRoom to Teacher
+                        userManager.RemoveFromRole(sectionRecord.teacherId, "HoomRoom");
+                        userManager.AddToRole(sectionRecord.teacherId, "Teacher");
+
+                        //successful message
+                        ViewBag.delete = "Section Deleted Successfully";
                     }
-                    
+                    else
+                    {
+                        ViewBag.delete = "Unable to Delete Section. Students are Enrolled";
+                    }
                 }
-
+                else
+                {
+                    //error message
+                    ViewBag.delete = "Unable to Delete Section Not Found";
+                }
             }
-
 
             return View(sectionViewModel);
         }

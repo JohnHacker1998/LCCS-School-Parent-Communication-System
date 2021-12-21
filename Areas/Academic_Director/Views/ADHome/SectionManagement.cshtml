@@ -13,16 +13,16 @@
 <body>
     @using (Html.BeginForm("SectionManagement", "ADHome", FormMethod.Post))
     {
-        
+
             @Html.LabelFor(lbl => lbl.grade)
-            @Html.EditorFor(tb => tb.grade, new { type = "number", min = "9", max = "12", step = "1", @class = "form-control" })
+            @Html.EditorFor(tb => tb.grade, new { type = "number", min = "9", max = "12", step = "1",@readonly=ViewBag.read, @class = "form-control" })
             @Html.ValidationMessageFor(vm => vm.grade)
             <br />
             @Html.LabelFor(lbl => lbl.letter)
-            @Html.DropDownListFor(tb => tb.letter, new SelectList(Model.letter))
+            @Html.DropDownListFor(tb => tb.letter, new SelectList(Model.letter),htmlAttributes:new { @readonly=ViewBag.read})
             @Html.ValidationMessageFor(vm => vm.letter)
             <br />
-        if (ViewBag.search && ViewBag.found)
+        if (ViewBag.search)
         {
             @Html.LabelFor(lbl => lbl.teachers)
             <select id="teachers" name="teachers">
@@ -31,10 +31,9 @@
                     <option value=@i>@i</option>
                 }
             </select>
-            @Html.ValidationMessageFor(vm => vm.teachers)
             <br />
             @Html.LabelFor(lbl => lbl.academicYears)
-            <select id="academicYears" name="academicYears">
+            <select id="academicYears" name="academicYears" readonly>
                 @foreach (var i in Model.academicYears)
                 {
                     if (i == ViewBag.academicYear)
@@ -62,13 +61,16 @@
 
                 <br />
                 <hr />
+                @ViewBag.add
+                @ViewBag.found
+                @ViewBag.delete
                 @Html.ValidationSummary(true, "please fix the errors to procced to the next step")
 
                 <hr />
                 <input type="submit" name="add" value="Add" />
                 <input type="submit" name="search" value="Search" />
-                <input type="submit" name="update" value="Update" />
+                <input type="submit" name="update" value="Update" @ViewBag.upHidden />
                 <input type="submit" name="delete" value="Delete" />
-                }
+    }
         </body>
 </html>
