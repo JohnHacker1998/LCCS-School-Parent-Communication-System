@@ -1,4 +1,7 @@
 ﻿@model LCCS_School_Parent_Communication_System.viewModels.StudentViewModel
+@{
+    Layout = null;
+}
 
 <!DOCTYPE html>
 
@@ -8,7 +11,7 @@
     <title>StudentManagement</title>
 </head>
 <body>
-    @using (Html.BeginForm("StudentManagement", "ADHome", FormMethod.Post))
+    @using (Html.BeginForm("StudentManagement", "RHome", FormMethod.Post))
     {
 
         @Html.HiddenFor(tb => tb.Id)
@@ -41,11 +44,18 @@
             @Html.DropDownListFor(tb => tb.sectionName, new SelectList(Model.sectionName))
             @Html.ValidationMessageFor(vm => vm.sectionName)
         }
+        <br />
+        <hr />
+        @ViewBag.found
+        @ViewBag.upMessage
+        @ViewBag.duplicate
+        @Html.ValidationSummary(true, "please fix the errors to procced to the next step")
+        <hr />
 
 
         <input type="submit" name="register" value="Register" />
         <input type="submit" name="search" value="Search" />
-        <input type="submit" name="update" value="Update" />
+        <input type="submit" name="update" value="Update" @ViewBag.update />
     }
 
 
@@ -65,7 +75,7 @@
                     <td>@list.sectionName</td>
                     <td>@list.academicYear</td>
                     <td>
-                        @using (Html.BeginForm("StudentManagement", "ADHome", new { id = @list.studentId }, FormMethod.Post))
+                        @using (Html.BeginForm("StudentManagement", "RHome", new { id = @list.studentId }, FormMethod.Post))
                         {
                             <input type="submit" value="Edit" name="edit" />
                             <input type="submit" value="Delete" name="delete" />
@@ -76,7 +86,5 @@
             }
         </table>
     }
-
-
 </body>
 </html>

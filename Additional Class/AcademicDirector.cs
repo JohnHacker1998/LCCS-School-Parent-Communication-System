@@ -180,39 +180,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             return null;
         }
 
-        //function to populate section list in the UI
-        public List<string> populateSection()
-        {
-            //basic objects
-            ApplicationDbContext context = new ApplicationDbContext();
-            List<string> section = new List<string>();
-
-            //get all academic years
-            var academicYears = context.AcademicYear.ToList();
-            foreach (var getActive in academicYears)
-            {
-                //get start and end dates to check if today is in the middle
-                string[] duration = getActive.duration.Split('-');
-                if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
-                {
-                    //get sections on a given academic year
-                    var getSection = context.Section.Where(s => s.academicYearId == getActive.academicYearName).ToList();
-
-                    //check if sections exist in the academic year
-                    if (getSection.Count != 0)
-                    {
-                        foreach (var getSectionName in getSection)
-                        {
-                            //populate section list
-                            section.Add(getSectionName.sectionName);
-                            
-                        }
-                    }
-                }
-            }
-
-            return section;
-        }
+        
 
 
 

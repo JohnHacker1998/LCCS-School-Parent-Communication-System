@@ -488,11 +488,11 @@
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="Areas\Academic_Director\Views\ADHome\unitLeaderManagement.cshtml" />
-    <Content Include="Areas\Academic_Director\Views\ADHome\StudentManagement.cshtml" />
     <Content Include="Areas\Registrar\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Registrar\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Registrar\Views\RHome\Index.cshtml" />
     <Content Include="Areas\Registrar\Views\RHome\parentManagement.cshtml" />
+    <Content Include="Areas\Registrar\Views\RHome\StudentManagement.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -503,6 +503,7 @@
   <ItemGroup>
     <Compile Include="Additional Class\AcademicDirector.cs" />
     <Compile Include="Additional Class\Collection.cs" />
+    <Compile Include="Additional Class\RegistrarMethod.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\Academic_Director\Academic_DirectorAreaRegistration.cs" />
@@ -523,9 +524,7 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
-    <Compile Include="Migrations\202112210831383_allInOne.cs" />
-    <Compile Include="Migrations\202112210831383_allInOne.designer.cs">
-      <DependentUpon>202112210831383_allInOne.cs</DependentUpon>
+    
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AcademicYear.cs" />
@@ -533,7 +532,6 @@
     <Compile Include="Models\Section.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\Teacher.cs" />
-    <Compile Include="Models\RegistrarModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="viewModels\AcademicYearViewModel.cs" />
     <Compile Include="viewModels\LoginViewModel.cs" />
@@ -588,8 +586,7 @@
     <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202112210831383_allInOne.resx">
-      <DependentUpon>202112210831383_allInOne.cs</DependentUpon>
+
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

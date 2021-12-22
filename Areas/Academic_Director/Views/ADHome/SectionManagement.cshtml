@@ -49,10 +49,10 @@
         }
         else
         {
-            @Html.LabelFor(lbl => lbl.teachers)
+                @Html.LabelFor(lbl => lbl.teachers)
                 @Html.DropDownListFor(tb => tb.teachers, new SelectList(Model.teachers), "Select Teacher")
                 @Html.ValidationMessageFor(vm => vm.teachers)
-                < br />
+                <br />
                 @Html.LabelFor(lbl => lbl.academicYears)
                 @Html.DropDownListFor(tb => tb.academicYears, new SelectList(Model.academicYears), "Select Acadamic Year")
                 @Html.ValidationMessageFor(vm => vm.academicYears)
