@@ -11,9 +11,19 @@
 
     @using (Html.BeginForm("RegisterTeacher", "ADHome", FormMethod.Post))
     {
-        @Html.LabelFor(lbl => lbl.email)
-        @Html.EditorFor(tb => tb.email, new { htmlAttributes=new {@readonly=ViewBag.disableEmail }, placeholder = "example@gmail.com", @class = "form-control" })
-        @Html.ValidationMessageFor(vm => vm.email)
+        if (@ViewBag.disableEmail)
+        {
+            @Html.LabelFor(lbl => lbl.email)
+            @Html.EditorFor(tb => tb.email, new { htmlAttributes = new { @readonly = @ViewBag.disableEmail }, placeholder = "example@gmail.com", @class = "form-control" })
+            @Html.ValidationMessageFor(vm => vm.email)
+        }
+        else
+        {
+            @Html.LabelFor(lbl => lbl.email)
+            @Html.EditorFor(tb => tb.email, new { placeholder = "example@gmail.com", @class = "form-control" })
+            @Html.ValidationMessageFor(vm => vm.email)
+        }
+
         <br />
         @Html.LabelFor(lbl => lbl.fullName)
         @Html.EditorFor(tb => tb.fullName, new { @class = "form-control" })

@@ -31,7 +31,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             //handel viewbag
             ViewBag.search = false;
             ViewBag.upHidden = "hidden";
-            ViewBag.disableEmail = " ";
+            ViewBag.disableEmail = false;
 
             return View();
         }
@@ -55,7 +55,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 //viewbag attributes for UI rendering 
                 ViewBag.search = false;
                 ViewBag.upHidden = "hidden";
-                ViewBag.disableEmail = " ";
+                ViewBag.disableEmail = false;
 
                 //check if register button is clicked
                 if (register != null)
@@ -827,170 +827,5 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
             return View(sectionViewModel);
         }
-
-
-        public ActionResult StudentManagement()
-        {
-            //populate the list of section name
-            ApplicationDbContext context = new ApplicationDbContext();
-            StudentViewModel studentViewModel = new StudentViewModel();
-            AcademicDirector academicDirector = new AcademicDirector();
-            studentViewModel.sectionName = new List<string>();
-            //to get active academic years
-            //we need to get the academic year id
-            //then if and for loop
-
-            //var academicYears = context.AcademicYear.ToList();
-
-            //foreach (var getActive in academicYears)
-            //{
-            //    string[] duration = getActive.duration.Split('-');
-            //    if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
-            //    {
-            //        var getSection = context.Section.Where(s => s.academicYearId == getActive.academicYearName).ToList();
-
-            //        foreach(var getSectionName in getSection)
-            //        {
-            //            studentViewModel.sectionName.Add(getSectionName.sectionName);
-            //        }
-
-            //    }
-            //}
-
-
-            studentViewModel.sectionName=academicDirector.populateSection();
-
-            ViewBag.edit = false;
-            ViewBag.search = false;
-
-            return View(studentViewModel);
-        }
-        [HttpPost]
-        public ActionResult StudentManagement(StudentViewModel studentViewModel,string sectionName,string register, string search, string update, string delete,string edit,int id)
-        {
-            ApplicationDbContext context = new ApplicationDbContext();
-            AcademicDirector academicDirector = new AcademicDirector();
-            Student student = new Student();
-            studentViewModel.sectionName = new List<string>();
-            ViewBag.edit = false;
-            ViewBag.search = false;
-
-            if (register != null)
-            {
-
-                //AcademicYear academicYear = new AcademicYear();
-
-                //academicyear
-                var academicYears = context.AcademicYear.ToList();
-                foreach (var getAcadamicYear in academicYears)
-                {
-                    string[] duration = getAcadamicYear.duration.Split('-');
-                    if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
-                    {
-                        var sectionRecord = context.Section.Where(s => s.sectionName == sectionName && s.academicYearId == getAcadamicYear.academicYearName).ToList();
-                        if (sectionRecord.Count != 0)
-                        {
-                            student.academicYearId = getAcadamicYear.academicYearName;
-                            break;
-                        }
-
-
-                    }
-                }
-
-                student.fullName = studentViewModel.fullName;
-                student.sectionName = sectionName;
-
-                context.Student.Add(student);
-                context.SaveChanges();
-
-                studentViewModel.sectionName = academicDirector.populateSection();
-
-            }
-            else if (search != null)
-            {
-
-                studentViewModel.student = new List<Student>();
-                studentViewModel.student = context.Student.Where(s => s.fullName.StartsWith(studentViewModel.fullName)).ToList();
-
-                studentViewModel.sectionName = academicDirector.populateSection();
-                ViewBag.search = true;
-
-            }
-            else if (edit != null)
-            {
-                //populate the data using the id passed
-                ViewBag.edit = true;
-
-                student = context.Student.Find(id);
-                studentViewModel.Id = student.studentId;
-                studentViewModel.fullName = student.fullName;
-                studentViewModel.sectionName = new List<string>();
-
-                studentViewModel.sectionName = academicDirector.populateSection();
-
-                var sectionExist = studentViewModel.sectionName.Find(f => f.Equals(student.sectionName));
-
-                if (sectionExist == null)
-                {
-                    studentViewModel.sectionName.Add(student.sectionName);
-                }
-
-                ViewBag.section = student.sectionName;
-            }
-            else if (update != null)
-            {
-                //updaate the normal way
-                var studentUp = context.Student.Find(studentViewModel.Id);
-
-                studentUp.fullName = studentViewModel.fullName;
-
-                var academicYears = context.AcademicYear.ToList();
-
-                foreach (var getActive in academicYears)
-                {
-                    string[] duration = getActive.duration.Split('-');
-                    if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
-                    {
-                        var getSection = context.Section.Where(s => s.academicYearId == getActive.academicYearName && s.sectionName==studentUp.sectionName).ToList();
-
-                        if (getSection.Count != 0)
-                        {
-                            studentUp.sectionName = sectionName;
-                            studentUp.academicYearId = getActive.academicYearName;
-                            context.SaveChanges();
-                        }
-                        
-                    }
-                }
-
-                studentViewModel.sectionName = academicDirector.populateSection();
-            }
-            else if (delete != null)
-            {
-                ApplicationDbContext contextExtra = new ApplicationDbContext();
-
-                var parentDelete = contextExtra.Parent.Where(p => p.studentId == id).ToList(); ;
-                var studentDelete = context.Student.Find(id);
-
-                if (parentDelete.Count != 0)
-                {
-                    foreach (var getParent in parentDelete)
-                    {
-                        contextExtra.Parent.Remove(getParent);
-                        contextExtra.SaveChanges();
-                    }
-                }
-     
-                context.Student.Remove(studentDelete);
-                context.SaveChanges();
-
-                studentViewModel.sectionName = academicDirector.populateSection();
-
-            }
-            return View(studentViewModel);
-        }
-      
-
     }
 }
