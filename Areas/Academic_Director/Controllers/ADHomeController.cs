@@ -31,7 +31,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             //handel viewbag
             ViewBag.search = false;
             ViewBag.upHidden = "hidden";
-            ViewBag.disableEmail = " ";
+          ViewBag.disableEmail = false;
 
             return View();
         }
@@ -55,7 +55,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 //viewbag attributes for UI rendering 
                 ViewBag.search = false;
                 ViewBag.upHidden = "hidden";
-                ViewBag.disableEmail = " ";
+               ViewBag.disableEmail = false;
 
                 //check if register button is clicked
                 if (register != null)

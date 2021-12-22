@@ -49,7 +49,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
             Models.Parent parent = new Models.Parent();
             var userStore = new ApplicationUserStore(db);
             var userManager = new ApplicationUserManager(userStore);
-            var regex = new Regex(@"([A-Z]{1}[a-z]{2,} ){2}([A-Z]{1}[a-z]{2,})");
+            var regex = new Regex(@"[A-Z][a-z]{2,}");
 
 
             if (ModelState.IsValid || delete != null || select != null || search != null)
