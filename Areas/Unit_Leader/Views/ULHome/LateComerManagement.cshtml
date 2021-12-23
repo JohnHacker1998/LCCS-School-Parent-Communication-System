@@ -1,0 +1,56 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.LateComerViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>LateComerManagement</title>
+</head>
+<body>
+    @using (Html.BeginForm("LateComerManagement", "ULHome", FormMethod.Post))
+    {
+
+        @Html.LabelFor(lbl => lbl.studentName)
+        @Html.EditorFor(tb => tb.studentName, new { @class = "form-control" })
+        @Html.ValidationMessageFor(vm => vm.studentName)
+        <br />
+        <input type="submit" name="search" value="Search" />
+        <br />
+        <hr />
+        @ViewBag.error
+        @ViewBag.found
+        @ViewBag.message
+        @Html.ValidationSummary(true, "please fix the errors to procced to the next step")
+        <hr />
+    }
+
+    @if (ViewBag.search == true)
+    {
+        <table>
+            <tr>
+                <th>Student Name</th>
+                <th>Grade</th>
+                <th></th>
+            </tr>
+            @foreach (var list in Model.students)
+            {
+                <tr>
+                    <td>@list.fullName</td>
+                    <td>@list.sectionName</td>
+                    <td>
+                        @using (Html.BeginForm("LateComerManagement", "ULHome", new { id = @list.studentId.ToString() }, FormMethod.Post))
+                        {
+                            <input type="submit" value="LateComer" name="late" />
+                        }
+                    </td>
+                </tr>
+            }
+
+        </table>
+    }
+</body>
+</html>

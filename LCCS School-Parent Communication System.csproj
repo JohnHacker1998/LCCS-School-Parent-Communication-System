@@ -495,6 +495,8 @@
     <Content Include="Areas\Registrar\Views\RHome\Index.cshtml" />
     <Content Include="Areas\Registrar\Views\RHome\parentManagement.cshtml" />
     <Content Include="Areas\Registrar\Views\RHome\StudentManagement.cshtml" />
+    <Content Include="Areas\Unit_Leader\Views\ULHome\LateComerManagement.cshtml" />
+    <Content Include="Areas\Unit_Leader\Views\ULHome\Index.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -526,18 +528,23 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
-    <Compile Include="Migrations\202112210901394_allinone.cs" />
-    <Compile Include="Migrations\202112210901394_allinone.designer.cs">
-      <DependentUpon>202112210901394_allinone.cs</DependentUpon>
+    <Compile Include="Migrations\202112230800112_allinone.cs" />
+    <Compile Include="Migrations\202112230800112_allinone.designer.cs">
+      <DependentUpon>202112230800112_allinone.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AbsenceRecord.cs" />
     <Compile Include="Models\AcademicYear.cs" />
+    <Compile Include="Models\LateComer.cs" />
     <Compile Include="Models\Parent.cs" />
     <Compile Include="Models\Section.cs" />
     <Compile Include="Models\Student.cs" />
+    <Compile Include="Models\Suspension.cs" />
     <Compile Include="Models\Teacher.cs" />
+    <Compile Include="Models\Warning.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="viewModels\AcademicYearViewModel.cs" />
+    <Compile Include="viewModels\LateComerViewModel.cs" />
     <Compile Include="viewModels\LoginViewModel.cs" />
     <Compile Include="Startup1.cs" />
     <Compile Include="viewModels\parentViewModel.cs" />
@@ -546,6 +553,7 @@
     <Compile Include="viewModels\RegistrarManagementViewModel.cs" />
     <Compile Include="viewModels\SectionViewModel.cs" />
     <Compile Include="viewModels\StudentViewModel.cs" />
+    <Compile Include="viewModels\WarningViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -586,12 +594,11 @@
     <Folder Include="Areas\Registrar\Data\" />
     <Folder Include="Areas\Unit_Leader\Data\" />
     <Folder Include="Areas\Unit_Leader\Views\Shared\" />
-    <Folder Include="Areas\Unit_Leader\Views\ULHome\" />
     <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202112210901394_allinone.resx">
-      <DependentUpon>202112210901394_allinone.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202112230800112_allinone.resx">
+      <DependentUpon>202112230800112_allinone.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
