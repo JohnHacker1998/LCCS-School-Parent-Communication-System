@@ -7,18 +7,19 @@ using System.Web;
 
 namespace LCCS_School_Parent_Communication_System.Models
 {
-    public class Suspension
+    public class LateComer
     {
         [Key]
-        public int suspensionID { get; set; }
+        public int lateId { get; set; }
         [ForeignKey("student")]
-        public int studentId{ get; set; }
+        public int studentId { get; set; }
 
-        public DateTime startDate { get; set; }
+        public DateTime lateDate { get; set; }
 
-        public DateTime endDate { get; set; }
+        public string academicPeriod { get; set; }
+
+        public int dayCount { get; set; }
 
         public virtual Student student { get; set; }
-
     }
 }

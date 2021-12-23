@@ -39,6 +39,11 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         [HttpPost]
         public async Task<ActionResult> RegisterTeacher(RegisterTeacherViewModel registerTeacherViewModel,string register,string search,string update,string edit,string delete,string id)
         {
+            //viewbag attributes for UI rendering 
+            ViewBag.search = false;
+            ViewBag.upHidden = "hidden";
+            ViewBag.disableEmail = false;
+
             //check if their are no errors arise from user input
             if (ModelState.IsValid || (search!=null && ModelState.IsValidField("fullName")) || edit!=null || delete!=null)
             {
@@ -51,11 +56,6 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 Teacher teacher = new Teacher();
                 ApplicationUser user = new ApplicationUser();
                 RegisterViewModel registerViewModel = new RegisterViewModel();
-
-                //viewbag attributes for UI rendering 
-                ViewBag.search = false;
-                ViewBag.upHidden = "hidden";
-                ViewBag.disableEmail = false;
 
                 //check if register button is clicked
                 if (register != null)
@@ -675,155 +675,160 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             ViewBag.upHidden = "hidden";
             ViewBag.read = false;
 
-            //check if Add button is clicked
-            if (add != null)
+            if (ModelState.IsValid || (search != null && ModelState.IsValidField("grade")) || delete != null)
             {
-                //check if the record doesn't exist
-                sectionViewModelExtra = academicDirector.searchSection(sectionViewModel.grade,letter);
-                if (sectionViewModelExtra==null)
+                //check if Add button is clicked
+                if (add != null)
                 {
-                    //get teacher Id and academic year Id 
-                    var findTeacher = context.Teacher.Where(t => t.user.fullName == teachers).FirstOrDefault();
-                    section.teacherId = findTeacher.teacherId;
-                    section.academicYearId = academicYears;
-
-                    //concatenate grade and section letter as a sectionName
-                    section.sectionName = sectionViewModel.grade.ToString() + letter;
-
-                    //save section record
-                    context.Section.Add(section);
-                    context.SaveChanges();
-
-                    //assign HomeRoom role for the selected teacher(remove teacher role)
-                    userManager.RemoveFromRole(section.teacherId, "Teacher");
-                    userManager.AddToRole(section.teacherId, "HomeRoom");
-
-                    //populate selection list
-                    sectionViewModel = academicDirector.populateFormData();
-
-                    //success message
-                    ViewBag.add = "Section Created Successfully";
-                }
-                else
-                {
-                    //error message
-                    ViewBag.add = "The Section Already Exist on Either Selected or Other Active Academic Year";
-                }
-            }
-            //check if search button is clicked
-            else if (search != null)
-            {
-                //remove unwanted errors
-                ModelState.Remove("teachers");
-                ModelState.Remove("academicYears");
-
-                //search section record
-                sectionViewModelExtra = academicDirector.searchSection(sectionViewModel.grade,letter);
-
-                //check if the record exists
-                if (sectionViewModelExtra != null)
-                {
-                    //viewbag attribute for UI usage
-                    ViewBag.search = true;
-                    ViewBag.upHidden = " ";
-                    ViewBag.read= true;
-
-                    //populate other selections in the sectionViewModel
-                    sectionViewModel = academicDirector.populateFormData();
-
-                    //include section home room in to the teacher selection
-                    foreach(var getTeacher in sectionViewModelExtra.teachers)
+                    //check if the record doesn't exist
+                    sectionViewModelExtra = academicDirector.searchSection(sectionViewModel.grade, letter);
+                    if (sectionViewModelExtra == null)
                     {
-                        sectionViewModel.teachers.Insert(0,getTeacher);
-                        ViewBag.teacher = getTeacher;
-                    }
-                    //get acadamic year of the section record
-                    foreach (var getAcademicYear in sectionViewModelExtra.academicYears)
-                    {
-                        ViewBag.academicYear = getAcademicYear;
-                    }
-                }
-                else
-                {
-                    //record not found error message
-                    ViewBag.found = "Section Not Found";
-                    sectionViewModel = academicDirector.populateFormData();
+                        //get teacher Id and academic year Id 
+                        var findTeacher = context.Teacher.Where(t => t.user.fullName == teachers).FirstOrDefault();
+                        section.teacherId = findTeacher.teacherId;
+                        section.academicYearId = academicYears;
 
-                }
-            }
-            else if (update != null)
-            {
-                //check if it exists (also the year)and update
-                var sectionRecord = context.Section.Where(s => s.sectionName == sectionViewModel.grade.ToString() + letter && s.academicYearId == academicYears).FirstOrDefault();
+                        //concatenate grade and section letter as a sectionName
+                        section.sectionName = sectionViewModel.grade.ToString() + letter;
 
-                if (sectionRecord != null)
-                {
-                    //demote role from HoomRoom to Teacher
-                    userManager.RemoveFromRole(sectionRecord.teacherId, "HoomRoom");
-                    userManager.AddToRole(sectionRecord.teacherId, "Teacher");
-                    var newTeacherId = context.Teacher.Where(t => t.user.fullName == teachers).FirstOrDefault();
-
-                    //get section to update using sectionId
-                    var updateRecord = context.Section.Find(sectionRecord.sectionId);
-                    updateRecord.teacherId = newTeacherId.teacherId;
-
-                    //update section
-                    context.SaveChanges();
-
-                    //promote role from Teacher to HoomRoom
-                    userManager.RemoveFromRole(newTeacherId.teacherId, "Teacher");
-                    userManager.AddToRole(newTeacherId.teacherId, "HomeRoom");
-
-                }
-
-                //update success message 
-                ViewBag.update = "Update Completed Successfully";
-                ViewBag.read = false;
-                ViewBag.upHidden = "hidden";
-
-                //populate form selection options 
-                sectionViewModel = academicDirector.populateFormData();
-
-            }
-            else if (delete != null)
-            {
-                //remove unwanted errors
-                ModelState.Remove("teachers");
-                ModelState.Remove("academicYears");
-
-                //search section record
-                sectionViewModelExtra = academicDirector.searchSection(sectionViewModel.grade, letter);
-
-                if (sectionViewModelExtra != null)
-                {
-                    //check if their are no students enrolled in the section
-                    Student student = new Student();
-                    var checkStudent = context.Student.Where(s => s.sectionName == sectionViewModelExtra.grade.ToString() + sectionViewModelExtra.letter[0].ToString() && s.academicYearId == sectionViewModelExtra.academicYears[0]).ToList();
-                    if (checkStudent.Count == 0)
-                    {
-                        //delete section
-                        var sectionRecord = context.Section.Where(s => s.sectionName == sectionViewModelExtra.grade.ToString() + sectionViewModelExtra.letter[0].ToString() && s.academicYearId == sectionViewModelExtra.academicYears[0]).FirstOrDefault();
-                        context.Section.Remove(sectionRecord);
+                        //save section record
+                        context.Section.Add(section);
                         context.SaveChanges();
 
-                        //demote role from HoomRoom to Teacher
-                        userManager.RemoveFromRole(sectionRecord.teacherId, "HoomRoom");
-                        userManager.AddToRole(sectionRecord.teacherId, "Teacher");
+                        //assign HomeRoom role for the selected teacher(remove teacher role)
+                        userManager.RemoveFromRole(section.teacherId, "Teacher");
+                        userManager.AddToRole(section.teacherId, "HomeRoom");
 
-                        //successful message
-                        ViewBag.delete = "Section Deleted Successfully";
+                        //populate selection list
+                        sectionViewModel = academicDirector.populateFormData();
+
+                        //success message
+                        ViewBag.add = "Section Created Successfully";
                     }
                     else
                     {
-                        ViewBag.delete = "Unable to Delete Section. Students are Enrolled";
+                        //error message
+                        ViewBag.add = "The Section Already Exist on Either Selected or Other Active Academic Year";
                     }
                 }
-                else
+                //check if search button is clicked
+                else if (search != null)
                 {
-                    //error message
-                    ViewBag.delete = "Unable to Delete Section Not Found";
+                    //remove unwanted errors
+                    ModelState.Remove("teachers");
+                    ModelState.Remove("academicYears");
+
+                    //search section record
+                    sectionViewModelExtra = academicDirector.searchSection(sectionViewModel.grade, letter);
+
+                    //check if the record exists
+                    if (sectionViewModelExtra != null)
+                    {
+                        //viewbag attribute for UI usage
+                        ViewBag.search = true;
+                        ViewBag.upHidden = " ";
+                        ViewBag.read = true;
+
+                        //populate other selections in the sectionViewModel
+                        sectionViewModel = academicDirector.populateFormData();
+
+                        //include section home room in to the teacher selection
+                        foreach (var getTeacher in sectionViewModelExtra.teachers)
+                        {
+                            sectionViewModel.teachers.Insert(0, getTeacher);
+                            ViewBag.teacher = getTeacher;
+                        }
+                        //get acadamic year of the section record
+                        foreach (var getAcademicYear in sectionViewModelExtra.academicYears)
+                        {
+                            ViewBag.academicYear = getAcademicYear;
+                        }
+                    }
+                    else
+                    {
+                        //record not found error message
+                        ViewBag.found = "Section Not Found";
+                        sectionViewModel = academicDirector.populateFormData();
+
+                    }
+                }
+                else if (update != null)
+                {
+                    //check if it exists (also the year)and update
+                    var sectionRecord = context.Section.Where(s => s.sectionName == sectionViewModel.grade.ToString() + letter && s.academicYearId == academicYears).FirstOrDefault();
+
+                    if (sectionRecord != null)
+                    {
+                        //demote role from HoomRoom to Teacher
+                        userManager.RemoveFromRole(sectionRecord.teacherId, "HoomRoom");
+                        userManager.AddToRole(sectionRecord.teacherId, "Teacher");
+                        var newTeacherId = context.Teacher.Where(t => t.user.fullName == teachers).FirstOrDefault();
+
+                        //get section to update using sectionId
+                        var updateRecord = context.Section.Find(sectionRecord.sectionId);
+                        updateRecord.teacherId = newTeacherId.teacherId;
+
+                        //update section
+                        context.SaveChanges();
+
+                        //promote role from Teacher to HoomRoom
+                        userManager.RemoveFromRole(newTeacherId.teacherId, "Teacher");
+                        userManager.AddToRole(newTeacherId.teacherId, "HomeRoom");
+
+                    }
+
+                    //update success message 
+                    ViewBag.update = "Update Completed Successfully";
+                    ViewBag.read = false;
+                    ViewBag.upHidden = "hidden";
+
+                    //populate form selection options 
+                    sectionViewModel = academicDirector.populateFormData();
+
+                }
+                else if (delete != null)
+                {
+                    //remove unwanted errors
+                    ModelState.Remove("teachers");
+                    ModelState.Remove("academicYears");
+
+                    //search section record
+                    sectionViewModelExtra = academicDirector.searchSection(sectionViewModel.grade, letter);
+
+                    if (sectionViewModelExtra != null)
+                    {
+                        //check if their are no students enrolled in the section
+                        Student student = new Student();
+                        var checkStudent = context.Student.Where(s => s.sectionName == sectionViewModelExtra.grade.ToString() + sectionViewModelExtra.letter[0].ToString() && s.academicYearId == sectionViewModelExtra.academicYears[0]).ToList();
+                        if (checkStudent.Count == 0)
+                        {
+                            //delete section
+                            var sectionRecord = context.Section.Where(s => s.sectionName == sectionViewModelExtra.grade.ToString() + sectionViewModelExtra.letter[0].ToString() && s.academicYearId == sectionViewModelExtra.academicYears[0]).FirstOrDefault();
+                            context.Section.Remove(sectionRecord);
+                            context.SaveChanges();
+
+                            //demote role from HoomRoom to Teacher
+                            userManager.RemoveFromRole(sectionRecord.teacherId, "HoomRoom");
+                            userManager.AddToRole(sectionRecord.teacherId, "Teacher");
+
+                            //successful message
+                            ViewBag.delete = "Section Deleted Successfully";
+                        }
+                        else
+                        {
+                            ViewBag.delete = "Unable to Delete Section. Students are Enrolled";
+                        }
+                    }
+                    else
+                    {
+                        //error message
+                        ViewBag.delete = "Unable to Delete Section Not Found";
+                    }
                 }
             }
+
+            
 
             return View(sectionViewModel);
         }

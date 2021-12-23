@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Helpers;
 using LCCS_School_Parent_Communication_System.viewModels;
 using System.Threading.Tasks;
+using LCCS_School_Parent_Communication_System.Models;
 
 namespace LCCS_School_Parent_Communication_System.Additional_Class
 {
@@ -167,6 +168,49 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
 
             return "failed";
         }
+
+
+        public string currentQuarter(int id)
+        {
+            //basic objects
+            ApplicationDbContext context = new ApplicationDbContext();
+            Student student = new Student();
+            AcademicYear academicYear = new AcademicYear();
+            string quarter = " ";
+
+            //get academic year of the student
+            student = context.Student.Where(s => s.studentId == id).FirstOrDefault();
+            academicYear = context.AcademicYear.Where(a => a.academicYearName == student.academicYearId).FirstOrDefault();
+
+            //start and end dates
+            string [] quarter1 = academicYear.quarterOne.Split('-');
+            string [] quarter2 = academicYear.quarterTwo.Split('-');
+            string [] quarter3 = academicYear.quarterThree.Split('-');
+            string [] quarter4 = academicYear.quarterFour.Split('-');
+
+            //check in which quarter is the current date
+            if (DateTime.Compare(DateTime.Parse(quarter1[0]).Date,DateTime.Now.Date)<=0 && DateTime.Compare(DateTime.Parse(quarter1[1]).Date,DateTime.Now.Date) >= 0)
+            {
+                quarter = academicYear.academicYearName + "-Q1";
+            }
+            else if(DateTime.Compare(DateTime.Parse(quarter2[0]).Date, DateTime.Now.Date) <= 0 && DateTime.Compare(DateTime.Parse(quarter2[1]).Date, DateTime.Now.Date) >= 0)
+            {
+                quarter = academicYear.academicYearName + "-Q2";
+            }
+            else if(DateTime.Compare(DateTime.Parse(quarter3[0]).Date,DateTime.Now.Date) <= 0 && DateTime.Compare(DateTime.Parse(quarter3[1]).Date, DateTime.Now.Date) >= 0)
+            {
+                quarter = academicYear.academicYearName + "-Q3";
+            }
+            else if(DateTime.Compare(DateTime.Parse(quarter4[0]).Date, DateTime.Now.Date) <= 0 && DateTime.Compare(DateTime.Parse(quarter4[1]).Date, DateTime.Now.Date) >= 0)
+            {
+                quarter = academicYear.academicYearName + "-Q4";
+            }
+
+            return quarter;
+        }
+
+
+
         public bool checkUserExistence(string email,string fullname)
         {
             var appDbContext = new ApplicationDbContext();

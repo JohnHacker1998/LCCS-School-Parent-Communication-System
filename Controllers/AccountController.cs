@@ -30,7 +30,7 @@ namespace LCCS_School_Parent_Communication_System.Controllers
             if (ModelState.IsValid)
             {
                 var user = userManager.Find(lv.username, lv.password);
-
+                
                 int x = 0;
                 if (user != null)
                 {

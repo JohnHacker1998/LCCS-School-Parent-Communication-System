@@ -493,6 +493,8 @@
     <Content Include="Areas\Registrar\Views\RHome\Index.cshtml" />
     <Content Include="Areas\Registrar\Views\RHome\parentManagement.cshtml" />
     <Content Include="Areas\Registrar\Views\RHome\StudentManagement.cshtml" />
+    <Content Include="Areas\Unit_Leader\Views\ULHome\LateComerManagement.cshtml" />
+    <Content Include="Areas\Unit_Leader\Views\ULHome\Index.cshtml" />
     <Content Include="Areas\Homeroom_Teacher\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Homeroom_Teacher\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Homeroom_Teacher\Views\HTHome\Index.cshtml" />
@@ -533,29 +535,21 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
-    <Compile Include="Migrations\202112220624469_allInOne.cs" />
-    <Compile Include="Migrations\202112220624469_allInOne.designer.cs">
-      <DependentUpon>202112220624469_allInOne.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202112221108434_tblAbsenceSuspension.cs" />
-    <Compile Include="Migrations\202112221108434_tblAbsenceSuspension.designer.cs">
-      <DependentUpon>202112221108434_tblAbsenceSuspension.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202112221349063_recordDateString.cs" />
-    <Compile Include="Migrations\202112221349063_recordDateString.designer.cs">
-      <DependentUpon>202112221349063_recordDateString.cs</DependentUpon>
-    </Compile>
+    
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AbsenceRecord.cs" />
     <Compile Include="Models\AcademicYear.cs" />
+    <Compile Include="Models\LateComer.cs" />
     <Compile Include="Models\Parent.cs" />
     <Compile Include="Models\Section.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\Suspension.cs" />
     <Compile Include="Models\Teacher.cs" />
+    <Compile Include="Models\Warning.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="viewModels\AbsenceRecordViewMoel.cs" />
     <Compile Include="viewModels\AcademicYearViewModel.cs" />
+    <Compile Include="viewModels\LateComerViewModel.cs" />
     <Compile Include="viewModels\calanderEvents.cs" />
     <Compile Include="viewModels\LoginViewModel.cs" />
     <Compile Include="Startup1.cs" />
@@ -565,6 +559,7 @@
     <Compile Include="viewModels\RegistrarManagementViewModel.cs" />
     <Compile Include="viewModels\SectionViewModel.cs" />
     <Compile Include="viewModels\StudentViewModel.cs" />
+    <Compile Include="viewModels\WarningViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -601,20 +596,9 @@
     <Folder Include="Areas\Registrar\Data\" />
     <Folder Include="Areas\Unit_Leader\Data\" />
     <Folder Include="Areas\Unit_Leader\Views\Shared\" />
-    <Folder Include="Areas\Unit_Leader\Views\ULHome\" />
     <Folder Include="Views\Login\" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\202112220624469_allInOne.resx">
-      <DependentUpon>202112220624469_allInOne.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112221108434_tblAbsenceSuspension.resx">
-      <DependentUpon>202112221108434_tblAbsenceSuspension.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202112221349063_recordDateString.resx">
-      <DependentUpon>202112221349063_recordDateString.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
+ 
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
