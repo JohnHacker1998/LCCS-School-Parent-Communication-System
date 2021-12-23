@@ -258,7 +258,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                     rv.fullName = rmv.fullName;
                     c.RegisterUser(rv, "Registrar");
                    // string messageBody = "Registrar Account Username:" + rv.username + "Password=" + rv.password;
-                    //    c.sendMail(rv.email,rv.username, rv.password);
+                    c.sendMail(rv.email,rv.username, rv.password);
                     }
                     else
                     {
