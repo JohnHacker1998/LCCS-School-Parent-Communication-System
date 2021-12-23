@@ -7,13 +7,13 @@ namespace LCCS_School_Parent_Communication_System.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class allInOne : IMigrationMetadata
+    public sealed partial class recordDateString : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(allInOne));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(recordDateString));
         
         string IMigrationMetadata.Id
         {
-            get { return "202112210831383_allInOne"; }
+            get { return "202112221349063_recordDateString"; }
         }
         
         string IMigrationMetadata.Source

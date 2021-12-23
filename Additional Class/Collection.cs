@@ -25,7 +25,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
 
             //hash password to store on the table
             var passwordHash = Crypto.HashPassword(registerViewModel.password);
-
+            
             //create Application user object
             var user = new ApplicationUser()
             {
@@ -33,6 +33,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
                 PasswordHash = passwordHash,
                 fullName = registerViewModel.fullName,
                 Email = registerViewModel.email
+                
             };
 
             //create user

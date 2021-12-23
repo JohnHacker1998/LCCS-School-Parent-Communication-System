@@ -1,8 +1,11 @@
 ﻿using LCCS_School_Parent_Communication_System.Identity;
+using LCCS_School_Parent_Communication_System.viewModels;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Helpers;
 
 namespace LCCS_School_Parent_Communication_System.Additional_Class
 {
@@ -41,6 +44,40 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             }
 
             return section;
+        }
+        public String RegisterParent(RegisterViewModel registerViewModel, String role)
+        {
+            //basic objects for creation of user
+            var appDbContext = new ApplicationDbContext();
+            var userStore = new ApplicationUserStore(appDbContext);
+            var userManager = new ApplicationUserManager(userStore);
+
+            //hash password to store on the table
+            var passwordHash = Crypto.HashPassword(registerViewModel.password);
+
+            //create Application user object
+            var user = new ApplicationUser()
+            {
+                UserName = registerViewModel.username,
+                PasswordHash = passwordHash,
+                fullName = registerViewModel.fullName,
+                Email = registerViewModel.email,
+                PhoneNumber=registerViewModel.phoneNumber,
+                
+
+            };
+
+            //create user
+            IdentityResult result = userManager.Create(user);
+
+            //add asssociated role to the user
+            if (result.Succeeded)
+            {
+                userManager.AddToRole(user.Id, role);
+                return user.Id;
+            }
+
+            return null;
         }
     }
 }

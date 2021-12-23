@@ -45,6 +45,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
             Student st = new Student();
             Models.Parent p = new Models.Parent();
             Collection c = new Collection();
+            RegistrarMethod rm = new RegistrarMethod();
             RegisterViewModel rv = new RegisterViewModel();
             Models.Parent parent = new Models.Parent();
             var userStore = new ApplicationUserStore(db);
@@ -115,8 +116,10 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
                             rv.fullName = pv.fullName;
                             rv.username = c.generateUserName();
                             rv.password = c.generatePassword();
+                            rv.phoneNumber = pv.phoneNumber;
+                            
 
-                            string ide = c.RegisterUser(rv, "Parent");
+                            string ide = rm.RegisterParent(rv, "Parent");
 
                             if (ide != null)
                             {

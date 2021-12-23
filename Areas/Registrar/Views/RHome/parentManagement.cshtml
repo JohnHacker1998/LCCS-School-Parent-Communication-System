@@ -20,6 +20,11 @@
     @Html.LabelFor(a => a.email);
     @Html.TextBoxFor(a => a.email);
     @Html.ValidationMessageFor(a => a.email);
+
+    @Html.LabelFor(a => a.phoneNumber);
+    @Html.EditorFor(a => a.phoneNumber);
+    @Html.ValidationMessageFor(a => a.phoneNumber);
+
     <input type="submit" name="search" value="Search" />
 
     <input type="submit" name="add" value="Add" />
@@ -74,6 +79,7 @@
                 <td>@k.user.fullName</td>
                 <td>@k.student.fullName</td>
                 <td>@k.user.Email</td>
+                <td>@k.user.PhoneNumber</td>
                 <td>
                     @using (Html.BeginForm("parentManagement", "RHome", new { pid = k.parentId }, FormMethod.Post))
                     {

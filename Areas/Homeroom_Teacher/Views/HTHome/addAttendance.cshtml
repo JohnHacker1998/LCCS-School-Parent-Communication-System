@@ -1,0 +1,30 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.AbsenceRecordViewMoel
+@{
+    ViewBag.Title = "addAttendance";
+}
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+@using (Html.BeginForm("addAttendance", "HTHome", FormMethod.Post))
+{
+    @Html.ListBoxFor(a => a.selectedStudents, Model.studentList, new { style = "width:400px" });
+
+
+    if (ViewBag.Message == true)
+    {
+        <input type="submit" name="add" value="Add As Absent" disabled>
+    }
+    else
+    {
+        <input type="submit" name="add" value="Add As Absent" />
+    }
+    <input type="submit" name="update" value="Update List" />
+}
+
+<script type="text/javascript">
+    $('option').mousedown(function (e) {
+        e.preventDefault();
+        $(this).prop('selected', !$(this).prop('selected'));
+        return false;
+    });
+</script>

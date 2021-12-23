@@ -46,7 +46,7 @@ namespace LCCS_School_Parent_Communication_System.Controllers
                     {
                         return RedirectToAction("Index", "ULHome", new { area = "Unit_Leader" });
                     }
-                    else if (userManager.IsInRole(user.Id, "HomeroomTeacher"))
+                    else if (userManager.IsInRole(user.Id, "HomeRoom"))
                     {
                         return RedirectToAction("Index", "HTHome", new { area = "Homeroom_Teacher" });
                     }

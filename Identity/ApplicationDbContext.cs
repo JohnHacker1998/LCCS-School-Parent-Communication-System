@@ -21,5 +21,7 @@ namespace LCCS_School_Parent_Communication_System.Identity
         
         public DbSet<Parent> Parent { get; set; }
         public DbSet<Student> Student { get; set; }
+        public DbSet<AbsenceRecord> AbsenceRecord { get; set; }
+        public DbSet<Suspension> Suspension { get; set; }
     }
 }

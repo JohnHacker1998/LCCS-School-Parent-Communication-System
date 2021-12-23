@@ -24,5 +24,6 @@ namespace LCCS_School_Parent_Communication_System.viewModels
         [RegularExpression(@"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$", ErrorMessage = "Email is not valid.")]
 
         public string email { get; set; }
+        public string phoneNumber { get; set; }
     }
 }
