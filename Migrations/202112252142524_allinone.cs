@@ -3,16 +3,16 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class recordDateString : DbMigration
+    public partial class allinone : DbMigration
     {
         public override void Up()
         {
-            AlterColumn("dbo.AbsenceRecords", "recordDate", c => c.String());
+            AddColumn("dbo.AbsenceRecords", "evidenceFlag", c => c.String());
         }
         
         public override void Down()
         {
-            AlterColumn("dbo.AbsenceRecords", "recordDate", c => c.DateTime(nullable: false));
+            DropColumn("dbo.AbsenceRecords", "evidenceFlag");
         }
     }
 }

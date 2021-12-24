@@ -25,7 +25,8 @@ namespace LCCS_School_Parent_Communication_System.Identity
         public DbSet<Warning> Warning { get; set; }
 
         public DbSet<AbsenceRecord> AbsenceRecord { get; set; }
+        public DbSet<Evidence> Evidence { get; set; }
 
-        
+
     }
 }
