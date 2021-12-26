@@ -536,86 +536,91 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             rvm.retrevedTeacherList = new List<Teacher>();
             List<Teacher> retrieveAssignment = new List<Teacher>();
             //if select is selected for unit leader assignemnt
-            if (selectToAssign != null)
+            if (ModelState.IsValid || selectToAssign!=null)
             {
-                //searching for the selected teacher using the teacher id provided from the anonymous class provided by the teacher.
-               retrieveAssignment = db.Teacher.Where(a => a.teacherId == teacherID).ToList();
-                //filling the teacher information into the register teacher view model variables which are binded with the form elements.
-                foreach(var k in retrieveAssignment)
+                if (selectToAssign != null)
                 {
-                    rvm.fullName = k.user.fullName;
-                    rvm.grade = k.grade;
-                    rvm.subject = k.subject;
-                }
-            }
-            //if assign is clicked
-            else if (assign != null)
-            {
-                //retreiving the teacher with the credentials recieved from the form using the register teaacher view model.
-                retrieveAssignment = db.Teacher.Where(a => a.grade == rvm.grade && a.subject==rvm.subject && a.user.fullName==rvm.fullName).ToList();
-                //getting the teacher UID
-                foreach(var k in retrieveAssignment)
-                {
-                    teacherID = k.user.Id;
-                }
-                //searching the existence of theteacher from the ApplicationUser table 
-                appUser = userManager.FindById(teacherID);
-                //finding out role name and ID of the teacher
-                var oldRoleId = appUser.Roles.SingleOrDefault().RoleId;
-                
-                var oldRoleName = db.Roles.SingleOrDefault(r => r.Id == oldRoleId).Name;
-                //collecting every teacher with the same grade of the current teacher
-                var teacherList = db.Teacher.Where(a => a.grade == rvm.grade).ToList();
-                //status flag
-                int status = 0;
-                //iterating if the teachers id having the same grade are assigned unit leader status, if so disabling the previlige to add new academic leader for the specified grade.
-                foreach(var i in teacherList)
-                {
-                    if (ad.IsTeacherorUnitLeader(i.teacherId, "UnitLeader")){
-                        status = status + 1;
-                    }
-                }
-                //if the status returns 0, meaning there is no teacher with the unit leader role, removing the teacher role of the selected teacher and assigning unitLeader role to it.
-                if (status == 0) { 
-                userManager.RemoveFromRole(appUser.Id, oldRoleName);
-                userManager.AddToRole(appUser.Id, "UnitLeader");
-                }
-                else
-                {
-                    ViewBag.Message = "Unit leader of the grade already exists.";
-                }
-
-            }
-            //if update is clicked
-            else if (update != null)
-            {//retrieving the modifyable role user using the register view model and searching for the same credential in the teacher table.
-                retrieveAssignment = db.Teacher.Where(a => a.grade == rvm.grade && a.subject == rvm.subject && a.user.fullName == rvm.fullName).ToList();
-                //getting the teacher's user id using foreach loop
-                foreach (var k in retrieveAssignment)
-                {
-                    teacherID = k.user.Id;
-                }
-                //populating the list of teachers to temp3
-                temp3 = db.Teacher.ToList();
-                foreach (var k in temp3)
-                {
-                 //   checking if the teacher has unitleader status, if so checking grade of the grade is same us the value recieved from the view model.
-                    if (ad.IsTeacherorUnitLeader(k.user.Id, "UnitLeader"))
+                    //searching for the selected teacher using the teacher id provided from the anonymous class provided by the teacher.
+                    retrieveAssignment = db.Teacher.Where(a => a.teacherId == teacherID).ToList();
+                    //filling the teacher information into the register teacher view model variables which are binded with the form elements.
+                    foreach (var k in retrieveAssignment)
                     {
-                        if (k.grade == rvm.grade)
-                        {
-                            //updating the role of the teacher from unit leader to teacher.
-                            userManager.RemoveFromRole(k.user.Id, "UnitLeader");
-                            userManager.AddToRole(k.user.Id, "Teacher");
-                            userManager.RemoveFromRole(teacherID, "Teacher");
-                            userManager.AddToRole(teacherID, "UnitLeader");
-                        }
-                       
+                        rvm.fullName = k.user.fullName;
+                        rvm.grade = k.grade;
+                        rvm.subject = k.subject;
                     }
-                    
                 }
+                //if assign is clicked
+                else if (assign != null)
+                {
+                    //retreiving the teacher with the credentials recieved from the form using the register teaacher view model.
+                    retrieveAssignment = db.Teacher.Where(a => a.grade == rvm.grade && a.subject == rvm.subject && a.user.fullName == rvm.fullName).ToList();
+                    //getting the teacher UID
+                    foreach (var k in retrieveAssignment)
+                    {
+                        teacherID = k.user.Id;
+                    }
+                    //searching the existence of theteacher from the ApplicationUser table 
+                    appUser = userManager.FindById(teacherID);
+                    //finding out role name and ID of the teacher
+                    var oldRoleId = appUser.Roles.SingleOrDefault().RoleId;
+
+                    var oldRoleName = db.Roles.SingleOrDefault(r => r.Id == oldRoleId).Name;
+                    //collecting every teacher with the same grade of the current teacher
+                    var teacherList = db.Teacher.Where(a => a.grade == rvm.grade).ToList();
+                    //status flag
+                    int status = 0;
+                    //iterating if the teachers id having the same grade are assigned unit leader status, if so disabling the previlige to add new academic leader for the specified grade.
+                    foreach (var i in teacherList)
+                    {
+                        if (ad.IsTeacherorUnitLeader(i.teacherId, "UnitLeader"))
+                        {
+                            status = status + 1;
+                        }
+                    }
+                    //if the status returns 0, meaning there is no teacher with the unit leader role, removing the teacher role of the selected teacher and assigning unitLeader role to it.
+                    if (status == 0)
+                    {
+                        userManager.RemoveFromRole(appUser.Id, oldRoleName);
+                        userManager.AddToRole(appUser.Id, "UnitLeader");
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Unit leader of the grade already exists.";
+                    }
+
+                }
+                //if update is clicked
+                else if (update != null)
+                {//retrieving the modifyable role user using the register view model and searching for the same credential in the teacher table.
+                    retrieveAssignment = db.Teacher.Where(a => a.grade == rvm.grade && a.subject == rvm.subject && a.user.fullName == rvm.fullName).ToList();
+                    //getting the teacher's user id using foreach loop
+                    foreach (var k in retrieveAssignment)
+                    {
+                        teacherID = k.user.Id;
+                    }
+                    //populating the list of teachers to temp3
+                    temp3 = db.Teacher.ToList();
+                    foreach (var k in temp3)
+                    {
+                        //   checking if the teacher has unitleader status, if so checking grade of the grade is same us the value recieved from the view model.
+                        if (ad.IsTeacherorUnitLeader(k.user.Id, "UnitLeader"))
+                        {
+                            if (k.grade == rvm.grade)
+                            {
+                                //updating the role of the teacher from unit leader to teacher.
+                                userManager.RemoveFromRole(k.user.Id, "UnitLeader");
+                                userManager.AddToRole(k.user.Id, "Teacher");
+                                userManager.RemoveFromRole(teacherID, "Teacher");
+                                userManager.AddToRole(teacherID, "UnitLeader");
+                            }
+
+                        }
+
+                    }
 
 
+                }
             }
             //populaing list of teachers in temp 1, so if they have a teacher role, adding them to retreived teacher list.
             temp1 = db.Teacher.ToList();

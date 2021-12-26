@@ -258,21 +258,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             ayVM.academicList = db.AcademicYear.ToList();
             return ayVM;
         }
-        /*public bool IsAcceptableAcademicYear(DateTime start)
-        {
-            
-            ApplicationDbContext context = new ApplicationDbContext();
-            var allAcadamicYears = context.AcademicYear.ToList();
-            foreach (var getAcadamicYear in allAcadamicYears)
-            {
-                string[] duration = getAcadamicYear.duration.Split('-');
-                if ((start.Month.ToString==DateTime.Parse(duration[1]).Month) > 0)){
-                    return false;
-                }
-               
-            }
-            return true;
-        }*/
+       
 
 
     }

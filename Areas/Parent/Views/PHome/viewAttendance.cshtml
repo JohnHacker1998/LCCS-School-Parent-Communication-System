@@ -3,7 +3,7 @@
     ViewBag.Title = "viewAttendance";
 }
 
-<h2>viewAttendance</h2>
+
 
 @*@using (Html.BeginForm("viewAttendance", "PHome", FormMethod.Post))
 {
@@ -27,12 +27,14 @@
 
             .fc-day-top {
                 border-color: solid red 3px;
+                background-color:red;
             }
 
-            .fc-today {
+           @* .fc-today {
                 background: red !important;
                 color: white;
-            }
+            }*@
+            
 
             .fc-highlight {
                 background: red !important;
@@ -84,14 +86,14 @@
 			$(document).ready(function () {
 				$('#calendar').fullCalendar({
         			header: {
-            			left: 'prev,next today',
+            			left: 'prev,next',
             			center: 'title',
-                        right: 'month'
+                        right: ''
                         
 					},
             		firstDay: 1, //The day that each week begins (Monday=1)
             		slotMinutes: 60,
-            		events: '@Url.RouteUrl(new{ action="GetEvents", controller="Home"})'
+            		events: '@Url.RouteUrl(new{ action="GetEvents", controller="PHome"})'
         		});
     		});
         </script>

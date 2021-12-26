@@ -3,91 +3,102 @@
     ViewBag.Title = "parentManagement";
 }
 
-<h2>parentManagement</h2>
+
 @using (Html.BeginForm("parentManagement", "RHome", FormMethod.Post))
 {
     @Html.HiddenFor(a => a.studentId);
-    @Html.TextBoxFor(a => a.studentId, new { htmlAttributes = new { @readonly = true } });
+   @* @Html.TextBoxFor(a => a.studentId, new { htmlAttributes = new { @readonly = true } });
+*@
+<div class="row d-flex align-self-center">
+    <div class="form-group col-xl-6 ">
+        @Html.LabelFor(a => a.studentFullName)
+        @Html.EditorFor(a => a.studentFullName,new {htmlAttributes=new{ @class="form-control"} })
+    
+    </div>
+    <div class="form-group col-xl-6">
+        @Html.LabelFor(a => a.fullName)
+        @Html.EditorFor(a => a.fullName, new { htmlAttributes = new { @class = "form-control" } })
+       
+    </div>
 
-    @Html.LabelFor(a => a.studentFullName);
-    @Html.TextBoxFor(a => a.studentFullName);
-    @Html.ValidationMessageFor(a => a.studentFullName);
+    </div>
+<div class="row">
+    <div class="form-group col-xl-6">
+        @Html.LabelFor(a => a.email)
+        @Html.EditorFor(a => a.email, new { htmlAttributes = new { @class = "form-control" } })
+ 
+    </div>
+    <div class="form-group col-xl-6">
+        @Html.LabelFor(a => a.phoneNumber)
+        @Html.EditorFor(a => a.phoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+       
+    </div>
+        </div>
+<div class="text-center">
+    <input type="submit" name="search" value="Search" class="btn btn-primary "/>
 
-    @Html.LabelFor(a => a.fullName);
-    @Html.TextBoxFor(a => a.fullName);
-    @Html.ValidationMessageFor(a => a.fullName);
-
-    @Html.LabelFor(a => a.email);
-    @Html.TextBoxFor(a => a.email);
-    @Html.ValidationMessageFor(a => a.email);
-
-    @Html.LabelFor(a => a.phoneNumber);
-    @Html.EditorFor(a => a.phoneNumber);
-    @Html.ValidationMessageFor(a => a.phoneNumber);
-
-    <input type="submit" name="search" value="Search" />
-
-    <input type="submit" name="add" value="Add" />
-    @Html.ValidationSummary(true, "please fix the errors to procced to the next step")
-}
-<div class="alert alert-danger" role="alert">
-    @ViewBag.Message
+    <input type="submit" name="add" value="Add "class="btn btn-primary bg-green" />
 </div>
-<div class="alert alert-danger" role="alert">
-    @ViewBag.existenceMessage
-</div>
+   
+    }
+   
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Message
+        @ViewBag.existenceMessage
+        @Html.ValidationSummary()
+    </div>
 
-@if (@ViewBag.startStudent == true)
-{
-    <h1>Student List</h1>
+    @if (@ViewBag.startStudent == true)
+    {
+        <h1>Student List</h1>
 
-    <table>
-        <tr>
-            <th>Full Name</th>
-            <th>Section</th>
-
-        </tr>
-        @foreach (var k in Model.studentList)
-        {
+        <table class="table table-striped">
             <tr>
-                <td>@k.fullName</td>
-                <td>@k.sectionName</td>
-                <td>
-                    @using (Html.BeginForm("parentManagement", "RHome", new { id = k.studentId.ToString() }, FormMethod.Post))
-                    {
-                        <input type="submit" name="select" value="Select" />
-                    }
-                </td>
+                <th scope="col">Full Name</th>
+                <th scope="col">Section</th>
+
             </tr>
-        }
+            @foreach (var k in Model.studentList)
+            {
+                <tr>
+                    <td>@k.fullName</td>
+                    <td>@k.sectionName</td>
+                    <td>
+                        @using (Html.BeginForm("parentManagement", "RHome", new { id = k.studentId.ToString() }, FormMethod.Post))
+                        {
+                            <input type="submit" name="select" value="Select" class="btn btn-primary "/>
+                        }
+                    </td>
+                </tr>
+            }
 
-    </table>
-}
-@if (@ViewBag.startParent == true)
-{
-    <h1>Parent List</h1>
-    <table>
-        <tr>
-            <th>Full Name</th>
-            <th>Student Name</th>
-            <th>Email</th>
-        </tr>
-
-        @foreach (var k in Model.parentList)
-        {
+        </table>
+    }
+    @if (@ViewBag.startParent == true)
+    {
+        <h1>Parent List</h1>
+        <table class="table table-striped">
             <tr>
-                <td>@k.user.fullName</td>
-                <td>@k.student.fullName</td>
-                <td>@k.user.Email</td>
-                <td>@k.user.PhoneNumber</td>
-                <td>
-                    @using (Html.BeginForm("parentManagement", "RHome", new { pid = k.parentId }, FormMethod.Post))
-                    {
-                        <input type="submit" name="delete" value="Delete" />
-                    }
-                </td>
+                <th scope="col">Full Name</th>
+                <th scope="col">Student Name</th>
+                <th scope="col">Email</th>
             </tr>
-        }
-    </table>
 
-}
+            @foreach (var k in Model.parentList)
+            {
+                <tr>
+                    <td>@k.user.fullName</td>
+                    <td>@k.student.fullName</td>
+                    <td>@k.user.Email</td>
+                    <td>@k.user.PhoneNumber</td>
+                    <td>
+                        @using (Html.BeginForm("parentManagement", "RHome", new { pid = k.parentId }, FormMethod.Post))
+                        {
+                            <input type="submit" name="delete" value="Delete" class="btn btn-danger "/>
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+
+    }

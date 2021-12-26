@@ -28,14 +28,20 @@ namespace LCCS_School_Parent_Communication_System.Areas.Homeroom_Teacher.Control
             ApplicationDbContext db = new ApplicationDbContext();
             AbsenceRecordViewMoel av = new AbsenceRecordViewMoel();
             AcademicYear ay = new AcademicYear();
+            //finding the logged on teacher ID
             string currentUserId = User.Identity.GetUserId();
             av.studentList = new List<SelectListItem>();
+            //finding the student list of where the teacher is homeroom for
             av.studentList = htm.getList(currentUserId);
+            //counting number of students in the retrieved list
             int a = av.studentList.Count();
+            //creating an array with the size of the list of the students list to hold the selection on listbox
             av.selectedStudents = new int[a];
             Section s = new Section();
+            //finding the section where the teacher is homeroom
             s = db.Section.Where(x => x.teacherId == currentUserId).FirstOrDefault();
             List<AbsenceRecord> absenceList = new List<AbsenceRecord>();
+            //recording the current date as a short date string
             string d = DateTime.Now.ToShortDateString();
             absenceList = db.AbsenceRecord.Where(c => c.recordDate == d).ToList();
             int i = 0;

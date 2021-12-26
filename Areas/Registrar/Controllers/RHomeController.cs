@@ -279,6 +279,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
                         //error message
                         ViewBag.found = "Record Not Found";
                     }
+                    int x = 0;
 
                 }
                 else if (edit != null)

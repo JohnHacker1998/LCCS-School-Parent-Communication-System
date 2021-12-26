@@ -27,7 +27,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
 
             return View(new calanderEvents());
         }
-        public JsonResult GetEvents(DateTime start, DateTime end)
+        public JsonResult GetEvents()
         {
             calanderEvents cv = new calanderEvents();
             ApplicationDbContext db = new ApplicationDbContext();
@@ -35,10 +35,11 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
             string currentUserId = User.Identity.GetUserId();
             Models.Parent p = new Models.Parent();
             p = db.Parent.Where(r => r.parentId == currentUserId).FirstOrDefault();
-            start = DateTime.Today;
-            end = DateTime.Today;
+           
            List<AbsenceRecord>  ab = new List<AbsenceRecord>();
+            List<LateComer> lc = new List<LateComer>();
             ab = db.AbsenceRecord.Where(a=>a.studentId==p.studentId).ToList();
+            lc = db.LateComer.Where(a => a.studentId == p.studentId).ToList();
             if (ab.Count() != 0) 
             {
                 foreach(var g in ab)
@@ -49,6 +50,21 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
                         title = "Absent",
                         start = g.recordDate,
                         end =g.recordDate,
+                        allDay = true,
+                    }
+                        );
+                }
+            }
+            if (lc.Count != 0)
+            {
+                foreach (var m in lc)
+                {
+                    events.Add(new calanderEvents()
+                    {
+                        id = m.lateId,
+                        title = "Late",
+                        start = m.lateDate.ToShortDateString(),
+                        end = m.lateDate.ToShortDateString(),
                         allDay = true,
                     }
                         );

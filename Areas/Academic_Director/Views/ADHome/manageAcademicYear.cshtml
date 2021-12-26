@@ -5,7 +5,7 @@
 
 }
 
-<h2>manageAcademicYear</h2>
+
 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
@@ -23,180 +23,222 @@
 
 @using (Html.BeginForm("manageAcademicYear", "ADHome", FormMethod.Post))
 {
-    @Html.HiddenFor(a => a.yearStartTemp);
-    if (ViewBag.disableYearStart == true)
-    {
-        @Html.LabelFor(a => a.yearStart);
-        @Html.EditorFor(a => a.yearStart, new { htmlAttributes = new { @readonly = true } });
+    @Html.HiddenFor(a => a.yearStartTemp)
+    <div class="row">
+        @if (ViewBag.disableYearStart == true)
+        {
+            <div class="form-group col-xl-6 ">
+                @Html.LabelFor(a => a.yearStart)
+                @Html.EditorFor(a => a.yearStart, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })
+            </div>
+        }
+        else
+        {
+            <div class="form-group col-xl-6">
+                @Html.LabelFor(a => a.yearStart)
+                @Html.EditorFor(a => a.yearStart, new { ViewBag.disableYearStart, htmlAttributes = new { @class = "datepicker form-control" } })
+             
+            </div>
+        }
 
+        @if (ViewBag.disableYearEnd == true)
+        {
+            <div class="form-group col-xl-6">
+                @Html.LabelFor(a => a.yearEnd)
+                @Html.EditorFor(a => a.yearEnd, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })
+            </div>
+        }
+        else
+        {
+            <div class="form-group col-xl-6">
+                @Html.LabelFor(a => a.yearEnd)
+                @Html.EditorFor(a => a.yearEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })
+              
+            </div>
+        }
+    </div>
+    <div class="row">
+        @if (ViewBag.disableQuarterOneStart == true)
+        {
+        <div class="form-group col-xl-6">
+            @Html.LabelFor(a => a.quarterOneStart)
+            @Html.EditorFor(a => a.quarterOneStart, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })
+        </div>
+        }
+        else
+        {
+        <div class="form-group col-xl-6">
+            @Html.LabelFor(a => a.quarterOneStart)
+            @Html.EditorFor(a => a.quarterOneStart, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })
+           
+        </div>
+        }
+       @if (ViewBag.disableQuarterOneEnd == true)
+        {
+        <div class="form-group col-xl-6">
+            @Html.LabelFor(a => a.quarterOneEnd)
+            @Html.EditorFor(a => a.quarterOneEnd, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })
+        </div>
+        }
+        else
+        {
+        <div class="form-group col-xl-6">
+            @Html.LabelFor(a => a.quarterOneEnd)
+            @Html.EditorFor(a => a.quarterOneEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })
+          
+        </div>
+        }
+        </div>
+<div class="row">
+        @if (ViewBag.disableQuarterTwoStart == true)
+        {
+        <div class="form-group col-xl-6">
+            @Html.LabelFor(a => a.quarterTwoStart)
+            @Html.EditorFor(a => a.quarterTwoStart, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })
+        </div>
+
+        }
+        else
+        {
+        <div class="form-group col-xl-6">
+            @Html.LabelFor(a => a.quarterTwoStart)
+            @Html.EditorFor(a => a.quarterTwoStart, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })
+       
+        </div>
+        }
+        @if (ViewBag.disableQuarterTwoEnd == true)
+        {
+        <div class="form-group col-xl-6">
+            @Html.LabelFor(a => a.quarterTwoEnd)
+            @Html.EditorFor(a => a.quarterTwoEnd, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })
+        </div>
+        }
+        else
+        {
+        <div class="form-group col-xl-6">
+            @Html.LabelFor(a => a.quarterTwoEnd)
+            @Html.EditorFor(a => a.quarterTwoEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })
+          
+        </div>
+        }
+        </div>
+<div class="row">
+    @if (ViewBag.disableQuarterThreeStart == true)
+    {
+    <div class="form-group col-xl-6">
+        @Html.LabelFor(a => a.quarterThreeStart)
+        @Html.EditorFor(a => a.quarterThreeStart, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })
+    </div>
     }
     else
     {
-        @Html.LabelFor(a => a.yearStart);
-        @Html.EditorFor(a => a.yearStart, new { ViewBag.disableYearStart, htmlAttributes = new { @class = "datepicker" } });
-        @Html.ValidationMessageFor(a => a.yearStart);
+    <div class="form-group col-xl-6">
+        @Html.LabelFor(a => a.quarterThreeStart)
+        @Html.EditorFor(a => a.quarterThreeStart, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })
+        
+    </div>
     }
-
-    if (ViewBag.disableYearEnd == true)
+    @if (ViewBag.disableQuarterThreeEnd == true)
     {
-        @Html.LabelFor(a => a.yearEnd);
-        @Html.EditorFor(a => a.yearEnd, new { htmlAttributes = new { @readonly = true } });
-
+    <div class="form-group col-xl-6">
+        @Html.LabelFor(a => a.quarterThreeEnd)
+        @Html.EditorFor(a => a.quarterThreeEnd, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })
+    </div>
     }
     else
     {
-        @Html.LabelFor(a => a.yearEnd);
-        @Html.EditorFor(a => a.yearEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
-        @Html.ValidationMessageFor(a => a.yearEnd);
+    <div class="form-group col-xl-6">
+        @Html.LabelFor(a => a.quarterThreeEnd)
+        @Html.EditorFor(a => a.quarterThreeEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })
+   
+    </div>
     }
-    if (ViewBag.disableQuarterOneStart == true)
-    {
-        @Html.LabelFor(a => a.quarterOneStart);
-        @Html.EditorFor(a => a.quarterOneStart, new { htmlAttributes = new { @readonly = true } });
-
-    }
-    else
-    {
-        @Html.LabelFor(a => a.quarterOneStart);
-        @Html.EditorFor(a => a.quarterOneStart, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
-        @Html.ValidationMessageFor(a => a.quarterOneStart);
-    }
-    if (ViewBag.disableQuarterOneEnd == true)
-    {
-        @Html.LabelFor(a => a.quarterOneEnd);
-        @Html.EditorFor(a => a.quarterOneEnd, new { htmlAttributes = new { @readonly = true } });
-
-    }
-    else
-    {
-        @Html.LabelFor(a => a.quarterOneEnd);
-        @Html.EditorFor(a => a.quarterOneEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
-        @Html.ValidationMessageFor(a => a.quarterOneEnd);
-    }
-    if (ViewBag.disableQuarterTwoStart == true)
-    {
-        @Html.LabelFor(a => a.quarterTwoStart);
-        @Html.EditorFor(a => a.quarterTwoStart, new { htmlAttributes = new { @readonly = true } });
-
-    }
-    else
-    {
-        @Html.LabelFor(a => a.quarterTwoStart);
-        @Html.EditorFor(a => a.quarterTwoStart, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
-        @Html.ValidationMessageFor(a => a.quarterTwoStart);
-    }
-    if (ViewBag.disableQuarterTwoEnd == true)
-    {
-        @Html.LabelFor(a => a.quarterTwoEnd);
-        @Html.EditorFor(a => a.quarterTwoEnd, new { htmlAttributes = new { @readonly = true } });
-
-    }
-    else
-    {
-        @Html.LabelFor(a => a.quarterTwoEnd);
-        @Html.EditorFor(a => a.quarterTwoEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
-        @Html.ValidationMessageFor(a => a.quarterTwoEnd);
-
-    }
-    if (ViewBag.disableQuarterThreeStart == true)
-    {
-        @Html.LabelFor(a => a.quarterThreeStart);
-        @Html.EditorFor(a => a.quarterThreeStart, new { htmlAttributes = new { @readonly = true } });
-
-    }
-    else
-    {
-        @Html.LabelFor(a => a.quarterThreeStart);
-        @Html.EditorFor(a => a.quarterThreeStart, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
-        @Html.ValidationMessageFor(a => a.quarterThreeStart);
-    }
-    if (ViewBag.disableQuarterThreeEnd == true)
-    {
-        @Html.LabelFor(a => a.quarterThreeEnd);
-        @Html.EditorFor(a => a.quarterThreeEnd, new { htmlAttributes = new { @readonly = true } });
-
-    }
-    else
-    {
-        @Html.LabelFor(a => a.quarterThreeEnd);
-        @Html.EditorFor(a => a.quarterThreeEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
-        @Html.ValidationMessageFor(a => a.quarterThreeEnd);
-    }
-    if (ViewBag.disableQuarterFourStart == true)
-    {
-        @Html.LabelFor(a => a.quarterFourStart);
-        @Html.EditorFor(a => a.quarterFourStart, new { htmlAttributes = new { @readonly = true } });
-
-    }
-    else
-    {
-        @Html.LabelFor(a => a.quarterFourStart);
-        @Html.EditorFor(a => a.quarterFourStart, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
-        @Html.ValidationMessageFor(a => a.quarterFourStart);
-    }
-    if (ViewBag.disableQuarterFourEnd == true)
-    {
-        @Html.LabelFor(a => a.quarterFourEnd);
-        @Html.EditorFor(a => a.quarterFourEnd, new { htmlAttributes = new { @readonly = true } });
-
-    }
-    else
-    {
-        @Html.LabelFor(a => a.quarterFourEnd);
-        @Html.EditorFor(a => a.quarterFourEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker" } });
-        @Html.ValidationMessageFor(a => a.quarterFourEnd);
-    }
-
-
-    <input type="submit" value="Add" name="add" />
-    <input type="submit" value="Update" name="update" />
-    @Html.ValidationSummary(true, "please fix the errors to procced to the next step")
-
-}
-
-<div class="alert alert-danger" role="alert">
-    @ViewBag.Message
-
-
 </div>
+<div class="row">
+    @if (ViewBag.disableQuarterFourStart == true)
+    {
+        <div class="form-group col-xl-6">
+            @Html.LabelFor(a => a.quarterFourStart)
+            @Html.EditorFor(a => a.quarterFourStart, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })
+        </div>
+    }
+    else
+    {
+        <div class="form-group col-xl-6">
+            @Html.LabelFor(a => a.quarterFourStart)
+            @Html.EditorFor(a => a.quarterFourStart, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })
+      
+        </div>
+    }
+    @if (ViewBag.disableQuarterFourEnd == true)
+    {
+        <div class="form-group col-xl-6">
+            @Html.LabelFor(a => a.quarterFourEnd)
+            @Html.EditorFor(a => a.quarterFourEnd, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })
+        </div>
+
+    }
+    else
+    {
+        <div class="form-group col-xl-6">
+            @Html.LabelFor(a => a.quarterFourEnd)
+            @Html.EditorFor(a => a.quarterFourEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })
+           
+        </div>
+
+    }
+</div>
+<div class="row d-block  w-50">
+    <input type="submit" value="Add" name="add" class="btn btn-primary col bg-green m-lg-3" />
+    <input type="submit" value="Update" name="update" class="btn btn-primary col  m-lg-3 " />
+</div>
+        
+      
+
+        }
+
 <div class="alert alert-danger" role="alert">
+    @Html.ValidationSummary()
+    @ViewBag.Message
     @ViewBag.durationMessage
 
+
 </div>
+        
 
 
 
-<table>
-    <tr>
-        <th>Academic Year Name</th>
-        <th>Q1</th>
-        <th>Q2</th>
-        <th>Q3</th>
-        <th>Q4</th>
-        <th>Academic Year End</th>
+        <table class="table table-striped">
+            <tr>
+                <th scope="col">Academic Year Name</th>
+                <th scope="col">Q1</th>
+                <th scope="col">Q2</th>
+                <th scope="col">Q3</th>
+                <th scope="col">Q4</th>
+                <th scope="col">Academic Year End</th>
 
-    </tr>
+            </tr>
 
-    @foreach (var k in Model.academicList)
-    {
-        <tr>
-            <td>@k.academicYearName</td>
-            <td>@k.quarterOne</td>
-            <td>@k.quarterTwo</td>
-            <td>@k.quarterThree</td>
-            <td>@k.quarterFour</td>
-            <td>@k.duration</td>
-            <td>
-                @using (Html.BeginForm("manageAcademicYear", "ADHome", new { acadYN = k.academicYearName }, FormMethod.Post))
-                {
-                    <input type="submit" name="select" value="Select" />
-                }
-            </td>
+            @foreach (var k in Model.academicList)
+            {
+                <tr>
+                    <td>@k.academicYearName</td>
+                    <td>@k.quarterOne</td>
+                    <td>@k.quarterTwo</td>
+                    <td>@k.quarterThree</td>
+                    <td>@k.quarterFour</td>
+                    <td>@k.duration</td>
+                    <td>
+                        @using (Html.BeginForm("manageAcademicYear", "ADHome", new { acadYN = k.academicYearName }, FormMethod.Post))
+                        {
+                            <input type="submit" name="select" value="Select"class="btn btn-primary" />
+                        }
+                    </td>
 
-        </tr>
+                </tr>
 
-    }
-</table>
+            }
+        </table>
 
 
 
