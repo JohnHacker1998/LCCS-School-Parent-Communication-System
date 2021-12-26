@@ -1,0 +1,40 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.EvidenceApprovalViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EvidenceApproval</title>
+</head>
+<body>
+    @*@using (Html.BeginForm("EvidenceApproval", "ULHome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+        {
+            <input type="file" name="file" />
+            <input type="submit" name="submit" value="Upload" />
+        }*@
+
+
+
+    @using (Html.BeginForm("EvidenceApproval", "ULHome", FormMethod.Post))
+    {
+        @Html.HiddenFor(h=>h.Id)
+        @Html.ListBoxFor(l => l.days, new SelectList(Model.days))
+        <input type="submit" name="approve" value="Approve" />
+    }
+
+
+    @if (ViewBag.view)
+    {
+        var base1 = Convert.ToBase64String(Model.document);
+        var src = string.Format("data:application/pdf;base64,{0}", base1);
+        <iframe src="@src" height="800"style="width="100%" ></iframe>
+    }
+
+
+
+</body>
+</html>

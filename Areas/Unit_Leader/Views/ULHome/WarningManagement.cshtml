@@ -1,0 +1,69 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.WarningViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>WarningManagement</title>
+</head>
+<body>
+    <hr />
+    @ViewBag.message
+    <hr />
+
+    <table>
+        <tr>
+            <th>Student Name</th>
+            <th>Section</th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.eligible)
+        {
+            <tr>
+                <td>@item.fullName</td>
+                <td>@item.sectionName</td>
+                <td>
+                    @using (Html.BeginForm("WarningManagement", "ULHome", new { id = item.studentId.ToString() }, FormMethod.Post))
+                    {
+                        <input type="submit" value="Send Warning" name="warning" />
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+
+
+
+    <table>
+        <tr>
+            <th>Send Date</th>
+            <th>Student Name</th>
+            <th>Section</th>
+            <th>Type</th>
+            <th>Parent Name</th>
+            <th>Phone Number</th>
+        </tr>
+        @{
+            int i = 0;
+            foreach (var item in Model.nonViewed)
+            {
+                <tr>
+                    <td>@item.warningDate</td>
+                    <td>@item.student.fullName</td>
+                    <td>@item.student.sectionName</td>
+                    <td>@item.warningType</td>
+                    <td>@Model.parentName[i]</td>
+                    <td>@Model.parentPhone[i]</td>
+                </tr>
+                i++;
+            }
+        }
+    </table>
+</body>
+</html>

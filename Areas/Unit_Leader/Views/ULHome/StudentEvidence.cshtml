@@ -1,0 +1,23 @@
+﻿@model List<LCCS_School_Parent_Communication_System.Models.Evidence>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>StudentEvidence</title>
+</head>
+<body>
+
+    @foreach (var list in Model)
+    {
+        <a href="/Unit_Leader/ULHome/EvidenceApproval/@list.evidenceId">@list.parent.student.fullName</a>
+    }
+
+    @ViewBag.message
+
+</body>
+</html>

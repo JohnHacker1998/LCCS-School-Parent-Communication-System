@@ -1,0 +1,52 @@
+﻿@model LCCS_School_Parent_Communication_System.Models.Warning
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ViewWarning</title>
+</head>
+<body>
+    @if (Model.warningType == "Atendance")
+    {
+        <h1>Attendance Warning Letter</h1>
+        <p>Date: @Model.warningDate</p>
+
+        <p>Subject: A letter of caution due to the child's poor attendance record.</p>
+
+        <p>Dear Parent/Guardian</p>
+
+        <p>Our records indicate that your child (@Model.student.fullName) has missed 3 days in a single quarter from school, which has been determined to be reaching the tolerance limit. Regular attendance is absolutely necessary in order for your child to progress in his/her academic studies. Per Lideta Catholic Cathedral School Attendance Law, students are required to attend school regularly. Parents and guardians are responsible for ensuring that their children attend school on a regular basis.</p>
+
+        <p>A written notice is required for every absence. If your child is absent from school due to illness, a doctor’s note is required for the absence to be excused.</p>
+
+        <p>Please be advised that if absences continue, we will be forced to take appropriate actions based on the school rules. we hope you will regard this message as a serious warning.</p>
+
+        <p>If you feel our records are incorrect, or there are circumstances of which we should be aware of, please Physically contact the School.</p>
+        <br />
+        <p>Sincerely,</p>
+
+        <br />
+        <p>Academic Director</p>
+    }
+    else if (Model.warningType == "LateComer")
+    {
+        <p>Date: @Model.warningDate</p>
+
+        <p>Subject: A letter of caution due to the child's poor attendance record.</p>
+
+        <p>Dear Parent/Guardian</p>
+        <p>This letter serves to provide an official warning from LCCS for your child's (name) unfavorable punctuality records. LCCS believes that punctuality to school and class is important to a student’s ongoing success with their education.</p>
+        <p>It has come to our attention that your child has arrived late to school for the third time in a single quarter. Please assist in putting an end to your child's tardiness. Further violations of our punctuality policies will require the school to suspend the student. Please be guided accordingly. Please contact us if you have any questions.</p>
+        <br />
+        <p>Sincerely,</p>
+
+        <br />
+        <p>Academic Director</p>
+    }
+</body>
+</html>
