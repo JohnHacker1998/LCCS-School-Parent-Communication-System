@@ -107,14 +107,14 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
                         yesterday = yesterday.Subtract(TimeSpan.FromDays(1));
                     }
                     while (yesterday.DayOfWeek == DayOfWeek.Sunday || yesterday.DayOfWeek == DayOfWeek.Saturday);
-                    string previousDate = yesterday.ToShortDateString();
-                    var absenceRecord = context.AbsenceRecord.Where(a => a.studentId == parent.studentId && a.recordDate == previousDate).FirstOrDefault();
+                    //string previousDate = yesterday.ToShortDateString();
+                    var absenceRecord = context.AbsenceRecord.Where(a => a.studentId == parent.studentId && a.recordDate == yesterday.Date).FirstOrDefault();
 
                     //check if the student absence record
                     if (absenceRecord != null)
                     {
                         var currentDay = DateTime.Now.ToShortDateString();
-                        var presenceRecord = context.AbsenceRecord.Where(a => a.studentId == parent.studentId && a.recordDate == currentDay ).FirstOrDefault();
+                        var presenceRecord = context.AbsenceRecord.Where(a => a.studentId == parent.studentId && a.recordDate == yesterday.Date).FirstOrDefault();
 
                         //check today attendance record
                         if (presenceRecord == null)
@@ -122,11 +122,11 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
                             Evidence duplicateEvidence;
                             if (secondParent == null)
                             {
-                                duplicateEvidence = context.Evidence.Where(e => e.parentId == pId && e.dateUpload == currentDay).FirstOrDefault();
+                                duplicateEvidence = context.Evidence.Where(e => e.parentId == pId && e.dateUpload == yesterday.Date).FirstOrDefault();
                             }
                             else
                             {
-                                duplicateEvidence = context.Evidence.Where(e => (e.parentId == pId && e.dateUpload == currentDay) || (e.parentId == secondParent.parentId && e.dateUpload == currentDay)).FirstOrDefault();
+                                duplicateEvidence = context.Evidence.Where(e => (e.parentId == pId && e.dateUpload == yesterday.Date) || (e.parentId == secondParent.parentId && e.dateUpload == yesterday.Date)).FirstOrDefault();
                             }
 
                             //check if the eviedence is provided once
@@ -142,7 +142,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
                                     //populate the evidence object
                                     evidence.evidenceDocument = upload;
                                     evidence.parentId = pId;
-                                    evidence.dateUpload = DateTime.Now.ToShortDateString();
+                                    evidence.dateUpload = DateTime.Now.Date;
                                     evidence.approvalStatus = "Provided";
 
                                     //save the record
