@@ -12,7 +12,7 @@
     <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
     <link href="~/Areas/Academic_Director/css/styles.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-
+    <link rel="stylesheet" href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" />
     <link href="~/Areas/Academic_Director/css/main.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
     <link href="~/Areas/Academic_Director/css/styles.css" rel="stylesheet" />
@@ -31,8 +31,7 @@
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 bg-custom" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
-        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-        </form>
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"></form>
         <!-- Navbar-->
         <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
             <li class="nav-item dropdown">
@@ -44,25 +43,25 @@
                 </ul>
             </li>
         </ul>
-     
+
     </nav>
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-red" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                     
+
                         <a class="nav-link" href="@Url.Action("manageRegistrar","ADHome")">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Registrar Management
                         </a>
                         <a class="nav-link" href="@Url.Action("RegisterTeacher","ADHome")">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                           Teacher Management
+                            Teacher Management
                         </a>
                         <a class="nav-link" href="@Url.Action("SectionManagement","ADHome")">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                           Section Management
+                            Section Management
                         </a>
                         <a class="nav-link" href="@Url.Action("manageAcademicYear","ADHome")">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
@@ -72,9 +71,9 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Unit Leader Designation
                         </a>
-                        
 
-                        
+
+
 
 
 
@@ -100,7 +99,7 @@
                             <a href="#">Terms &amp; Conditions</a>
                         </div>
                     </div>
-                </div>  
+                </div>
             </footer>
         </div>
     </div>
@@ -110,7 +109,8 @@
     <script src="assets/demo/chart-bar-demo.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
     <script src="js/datatables-simple-demo.js"></script>
- 
+
     <script src="~/Areas/Academic_Director/js/scripts.js"></script>
+    
 </body>
 </html>

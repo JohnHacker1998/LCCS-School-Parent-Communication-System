@@ -16,7 +16,7 @@ namespace LCCS_School_Parent_Communication_System.Models
         [Key]
         public int warningId { get; set; }
 
-        public string warningDate { get; set; }
+        public DateTime warningDate { get; set; }
         [ForeignKey("student")]
         public int studentId { get; set; }
 

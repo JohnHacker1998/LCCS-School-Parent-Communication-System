@@ -60,8 +60,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
                         foreach (var getActive in academicYears)
                         {
                             //get start and end dates to check if today is in the middle
-                            string[] duration = getActive.duration.Split('-');
-                            if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
+                            if (!(DateTime.Compare(DateTime.Now, getActive.durationStart) < 0 || DateTime.Compare(DateTime.Now, getActive.durationStart) > 0))
                             {
                                 //search student by student name in active academic years
                                 lateComerViewModel.students = context.Student.Where(s => s.fullName.StartsWith(lateComerViewModel.studentName) && s.academicYearId == getActive.academicYearName && s.sectionName.StartsWith(teacher.grade.ToString())).ToList();
@@ -151,7 +150,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
                                 warning.grade = teacher.grade;
                                 warning.warningType = "LateComer";
                                 warning.academicYear = collection.currentQuarter(ID);
-                                warning.warningDate = DateTime.Now.ToShortDateString();
+                                warning.warningDate = DateTime.Now.Date;
 
                                 //save warning
                                 context.Warning.Add(warning);
@@ -331,7 +330,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
 
                     //populate warning object
                     warningobj.academicYear = quarter;
-                    warningobj.warningDate = DateTime.Now.ToShortDateString();
+                    warningobj.warningDate = DateTime.Now.Date;
                     warningobj.WarningReadStatus = "No";
                     warningobj.warningType = "Atendance";
                     warningobj.studentId = ID;
@@ -369,11 +368,11 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
 
             do
             {
-                string yesterdayDate = yesterday.ToShortDateString();
-                var daysRecord = context.AbsenceRecord.Where(a => a.studentId == evidence.parent.student.studentId && a.recordDate == yesterdayDate).FirstOrDefault();
+                //string yesterdayDate = yesterday.ToShortDateString();
+                var daysRecord = context.AbsenceRecord.Where(a => a.studentId == evidence.parent.student.studentId && a.recordDate == yesterday.Date).FirstOrDefault();
                 if (daysRecord != null)
                 {
-                    evidenceApprovalViewModel.days.Add(daysRecord.recordDate);
+                    evidenceApprovalViewModel.days.Add(daysRecord.recordDate.Date.ToShortDateString());
 
                     do
                     {
@@ -427,8 +426,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
 
             for(int i = 0; i < days.Length; i++)
             {
-                string date = days[i];
-                var absenceRecord = context.AbsenceRecord.Where(a => a.recordDate == date && a.studentId == evidence.parent.student.studentId).FirstOrDefault();
+                DateTime date = DateTime.Parse(days[i]);
+                var absenceRecord = context.AbsenceRecord.Where(a => a.recordDate == date.Date && a.studentId == evidence.parent.student.studentId).FirstOrDefault();
                 absenceRecord.evidenceFlag = "AcceptableReason";
                 context.SaveChanges();
             }
@@ -443,7 +442,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
             List<Student> students = new List<Student>();
             List<Evidence> evidence = new List<Evidence>();
 
-            var currentDate = DateTime.Now.ToShortDateString();
+            var currentDate = DateTime.Now.Date;
 
             //get teacher grade from login info
             string tId = User.Identity.GetUserId().ToString();
@@ -517,8 +516,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
             foreach (var getActive in academicYears)
             {
                 //get start and end dates to check if today is in the middle
-                string[] duration = getActive.duration.Split('-');
-                if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
+                if (!(DateTime.Compare(DateTime.Now, getActive.durationStart) < 0 || DateTime.Compare(DateTime.Now, getActive.durationEnd) > 0))
                 {
                     string quarter = homeroomTeacherMethod.whichQuarter(getActive.academicYearName);
 
@@ -536,8 +534,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
                                 yesterday = yesterday.Subtract(TimeSpan.FromDays(1));
                             }
                             while (yesterday.DayOfWeek==DayOfWeek.Sunday || yesterday.DayOfWeek==DayOfWeek.Saturday);
-                            string previousDate = yesterday.ToShortDateString();
-                            var previousDay = context.AbsenceRecord.Where(a => a.recordDate == previousDate && a.studentId == getStudents.studentId);
+                            //string previousDate = yesterday.ToShortDateString();
+                            var previousDay = context.AbsenceRecord.Where(a => a.recordDate == yesterday.Date && a.studentId == getStudents.studentId);
 
                             if (previousDay == null)
                             {
@@ -580,8 +578,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
             foreach (var getActive in academicYears)
             {
                 //get start and end dates to check if today is in the middle
-                string[] duration = getActive.duration.Split('-');
-                if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
+                if (!(DateTime.Compare(DateTime.Now, getActive.durationStart) < 0 || DateTime.Compare(DateTime.Now, getActive.durationEnd) > 0))
                 {
                     //get current quarter and students who register for that academic year who are managed by this unitleader
                     string quarter = homeroomTeacherMethod.whichQuarter(getActive.academicYearName);

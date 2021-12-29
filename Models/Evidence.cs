@@ -13,7 +13,7 @@ namespace LCCS_School_Parent_Communication_System.Models
         public int evidenceId { get; set; }
         [ForeignKey("parent")]
         public string parentId { get; set; }
-        public string dateUpload { get; set; }
+        public DateTime dateUpload { get; set; }
 
         public byte[] evidenceDocument { get; set; }
         public string approvalStatus { get; set; }
