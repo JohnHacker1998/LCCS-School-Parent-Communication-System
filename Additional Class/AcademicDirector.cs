@@ -51,32 +51,24 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             context.SaveChanges();
         }
 
-        public Boolean validateDuration(AcademicYearViewModel ayvm)
+        public Boolean validateDuration(AcademicYear ay)
         {
-            DateTime yearStartOne = Convert.ToDateTime(ayvm.yearStart);
-            DateTime yearEndOne = Convert.ToDateTime(ayvm.yearEnd);
-            DateTime zquarterOneStart = Convert.ToDateTime(ayvm.quarterOneStart);
-            DateTime zquarterOneEnd = Convert.ToDateTime(ayvm.quarterOneEnd);
-            DateTime zquarterTwoStart = Convert.ToDateTime(ayvm.quarterTwoStart);
-            DateTime zquarterTwoEnd = Convert.ToDateTime(ayvm.quarterTwoEnd);
-            DateTime zquarterThreeStart = Convert.ToDateTime(ayvm.quarterThreeStart);
-            DateTime zquarterThreeEnd = Convert.ToDateTime(ayvm.quarterThreeEnd);
-            DateTime zquarterFourStart = Convert.ToDateTime(ayvm.quarterFourStart);
-            DateTime zquarterFourEnd = Convert.ToDateTime(ayvm.quarterFourEnd);
+           
 
-            if (DateTime.Compare(yearStartOne, yearEndOne) != 0 && DateTime.Compare(zquarterOneStart, zquarterOneEnd) != 0 &&
-                DateTime.Compare(zquarterTwoStart, zquarterTwoEnd) != 0 && DateTime.Compare(zquarterThreeStart, zquarterThreeEnd) != 0 &&
-                DateTime.Compare(zquarterFourStart, zquarterFourEnd) != 0)
+           
+            if (DateTime.Compare(ay.academicDurationStart, ay.academicDurationEnd) != 0 && DateTime.Compare(ay.quarterOneStart, ay.quarterOneEnd) != 0 &&
+                DateTime.Compare(ay.quarterTwoStart, ay.quarterTwoEnd) != 0 && DateTime.Compare(ay.quarterThreeStart, ay.quarterThreeEnd) != 0 &&
+                DateTime.Compare(ay.quarterFourStart, ay.quarterFourEnd) != 0)
             {
                 int y = 0;
-                if (DateTime.Compare(zquarterOneStart, zquarterOneEnd) < 0 && DateTime.Compare(zquarterTwoStart, zquarterTwoEnd) < 0 &&
-                    DateTime.Compare(zquarterThreeStart, zquarterThreeEnd) < 0 && DateTime.Compare(zquarterFourStart, zquarterFourEnd) < 0 &&
-                    DateTime.Compare(yearStartOne, yearEndOne) < 0)
+                if (DateTime.Compare(ay.quarterOneStart, ay.quarterOneEnd) < 0 && DateTime.Compare(ay.quarterTwoStart, ay.quarterTwoEnd) < 0 &&
+                    DateTime.Compare(ay.quarterThreeStart, ay.quarterThreeEnd) < 0 && DateTime.Compare(ay.quarterFourStart, ay.quarterFourEnd) < 0 &&
+                    DateTime.Compare(ay.academicDurationStart, ay.academicDurationEnd) < 0)
                 {
                     
 
-                    if (DateTime.Compare(zquarterOneEnd, zquarterTwoStart) < 0 && DateTime.Compare(zquarterTwoEnd, zquarterThreeStart) < 0 &&
-                    DateTime.Compare(zquarterThreeEnd, zquarterFourStart) < 0 && (DateTime.Compare(zquarterFourEnd, yearEndOne) < 0 || DateTime.Compare(zquarterFourEnd, yearEndOne) == 0))
+                    if (DateTime.Compare(ay.quarterOneEnd, ay.quarterTwoStart) < 0 && DateTime.Compare(ay.quarterTwoEnd, ay.quarterThreeStart) < 0 &&
+                    DateTime.Compare(ay.quarterThreeEnd, ay.quarterFourStart) < 0 && (DateTime.Compare(ay.quarterFourEnd, ay.academicDurationEnd) < 0 || DateTime.Compare(ay.quarterFourEnd, ay.academicDurationEnd) == 0))
                     {
 
                         return true;
@@ -105,7 +97,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             //retrive all teachers that have teacher role from teacher table and populate it to sectionViewModel
             var allTeachers = context.Teacher.ToList();
 
-            if(allTeachers.Count!= 0)
+            if (allTeachers.Count != 0)
             {
                 foreach (var getNames in allTeachers)
                 {
@@ -116,7 +108,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
                     }
                 }
             }
-            
+
             //retrive all Academic Years that are already active and populate it to sectionViewModel
             var allAcadamicYears = context.AcademicYear.ToList();
 
@@ -131,7 +123,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
                     }
                 }
             }
-            
+
             //populate section letters with alphabet letters
             for (char c = 'A'; c <= 'Z'; c++)
             {
@@ -142,7 +134,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
         }
 
         //function to populate section record
-        public SectionViewModel searchSection(int grade,string letter)
+        public SectionViewModel searchSection(int grade, string letter)
         {
             //basic objects
             ApplicationDbContext context = new ApplicationDbContext();
@@ -174,11 +166,11 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
                     }
                 }
             }
-            
+
             return null;
         }
 
-        
+
 
 
 

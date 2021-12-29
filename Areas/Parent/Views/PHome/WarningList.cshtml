@@ -1,21 +1,14 @@
 ﻿@model List<LCCS_School_Parent_Communication_System.Models.Warning>
 @{
-    Layout = null;
+
 }
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>WarningList</title>
-</head>
-<body>
+@foreach (var list in Model)
+{
+<div class="btn-group w-50 ">
+    <a href="/Parent/PHome/ViewWarning/@list.warningId" class="btn btn-primary">Too Many @list.warningType Record</a>
+</div>
+        }
 
-    @foreach (var list in Model)
-    {
-        <a href="/Parent/PHome/ViewWarning/@list.warningId">Too Many @list.warningType Record</a>
-    }
 
-</body>
-</html>

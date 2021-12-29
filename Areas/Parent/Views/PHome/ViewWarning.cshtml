@@ -1,16 +1,8 @@
 ﻿@model LCCS_School_Parent_Communication_System.Models.Warning
 @{
-    Layout = null;
+    
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>ViewWarning</title>
-</head>
-<body>
     @if (Model.warningType == "Atendance")
     {
         <h1>Attendance Warning Letter</h1>
@@ -48,5 +40,3 @@
         <br />
         <p>Academic Director</p>
     }
-</body>
-</html>

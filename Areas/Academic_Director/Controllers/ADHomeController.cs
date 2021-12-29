@@ -293,6 +293,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             AcademicYear ay = new AcademicYear();
             ApplicationDbContext db = new ApplicationDbContext();
             AcademicDirector ad = new AcademicDirector();
+            
 
             AcademicYearViewModel academicYearViewModel = new AcademicYearViewModel();
             academicYearViewModel.academicList = new List<AcademicYear>();
@@ -316,37 +317,33 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             if (ModelState.IsValid || select!=null || update!=null)
             {
                 //if the model is valid, strings reciieved from the view will be converted to datetime for further manipulation
-                DateTime tempStart = Convert.ToDateTime(ayvm.yearStartTemp);
-                DateTime yearStartOne = Convert.ToDateTime(ayvm.yearStart);
-                DateTime yearEndOne = Convert.ToDateTime(ayvm.yearEnd);
-                DateTime zquarterOneStart = Convert.ToDateTime(ayvm.quarterOneStart);
-                DateTime zquarterOneEnd = Convert.ToDateTime(ayvm.quarterOneEnd);
-                DateTime zquarterTwoStart = Convert.ToDateTime(ayvm.quarterTwoStart);
-                DateTime zquarterTwoEnd = Convert.ToDateTime(ayvm.quarterTwoEnd);
-                DateTime zquarterThreeStart = Convert.ToDateTime(ayvm.quarterThreeStart);
-                DateTime zquarterThreeEnd = Convert.ToDateTime(ayvm.quarterThreeEnd);
-                DateTime zquarterFourStart = Convert.ToDateTime(ayvm.quarterFourStart);
-                DateTime zquarterFourEnd = Convert.ToDateTime(ayvm.quarterFourEnd);
+               
+                ay.academicYearName = Convert.ToDateTime(ayvm.yearStart).ToString("MMMM") + Convert.ToDateTime(ayvm.yearStart).Year.ToString();
+               ay.academicDurationStart = Convert.ToDateTime(ayvm.yearStart).Date;
+               ay.academicDurationEnd= Convert.ToDateTime(ayvm.yearEnd).Date;
+                ay.quarterOneStart = Convert.ToDateTime(ayvm.quarterOneStart).Date;
+                ay.quarterOneEnd = Convert.ToDateTime(ayvm.quarterOneEnd).Date;
+                ay.quarterTwoStart = Convert.ToDateTime(ayvm.quarterTwoStart).Date;
+               ay.quarterTwoEnd = Convert.ToDateTime(ayvm.quarterTwoEnd).Date;
+                ay.quarterThreeStart = Convert.ToDateTime(ayvm.quarterThreeStart).Date;
+                ay.quarterThreeEnd = Convert.ToDateTime(ayvm.quarterThreeEnd).Date;
+                ay.quarterFourStart = Convert.ToDateTime(ayvm.quarterFourStart).Date;
+                ay.quarterFourEnd = Convert.ToDateTime(ayvm.quarterFourEnd).Date;
                 //if add is clicked
                 if (add != null)
                 {
 
                     AcademicYear ayear = new AcademicYear();
                     //concatenating year start month name and year to create the academic year name.
-                    String concatenatedAYName = yearStartOne.ToString("MMMM")+ yearStartOne.Year.ToString();
+                  
                     //checking if the academic year name exists on the academic year table, and if so,not enabling user to add other duplicate data.
-                    ayear = db.AcademicYear.Where(a => a.academicYearName == concatenatedAYName).FirstOrDefault();
+                    ayear = db.AcademicYear.Where(a => a.academicYearName == ay.academicYearName).FirstOrDefault();
                     if (ayear == null) { 
                         //checking if the recieved academic year information fulfills the necessary criterias using the validateDuration() method.
-                    if (ad.validateDuration(ayvm))
+                    if (ad.validateDuration(ay))
                     {
                             //ifso enabling user to register the information to the academic year table.
-                        ay.academicYearName = yearStartOne.ToString("MMMM") + yearStartOne.Year.ToString();
-                        ay.duration = yearStartOne.ToShortDateString() + "-" + yearEndOne.ToShortDateString();
-                        ay.quarterOne = zquarterOneStart.ToShortDateString() + "-" + zquarterOneEnd.ToShortDateString();
-                        ay.quarterTwo = zquarterTwoStart.ToShortDateString() + "-" + zquarterTwoEnd.ToShortDateString();
-                        ay.quarterThree = zquarterThreeStart.ToShortDateString() + "-" + zquarterThreeEnd.ToShortDateString();
-                        ay.quarterFour = zquarterFourStart.ToShortDateString() + "-" + zquarterFourEnd.ToShortDateString();
+                       
                         db.AcademicYear.Add(ay);
                         db.SaveChanges();
                                                     
@@ -369,21 +366,12 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                    
                     ModelState.Clear();
 
-                // searching if the academic year exists on academic year table, if so enabling the academic director to modify the academic year.
-                    ay = db.AcademicYear.Find(tempStart.ToString("MMMM") + tempStart.Year.ToString());
-                    //splitting the duration string into two to start setting up for the update of the academic year
-                    string[] splitItems = ay.duration.Split('-');
-                    DateTime originalYearStart = Convert.ToDateTime(splitItems[0]);
-                    yearStartOne = originalYearStart;
+                
                //if the modification of the academic year fulfills the necessary conditions stated in validateDuration(),allowing the update.
-                    if (ad.validateDuration(ayvm))
+                    if (ad.validateDuration(ay))
                     {
                         //updating the academic year
-                        ay.duration = yearStartOne.ToShortDateString() + "-" + yearEndOne.ToShortDateString();
-                        ay.quarterOne = zquarterOneStart.ToShortDateString() + "-" + zquarterOneEnd.ToShortDateString();
-                        ay.quarterTwo = zquarterTwoStart.ToShortDateString() + "-" + zquarterTwoEnd.ToShortDateString();
-                        ay.quarterThree = zquarterThreeStart.ToShortDateString() + "-" + zquarterThreeEnd.ToShortDateString();
-                        ay.quarterFour = zquarterFourStart.ToShortDateString() + "-" + zquarterFourEnd.ToShortDateString();
+                       
                         db.SaveChanges();
                     }
                     else
@@ -396,84 +384,57 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 {
                     ModelState.Clear();
                     //searching the academic year using the academic year name to find the right academic year to populate the form.
-                    var academicYear = db.AcademicYear.Where(a => a.academicYearName == acadYN).ToList();
-                    
-                    foreach (var kd in academicYear)
-                    {
-                        //splitting every attribute to determine the starting and ending sections of the academic year and the quarters.
+                    var academicYear = db.AcademicYear.Where(a => a.academicYearName == acadYN).FirstOrDefault();
 
-                        string[] splitItems = kd.duration.Split('-');
-                        yearStartOne = Convert.ToDateTime(splitItems[0]);
-                        yearEndOne = Convert.ToDateTime(splitItems[1]);
-                        Array.Clear(splitItems, 0, splitItems.Length);
-                        splitItems = kd.quarterOne.Split('-');
-                        zquarterOneStart = Convert.ToDateTime(splitItems[0]);
-                        zquarterOneEnd = Convert.ToDateTime(splitItems[1]);
-                        Array.Clear(splitItems, 0, splitItems.Length);
-                        splitItems = kd.quarterTwo.Split('-');
-                        zquarterTwoStart = Convert.ToDateTime(splitItems[0]);
-                        zquarterTwoEnd = Convert.ToDateTime(splitItems[1]);
-                        Array.Clear(splitItems, 0, splitItems.Length);
-                        splitItems = kd.quarterThree.Split('-');
-                        zquarterThreeStart = Convert.ToDateTime(splitItems[0]);
-                        zquarterThreeEnd = Convert.ToDateTime(splitItems[1]);
-                        Array.Clear(splitItems, 0, splitItems.Length);
-                        splitItems = kd.quarterFour.Split('-');
-                        zquarterFourStart = Convert.ToDateTime(splitItems[0]);
-                        zquarterFourEnd = Convert.ToDateTime(splitItems[1]);
-                      
-                    }
-                    //populating the divided sections into the academic year view model variables.
-                    academicYearViewModel.yearStartTemp = yearStartOne.ToShortDateString();
-                    academicYearViewModel.yearStart = yearStartOne.ToShortDateString();
-                    ViewBag.disableYearStart = true;
-                   /* checking if the date of the attributes hasn't passed today's date, if it has passed, disabling the possibility of updating
-                    those form elements*/
-                    academicYearViewModel.yearEnd = yearEndOne.ToShortDateString();
-                    if (DateTime.Compare(DateTime.Now, yearEndOne) > 0)
-                    {
+                   
+                        academicYearViewModel.yearStart = academicYear.academicDurationStart.ToShortDateString();
+                        ViewBag.disableYearStart = true;
+                        academicYearViewModel.yearEnd = academicYear.academicDurationEnd.ToShortDateString();
+                         if (DateTime.Compare(DateTime.Now, academicYear.academicDurationEnd) > 0)
+                          {
                         ViewBag.disableYearEnd = true;
-                    }
-                    academicYearViewModel.quarterOneStart = zquarterOneStart.ToShortDateString();
-                    if (DateTime.Compare(DateTime.Now, zquarterOneStart) > 0)
-                    {
+                           }
+                        academicYearViewModel.quarterOneStart = academicYear.quarterOneStart.ToShortDateString();
+                        if (DateTime.Compare(DateTime.Now, academicYear.quarterOneStart) > 0)
+                         {
                         ViewBag.disableQuarterOneStart = true;
-                    }
-                    academicYearViewModel.quarterOneEnd = zquarterOneEnd.ToShortDateString();
-                    if (DateTime.Compare(DateTime.Now, zquarterOneEnd) > 0)
+                         }
+                        academicYearViewModel.quarterOneEnd = academicYear.quarterOneEnd.ToShortDateString();
+                    if (DateTime.Compare(DateTime.Now, academicYear.quarterOneEnd) > 0)
                     {
                         ViewBag.disableQuarterOneEnd = true;
                     }
-                    academicYearViewModel.quarterTwoStart = zquarterTwoStart.ToShortDateString();
-                    if (DateTime.Compare(DateTime.Now, zquarterTwoStart) > 0)
+                    academicYearViewModel.quarterTwoStart = academicYear.quarterTwoStart.ToShortDateString();
+                    if (DateTime.Compare(DateTime.Now, academicYear.quarterTwoStart) > 0)
                     {
                         ViewBag.disableQuarterTwoStart = true;
                     }
-                    academicYearViewModel.quarterTwoEnd = zquarterTwoEnd.ToShortDateString();
-                    if (DateTime.Compare(DateTime.Now, zquarterTwoEnd) > 0)
+                    academicYearViewModel.quarterTwoEnd = academicYear.quarterTwoEnd.ToShortDateString();
+                    if (DateTime.Compare(DateTime.Now, academicYear.quarterTwoEnd) > 0)
                     {
                         ViewBag.disableQuarterTwoEnd = true;
                     }
-                    academicYearViewModel.quarterThreeStart = zquarterThreeStart.ToShortDateString();
-                    if (DateTime.Compare(DateTime.Now, zquarterThreeStart) > 0)
+                    academicYearViewModel.quarterThreeStart = academicYear.quarterThreeStart.ToShortDateString();
+                    if (DateTime.Compare(DateTime.Now, academicYear.quarterThreeStart) > 0)
                     {
-                        ViewBag.disableQuarterThreeStart = true;
+                        ViewBag.disableQuarterTwoEnd = true;
                     }
-                    academicYearViewModel.quarterThreeEnd = zquarterThreeEnd.ToShortDateString();
-                    if (DateTime.Compare(DateTime.Now, zquarterThreeEnd) > 0)
+                    academicYearViewModel.quarterThreeEnd = academicYear.quarterThreeEnd.ToShortDateString();
+                    if (DateTime.Compare(DateTime.Now, academicYear.quarterThreeEnd) > 0)
                     {
                         ViewBag.disableQuarterThreeEnd = true;
                     }
-                    academicYearViewModel.quarterFourStart = zquarterFourStart.ToShortDateString();
-                    if (DateTime.Compare(DateTime.Now, zquarterFourStart) > 0)
+                    academicYearViewModel.quarterFourStart = academicYear.quarterFourStart.ToShortDateString();
+                    if (DateTime.Compare(DateTime.Now, academicYear.quarterFourStart) > 0)
                     {
                         ViewBag.disableQuarterFourStart = true;
                     }
-                    academicYearViewModel.quarterFourEnd = zquarterFourEnd.ToShortDateString();
-                    if (DateTime.Compare(DateTime.Now, zquarterFourEnd) > 0)
+                    academicYearViewModel.quarterFourEnd = academicYear.quarterFourEnd.ToShortDateString();
+                    if (DateTime.Compare(DateTime.Now, academicYear.quarterFourEnd) > 0)
                     {
                         ViewBag.disableQuarterFourEnd = true;
                     }
+                                            
 
                 }
             }
@@ -536,8 +497,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             rvm.retrevedTeacherList = new List<Teacher>();
             List<Teacher> retrieveAssignment = new List<Teacher>();
             //if select is selected for unit leader assignemnt
-            if (ModelState.IsValid || selectToAssign!=null)
-            {
+            
                 if (selectToAssign != null)
                 {
                     //searching for the selected teacher using the teacher id provided from the anonymous class provided by the teacher.
@@ -621,7 +581,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
 
                 }
-            }
+            
             //populaing list of teachers in temp 1, so if they have a teacher role, adding them to retreived teacher list.
             temp1 = db.Teacher.ToList();
             foreach (var k in temp1)
@@ -661,6 +621,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             ViewBag.read = false;
 
             return View(academicDirector.populateFormData());
+        
         }
 
         [HttpPost]

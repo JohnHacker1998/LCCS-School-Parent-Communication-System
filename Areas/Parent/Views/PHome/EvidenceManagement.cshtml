@@ -1,22 +1,22 @@
 ﻿
 @{
-    Layout = null;
+
 }
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>EvidenceManagement</title>
-</head>
-<body>
-    @using (Html.BeginForm("EvidenceManagement", "PHome", FormMethod.Post,new { @enctype="multipart/form-data"}))
-    {
-        <input type="file" name="file" />
-        <input type="submit" name="submit" value="Upload"/>
-    }
-    <br />
+
+@using (Html.BeginForm("EvidenceManagement", "PHome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+{<div class="row">
+    <div class="form-group col-xl-12">
+        <input type="file" name="file" class="form-control" />
+    </div>
+    
+</div>
+    
+     <input type="submit" name="submit" value="Upload" class="btn btn-primary " />
+
+}
+<br />
+<div class="alert alert-danger" role="alert">
     @ViewBag.message
-    </body>
-</html>
+    </div>

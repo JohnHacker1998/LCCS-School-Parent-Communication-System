@@ -77,42 +77,35 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             ayr = db.AcademicYear.Where(a => a.academicYearName == academicYearName).FirstOrDefault();
             if (ayr != null)
             {
-                string[] duration;
-                duration = ayr.duration.Split('-');
-                if (DateTime.Compare(DateTime.Now.Date, Convert.ToDateTime(duration[0]).Date) > 0 && (DateTime.Compare(DateTime.Now.Date, Convert.ToDateTime(duration[1]).Date) < 0))
+                if (DateTime.Compare(DateTime.Now.Date, ayr.academicDurationStart) >= 0 && (DateTime.Compare(DateTime.Now.Date, ayr.academicDurationEnd) <= 0))
                 {
-                    Array.Clear(duration, 0, duration.Length);
-                    duration = ayr.quarterOne.Split('-');
-                    if (DateTime.Compare(DateTime.Now.Date, Convert.ToDateTime(duration[0]).Date) >= 0 && (DateTime.Compare(DateTime.Now.Date, Convert.ToDateTime(duration[1])) <= 0))
+                   
+                    if (DateTime.Compare(DateTime.Now.Date,ayr.quarterOneStart) >= 0 && (DateTime.Compare(DateTime.Now.Date,ayr.quarterOneEnd) <= 0))
                     {
                         status = "Q1";
                         return status;
                     }
                     else
                     {
-                        Array.Clear(duration, 0, duration.Length);
-                        duration = ayr.quarterTwo.Split('-');
-                        if (DateTime.Compare(DateTime.Now.Date, Convert.ToDateTime(duration[0]).Date) >= 0 && (DateTime.Compare(DateTime.Now.Date, Convert.ToDateTime(duration[1]).Date) <= 0))
+                        
+                        if (DateTime.Compare(DateTime.Now.Date, ayr.quarterTwoStart) >= 0 && (DateTime.Compare(DateTime.Now.Date, ayr.quarterTwoEnd) <= 0))
                         {
                             status = "Q2";
                             return status;
                         }
                         else
                         {
-                            Array.Clear(duration, 0, duration.Length);
-                            duration = ayr.quarterThree.Split('-');
-                            if (DateTime.Compare(DateTime.Now.Date, Convert.ToDateTime(duration[0]).Date) >= 0 && (DateTime.Compare(DateTime.Now.Date, Convert.ToDateTime(duration[1]).Date) <= 0))
+                           
+                            if (DateTime.Compare(DateTime.Now.Date,ayr.quarterThreeStart) >= 0 && (DateTime.Compare(DateTime.Now.Date, ayr.quarterThreeEnd) <= 0))
                             {
                                 status = "Q3";
                                 return status;
                             }
                             else 
                             {
-
-                                Array.Clear(duration, 0, duration.Length);
-                                duration = ayr.quarterFour.Split('-');
-                                status = "Q4";
-                                if (DateTime.Compare(DateTime.Now.Date, Convert.ToDateTime(duration[0]).Date) >= 0 && (DateTime.Compare(DateTime.Now.Date, Convert.ToDateTime(duration[1]).Date) <= 0))
+                                                             
+                                
+                                if (DateTime.Compare(DateTime.Now.Date, ayr.quarterFourStart) >= 0 && (DateTime.Compare(DateTime.Now.Date, ayr.quarterFourEnd) <= 0))
                                 {
                                     status = "Q4";
                                     return status;

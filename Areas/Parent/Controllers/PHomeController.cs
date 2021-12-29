@@ -10,7 +10,7 @@ using LCCS_School_Parent_Communication_System.Models;
 
 namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
 {
-    //[Authorize(Roles = "Parent")]
+    [Authorize(Roles = "Parent")]
 
     public class PHomeController : Controller
     {
@@ -44,6 +44,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
             {
                 foreach(var g in ab)
                 {
+                    if (g.evidenceFlag == "Absent") { 
                     events.Add(new calanderEvents()
                     {
                         id =g.recordId,
@@ -52,7 +53,22 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
                         end =g.recordDate,
                         allDay = true,
                     }
+
                         );
+                    }
+                    else if (g.evidenceFlag == "AcceptableReason")
+                    {
+                        events.Add(new calanderEvents()
+                        {
+                            id = g.recordId,
+                            title = "Evident",
+                            start = g.recordDate,
+                            end = g.recordDate,
+                            allDay = true,
+                        }
+
+                                                );
+                    }
                 }
             }
             if (lc.Count != 0)

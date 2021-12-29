@@ -8,8 +8,8 @@
 <div class="form-group text-center">
     @using (Html.BeginForm("addAttendance", "HTHome", FormMethod.Post))
     {
-        @Html.ListBoxFor(a => a.selectedStudents, Model.studentList, new { htmlAttributes = new { @class = " form-control w-50 dpbig "},style="max-width:550px; height:300px; border-color:blue;font-size:1.5em; " })<br>
-       
+        @Html.ListBoxFor(a => a.selectedStudents, Model.studentList, new { htmlAttributes = new { @class = " form-control w-50 dpbig " }, style = "max-width:550px; height:300px; border-color:blue;font-size:1.5em; " })<br>
+
 
 
         if (ViewBag.Message == true)
@@ -18,12 +18,13 @@
         }
         else
         {
-            <input type="submit" name="add" value="Add As Absent"  class="btn btn-danger"/>
+            <input type="submit" name="add" value="Add As Absent" class="btn btn-danger" />
         }
-        <input type="submit" name="update" value="Update List"  class="btn btn-primary"/>
+        <input type="submit" name="update" value="Update List" class="btn btn-primary" />
     }
 </div>
 
+ViewBag.messageSuccessStatus
 <script type="text/javascript">
     $('option').mousedown(function (e) {
         e.preventDefault();
