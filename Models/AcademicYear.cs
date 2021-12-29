@@ -19,8 +19,9 @@ namespace LCCS_School_Parent_Communication_System.Models
         public DateTime quarterThreeEnd { get; set; }
         public DateTime quarterFourStart { get; set; }
         public DateTime quarterFourEnd { get; set; }
-        public DateTime academicDurationStart { get; set; }
-        public DateTime academicDurationEnd { get; set; }
+        public DateTime durationStart { get; set; }
+        public DateTime durationEnd { get; set; }
+
 
     }
 }

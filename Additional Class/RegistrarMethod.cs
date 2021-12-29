@@ -24,8 +24,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             foreach (var getActive in academicYears)
             {
                 //get start and end dates to check if today is in the middle
-                string[] duration = getActive.duration.Split('-');
-                if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
+                if (!(DateTime.Compare(DateTime.Now, getActive.durationStart) < 0 || DateTime.Compare(DateTime.Now, getActive.durationEnd) > 0))
                 {
                     //get sections on a given academic year
                     var getSection = context.Section.Where(s => s.academicYearId == getActive.academicYearName).ToList();

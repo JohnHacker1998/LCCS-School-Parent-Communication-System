@@ -117,8 +117,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
                 foreach (var getAcadamicYear in allAcadamicYears)
                 {
                     //check today is in between start and end date of the specific academic year
-                    string[] duration = getAcadamicYear.duration.Split('-');
-                    if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
+                    if (!(DateTime.Compare(DateTime.Now, getAcadamicYear.durationStart) < 0 || DateTime.Compare(DateTime.Now, getAcadamicYear.durationEnd) > 0))
                     {
                         sectionViewModel.academicYears.Add(getAcadamicYear.academicYearName);
                     }
@@ -151,8 +150,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
                 foreach (var getAcadamicYear in allAcadamicYears)
                 {
                     //get start and end dates of a given academic year to check if today is in the middle
-                    string[] duration = getAcadamicYear.duration.Split('-');
-                    if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
+                    if (!(DateTime.Compare(DateTime.Now, getAcadamicYear.durationStart) < 0 || DateTime.Compare(DateTime.Now, getAcadamicYear.durationEnd) > 0))
                     {
                         //search for section in a given academic year
                         var sectionRecord = context.Section.Where(s => s.sectionName == grade.ToString() + letter && s.academicYearId == getAcadamicYear.academicYearName).FirstOrDefault();

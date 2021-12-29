@@ -215,6 +215,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
 
             //get parent info
             string pId = User.Identity.GetUserId().ToString();
+            //string pId = "sdf";
             var parent = context.Parent.Where(p => p.parentId == pId).FirstOrDefault();
 
             var warnings = context.Warning.Where(w => w.studentId == parent.studentId && w.WarningReadStatus == "No").ToList();

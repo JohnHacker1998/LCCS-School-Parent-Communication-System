@@ -228,8 +228,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
                         var academicYears = context.AcademicYear.ToList();
                         foreach (var getAcadamicYear in academicYears)
                         {
-                            string[] duration = getAcadamicYear.duration.Split('-');
-                            if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
+                            if (!(DateTime.Compare(DateTime.Now, getAcadamicYear.durationStart) < 0 || DateTime.Compare(DateTime.Now, getAcadamicYear.durationEnd) > 0))
                             {
                                 var sectionRecord = context.Section.Where(s => s.sectionName == sectionName && s.academicYearId == getAcadamicYear.academicYearName).ToList();
                                 if (sectionRecord.Count != 0)
@@ -320,8 +319,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
                         foreach (var getActive in academicYears)
                         {
                             //get the active academic years
-                            string[] duration = getActive.duration.Split('-');
-                            if (!(DateTime.Compare(DateTime.Now, DateTime.Parse(duration[0])) < 0 || DateTime.Compare(DateTime.Now, DateTime.Parse(duration[1])) > 0))
+                            if (!(DateTime.Compare(DateTime.Now, getActive.durationStart) < 0 || DateTime.Compare(DateTime.Now, getActive.durationEnd) > 0))
                             {
                                 var getSection = context.Section.Where(s => s.academicYearId == getActive.academicYearName && s.sectionName == studentUp.sectionName).FirstOrDefault();
 
