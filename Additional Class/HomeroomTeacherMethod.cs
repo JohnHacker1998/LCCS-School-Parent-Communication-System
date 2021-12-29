@@ -77,7 +77,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             ayr = db.AcademicYear.Where(a => a.academicYearName == academicYearName).FirstOrDefault();
             if (ayr != null)
             {
-                if (DateTime.Compare(DateTime.Now.Date, ayr.academicDurationStart) >= 0 && (DateTime.Compare(DateTime.Now.Date, ayr.academicDurationEnd) <= 0))
+                if (DateTime.Compare(DateTime.Now.Date, ayr.durationStart) >= 0 && (DateTime.Compare(DateTime.Now.Date, ayr.durationEnd) <= 0))
                 {
                    
                     if (DateTime.Compare(DateTime.Now.Date,ayr.quarterOneStart) >= 0 && (DateTime.Compare(DateTime.Now.Date,ayr.quarterOneEnd) <= 0))
