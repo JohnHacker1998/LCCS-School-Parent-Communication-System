@@ -1,0 +1,28 @@
+﻿.form-group {
+  
+}
+.form-control{
+  
+}
+.col-xl-6 {
+    
+    
+}
+.row {
+    padding-left: 25%;
+   
+}
+.bg-green{
+    background-color:darkgreen !important;
+}
+
+.d-block{
+    margin-left:15em !important;
+}
+.m-lg-3{
+    margin-left:40em !important;
+}
+
+.table-striped {
+    overflow-x: scroll !important;
+}

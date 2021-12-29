@@ -1,66 +1,71 @@
 ﻿@model LCCS_School_Parent_Communication_System.viewModels.RegisterTeacherViewModel
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>RegisterTeacher</title>
-</head>
-<body>
 
-    @using (Html.BeginForm("RegisterTeacher", "ADHome", FormMethod.Post))
+@using (Html.BeginForm("RegisterTeacher", "ADHome", FormMethod.Post))
+{
+<div class="row">
+    @if (@ViewBag.disableEmail)
     {
-        if (@ViewBag.disableEmail)
-        {
+        <div class="form-group col-xl-6">
             @Html.LabelFor(lbl => lbl.email)
-            @Html.EditorFor(tb => tb.email, new { htmlAttributes = new { @readonly = @ViewBag.disableEmail }, placeholder = "example@gmail.com", @class = "form-control" })
-            @Html.ValidationMessageFor(vm => vm.email)
-        }
-        else
-        {
+            @Html.EditorFor(tb => tb.email, new { htmlAttributes = new { @readonly = @ViewBag.disableEmail, @class = "form-control" }, placeholder = "example@gmail.com" })
+           
+        </div>
+    }
+    else
+    {
+        <div class="form-group col-xl-6">
             @Html.LabelFor(lbl => lbl.email)
-            @Html.EditorFor(tb => tb.email, new { placeholder = "example@gmail.com", @class = "form-control" })
-            @Html.ValidationMessageFor(vm => vm.email)
-        }
+            @Html.EditorFor(tb => tb.email, new { htmlAttributes=new { placeholder = "example@gmail.com", @class = "form-control" }  })
+        
+        </div>
+    }
 
-        <br />
-        @Html.LabelFor(lbl => lbl.fullName)
-        @Html.EditorFor(tb => tb.fullName, new { @class = "form-control" })
-        @Html.ValidationMessageFor(vm => vm.fullName)
-        <br />
+<div class="form-group col-xl-6">
+    @Html.LabelFor(lbl => lbl.fullName)
+    @Html.EditorFor(tb => tb.fullName, new { htmlAttributes=new { @class = "form-control" } })
+
+</div>
+    </div>
+<div class="row">
+    <div class="form-group col-xl-6">
         @Html.LabelFor(lbl => lbl.grade)
-        @Html.EditorFor(tb => tb.grade, new { htmlAttributes = new { type = "number", @min = 9, @max = 12, step = 1 }, @class = "form-control" })
-        @Html.ValidationMessageFor(vm => vm.grade)
-        <br />
+        @Html.EditorFor(tb => tb.grade, new { htmlAttributes = new { type = "number", @min = 9, @max = 12, step = 1, @class = "form-control" } })
+      
+    </div>
+    <div class="form-group col-xl-6">
         @Html.LabelFor(lbl => lbl.subject)
-        @Html.EditorFor(tb => tb.subject, new { @class = "form-control" })
-        @Html.ValidationMessageFor(vm => vm.subject)
-        <br />
-        <hr />
-        @ViewBag.registerStatus
-        @ViewBag.updateStatus
-        @ViewBag.duplicate
-        @ViewBag.searchFound
-        @ViewBag.fullName
-        @ViewBag.role
-        @Html.ValidationSummary(true, "please fix the errors to procced to the next step")
-        <hr />
-        <input type="submit" name="register" value="Register" />
-        <input type="submit" name="search" value="Search" />
-        <input type="submit" name="update" value="Update" @ViewBag.upHidden />
+        @Html.EditorFor(tb => tb.subject, new { htmlAttributes=new { @class = "form-control" } })
+        
+    </div>
+    </div>
+       <div class="alert alert-danger" role="alert">
+    @ViewBag.registerStatus
+    @ViewBag.updateStatus
+    @ViewBag.duplicate
+    @ViewBag.searchFound
+    @ViewBag.fullName
+    @ViewBag.role
+    @Html.ValidationSummary()
+   </div>
+    <div class="text-center">
+        <input type="submit" name="register" value="Register" class="btn btn-primary bg-green" />
+        <input type="submit" name="search" value="Search" class="btn btn-primary" />
+        <input type="submit" name="update" value="Update" @ViewBag.upHidden class="btn bg-red" />
+    </div>
     }
 
 
     @if (ViewBag.search == true)
     {
-        <table>
+        <table class="table table-striped">
             <tr>
-                <th>Full Name</th>
-                <th>Email</th>
-                <th>Grade</th>
-                <th>Subject</th>
-                <th></th>
+                <th scope="col">Full Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Grade</th>
+                <th scope="col">Subject</th>
+                <th scope="col"></th>
             </tr>
             @foreach (var list in Model.teacherList)
             {
@@ -72,8 +77,8 @@
                     <td>
                         @using (Html.BeginForm("RegisterTeacher", "ADHome", new { id = @list.teacherId }, FormMethod.Post))
                         {
-                            <input type="submit" value="Edit" name="edit" />
-                            <input type="submit" value="Delete" name="delete" />
+                            <input type="submit" value="Select" name="edit" class="btn btn-primary bg-green" />
+                            <input type="submit" value="Delete" name="delete" class="btn btn-danger" />
                         }
 
                     </td>
@@ -81,5 +86,4 @@
             }
         </table>
     }
-</body>
-</html>
+

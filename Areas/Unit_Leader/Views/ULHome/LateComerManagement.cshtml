@@ -1,56 +1,51 @@
 ﻿@model LCCS_School_Parent_Communication_System.viewModels.LateComerViewModel
 @{
-    Layout = null;
+    Layout = " ~/Areas/Unit_Leader/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>LateComerManagement</title>
-</head>
-<body>
-    @using (Html.BeginForm("LateComerManagement", "ULHome", FormMethod.Post))
-    {
 
-        @Html.LabelFor(lbl => lbl.studentName)
-        @Html.EditorFor(tb => tb.studentName, new { @class = "form-control" })
-        @Html.ValidationMessageFor(vm => vm.studentName)
-        <br />
-        <input type="submit" name="search" value="Search" />
-        <br />
-        <hr />
+@using (Html.BeginForm("LateComerManagement", "ULHome", FormMethod.Post))
+{
+    <div class="row">
+        <div class="form-group col-xl-12">
+            @Html.LabelFor(lbl => lbl.studentName)
+            @Html.EditorFor(tb => tb.studentName, new { htmlAttributes = new { @class = "form-control" } })
+           
+            <br />
+            <input type="submit" name="search" value="Search" class="btn btn-primary " />
+        </div>
+    </div>
+
+    <div class="alert alert-danger" role="alert">
         @ViewBag.error
         @ViewBag.found
         @ViewBag.message
-        @Html.ValidationSummary(true, "please fix the errors to procced to the next step")
-        <hr />
-    }
+        @Html.ValidationSummary()
+     </div>
+        }
 
-    @if (ViewBag.search == true)
-    {
-        <table>
-            <tr>
-                <th>Student Name</th>
-                <th>Grade</th>
-                <th></th>
-            </tr>
-            @foreach (var list in Model.students)
-            {
+        @if (ViewBag.search == true)
+        {
+            <table class="table table-striped">
                 <tr>
-                    <td>@list.fullName</td>
-                    <td>@list.sectionName</td>
-                    <td>
-                        @using (Html.BeginForm("LateComerManagement", "ULHome", new { id = @list.studentId.ToString() }, FormMethod.Post))
-                        {
-                            <input type="submit" value="LateComer" name="late" />
-                        }
-                    </td>
+                    <th scope="col">Student Name</th>
+                    <th scope="col">Grade</th>
+                    <th scope="col"></th>
                 </tr>
-            }
+                @foreach (var list in Model.students)
+                {
+                    <tr>
+                        <td>@list.fullName</td>
+                        <td>@list.sectionName</td>
+                        <td>
+                            @using (Html.BeginForm("LateComerManagement", "ULHome", new { id = @list.studentId.ToString() }, FormMethod.Post))
+                            {
+                                <input type="submit" value="LateComer" name="late" class="btn btn-danger" />
+                            }
+                        </td>
+                    </tr>
+                }
 
-        </table>
-    }
-</body>
-</html>
+            </table>
+        }

@@ -40,23 +40,23 @@ namespace LCCS_School_Parent_Communication_System.Controllers
 
                     if (userManager.IsInRole(user.Id, "AcademicDirector"))
                     {
-                        return RedirectToAction("Index", "ADHome", new { area = "Academic_Director" });
+                        return RedirectToAction("manageRegistrar", "ADHome", new { area = "Academic_Director" });
                     }
                     else if (userManager.IsInRole(user.Id, "UnitLeader"))
                     {
-                        return RedirectToAction("Index", "ULHome", new { area = "Unit_Leader" });
+                        return RedirectToAction("LateComerManagement", "ULHome", new { area = "Unit_Leader" });
                     }
                     else if (userManager.IsInRole(user.Id, "HomeRoom"))
                     {
-                        return RedirectToAction("Index", "HTHome", new { area = "Homeroom_Teacher" });
+                        return RedirectToAction("addAttendance", "HTHome", new { area = "Homeroom_Teacher" });
                     }
                     else if (userManager.IsInRole(user.Id, "Parent"))
                     {
-                        return RedirectToAction("Index", "PHome", new { area = "Parent" });
+                        return RedirectToAction("viewAttendance", "PHome", new { area = "Parent" });
                     }
                     else if (userManager.IsInRole(user.Id, "Registrar"))
                     {
-                        return RedirectToAction("Index", "RHome", new { area = "Registrar" });
+                        return RedirectToAction("parentManagement", "RHome", new { area = "Registrar" });
                     }
                     else
                     {

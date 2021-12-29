@@ -1,76 +1,85 @@
 ﻿@model LCCS_School_Parent_Communication_System.viewModels.SectionViewModel
 @{
-    Layout = null;
+  
 }
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>SectionManagement</title>
-</head>
-<body>
     @using (Html.BeginForm("SectionManagement", "ADHome", FormMethod.Post))
     {
+<div class="row">
+    <div class="form-group col-xl-6">
+        @Html.LabelFor(lbl => lbl.grade)
+        @Html.EditorFor(tb => tb.grade, new { htmlAttributes=new {@class = "form-control" }, type = "number", min = "9", max = "12", step = "1", @readonly = ViewBag.read})
+        
+    </div>
+    <div class="form-group col-xl-6">
+        @Html.LabelFor(lbl => lbl.letter)
+        @Html.DropDownListFor(tb => tb.letter, new SelectList(Model.letter), htmlAttributes: new { @readonly = ViewBag.read,@class="form-control" })
+      
+    </div>
+    </div>
 
-            @Html.LabelFor(lbl => lbl.grade)
-            @Html.EditorFor(tb => tb.grade, new { type = "number", min = "9", max = "12", step = "1",@readonly=ViewBag.read, @class = "form-control" })
-            @Html.ValidationMessageFor(vm => vm.grade)
-            <br />
-            @Html.LabelFor(lbl => lbl.letter)
-            @Html.DropDownListFor(tb => tb.letter, new SelectList(Model.letter),htmlAttributes:new { @readonly=ViewBag.read})
-            @Html.ValidationMessageFor(vm => vm.letter)
-            <br />
-        if (ViewBag.search)
-        {
-            @Html.LabelFor(lbl => lbl.teachers)
-            <select id="teachers" name="teachers">
-                @foreach (var i in Model.teachers)
+
+    if (ViewBag.search)
+    {<div class="row">
+    <div class="form-group col-xl-6">
+        @Html.LabelFor(lbl => lbl.teachers)
+        <select id="teachers" name="teachers">
+            @foreach (var i in Model.teachers)
+            {
+                <option value=@i>@i</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group col-xl-6">
+        @Html.LabelFor(lbl => lbl.academicYears)
+        <select id="academicYears" name="academicYears" readonly>
+            @foreach (var i in Model.academicYears)
+            {
+                if (i == ViewBag.academicYear)
+                {
+                    <option value=@i selected>@i</option>
+                }
+                else
                 {
                     <option value=@i>@i</option>
                 }
-            </select>
-            <br />
-            @Html.LabelFor(lbl => lbl.academicYears)
-            <select id="academicYears" name="academicYears" readonly>
-                @foreach (var i in Model.academicYears)
-                {
-                    if (i == ViewBag.academicYear)
-                    {
-                        <option value=@i selected>@i</option>
-                    }
-                    else
-                    {
-                        <option value=@i>@i</option>
-                    }
-                }
-            </select>
-        }
-        else
-        {
-                @Html.LabelFor(lbl => lbl.teachers)
-                @Html.DropDownListFor(tb => tb.teachers, new SelectList(Model.teachers), "Select Teacher")
-                @Html.ValidationMessageFor(vm => vm.teachers)
-                <br />
-                @Html.LabelFor(lbl => lbl.academicYears)
-                @Html.DropDownListFor(tb => tb.academicYears, new SelectList(Model.academicYears), "Select Acadamic Year")
-                @Html.ValidationMessageFor(vm => vm.academicYears)
-        }
-
-
-                <br />
-                <hr />
-                @ViewBag.add
-                @ViewBag.found
-                @ViewBag.delete
-                @Html.ValidationSummary(true, "please fix the errors to procced to the next step")
-
-                <hr />
-                <input type="submit" name="add" value="Add" />
-                <input type="submit" name="search" value="Search" />
-                <input type="submit" name="update" value="Update" @ViewBag.upHidden />
-                <input type="submit" name="delete" value="Delete" />
+            }
+        </select>
+    </div>
+</div>
     }
-        </body>
-</html>
+    else
+    {
+<div class="row mt-5">
+    <div class="form-group col-xl-6">
+        @Html.LabelFor(lbl => lbl.teachers)
+        @Html.DropDownListFor(tb => tb.teachers, new SelectList(Model.teachers), "Select Teacher")
+        
+    </div>
+    <div class="form-group col-xl-6">
+        @Html.LabelFor(lbl => lbl.academicYears)
+        @Html.DropDownListFor(tb => tb.academicYears, new SelectList(Model.academicYears), "Select Acadamic Year")
+       
+    </div>
+
+    </div>
+    }
+
+
+
+<div class="alert alert-danger" role="alert">
+    @ViewBag.add
+    @ViewBag.found
+    @ViewBag.delete
+    @Html.ValidationSummary()
+
+  </div>
+    <div class="text-center">
+        <input type="submit" name="add" value="Add" class="btn btn-primary bg-green" />
+        <input type="submit" name="search" value="Search" class="btn btn-primary " />
+        <input type="submit" name="update" value="Update" class="btn btn-primary bg-green" @ViewBag.upHidden />
+        <input type="submit" name="delete" value="Delete" class="btn btn-danger" />
+    </div>
+    }
