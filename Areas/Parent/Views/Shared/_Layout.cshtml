@@ -23,6 +23,53 @@
         }
     </style>
 
+    <!-- CSS Includes -->
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.0.1/fullcalendar.min.css">
+
+    <style type="text/css">
+
+            .fc-day-top {
+                border-color: solid red 3px;
+                background-color:red;
+            }
+
+           @* .fc-today {
+                background: red !important;
+                color: white;
+            }*@
+
+
+            .fc-highlight {
+                background: red !important;
+                color: white;
+            }
+
+            .fc-row .fc-content-skeleton td, .fc-row .fc-helper-skeleton td {
+                border-color: inherit !important;
+            }
+
+            .dayWithEvent {
+                background: red;
+                cursor: pointer;
+                color: white;
+            }
+
+            .change-bg {
+                background-color: red !important;
+            }
+
+            #calendar .fc-content {
+                background-color: red;
+                font-size: 80%;
+            }
+
+            #calendar .fc-event {
+                border-color: red;
+                background-color: red
+            }
+    </style>
+
 </head>
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-red bg-red">
@@ -56,6 +103,15 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             View Attendance
                         </a>
+                        <a class="nav-link" href="@Url.Action("EvidenceManagement","PHome")">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Evidence Management
+                        </a>
+                        <a class="nav-link" href="@Url.Action("WarningList","PHome")">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Warning List
+                        </a>
+
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">

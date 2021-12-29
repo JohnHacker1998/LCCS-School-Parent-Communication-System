@@ -1,16 +1,8 @@
 ﻿@model LCCS_School_Parent_Communication_System.viewModels.EvidenceApprovalViewModel
 @{
-    Layout = null;
+   
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>EvidenceApproval</title>
-</head>
-<body>
     @*@using (Html.BeginForm("EvidenceApproval", "ULHome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
         {
             <input type="file" name="file" />
@@ -22,8 +14,8 @@
     @using (Html.BeginForm("EvidenceApproval", "ULHome", FormMethod.Post))
     {
         @Html.HiddenFor(h=>h.Id)
-        @Html.ListBoxFor(l => l.days, new SelectList(Model.days))
-        <input type="submit" name="approve" value="Approve" />
+        @Html.ListBoxFor(l => l.days, new SelectList(Model.days),new { style= "max-width:550px; height:300px; border-color:blue;font-size:1.5em; " })
+        <input type="submit" name="approve" value="Approve" class="btn btn-primary" />
     }
 
 
@@ -35,6 +27,3 @@
     }
 
 
-
-</body>
-</html>

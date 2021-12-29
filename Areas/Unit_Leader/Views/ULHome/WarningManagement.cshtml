@@ -1,53 +1,47 @@
 ﻿@model LCCS_School_Parent_Communication_System.viewModels.WarningViewModel
 @{
-    Layout = null;
+
 }
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>WarningManagement</title>
-</head>
-<body>
-    <hr />
-    @ViewBag.message
-    <hr />
 
-    <table>
+
+<table class="table table-striped">
+    <tr>
+        <th scope="col">Student Name</th>
+        <th scope="col">Section</th>
+        <th scope="col"></th>
+    </tr>
+
+    @foreach (var item in Model.eligible)
+    {
         <tr>
-            <th>Student Name</th>
-            <th>Section</th>
-            <th></th>
+            <td>@item.fullName</td>
+            <td>@item.sectionName</td>
+            <td>
+                @using (Html.BeginForm("WarningManagement", "ULHome", new { id = item.studentId.ToString() }, FormMethod.Post))
+                {
+                    <input type="submit" value="Send Warning" name="warning" class="btn btn-warning" />
+                }
+            </td>
         </tr>
+    }
 
-        @foreach (var item in Model.eligible)
-        {
-            <tr>
-                <td>@item.fullName</td>
-                <td>@item.sectionName</td>
-                <td>
-                    @using (Html.BeginForm("WarningManagement", "ULHome", new { id = item.studentId.ToString() }, FormMethod.Post))
-                    {
-                        <input type="submit" value="Send Warning" name="warning" />
-                    }
-                </td>
-            </tr>
-        }
-
-    </table>
+</table>
+<div class="alert alert-danger" role="alert">
+    @ViewBag.message
+   </div>
 
 
 
-    <table>
+    <table class="table table-striped">
         <tr>
-            <th>Send Date</th>
-            <th>Student Name</th>
-            <th>Section</th>
-            <th>Type</th>
-            <th>Parent Name</th>
-            <th>Phone Number</th>
+            <th scope="col">Send Date</th>
+            <th scope="col">Student Name</th>
+            <th scope="col">Section</th>
+            <th scope="col">Type</th>
+            <th scope="col">Parent Name</th>
+            <th scope="col">Phone Number</th>
         </tr>
         @{
             int i = 0;
@@ -65,5 +59,4 @@
             }
         }
     </table>
-</body>
-</html>
+
