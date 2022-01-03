@@ -11,7 +11,7 @@ using LCCS_School_Parent_Communication_System.Additional_Class;
 
 namespace LCCS_School_Parent_Communication_System.Areas.Homeroom_Teacher.Controllers
 {
-    [Authorize(Roles = "HomeRoom")]
+  //  [Authorize(Roles = "HomeRoom")]
 
     public class HTHomeController : Controller
     {

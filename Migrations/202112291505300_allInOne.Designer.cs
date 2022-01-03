@@ -13,7 +13,7 @@ namespace LCCS_School_Parent_Communication_System.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202112261124204_allInOne"; }
+            get { return "202112291505300_allInOne"; }
         }
         
         string IMigrationMetadata.Source

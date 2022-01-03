@@ -24,6 +24,10 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         {
             return View();
         }
+        public ActionResult profile()
+        {
+            return View();
+        }
 
         public ActionResult RegisterTeacher()
         {
@@ -284,7 +288,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             AcademicDirector ad = new AcademicDirector();
             academicYearViewModel.academicList = new List<AcademicYear>();
             academicYearViewModel= ad.listAcademicYear();
-            
+            ViewBag.disableUpdate = true;
+
             return View(academicYearViewModel);
         }
         [HttpPost]
@@ -293,7 +298,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             AcademicYear ay = new AcademicYear();
             ApplicationDbContext db = new ApplicationDbContext();
             AcademicDirector ad = new AcademicDirector();
-            
+            ViewBag.disableUpdate = true;
+
 
             AcademicYearViewModel academicYearViewModel = new AcademicYearViewModel();
             academicYearViewModel.academicList = new List<AcademicYear>();
@@ -371,8 +377,13 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                     if (ad.validateDuration(ay))
                     {
                         //updating the academic year
-                       
+                        AcademicYear ay1 = new AcademicYear();
+                        ay1 = db.AcademicYear.Where(a => a.academicYearName == ay.academicYearName).FirstOrDefault();
+                        if (ay1 != null) { 
+
                         db.SaveChanges();
+                            ViewBag.disableUpdate = true;
+                        }
                     }
                     else
                     {
@@ -434,8 +445,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                     {
                         ViewBag.disableQuarterFourEnd = true;
                     }
-                                            
 
+                    ViewBag.disableUpdate = false;
                 }
             }
             //populating list of academic year information into the academicList 

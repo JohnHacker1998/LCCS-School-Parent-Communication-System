@@ -190,7 +190,14 @@
 </div>
 <div class="row d-block  w-50">
     <input type="submit" value="Add" name="add" class="btn btn-primary col bg-green m-lg-3" />
-    <input type="submit" value="Update" name="update" class="btn btn-primary col  m-lg-3 " />
+    @if (ViewBag.disableUpdate == true)
+    {
+        <input type="submit" value="Update" name="update" class="btn btn-primary col  m-lg-3 " disabled/>
+    }
+    else
+    {
+        <input type="submit" value="Update" name="update" class="btn btn-primary col  m-lg-3 " />
+    }
 </div>
         
       
@@ -211,31 +218,41 @@
         <table class="table table-striped">
             <tr>
                 <th scope="col">Academic Year Name</th>
-                <th scope="col">Q1</th>
-                <th scope="col">Q2</th>
-                <th scope="col">Q3</th>
-                <th scope="col">Q4</th>
-                <th scope="col">Academic Year End</th>
-
+                <th scope="col">Q1 Start</th>
+                <th scope="col">Q1 End</th>
+                <th scope="col">Q2 Start</th>
+                <th scope="col">Q2 End</th>
+                <th scope="col">Q3 Start</th>
+                <th scope="col">Q3 End</th>
+                <th scope="col">Q4 Start</th>
+                <th scope="col">Q4 End</th>
+                <th scope="col">Year Start</th>
+                <th scope="col">Year End</th>          
+               
             </tr>
 
             @foreach (var k in Model.academicList)
             {
-                <tr>
-                    <td>@k.academicYearName</td>
-                    <td>@k.quarterOne</td>
-                    <td>@k.quarterTwo</td>
-                    <td>@k.quarterThree</td>
-                    <td>@k.quarterFour</td>
-                    <td>@k.duration</td>
-                    <td>
-                        @using (Html.BeginForm("manageAcademicYear", "ADHome", new { acadYN = k.academicYearName }, FormMethod.Post))
-                        {
-                            <input type="submit" name="select" value="Select"class="btn btn-primary" />
-                        }
-                    </td>
+        <tr>
+            <td>@k.academicYearName</td>
+            <td>@k.quarterOneStart.ToShortDateString()</td>
+            <td>@k.quarterOneEnd.ToShortDateString()</td>
+            <td>@k.quarterTwoStart.ToShortDateString()</td>
+            <td>@k.quarterTwoEnd.ToShortDateString()</td>
+            <td>@k.quarterThreeStart.ToShortDateString()</td>
+            <td>@k.quarterThreeEnd.ToShortDateString()</td>
+            <td>@k.quarterFourStart.ToShortDateString()</td>
+            <td>@k.quarterFourEnd.ToShortDateString()</td>
+            <td>@k.durationStart.ToShortDateString()</td>
+            <td>@k.durationEnd.ToShortDateString()</td>
+            <td>
+                @using (Html.BeginForm("manageAcademicYear", "ADHome", new { acadYN = k.academicYearName }, FormMethod.Post))
+                {
+                    <input type="submit" name="select" value="Select" class="btn btn-primary" />
+                }
+            </td>
 
-                </tr>
+        </tr>
 
             }
         </table>

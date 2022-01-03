@@ -44,13 +44,13 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
             {
                 foreach(var g in ab)
                 {
-                    if (g.evidenceFlag == "Absent") { 
+                    if (g.evidenceFlag == "Absent" || g.evidenceFlag==null) { 
                     events.Add(new calanderEvents()
                     {
                         id =g.recordId,
                         title = "Absent",
-                        start = g.recordDate,
-                        end =g.recordDate,
+                        start = g.recordDate.ToShortDateString(),
+                        end =g.recordDate.ToShortDateString(),
                         allDay = true,
                     }
 
@@ -62,8 +62,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
                         {
                             id = g.recordId,
                             title = "Evident",
-                            start = g.recordDate,
-                            end = g.recordDate,
+                            start = g.recordDate.ToShortDateString(),
+                            end = g.recordDate.ToShortDateString(),
                             allDay = true,
                         }
 
