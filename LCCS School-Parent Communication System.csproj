@@ -626,6 +626,7 @@
     <Content Include="Content\bootstrap-grid.rtl.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
+    <Content Include="Areas\Academic_Director\Views\ADHome\profile.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -730,9 +731,9 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
-    <Compile Include="Migrations\202112261124204_allInOne.cs" />
-    <Compile Include="Migrations\202112261124204_allInOne.designer.cs">
-      <DependentUpon>202112261124204_allInOne.cs</DependentUpon>
+    <Compile Include="Migrations\202112291505300_allInOne.cs" />
+    <Compile Include="Migrations\202112291505300_allInOne.designer.cs">
+      <DependentUpon>202112291505300_allInOne.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AbsenceRecord.cs" />
@@ -791,6 +792,7 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Views\Account\profile.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -814,8 +816,8 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202112261124204_allInOne.resx">
-      <DependentUpon>202112261124204_allInOne.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202112291505300_allInOne.resx">
+      <DependentUpon>202112291505300_allInOne.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

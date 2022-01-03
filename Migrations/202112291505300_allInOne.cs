@@ -13,7 +13,7 @@
                     {
                         recordId = c.Int(nullable: false, identity: true),
                         academicPeriod = c.String(),
-                        recordDate = c.String(),
+                        recordDate = c.DateTime(nullable: false),
                         studentId = c.Int(nullable: false),
                         count = c.Int(nullable: false),
                         evidenceFlag = c.String(),
@@ -40,11 +40,16 @@
                 c => new
                     {
                         academicYearName = c.String(nullable: false, maxLength: 128),
-                        quarterOne = c.String(),
-                        quarterTwo = c.String(),
-                        quarterThree = c.String(),
-                        quarterFour = c.String(),
-                        duration = c.String(),
+                        quarterOneStart = c.DateTime(nullable: false),
+                        quarterOneEnd = c.DateTime(nullable: false),
+                        quarterTwoStart = c.DateTime(nullable: false),
+                        quarterTwoEnd = c.DateTime(nullable: false),
+                        quarterThreeStart = c.DateTime(nullable: false),
+                        quarterThreeEnd = c.DateTime(nullable: false),
+                        quarterFourStart = c.DateTime(nullable: false),
+                        quarterFourEnd = c.DateTime(nullable: false),
+                        durationStart = c.DateTime(nullable: false),
+                        durationEnd = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.academicYearName);
             
@@ -54,7 +59,7 @@
                     {
                         evidenceId = c.Int(nullable: false, identity: true),
                         parentId = c.String(maxLength: 128),
-                        dateUpload = c.String(),
+                        dateUpload = c.DateTime(nullable: false),
                         evidenceDocument = c.Binary(),
                         approvalStatus = c.String(),
                     })
@@ -203,7 +208,7 @@
                 c => new
                     {
                         warningId = c.Int(nullable: false, identity: true),
-                        warningDate = c.String(),
+                        warningDate = c.DateTime(nullable: false),
                         studentId = c.Int(nullable: false),
                         grade = c.Int(nullable: false),
                         warningType = c.String(),

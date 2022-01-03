@@ -72,5 +72,9 @@ namespace LCCS_School_Parent_Communication_System.Controllers
             }
             return View();
         }
+        public ActionResult profile()
+        {
+            return View();
+        }
     }
 }

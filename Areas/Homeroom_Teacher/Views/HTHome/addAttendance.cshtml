@@ -6,25 +6,39 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <div class="form-group text-center">
+    <h1>@DateTime.Now.ToShortDateString()</h1>
     @using (Html.BeginForm("addAttendance", "HTHome", FormMethod.Post))
-    {
-        @Html.ListBoxFor(a => a.selectedStudents, Model.studentList, new { htmlAttributes = new { @class = " form-control w-50 dpbig " }, style = "max-width:550px; height:300px; border-color:blue;font-size:1.5em; " })<br>
-
-
-
-        if (ViewBag.Message == true)
-        {
-            <input type="submit" name="add" value="Add As Absent" disabled class="btn btn-danger">
-        }
-        else
-        {
-            <input type="submit" name="add" value="Add As Absent" class="btn btn-danger" />
-        }
-        <input type="submit" name="update" value="Update List" class="btn btn-primary" />
+    {<div class="container  mt-3">
+         <div class="row ">
+            
+                 @Html.ListBoxFor(a => a.selectedStudents, Model.studentList, new { htmlAttributes = new { @class = " form-control w-50 dpbig " } })<br>
+           
+         </div>
+         <div class="row mt-3">
+             <div class="col-lg-6 pe-xl-4 pe-lg-4">
+                 <div class="row mt-2 mt-lg-0 mt-sm-1 mt-xl-0 mt-xxl-0">
+                     @if (ViewBag.Message == true)
+                     {
+                         <input type="submit" name="add" value="Add As Absent" disabled class="btn btn-danger btn-block">
+                     }
+                     else
+                     {
+                         <input type="submit" name="add" value="Add As Absent" class="btn btn-danger btn-block" />
+                     }
+                     </div>
+                 </div>
+                 <div class="col-lg-6 mt-2 mt-lg-0 mt-sm-1 mt-xl-0 mt-xxl-0 ps-xl-4 ps-lg-4">
+                     <div class="row">
+                         <input type="submit" name="update" value="Update List" class="btn btn-primary " />
+                     </div>
+                 </div>
+             </div>
+             </div>
+       
     }
 </div>
 
-ViewBag.messageSuccessStatus
+@ViewBag.messageSuccessStatus
 <script type="text/javascript">
     $('option').mousedown(function (e) {
         e.preventDefault();
