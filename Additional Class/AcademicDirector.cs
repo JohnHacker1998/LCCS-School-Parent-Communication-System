@@ -56,19 +56,19 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
            
 
            
-            if (DateTime.Compare(ay.academicDurationStart, ay.academicDurationEnd) != 0 && DateTime.Compare(ay.quarterOneStart, ay.quarterOneEnd) != 0 &&
+            if (DateTime.Compare(ay.durationStart, ay.durationEnd) != 0 && DateTime.Compare(ay.quarterOneStart, ay.quarterOneEnd) != 0 &&
                 DateTime.Compare(ay.quarterTwoStart, ay.quarterTwoEnd) != 0 && DateTime.Compare(ay.quarterThreeStart, ay.quarterThreeEnd) != 0 &&
                 DateTime.Compare(ay.quarterFourStart, ay.quarterFourEnd) != 0)
             {
                 int y = 0;
                 if (DateTime.Compare(ay.quarterOneStart, ay.quarterOneEnd) < 0 && DateTime.Compare(ay.quarterTwoStart, ay.quarterTwoEnd) < 0 &&
                     DateTime.Compare(ay.quarterThreeStart, ay.quarterThreeEnd) < 0 && DateTime.Compare(ay.quarterFourStart, ay.quarterFourEnd) < 0 &&
-                    DateTime.Compare(ay.academicDurationStart, ay.academicDurationEnd) < 0)
+                    DateTime.Compare(ay.durationStart, ay.durationEnd) < 0)
                 {
                     
 
                     if (DateTime.Compare(ay.quarterOneEnd, ay.quarterTwoStart) < 0 && DateTime.Compare(ay.quarterTwoEnd, ay.quarterThreeStart) < 0 &&
-                    DateTime.Compare(ay.quarterThreeEnd, ay.quarterFourStart) < 0 && (DateTime.Compare(ay.quarterFourEnd, ay.academicDurationEnd) < 0 || DateTime.Compare(ay.quarterFourEnd, ay.academicDurationEnd) == 0))
+                    DateTime.Compare(ay.quarterThreeEnd, ay.quarterFourStart) < 0 && (DateTime.Compare(ay.quarterFourEnd, ay.durationEnd) < 0 || DateTime.Compare(ay.quarterFourEnd, ay.durationEnd) == 0))
                     {
 
                         return true;

@@ -1,0 +1,29 @@
+﻿@model LCCS_School_Parent_Communication_System.Identity.ApplicationUser
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Profile</title>
+</head>
+<body>
+    @using (Html.BeginForm("profile", "Account", FormMethod.Post))
+    {
+        @Html.LabelFor(lbl => lbl.fullName)
+        <p>@Model.fullName</p>
+
+        @Html.LabelFor(lbl => lbl.Email)
+        <p>@Model.Email</p>
+
+        @Html.LabelFor(lbl => lbl.UserName)
+        <p>@Model.UserName</p>
+
+        @Html.LabelFor(lbl => lbl.PasswordHash)
+        <p>@Model.PasswordHash</p>
+    }
+</body>
+</html>

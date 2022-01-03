@@ -319,8 +319,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 //if the model is valid, strings reciieved from the view will be converted to datetime for further manipulation
                
                 ay.academicYearName = Convert.ToDateTime(ayvm.yearStart).ToString("MMMM") + Convert.ToDateTime(ayvm.yearStart).Year.ToString();
-               ay.academicDurationStart = Convert.ToDateTime(ayvm.yearStart).Date;
-               ay.academicDurationEnd= Convert.ToDateTime(ayvm.yearEnd).Date;
+               ay.durationStart = Convert.ToDateTime(ayvm.yearStart).Date;
+               ay.durationEnd= Convert.ToDateTime(ayvm.yearEnd).Date;
                 ay.quarterOneStart = Convert.ToDateTime(ayvm.quarterOneStart).Date;
                 ay.quarterOneEnd = Convert.ToDateTime(ayvm.quarterOneEnd).Date;
                 ay.quarterTwoStart = Convert.ToDateTime(ayvm.quarterTwoStart).Date;
@@ -387,10 +387,10 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                     var academicYear = db.AcademicYear.Where(a => a.academicYearName == acadYN).FirstOrDefault();
 
                    
-                        academicYearViewModel.yearStart = academicYear.academicDurationStart.ToShortDateString();
+                        academicYearViewModel.yearStart = academicYear.durationStart.ToShortDateString();
                         ViewBag.disableYearStart = true;
-                        academicYearViewModel.yearEnd = academicYear.academicDurationEnd.ToShortDateString();
-                         if (DateTime.Compare(DateTime.Now, academicYear.academicDurationEnd) > 0)
+                        academicYearViewModel.yearEnd = academicYear.durationEnd.ToShortDateString();
+                         if (DateTime.Compare(DateTime.Now, academicYear.durationEnd) > 0)
                           {
                         ViewBag.disableYearEnd = true;
                            }

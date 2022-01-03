@@ -72,5 +72,15 @@ namespace LCCS_School_Parent_Communication_System.Controllers
             }
             return View();
         }
+
+        public ActionResult profile()
+        {
+            ApplicationDbContext context = new ApplicationDbContext();
+
+            string uId = User.Identity.GetUserId().ToString();
+            var user = context.Users.Find(uId);
+
+            return View();
+        }
     }
 }
