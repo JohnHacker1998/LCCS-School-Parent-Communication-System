@@ -144,5 +144,61 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             }
             return last;
         }
+        public bool isInAcademicYear(string AcademicYearName)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            AcademicYear ay = new AcademicYear();
+            ay = db.AcademicYear.Where(a => a.academicYearName == AcademicYearName).FirstOrDefault();
+            if(DateTime.Compare(DateTime.Now.Date,ay.durationStart)>=0 && DateTime.Compare(DateTime.Now.Date, ay.durationEnd.Date) <= 0){
+                return true;
+            }
+            return false;
+            
+        }
+        public bool beforeQuarterEnd(DateTime submissionDate,string academicYearName)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            AcademicYear ay = new AcademicYear();
+            ay = db.AcademicYear.Where(a => a.academicYearName == academicYearName).FirstOrDefault();
+            if (ay != null)
+            {
+                string currentQuarter = whichQuarter(academicYearName);
+                if (currentQuarter == "Q1")
+                {
+                    if (DateTime.Compare(submissionDate.Date, ay.quarterOneEnd.Date) <= 0)
+                    {
+                        return true;
+                    }
+                }
+                else if (currentQuarter == "Q2")
+                {
+                    if (DateTime.Compare(submissionDate.Date, ay.quarterTwoEnd.Date) <= 0)
+                    {
+                        return true;
+                    }
+                }
+                else if (currentQuarter == "Q3")
+                {
+                    if (DateTime.Compare(submissionDate.Date, ay.quarterThreeEnd.Date) <= 0)
+                    {
+                        return true;
+                    }
+
+                }
+                else if (currentQuarter == "Q4")
+                {
+                    if (DateTime.Compare(submissionDate.Date, ay.quarterFourEnd.Date) <= 0)
+                    {
+                        return true;
+                    }
+                }
+                else if(currentQuarter=="gap" || currentQuarter == "no")
+                {
+                    return false;
+                }
+            }
+            return false;
+
+        }
     }
 }

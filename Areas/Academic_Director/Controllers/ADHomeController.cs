@@ -24,10 +24,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         {
             return View();
         }
-        public ActionResult profile()
-        {
-            return View();
-        }
+
+       
 
         public ActionResult RegisterTeacher()
         {
@@ -57,7 +55,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 var userManager = new ApplicationUserManager(userStore);
                 Collection collection = new Collection();
                 AcademicDirector academicDirector = new AcademicDirector();
-                Teacher teacher = new Teacher();
+                Models.Teacher teacher = new Models.Teacher();
                 ApplicationUser user = new ApplicationUser();
                 RegisterViewModel registerViewModel = new RegisterViewModel();
 
@@ -135,7 +133,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 else if (update != null)
                 {
                     //teacher object
-                    Teacher teacherUp = new Teacher(1);
+                    Models.Teacher teacherUp = new Models.Teacher(1);
 
                     //assign the new data to teacherUp object
                     var getId = context.Teacher.Where(t => t.user.Email == registerTeacherViewModel.email).FirstOrDefault();
@@ -174,7 +172,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                     if (!(userManager.IsInRole(id, "UnitLeader") || userManager.IsInRole(id, "HoomRoom")))
                     {
                         //populate the selected teacher data in to the update form
-                        registerTeacherViewModel.teacherList = new List<Teacher>();
+                        registerTeacherViewModel.teacherList = new List<Models.Teacher>();
                         teacher = context.Teacher.Find(id);
                         registerTeacherViewModel.fullName = teacher.user.fullName;
                         registerTeacherViewModel.subject = teacher.subject;
@@ -460,11 +458,11 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             AcademicDirector ad = new AcademicDirector();
             RegisterTeacherViewModel rvm = new RegisterTeacherViewModel();
             //instantiating lists of the register teacher view model
-            rvm.teacherList = new List<Teacher>();
-            rvm.retrevedTeacherList = new List<Teacher>();
+            rvm.teacherList = new List<Models.Teacher>();
+            rvm.retrevedTeacherList = new List<Models.Teacher>();
             //temporary lists to hold data for checking if a teacher in teacher's table hasa unit leader or teacher role.
-            List<Teacher> temp1 = new List<Teacher>();
-            List<Teacher> temp2 = new List<Teacher>();
+            List<Models.Teacher> temp1 = new List<Models.Teacher>();
+            List<Models.Teacher> temp2 = new List<Models.Teacher>();
             //populating list of teachers from teacher's table to temp1 list.
             temp1 = db.Teacher.ToList();
             foreach(var k in temp1)
@@ -498,15 +496,15 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             var userManager = new ApplicationUserManager(userStore);
             ApplicationUser appUser = new ApplicationUser();
             //preparing 3 temp lists where two are for displaying list of Unit leaders and candidate teachers, while temp 3 is used for managing unit leader assignemnt update
-            List<Teacher> temp1 = new List<Teacher>();
-            List<Teacher> temp2 = new List<Teacher>();
-            List<Teacher> temp3 = new List<Teacher>();
+            List<Models.Teacher> temp1 = new List<Models.Teacher>();
+            List<Models.Teacher> temp2 = new List<Models.Teacher>();
+            List<Models.Teacher> temp3 = new List<Models.Teacher>();
             ViewBag.Message = " ";
            
 
-            rvm.teacherList = new List<Teacher>();
-            rvm.retrevedTeacherList = new List<Teacher>();
-            List<Teacher> retrieveAssignment = new List<Teacher>();
+            rvm.teacherList = new List<Models.Teacher>();
+            rvm.retrevedTeacherList = new List<Models.Teacher>();
+            List<Models.Teacher> retrieveAssignment = new List<Models.Teacher>();
             //if select is selected for unit leader assignemnt
             
                 if (selectToAssign != null)
@@ -642,7 +640,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             ApplicationDbContext context = new ApplicationDbContext();
             AcademicDirector academicDirector = new AcademicDirector();
             Section section = new Section();
-            Teacher teacher = new Teacher();
+            Models.Teacher teacher = new Models.Teacher();
             var userStore = new ApplicationUserStore(context);
             var userManager = new ApplicationUserManager(userStore);
             SectionViewModel sectionViewModelExtra = new SectionViewModel();
@@ -808,6 +806,9 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             
 
             return View(sectionViewModel);
+        
         }
+        
+        
     }
 }

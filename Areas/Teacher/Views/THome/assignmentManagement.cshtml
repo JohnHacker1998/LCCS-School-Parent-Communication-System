@@ -1,0 +1,313 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.assignmentViewModel
+@{
+    ViewBag.Title = "assignmentManagement";
+}
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+@using (Html.BeginForm("assignmentManagement", "THome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(a => a.assignmentID);
+
+    @Html.LabelFor(a => a.assignmentType);
+    <select id="assignmentType" name="assignmentType" readonly class="form-control">
+        @foreach (var i in Model.assignmentType)
+        {
+            if (i == ViewBag.selectedType)
+            {
+                <option value=@i selected>@i</option>
+            }
+            else
+            {
+                <option value=@i>@i</option>
+            }
+        }
+    </select>
+
+    <div id="groupRelated" style="display:none">
+        @Html.LabelFor(a => a.numberOfGroupMembers);
+        @Html.EditorFor(a => a.numberOfGroupMembers);
+    </div>
+    @Html.LabelFor(a => a.sectionID)
+    <select id="sectionName" name="sectionName" readonly class="form-control">
+        @foreach (var i in Model.sectionList)
+        {
+            if (i == ViewBag.selectedSection)
+            {
+                <option value=@i selected>@i</option>
+            }
+            else
+            {
+                <option value=@i>@i</option>
+            }
+        }
+    </select>
+    @Html.LabelFor(a => a.submissionDate);
+    @Html.EditorFor(a => a.submissionDate, new { htmlAttributes = new { @class = "datepicker form-control" } });
+
+    @Html.LabelFor(a => a.assignmentDocument);
+    <input type="file" name="file" class="form-control" />
+    <input type="submit" name="add" value="Add" />
+    <input type="submit" name="update" value="Update" />
+
+
+}
+
+<table id="tblAssignmentList">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>SectionID</th>
+            <th>Section</th>
+            <th>Assignment Type</th>
+            <th>Submission Date</th>
+
+            <th>Number of Members</th>
+        </tr>
+    </thead>
+
+    @foreach (var k in Model.listAssignment)
+    {
+        <tbody>
+            <tr>
+                <td>@k.assignmentId</td>
+                <td>@k.sectionID</td>
+                <td>@k.section.sectionName</td>
+                <td>@k.assignmentType</td>
+                <td>@k.submissionDate.ToShortDateString()</td>
+
+                <td>@k.numberOfMembers</td>
+
+                @using (Html.BeginForm("assignmentManagement", "THome", new { assId = k.assignmentId.ToString() }, FormMethod.Post))
+                {
+                    <td><input type="submit" name="select" value="Select" /></td>
+                    <td><input type="submit" name="delete" value="Delete" /></td>
+
+                }
+
+                @if (k.assignmentType == "Group" && k.groupList==null)
+                {
+                    <td>
+                        <input type="submit" class="btnModal" id="btnModal" value="button" />
+                    </td>
+                }
+            </tr>
+        </tbody>
+
+    }
+
+</table>
+<div class="modal" tabindex="-1" role="dialog" id="exampleModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                @using (Html.BeginForm("assignmentManagement", "THome", FormMethod.Post, new { id = "groupForm" }))
+                {
+                    @Html.LabelFor(p => p.assignmentID)
+                    @Html.TextBoxFor(p => p.assignmentID, new { @id = "assignmentID1", @name = "assignmentID1" })
+                    @Html.LabelFor(p => p.sectionName);
+                    @Html.TextBoxFor(p => p.sectionName, new { @id = "sectionName1", @name = "sectionName1" })
+                    @Html.TextBoxFor(p => p.sectionID, new { @id = "sectionID1", @name = "sectionNameID1" })
+                    @Html.LabelFor(p => p.numberOfGroupMembers)
+                    @Html.TextBoxFor(p => p.numberOfGroupMembers, new { @id = "gMembers", @name = "gMembers" })
+
+
+
+                    <select id="stdList" class="studentList1" multiple>
+                    </select>
+
+                    <select id="groupedStudentList" class="studentList2" name="groupedStudentList" multiple>
+                    </select>
+                    <input type="text" name="txtValue" id="txtValue" />
+                    <input type="submit" id="btnSubmitGrouping" name="btnSubmitGrouping" value="Submit Group" style="display:none" />
+
+                }
+
+                <input type="submit" id="btnAssign" name="btnAssign" value="Assign" />
+                <input type="submit" id="btnRemove" name="btnRemove" value="Remove" />
+            </div>
+            <div class="modal-footer">
+               @* <button type="button" class="btn btn-primary">Save changes</button>*@
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            minDate: new Date(),
+
+
+        });
+        $('#assignmentType').change(function () {
+
+            $("#assignmentType").change(function () {
+                var a = $("#assignmentType Option:Selected").text();
+                if (a == "Group") {
+                    $("#groupRelated").show();
+
+                }
+                else {
+                    $("#groupRelated").hide();
+                }
+            })
+
+
+        }).change();
+
+        $(".modal").on("hidden.bs.modal", function () {
+            $(".modal-body1").html("");
+        });
+    });
+   
+
+</script>
+<script>
+
+    $(document).ready(function () {
+
+        $('.btnModal').on('click', function () {
+
+            $('#exampleModal').modal('show');
+
+            $tr = $(this).closest('tr');
+
+            var data = $tr.children("td").map(function () {
+                return $(this).text();
+            }).get();
+
+            console.log(data);
+
+            $('#assignmentID1').val(data[0]); //set value
+            $('#sectionID1').val(data[1]); //set value
+            $('#sectionName1').val(data[2]); //set value
+            $('#gMembers').val(data[5]); //set value
+
+            var arr = JSON.parse('@Html.Raw(Json.Encode(@Model.studentArray))')
+
+            $('#stdList').empty()
+            $('#groupedStudentList').empty()
+           for (let x = 0; x < @Model.studentArray.Length; x++){
+            if (arr[x] == data[2]) {
+
+                $('#stdList').append('<option value=' + arr[x+1] + '>' + arr[x+1] + '</option>');
+
+            }
+            x++;
+        }
+            $('option').mousedown(function (e) {
+
+                  e.preventDefault();
+                    $(this).prop('selected', !$(this).prop('selected'));
+                    return false;
+
+            });
+
+
+
+        });
+    });
+
+
+
+</script>
+<script type="text/javascript">
+
+   
+    $(document).ready(function () {
+        $('#btnAssign').on('click', function () {
+            $("#stdList option[value='']").each(function () {
+                $(this).remove();
+            });
+            $("#groupedStudentList option[value='']").each(function () {
+                $(this).remove();
+            });
+            var custom = $("#gMembers").val()
+            console.log(custom)
+            var count = $("#stdList :selected").length;
+            console.log(count)
+            if (count > custom) {
+                alert("Hello! I am an alert box!!");
+            }
+            else if (count <= custom) {
+            var name = $("#stdList :selected").text();
+            var tbl = name.split(',');
+            var values = "*";
+            var selected = $("#stdList option:selected");
+           selected.each(function () {
+                values += $(this).html() + "-";
+
+            });
+            
+                $('#groupedStudentList').append('<option value=' + values + '>' + values + '</option>');
+                $("#stdList option:selected").remove();
+                console.log(values)
+                if ($('#stdList').children().length == 0) {
+                    $("#btnSubmitGrouping").show();
+                }
+                else {
+                    $("#btnSubmitGrouping").hide();
+                }
+            }
+
+
+        });
+    });
+    $(document).ready(function () {
+        $('#btnRemove').on('click', function () {
+            $("#stdList option[value='']").each(function () {
+                $(this).remove();
+            });
+            $("#groupedStudentList option[value='']").each(function () {
+                $(this).remove();
+            });
+           
+            var count = $("#groupedStudentList :selected").length;
+            var name = $("#groupedStudentList :selected").text();
+            if (count == 1) {
+                let text = name;
+                let txtCount = text.length;
+                let text2 = text.substring(1, txtCount);
+                var arrFirst = text2.split("-");
+                for (let y = 0; y < arrFirst.length; y++) {
+                    $('#stdList').append('<option value=' + arrFirst[y] + '>' + arrFirst[y] + '</option>');
+                    $("#groupedStudentList option:selected").remove();
+                  
+                }
+                if ($('#stdList').children().length == 0) {
+                    $("#btnSubmitGrouping").show();
+                }
+                else {
+                    $("#btnSubmitGrouping").hide();
+                }
+            }
+        });
+    });
+    $(document).ready(function () {
+        $('#btnSubmitGrouping').on('click', function () {
+            $("#groupedStudentList option").prop('selected', true);
+            var value = $("#groupedStudentList option:selected").text();
+            $('#txtValue').val(value);
+        });
+
+    });
+</script>
+
+

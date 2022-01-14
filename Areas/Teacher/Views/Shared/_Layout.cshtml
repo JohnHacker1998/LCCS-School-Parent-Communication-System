@@ -3,19 +3,19 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <script src="~/Scripts/modernizr-2.8.3.js"></script>
     <script src="~/Scripts/jquery-ui-1.13.0.min.js"></script>
     <script src="~/Scripts/jquery-2.0.0.min.js"></script>
     <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
-    <link href="~/Areas/Academic_Director/css/styles.css" rel="stylesheet" />
+    <link href="~/Areas/Teacher/css/styles.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-    <link rel="stylesheet" href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" />
-    <link href="~/Areas/Academic_Director/css/main.css" rel="stylesheet" />
+    
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
-    <link href="~/Areas/Academic_Director/css/styles.css" rel="stylesheet" />
+    <link href="~/Areas/Teacher/css/styles.css" rel="stylesheet" />
     <style>
         input.input-validation-error,
         textarea.input-validation-error,
@@ -27,18 +27,18 @@
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-red bg-red">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="index.html">Academic Director</a>
+        <a class="navbar-brand ps-3" href="index.html">Teacher</a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 bg-custom" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
-        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"></form>
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+        </form>
         <!-- Navbar-->
         <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
             <li class="nav-item dropdown">
                 <a id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw bg-custom"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="~/">Profile</a></li>
-
+                    <li><a class="dropdown-item" href="#!">Profile</a></li>
                     <li><hr class="dropdown-divider" /></li>
                     <li><a class="dropdown-item" href="~/Account/Login">Logout</a></li>
                 </ul>
@@ -52,32 +52,10 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
 
-                        <a class="nav-link" href="@Url.Action("manageRegistrar","ADHome")">
+                        <a class="nav-link" href="@Url.Action("assignmentManagement","THome")">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Registrar Management
+                            Assignment Management
                         </a>
-                        <a class="nav-link" href="@Url.Action("RegisterTeacher","ADHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Teacher Management
-                        </a>
-                        <a class="nav-link" href="@Url.Action("SectionManagement","ADHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Section Management
-                        </a>
-                        <a class="nav-link" href="@Url.Action("manageAcademicYear","ADHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Academic Year Management
-                        </a>
-                        <a class="nav-link" href="@Url.Action("unitLeaderManagement","ADHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Unit Leader Designation
-                        </a>
-                        
-
-                        
-
-
-
 
                     </div>
                 </div>
@@ -112,7 +90,6 @@
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
     <script src="js/datatables-simple-demo.js"></script>
 
-    <script src="~/Areas/Academic_Director/js/scripts.js"></script>
-    
+    <script src="~/Areas/Teacher/js/scripts.js"></script>
 </body>
 </html>

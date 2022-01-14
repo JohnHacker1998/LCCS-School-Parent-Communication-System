@@ -58,6 +58,10 @@ namespace LCCS_School_Parent_Communication_System.Controllers
                     {
                         return RedirectToAction("parentManagement", "RHome", new { area = "Registrar" });
                     }
+                    else if (userManager.IsInRole(user.Id, "Teacher"))
+                    {
+                        return RedirectToAction("assignmentManagement", "THome", new { area = "Teacher" });
+                    }
                     else
                     {
                         return View();
@@ -72,9 +76,6 @@ namespace LCCS_School_Parent_Communication_System.Controllers
             }
             return View();
         }
-        public ActionResult profile()
-        {
-            return View();
-        }
+        
     }
 }

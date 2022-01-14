@@ -1,0 +1,22 @@
+﻿@model LCCS_School_Parent_Communication_System.Models.Assignment
+@{
+    ViewBag.Title = "viewAssignmentDetails";
+}
+
+<h2>viewAssignmentDetails</h2>
+<
+@if (Model.assignmentType == "Group")
+{
+    <h1>@Model.assignmentType</h1>
+    <h1>@Model.datePosted</h1>
+    <h1>@Model.section.sectionName</h1>
+    <h1>@Model.numberOfMembers</h1>
+    <h1>@Model.submissionDate</h1>
+}
+@if (Model.assignmentType == "Individual")
+{
+    <h1>@Model.assignmentType</h1>
+    <h1>@Model.datePosted</h1>
+    <h1>@Model.section.sectionName</h1>   
+    <h1>@Model.submissionDate</h1>
+}
