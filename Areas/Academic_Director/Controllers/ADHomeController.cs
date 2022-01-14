@@ -29,6 +29,113 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             return View();
         }
 
+        public ActionResult Register()
+        {
+            return PartialView("Register");
+        }
+        
+        [HttpPost]
+        public ActionResult Register(RegisterTeacherModal registerTeacher)
+        {
+            ViewBag.complete = null;
+            ViewBag.error = null;
+
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            var userStore = new ApplicationUserStore(context);
+            var userManager = new ApplicationUserManager(userStore);
+            Collection collection = new Collection();
+            RegisterViewModel registerViewModel = new RegisterViewModel();
+            Teacher teacher = new Teacher();
+            AcademicDirector academicDirector = new AcademicDirector();
+
+            
+            //check for a duplicate record
+            if (collection.checkUserExistence(registerTeacher.email, registerTeacher.fullName))
+            {
+                //populate RegisterViewModel with the inserted data for registration
+                registerViewModel.fullName = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(registerTeacher.fullName.ToLower()); 
+                registerViewModel.email = registerTeacher.email;
+                do
+                {
+                    //check if the username is unique if not regenerate
+                    registerViewModel.username = collection.generateUserName();
+                }
+                while (userManager.FindByName(registerViewModel.username) != null);
+
+                registerViewModel.password = collection.generatePassword();
+
+                //create teacher user account using the provided information
+                string Id = collection.RegisterUser(registerViewModel, "Teacher");
+
+                //check if the user registration is completed successfully and record to teacher table  
+                if (Id != null)
+                {
+                    //record other teacher informations
+                    teacher.teacherId = Id;
+                    teacher.grade = registerTeacher.grade;
+                    teacher.subject = registerTeacher.subject;
+
+                    Boolean sucess = academicDirector.registerTeacher(teacher);
+
+                    //check if the operation completed successfully or not
+                    if (sucess)
+                    {
+                        //send user credential through email to the new user
+                        Boolean mail = collection.sendMail(registerViewModel.email, registerViewModel.username, registerViewModel.password);
+
+                        if (mail)
+                        {
+                            //sucessful message
+                            ViewBag.complete = "Registration Completed Successfully";
+                        }
+                        else
+                        {
+                            //delete the created user record
+                            var revert = context.Users.Find(Id);
+                            context.Users.Remove(revert);
+                            int result = 0;
+                            do
+                            {
+                                result = context.SaveChanges();
+                            }
+                            while (result == 0);
+
+                            ViewBag.error = "Registration Failed!! Email Address doesn't exist";
+                        }
+
+                    }
+                    else
+                    {
+                        //delete the created user record
+                        var revert = context.Users.Find(Id);
+                        context.Users.Remove(revert);
+                        int result = 0;
+                        do
+                        {
+                            result = context.SaveChanges();
+                        }
+                        while (result == 0);
+
+                        ViewBag.error = "Registration Failed!!";
+                    }
+
+                }
+                else
+                {
+                    //faliure message due to identity register failure
+                    ViewBag.error = "Registration Failed!!";
+                }
+            }
+            else
+            {
+                //failure message due to duplicate user
+                ViewBag.error = "Registration Failed!! Record Exists with the Same Email Address or Full Name";
+            }
+
+            return PartialView("Register");
+        }
+
         public ActionResult RegisterTeacher()
         {
 
@@ -37,7 +144,11 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             ViewBag.upHidden = "hidden";
             ViewBag.disableEmail = false;
 
-            return View();
+            ApplicationDbContext context = new ApplicationDbContext();
+            RegisterTeacherViewModel registerTeacherViewModel = new RegisterTeacherViewModel();
+            registerTeacherViewModel.teacherList = context.Teacher.ToList();
+
+            return View(registerTeacherViewModel);
         }
 
         [HttpPost]
@@ -47,12 +158,14 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             ViewBag.search = false;
             ViewBag.upHidden = "hidden";
             ViewBag.disableEmail = false;
-
+            ApplicationDbContext context = new ApplicationDbContext();
+            
+            registerTeacherViewModel.teacherList = context.Teacher.ToList();
             //check if their are no errors arise from user input
             if (ModelState.IsValid || (search!=null && ModelState.IsValidField("fullName")) || edit!=null || delete!=null)
             {
                 //basic objects
-                ApplicationDbContext context = new ApplicationDbContext();
+                //ApplicationDbContext context = new ApplicationDbContext();
                 var userStore = new ApplicationUserStore(context);
                 var userManager = new ApplicationUserManager(userStore);
                 Collection collection = new Collection();

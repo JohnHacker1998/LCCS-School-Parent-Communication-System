@@ -26,3 +26,6 @@
 .table-striped {
     overflow-x: scroll !important;
 }
+.btn-sm{
+    color:white !important;
+}

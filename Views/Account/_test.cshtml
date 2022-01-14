@@ -1,0 +1,39 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.ProfileEditUserName
+
+
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="title">Edit</h4>
+                <button tyoe="button" class="close" data-dismiss="modal">
+                    <span>x</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form action="edit">
+                    <div class="form-group">
+                        @Html.LabelFor(l => l.userName)
+                        @Html.EditorFor(e => e.userName, new {@class="form-control"})
+                        @Html.ValidationMessageFor(v=>v.userName)
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-save="modal">Change</button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+<style>
+    .modal-content{
+        width:400px;
+        height:400px;
+    }
+</style>

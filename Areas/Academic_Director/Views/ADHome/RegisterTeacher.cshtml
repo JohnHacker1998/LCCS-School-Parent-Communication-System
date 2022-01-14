@@ -9,115 +9,183 @@
 
 
 
-<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+@*<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>*@
+
+@*<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/popper.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css" />
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>*@
+
+
 
 <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+    </script>
+
+@*@using (Html.BeginForm("RegisterTeacher", "ADHome", FormMethod.Post))
+    {
+        <div class="row">
+            @if (@ViewBag.disableEmail)
+            {
+                <div class="form-group col-xl-6">
+                    @Html.LabelFor(lbl => lbl.email)
+                    @Html.EditorFor(tb => tb.email, new { htmlAttributes = new { @readonly = @ViewBag.disableEmail, @class = "form-control" }, placeholder = "example@gmail.com" })
+
+                </div>
+            }
+            else
+            {
+                <div class="form-group col-xl-6">
+                    @Html.LabelFor(lbl => lbl.email)
+                    @Html.EditorFor(tb => tb.email, new { htmlAttributes = new { placeholder = "example@gmail.com", @class = "form-control" } })
+
+                </div>
+            }
+
+            <div class="form-group col-xl-6">
+                @Html.LabelFor(lbl => lbl.fullName)
+                @Html.EditorFor(tb => tb.fullName, new { htmlAttributes = new { @class = "form-control" } })
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-xl-6">
+                @Html.LabelFor(lbl => lbl.grade)
+                @Html.EditorFor(tb => tb.grade, new { htmlAttributes = new { type = "number", @min = 9, @max = 12, step = 1, @class = "form-control" } })
+
+            </div>
+            <div class="form-group col-xl-6">
+                @Html.LabelFor(lbl => lbl.subject)
+                @Html.EditorFor(tb => tb.subject, new { htmlAttributes = new { @class = "form-control" } })
+
+            </div>
+        </div>
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.registerStatus
+            @ViewBag.updateStatus
+            @ViewBag.duplicate
+            @ViewBag.searchFound
+            @ViewBag.fullName
+            @ViewBag.role
+            @Html.ValidationSummary()
+        </div>
+        <div class="text-center">
+            <input type="submit" name="register" value="Register" class="btn btn-primary bg-green" />
+            <input type="submit" name="search" value="Search" class="btn btn-primary" />
+            <input type="submit" name="update" value="Update" @ViewBag.upHidden class="btn bg-red" />
+        </div>
+    }*@
+
+
+
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#registerTeacherModal" data-url="@Url.Action("Register")">Register</button>
+
+
+<script type="text/javascript">
+
     $(document).ready(function () {
-        $('#myTable').DataTable();
+        var view = $('#myModal');
+        $('[data-toggle="modal"]').click(function () {
+            var url = $(this).data('url');
+            $.get(url).done(function (data) {
+                view.html(data);
+                view.modal('show');
+            });
+        });
+
+        view.on('click', '[data-save="modal"]', function (event) {
+
+            var form = $(this).parents('.modal').find('form');
+            var actionUrl = form.attr('action');
+            var sendData = form.serialize();
+            $.validator.unobtrusive.parse("#error");
+            ValidationForm();
+            if (ValidationForm()) {
+                $.post(actionUrl, sendData).done(function (data) {
+                    //view.modal('hide');
+                    view.html(data);
+                view.modal('show');
+                });
+            }
+
+        });
+
+        view.on('click', '[data-dismiss="modal"]', function (event) {
+            view.modal('hide');
+        });
+
+        function ValidationForm() {
+            if (!$("#error").valid()) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
     });
+
 </script>
 
-@using (Html.BeginForm("RegisterTeacher", "ADHome", FormMethod.Post))
-{
-    <div class="row">
-        @if (@ViewBag.disableEmail)
-        {
-            <div class="form-group col-xl-6">
-                @Html.LabelFor(lbl => lbl.email)
-                @Html.EditorFor(tb => tb.email, new { htmlAttributes = new { @readonly = @ViewBag.disableEmail, @class = "form-control" }, placeholder = "example@gmail.com" })
-
-            </div>
-        }
-        else
-        {
-            <div class="form-group col-xl-6">
-                @Html.LabelFor(lbl => lbl.email)
-                @Html.EditorFor(tb => tb.email, new { htmlAttributes = new { placeholder = "example@gmail.com", @class = "form-control" } })
-
-            </div>
-        }
-
-        <div class="form-group col-xl-6">
-            @Html.LabelFor(lbl => lbl.fullName)
-            @Html.EditorFor(tb => tb.fullName, new { htmlAttributes = new { @class = "form-control" } })
-
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-group col-xl-6">
-            @Html.LabelFor(lbl => lbl.grade)
-            @Html.EditorFor(tb => tb.grade, new { htmlAttributes = new { type = "number", @min = 9, @max = 12, step = 1, @class = "form-control" } })
-
-        </div>
-        <div class="form-group col-xl-6">
-            @Html.LabelFor(lbl => lbl.subject)
-            @Html.EditorFor(tb => tb.subject, new { htmlAttributes = new { @class = "form-control" } })
-
-        </div>
-    </div>
-    <div class="alert alert-danger" role="alert">
-        @ViewBag.registerStatus
-        @ViewBag.updateStatus
-        @ViewBag.duplicate
-        @ViewBag.searchFound
-        @ViewBag.fullName
-        @ViewBag.role
-        @Html.ValidationSummary()
-    </div>
-    <div class="text-center">
-        <input type="submit" name="register" value="Register" class="btn btn-primary bg-green" />
-        <input type="submit" name="search" value="Search" class="btn btn-primary" />
-        <input type="submit" name="update" value="Update" @ViewBag.upHidden class="btn bg-red" />
-    </div>
-}
 
 
-@if (ViewBag.search == true)
-{
 
 
-    <table class="table table-striped table-bordered" id="myTable">
-        <thead>
-            <tr>
-                <th scope="col">Full Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Grade</th>
-                <th scope="col">Subject</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var list in Model.teacherList)
-            {
+
+
+@*@if (ViewBag.search == true)
+{*@
+
+    <div class="container mb-3 mt-3">
+        <table class="table table-striped table-bordered" id="myTable">
+            <thead>
                 <tr>
-                    <td>@list.user.fullName</td>
-                    <td>@list.user.Email</td>
-                    <td>@list.grade</td>
-                    <td>@list.subject</td>
-                    <td>
-                        @using (Html.BeginForm("RegisterTeacher", "ADHome", new { id = @list.teacherId }, FormMethod.Post))
-                        {
-                            <input type="submit" value="Select" name="edit" class="btn btn-primary bg-green" />
-                            <input type="submit" value="Delete" name="delete" class="btn btn-danger" />
-                        }
-
-                    </td>
+                    <th scope="col">Full Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Grade</th>
+                    <th scope="col">Subject</th>
+                    <th scope="col"></th>
                 </tr>
-            }
-        </tbody>
-        <tfoot>
+            </thead>
+            <tbody>
+                @foreach (var list in Model.teacherList)
+                {
+                    <tr>
+                        <td>@list.user.fullName</td>
+                        <td>@list.user.Email</td>
+                        <td>@list.grade</td>
+                        <td>@list.subject</td>
+                        <td>
+                            @using (Html.BeginForm("RegisterTeacher", "ADHome", new { id = @list.teacherId }, FormMethod.Post))
+                            {
+                                <input type="submit" value="Select" name="edit" class="btn btn-primary bg-green" />
+                                <input type="submit" value="Delete" name="delete" class="btn btn-danger" />
+                            }
 
-        </tfoot>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
 
-    </table>
-}
+            </tfoot>
+
+        </table>
+    </div>
+@*}*@
 
 
-
+<div class="modal" id="myModal" role="dialog" data-backdrop="static" tabindex="-1" data-url="@Url.Action("Register")"></div>
 
 
 
