@@ -1,0 +1,130 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.ProfileViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Profile</title>
+
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+<body>
+
+
+    @Html.LabelFor(lbl => lbl.user.fullName)
+    <label class="form-label" data-toggle="modal1" data-target="#editFullName" data-url="@Url.Action("EditFullName")" data-id="1">@Model.fullName</label>
+    <br />
+    <hr class="line" />
+
+    @Html.LabelFor(lbl => lbl.user.Email)
+    <label class="form-label" data-toggle="modal" data-target="#edit" data-url="@Url.Action("edit")">@Model.email</label>
+    <br />
+    <hr class="line" />
+
+    @Html.LabelFor(lbl => lbl.user.UserName)
+    <label class="form-label" data-toggle="modal" data-target="#editUserName" data-url="@Url.Action("EditUserName")">@Model.userName</label>
+    <br />
+    <hr class="line" />
+
+    <lable>Password</lable>
+    <label class="form-label" data-toggle="modal" data-target="#editPassword" data-url="@Url.Action("EditPassword")">********</label>
+
+    <div class="modal" id="myModal" role="dialog" data-url="@Url.Action("edit")"></div>
+
+
+
+    @*@Html.ValidationMessage("changepass");*@
+
+
+
+    @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit" data-url="@Url.Action("edit")">edit</button>*@
+    @*<label data-toggle="modal" data-target="#edit" data-url="@Url.Action("edit")">asdf</label>*@
+
+
+
+
+    ------------------------------------------------------------------------------------------------------------------------------
+
+
+
+    @*@section Scripts{
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('.add').click(function (e) {
+                    $('#popup').modal('show');
+                });
+            });
+        </script>
+
+        }*@
+
+</body>
+</html>
+
+@*<div class="modal fade" id="popup" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                Hi Congra
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .modal-content{
+        height:500px;
+        width:700px;
+    }
+</style>*@
+
+@*<script type="text/javascript">
+    $(function () {
+        var a = $('#myModal');
+        $('.w').click(function (event) {
+            var url = $(this).data('url');
+            $.get(url).done(function (data) {
+                a.html(data);
+                a.find('#test').modal('show');
+            });
+        });
+    });
+</script>*@
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var view = $('#myModal');
+        $('[data-toggle="modal1"]').click(function () {
+            var url = $(this).data('url')+'?id='+$(this).data('id');
+            $.get(url).done(function (data) {
+                view.html(data);
+                view.modal('show');
+            });
+        });
+
+        view.on('click', '[data-save="modal"]', function (event) {
+            var form = $(this).parents('.modal').find('form');
+            var actionUrl = form.attr('action');
+            var sendData = form.serialize();
+            $.post(actionUrl, sendData).done(function (data) {
+                view.modal('hide');
+            });
+        });
+    });
+</script>
+
+@*<script type="text/javascript">
+
+    $(funtion(){
+        $('')
+    })
+
+</script>*@

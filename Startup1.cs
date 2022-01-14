@@ -5,6 +5,9 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.DataProtection;
+using Microsoft.VisualBasic.ApplicationServices;
+
 using Owin;
 
 [assembly: OwinStartup(typeof(LCCS_School_Parent_Communication_System.Startup1))]
@@ -13,14 +16,20 @@ namespace LCCS_School_Parent_Communication_System
 {
     public class Startup1
     {
-        
+        internal static IDataProtectionProvider DataProtectionProvider { get; private set; }
+
         public void Configuration(IAppBuilder app)
         {
             app.UseCookieAuthentication(new CookieAuthenticationOptions() { AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie, LoginPath = new PathString("/Account/Login") });
             // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=316888
             this.CreateRolesAndUsers();
+
+            DataProtectionProvider = app.GetDataProtectionProvider();
         }
 
+       
+
+       
         public void CreateRolesAndUsers()
         {
             

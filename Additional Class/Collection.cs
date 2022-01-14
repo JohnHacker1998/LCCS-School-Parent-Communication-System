@@ -126,26 +126,34 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
         }
 
         //function to send email to user
-        public void sendMail(string email,string userName,string password)
+        public Boolean sendMail(string email,string userName,string password)
         {
-           
-            //create the mail message
-            MailMessage message = new MailMessage("lideta.catholic.cathedral@gmail.com", email);
-            message.Subject = "Lccs School-Parent Communication Credential";
-            message.Body = "Welcome to Lideta Catholic Catedral School.\nYour School-Parent Communication System account has been created.\n\n\tYour Username is: " + userName + "\n\tpassword is: " + password + "\n\nBe careful with the uppercase and lowercase, they matter"; ;
-            message.IsBodyHtml = false;
+            try
+            {
+                //create the mail message
+                MailMessage message = new MailMessage("lideta.catholic.cathedral@gmail.com", email);
+                message.Subject = "Lccs School-Parent Communication Credential";
+                message.Body = "Welcome to Lideta Catholic Catedral School.\nYour School-Parent Communication System account has been created.\n\n\tYour Username is: " + userName + "\n\tpassword is: " + password + "\n\nBe careful with the uppercase and lowercase, they matter"; ;
+                message.IsBodyHtml = false;
 
-            //define the host and port number
-            SmtpClient smtp = new SmtpClient();
-            smtp.EnableSsl = true;
-            smtp.Host = "smtp.gmail.com";
-            smtp.Port = 587;
+                //define the host and port number
+                SmtpClient smtp = new SmtpClient();
+                smtp.EnableSsl = true;
+                smtp.Host = "smtp.gmail.com";
+                smtp.Port = 587;
 
-            //send mail using sender credential
-            NetworkCredential networkCredential = new NetworkCredential("lideta.catholic.cathedral@gmail.com", "Lccs@pi$s@65");
-            smtp.UseDefaultCredentials = true;
-            smtp.Credentials = networkCredential;
-            smtp.Send(message);
+                //send mail using sender credential
+                NetworkCredential networkCredential = new NetworkCredential("lideta.catholic.cathedral@gmail.com", "Lccs@pi$s@65");
+                smtp.UseDefaultCredentials = true;
+                smtp.Credentials = networkCredential;
+                smtp.Send(message);
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         //function to delete user account
@@ -204,11 +212,12 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
         }
 
 
-
+        //function to check if user with the provided email or fullname exists or not
         public bool checkUserExistence(string email,string fullname)
         {
             var appDbContext = new ApplicationDbContext();
 
+            //find the user using email or fullname 
             var appuser = appDbContext.Users.Where(a => a.Email == email || a.fullName == fullname).FirstOrDefault();
             if (appuser == null)
             {

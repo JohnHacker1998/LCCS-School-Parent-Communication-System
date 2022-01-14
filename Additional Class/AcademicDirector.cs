@@ -13,12 +13,19 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
     {
 
         //function to record teacher information
-        public void registerTeacher(Teacher teacher)
+        public Boolean registerTeacher(Teacher teacher)
         {
             //record teacher information
             ApplicationDbContext context = new ApplicationDbContext();
             context.Teacher.Add(teacher);
-            context.SaveChanges();
+            int result=context.SaveChanges();
+
+            if (result > 0)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         //function to update user information
