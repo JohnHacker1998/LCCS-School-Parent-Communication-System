@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using LCCS_School_Parent_Communication_System.viewModels;
 using LCCS_School_Parent_Communication_System.Models;
-
+using LCCS_School_Parent_Communication_System.Additional_Class;
 namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
 {
     [Authorize(Roles = "Parent")]
@@ -236,5 +236,75 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
 
             return View(warning);
         }
+        public ActionResult viewAssignment()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            HomeroomTeacherMethod ht = new HomeroomTeacherMethod();
+            List<Assignment> temp = new List<Assignment>();
+            Section sec = new Section();
+            string currentUserID = User.Identity.GetUserId().ToString();
+            Models.Parent p = new Models.Parent();
+            List<Assignment> ass = new List<Assignment>();
+            DateTime d = DateTime.Now.Date;
+            Student s = new Student();
+            p = db.Parent.Where(x => x.parentId == currentUserID).FirstOrDefault();
+            s = db.Student.Where(x => x.studentId == p.studentId).FirstOrDefault();
+            sec = db.Section.Where(x => x.sectionName == s.sectionName && x.academicYearId == s.academicYearId).FirstOrDefault();
+            if (s!= null)
+            {
+               
+               string status= ht.whichQuarter(s.academicYearId);
+                if(status== "Q1" || status== "Q2" || status== "Q3" || status== "Q4")
+                {
+                    string currentVal = s.academicYearId + "-" + status;
+                    ass = db.Assignment.Where(x => x.sectionID == sec.sectionId && x.yearlyQuarter==currentVal).ToList();
+                    foreach(var x in ass)
+                    {
+                        if (DateTime.Compare(DateTime.Now.Date, x.submissionDate) <= 0 )
+                        {
+                            if(x.assignmentType=="Individual" || (x.assignmentType=="Group" && x.groupList!=null))
+                            temp.Add(x);
+                        }
+                        
+                    }
+                    
+
+
+
+                }
+                else
+                {
+                    string viewBAGMEssage = "gap,error";
+                }
+                
+                
+            }
+
+            return View(temp);
+        }
+     
+    
+        
+        public ActionResult viewAssignmentDetails()
+        {
+            
+            Assignment ass = new Assignment();
+           
+
+                
+            return View(ass);
+        }
+        [HttpPost]
+        public ActionResult viewAssignmentDetails(string idk)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            Assignment ass = new Assignment();
+            int idx = int.Parse(idk);
+            ass = db.Assignment.Where(x => x.assignmentId == idx).FirstOrDefault();
+
+
+            return View(ass);
+        }
+
     }
 }

@@ -521,6 +521,9 @@
     <Content Include="Areas\Registrar\css\styles.css" />
     <Content Include="Areas\Registrar\js\datatables-simple-demo.js" />
     <Content Include="Areas\Registrar\js\scripts.js" />
+    <Content Include="Areas\Teacher\css\styles.css" />
+    <Content Include="Areas\Teacher\js\datatables-simple-demo.js" />
+    <Content Include="Areas\Teacher\js\scripts.js" />
     <Content Include="Areas\Unit_Leader\css\styles.css" />
     <Content Include="Areas\Unit_Leader\js\datatables-simple-demo.js" />
     <Content Include="Areas\Unit_Leader\js\scripts.js" />
@@ -667,6 +670,13 @@
     <Content Include="Areas\Registrar\Views\RHome\RegisterStudent.cshtml" />
     <Content Include="Areas\Registrar\Views\RHome\EditStudent.cshtml" />
     <Content Include="Areas\Registrar\Views\RHome\DeleteStudent.cshtml" />
+    <Content Include="Areas\Academic_Director\Views\ADHome\trying.cshtml" />
+    <Content Include="Areas\Teacher\Views\web.config" />
+    <Content Include="Areas\Teacher\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Teacher\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Teacher\Views\THome\assignmentManagement.cshtml" />
+    <Content Include="Areas\Parent\Views\PHome\viewAssignment.cshtml" />
+    <Content Include="Areas\Parent\Views\PHome\viewAssignmentDetails.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -772,6 +782,8 @@
     <Compile Include="Areas\Parent\ParentAreaRegistration.cs" />
     <Compile Include="Areas\Registrar\Controllers\RHomeController.cs" />
     <Compile Include="Areas\Registrar\RegistrarAreaRegistration.cs" />
+    <Compile Include="Areas\Teacher\Controllers\THomeController.cs" />
+    <Compile Include="Areas\Teacher\TeacherAreaRegistration.cs" />
     <Compile Include="Areas\Unit_Leader\Controllers\ULHomeController.cs" />
     <Compile Include="Areas\Unit_Leader\Unit_LeaderAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -783,13 +795,11 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
-    <Compile Include="Migrations\202201041024298_allinone.cs" />
-    <Compile Include="Migrations\202201041024298_allinone.designer.cs">
-      <DependentUpon>202201041024298_allinone.cs</DependentUpon>
-    </Compile>
+   
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AbsenceRecord.cs" />
     <Compile Include="Models\AcademicYear.cs" />
+    <Compile Include="Models\Assignment.cs" />
     <Compile Include="Models\Evidence.cs" />
     <Compile Include="Models\LateComer.cs" />
     <Compile Include="Models\Parent.cs" />
@@ -802,6 +812,7 @@
     <Compile Include="viewModels\AbsenceRecordViewMoel.cs" />
     <Compile Include="viewModels\AcademicYearViewModel.cs" />
     <Compile Include="viewModels\DeleteTeacherModal.cs" />
+    <Compile Include="viewModels\assignmentViewModel.cs" />
     <Compile Include="viewModels\EvidenceApprovalViewModel.cs" />
     <Compile Include="viewModels\ForgotPasswordViewModel.cs" />
     <Compile Include="viewModels\LateComerViewModel.cs" />
@@ -875,6 +886,7 @@
     <Folder Include="Areas\Homeroom_Teacher\Data\" />
     <Folder Include="Areas\Parent\Data\" />
     <Folder Include="Areas\Registrar\Data\" />
+    <Folder Include="Areas\Teacher\Data\" />
     <Folder Include="Areas\Unit_Leader\Data\" />
     <Folder Include="Views\Login\" />
   </ItemGroup>
@@ -884,11 +896,7 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\202201041024298_allinone.resx">
-      <DependentUpon>202201041024298_allinone.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
+
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

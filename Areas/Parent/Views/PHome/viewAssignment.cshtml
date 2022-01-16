@@ -1,0 +1,24 @@
+﻿@model List<LCCS_School_Parent_Communication_System.Models.Assignment>
+@{
+    ViewBag.Title = "viewAssignment";
+}
+
+<h2>viewAssignment</h2>
+<table>
+    <tr>
+        <th>Assignment List</th>
+    </tr>
+    <tr>
+        @foreach (var k in Model)
+        {
+
+
+            
+
+            using (Html.BeginForm("viewAssignmentDetails", "PHome", new { idk = k.assignmentId.ToString() }, FormMethod.Post))
+            {
+                <td><input type="submit" value=@k.assignmentType /></td>
+            }
+        }
+        </tr>
+</table>
