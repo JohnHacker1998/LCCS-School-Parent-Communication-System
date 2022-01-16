@@ -1,0 +1,185 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.AcademicYearViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            minDate: new Date(),
+
+
+        });
+    });
+</script>
+
+<html>
+<head>
+
+
+</head>
+<body>
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-red">
+                <h4 class="modal-title text-white" id="title">Update Academic Year</h4>
+                <button type="button" class="close btn bg-red" data-dismiss="modal">
+                    <span aria-hidden="true" class="text-white">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                @if (ViewBag.SuccessMessage != " " && ViewBag.SuccessMessage != null)
+                {
+                    <div class="alert alert-success">
+                        @ViewBag.SuccessMessage
+                    </div>
+                }
+                @if (ViewBag.durationMessage != " " && ViewBag.durationMessage != null)
+                {
+
+                    <div class="alert alert-danger">
+
+                        @ViewBag.durationMessage
+                    </div>
+                }
+               
+
+                <form action="updateAcademicYear" id="error" autocomplete="off">
+
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.yearStart, new { @class = "form-label mt-2" })
+                       <div class="container row"> @Html.EditorFor(a => a.yearStart, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
+                        <div class="container row">@Html.ValidationMessageFor(a => a.yearStart, null, new { @class = "text-danger" })</div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.yearEnd, new { @class = "form-label mt-2" })
+                        @if (ViewBag.disableYearEnd == true)
+                        {
+                            <div class="container row"> @Html.EditorFor(a => a.yearEnd, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
+                        }
+                        else
+                        {
+                          <div class="container row"> @Html.EditorFor(a => a.yearEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })</div>
+                        }
+                        <div class="container row">@Html.ValidationMessageFor(a => a.yearEnd, null, new { @class = "text-danger" })</div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.quarterOneStart, new { @class = "form-label mt-2" })
+                        @if (ViewBag.disableQuarterOneStart == true)
+                        {
+                            <div class="container row"> @Html.EditorFor(a => a.quarterOneStart, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
+                        }
+                        else {
+                            <div class="container row"> @Html.EditorFor(a => a.quarterOneStart, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })</div>
+                        }                        
+                        <div class="container row">@Html.ValidationMessageFor(a => a.quarterOneStart, null, new { @class = "text-danger" })</div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.quarterOneEnd, new { @class = "form-label mt-2" })
+                        @if (ViewBag.disableQuarterOneEnd == true)
+                        {
+                            <div class="container row"> @Html.EditorFor(a => a.quarterOneEnd, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
+                        }
+                        else {
+                            <div class="container row"> @Html.EditorFor(a => a.quarterOneEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })</div>
+                        }
+                        
+                        <div class="container row">@Html.ValidationMessageFor(a => a.quarterOneEnd, null, new { @class = "text-danger" })</div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.quarterTwoStart, new { @class = "form-label mt-2" })
+                        @if (ViewBag.disableQuarterTwoStart == true) { 
+                        <div class="container row"> @Html.EditorFor(a => a.quarterTwoStart, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
+                        }
+                        else { 
+                        <div class="container row"> @Html.EditorFor(a => a.quarterTwoStart, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })</div>
+                        }
+                            
+                        <div class="container row">@Html.ValidationMessageFor(a => a.quarterTwoStart, null, new { @class = "text-danger" })</div>
+                    </div>
+                    <div class="form-group">
+
+                        @Html.LabelFor(a => a.quarterTwoEnd, new { @class = "form-label mt-2" })
+                        @if (ViewBag.disableQuarterTwoEnd == true)
+                        {
+                            <div class="container row"> @Html.EditorFor(a => a.quarterTwoEnd, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
+                        }
+                        else
+                        {
+                            <div class="container row"> @Html.EditorFor(a => a.quarterTwoEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })</div>
+                        }
+                            <div class="container row">@Html.ValidationMessageFor(a => a.quarterTwoEnd, null, new { @class = "text-danger" })</div>
+                        </div>
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.quarterThreeStart, new { @class = "form-label mt-2" })
+                        @if (ViewBag.disableQuarterThreeStart == true)
+                        {
+                            <div class="container row"> @Html.EditorFor(a => a.quarterThreeStart, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
+                        }
+                        else { 
+                            <div class="container row"> @Html.EditorFor(a => a.quarterThreeStart, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })</div>
+                        }
+                        
+                        <div class="container row">@Html.ValidationMessageFor(a => a.quarterThreeStart, null, new { @class = "text-danger" })</div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.quarterThreeEnd, new { @class = "form-label mt-2" })
+                        @if (ViewBag.disableQuarterThreeEnd == true)
+                        {
+                            <div class="container row"> @Html.EditorFor(a => a.quarterThreeEnd, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
+                        }
+                        else
+                        {
+                            <div class="container row"> @Html.EditorFor(a => a.quarterThreeEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })</div>
+                        }
+
+                        <div class="container row">@Html.ValidationMessageFor(a => a.quarterThreeEnd, null, new { @class = "text-danger" })</div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.quarterFourStart, new { @class = "form-label mt-2" })
+                        @if (ViewBag.disableQuarterFourStart == true)
+                        {
+                            <div class="container row"> @Html.EditorFor(a => a.quarterFourStart, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
+                        }
+                        else
+                        {
+                            <div class="container row"> @Html.EditorFor(a => a.quarterFourStart, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })</div>
+                        }
+
+                        <div class="container row">@Html.ValidationMessageFor(a => a.quarterFourStart, null, new { @class = "text-danger" })</div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.quarterFourEnd, new { @class = "form-label mt-2" })
+                        @if (ViewBag.disableQuarterFourEnd == true)
+                        {
+                            <div class="container row"> @Html.EditorFor(a => a.quarterFourEnd, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
+                        }
+                        else
+                        {
+                            <div class="container row"> @Html.EditorFor(a => a.quarterFourEnd, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })</div>
+                        }
+
+                        <div class="container row">@Html.ValidationMessageFor(a => a.quarterFourEnd, null, new { @class = "text-danger" })</div>
+                    </div>
+
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="save" data-save="modal">Update</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<style>
+    .row, .row > * {
+        padding: 0 !important;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+</style>
+
+
+

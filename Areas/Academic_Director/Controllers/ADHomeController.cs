@@ -44,7 +44,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             var userManager = new ApplicationUserManager(userStore);
             Collection collection = new Collection();
             RegisterViewModel registerViewModel = new RegisterViewModel();
-            Teacher teacher = new Teacher();
+            Models.Teacher teacher = new Models.Teacher();
             AcademicDirector academicDirector = new AcademicDirector();
 
             
@@ -340,7 +340,45 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             }
             return View(registerTeacherViewModel);
         }
-       
+       public ActionResult registerRegistrar()
+        {
+            return PartialView("registerRegistrar");
+        }
+        [HttpPost]
+        public ActionResult registerRegistrar(RegistrarManagementViewModel rmv)
+        {
+            RegisterViewModel rv = new RegisterViewModel();
+            Collection c = new Collection();
+            RegistrarManagementViewModel rmvm = new RegistrarManagementViewModel();
+            AcademicDirector ad = new AcademicDirector();
+            ViewBag.Message = " ";
+            ViewBag.addedSuccessfully = " ";
+            //checking the validity of the inputs
+            if (ModelState.IsValid)
+            {
+                //checking if register button is clicked
+              
+                    if (c.checkUserExistence(rmv.email, rmv.fullName))
+                    {
+                        rv.username = c.generateUserName();
+                        rv.password = c.generatePassword();
+                        rv.email = rmv.email;
+                        rv.fullName = rmv.fullName;
+                        c.RegisterUser(rv, "Registrar");
+                        
+                        c.sendMail(rv.email, rv.username, rv.password);
+                        ViewBag.addedSuccessfully = "User Added Successfully.";
+                    }
+                    else
+                    {
+                        ViewBag.Message = "User exists";
+                    }
+                
+
+            }
+          
+            return PartialView("registerRegistrar");
+        }
         public ActionResult manageRegistrar()
 
         {
@@ -392,7 +430,181 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
             return View(rmvm);
         }
+        public ActionResult registerAcademicYear()
+        {
+            return PartialView("registerAcademicYear");
+        }
+
+        [HttpPost]
+         public ActionResult registerAcademicYear(AcademicYearViewModel ayvm)
+        {
+            ViewBag.addedSuccessfully = " ";
+            ViewBag.Message = " ";
+            ViewBag.durationMessage = " ";
+
+            AcademicYear ay = new AcademicYear();
+            ApplicationDbContext db = new ApplicationDbContext();
+            AcademicDirector ad = new AcademicDirector();
+            AcademicYear ayear = new AcademicYear();
+            if (ModelState.IsValid)
+            {
+                ay.academicYearName = Convert.ToDateTime(ayvm.yearStart).ToString("MMMM") + Convert.ToDateTime(ayvm.yearStart).Year.ToString();
+                ay.durationStart = Convert.ToDateTime(ayvm.yearStart).Date;
+                ay.durationEnd = Convert.ToDateTime(ayvm.yearEnd).Date;
+                ay.quarterOneStart = Convert.ToDateTime(ayvm.quarterOneStart).Date;
+                ay.quarterOneEnd = Convert.ToDateTime(ayvm.quarterOneEnd).Date;
+                ay.quarterTwoStart = Convert.ToDateTime(ayvm.quarterTwoStart).Date;
+                ay.quarterTwoEnd = Convert.ToDateTime(ayvm.quarterTwoEnd).Date;
+                ay.quarterThreeStart = Convert.ToDateTime(ayvm.quarterThreeStart).Date;
+                ay.quarterThreeEnd = Convert.ToDateTime(ayvm.quarterThreeEnd).Date;
+                ay.quarterFourStart = Convert.ToDateTime(ayvm.quarterFourStart).Date;
+                ay.quarterFourEnd = Convert.ToDateTime(ayvm.quarterFourEnd).Date;
+
+                //concatenating year start month name and year to create the academic year name.
+
+                //checking if the academic year name exists on the academic year table, and if so,not enabling user to add other duplicate data.
+                ayear = db.AcademicYear.Where(a => a.academicYearName == ay.academicYearName).FirstOrDefault();
+                if (ayear == null)
+                {
+                    //checking if the recieved academic year information fulfills the necessary criterias using the validateDuration() method.
+                    if (ad.validateDuration(ay))
+                    {
+                        //ifso enabling user to register the information to the academic year table.
+
+                        db.AcademicYear.Add(ay);
+                        db.SaveChanges();
+                        ViewBag.addedSuccessfully = "AcademicYear added Successfully.";
+
+
+                    }
+                    else
+                    {
+                        ViewBag.durationMessage = "Duration is invalid";
+                    }
+                }
+                else
+                {
+                    ViewBag.Message = "Academic Year Exists";
+                }
+            }
+
+            return PartialView("registerAcademicYear");
+        }
+        public ActionResult updateAcademicYear(string id)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            AcademicYearViewModel academicYearViewModel = new AcademicYearViewModel();
+            ViewBag.disableYearStart = false;
+            ViewBag.disableYearEnd = false;
+            ViewBag.disableQuarterOneStart = false;
+            ViewBag.disableQuarterOneEnd = false;
+            ViewBag.disableQuarterTwoStart = false;
+            ViewBag.disableQuarterTwoEnd = false;
+            ViewBag.disableQuarterThreeStart = false;
+            ViewBag.disableQuarterThreeEnd = false;
+            ViewBag.disableQuarterFourStart = false;
+            ViewBag.disableQuarterFourEnd = false;
+
+            //searching the academic year using the academic year name to find the right academic year to populate the form.
+            var academicYear = db.AcademicYear.Where(a => a.academicYearName == id).FirstOrDefault();
+
+
+            academicYearViewModel.yearStart = academicYear.durationStart.ToShortDateString();
+            ViewBag.disableYearStart = true;
+            academicYearViewModel.yearEnd = academicYear.durationEnd.ToShortDateString();
+            if (DateTime.Compare(DateTime.Now, academicYear.durationEnd) > 0)
+            {
+                ViewBag.disableYearEnd = true;
+            }
+            academicYearViewModel.quarterOneStart = academicYear.quarterOneStart.ToShortDateString();
+            if (DateTime.Compare(DateTime.Now, academicYear.quarterOneStart) > 0)
+            {
+                ViewBag.disableQuarterOneStart = true;
+            }
+            academicYearViewModel.quarterOneEnd = academicYear.quarterOneEnd.ToShortDateString();
+            if (DateTime.Compare(DateTime.Now, academicYear.quarterOneEnd) > 0)
+            {
+                ViewBag.disableQuarterOneEnd = true;
+            }
+            academicYearViewModel.quarterTwoStart = academicYear.quarterTwoStart.ToShortDateString();
+            if (DateTime.Compare(DateTime.Now, academicYear.quarterTwoStart) > 0)
+            {
+                ViewBag.disableQuarterTwoStart = true;
+            }
+            academicYearViewModel.quarterTwoEnd = academicYear.quarterTwoEnd.ToShortDateString();
+            if (DateTime.Compare(DateTime.Now, academicYear.quarterTwoEnd) > 0)
+            {
+                ViewBag.disableQuarterTwoEnd = true;
+            }
+            academicYearViewModel.quarterThreeStart = academicYear.quarterThreeStart.ToShortDateString();
+            if (DateTime.Compare(DateTime.Now, academicYear.quarterThreeStart) > 0)
+            {
+                ViewBag.disableQuarterTwoEnd = true;
+            }
+            academicYearViewModel.quarterThreeEnd = academicYear.quarterThreeEnd.ToShortDateString();
+            if (DateTime.Compare(DateTime.Now, academicYear.quarterThreeEnd) > 0)
+            {
+                ViewBag.disableQuarterThreeEnd = true;
+            }
+            academicYearViewModel.quarterFourStart = academicYear.quarterFourStart.ToShortDateString();
+            if (DateTime.Compare(DateTime.Now, academicYear.quarterFourStart) > 0)
+            {
+                ViewBag.disableQuarterFourStart = true;
+            }
+            academicYearViewModel.quarterFourEnd = academicYear.quarterFourEnd.ToShortDateString();
+            if (DateTime.Compare(DateTime.Now, academicYear.quarterFourEnd) > 0)
+            {
+                ViewBag.disableQuarterFourEnd = true;
+            }
+
+            ViewBag.disableUpdate = false;
+            return PartialView(academicYearViewModel);
+        }
+        [HttpPost]
+        public ActionResult updateAcademicYear(AcademicYearViewModel ayvm)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            AcademicDirector ad = new AcademicDirector();
+            AcademicYear ay = new AcademicYear();
+            if (ModelState.IsValid) {
+                ay.academicYearName = Convert.ToDateTime(ayvm.yearStart).ToString("MMMM") + Convert.ToDateTime(ayvm.yearStart).Year.ToString();
+                ay.durationStart = Convert.ToDateTime(ayvm.yearStart).Date;
+                ay.durationEnd = Convert.ToDateTime(ayvm.yearEnd).Date;
+                ay.quarterOneStart = Convert.ToDateTime(ayvm.quarterOneStart).Date;
+                ay.quarterOneEnd = Convert.ToDateTime(ayvm.quarterOneEnd).Date;
+                ay.quarterTwoStart = Convert.ToDateTime(ayvm.quarterTwoStart).Date;
+                ay.quarterTwoEnd = Convert.ToDateTime(ayvm.quarterTwoEnd).Date;
+                ay.quarterThreeStart = Convert.ToDateTime(ayvm.quarterThreeStart).Date;
+                ay.quarterThreeEnd = Convert.ToDateTime(ayvm.quarterThreeEnd).Date;
+                ay.quarterFourStart = Convert.ToDateTime(ayvm.quarterFourStart).Date;
+                ay.quarterFourEnd = Convert.ToDateTime(ayvm.quarterFourEnd).Date;
+
+                //if the modification of the academic year fulfills the necessary conditions stated in validateDuration(),allowing the update.
+                if (ad.validateDuration(ay))
+                {
+                    //updating the academic year
+                    AcademicYear ay1 = new AcademicYear();
+                    ay1 = db.AcademicYear.Where(a => a.academicYearName == ay.academicYearName).FirstOrDefault();
+                    if (ay1 != null)
+                    {
+
+                        db.SaveChanges();
+                        ViewBag.SuccessMessage = "Academic Year updated successfully";
+
+                    }
+                }
+                else
+                {
+                    ViewBag.durationMessage = "Duration is invalid";
+                }
+            }
+
+
         
+            return PartialView("updateAcademicYear");
+        }
+
+
         public ActionResult manageAcademicYear()
         {
             AcademicYearViewModel academicYearViewModel = new AcademicYearViewModel();
@@ -617,31 +829,19 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
             rvm.teacherList = new List<Models.Teacher>();
             rvm.retrevedTeacherList = new List<Models.Teacher>();
-            List<Models.Teacher> retrieveAssignment = new List<Models.Teacher>();
+            Models.Teacher retrieveAssignment = new Models.Teacher();
             //if select is selected for unit leader assignemnt
             
-                if (selectToAssign != null)
-                {
-                    //searching for the selected teacher using the teacher id provided from the anonymous class provided by the teacher.
-                    retrieveAssignment = db.Teacher.Where(a => a.teacherId == teacherID).ToList();
-                    //filling the teacher information into the register teacher view model variables which are binded with the form elements.
-                    foreach (var k in retrieveAssignment)
-                    {
-                        rvm.fullName = k.user.fullName;
-                        rvm.grade = k.grade;
-                        rvm.subject = k.subject;
-                    }
-                }
+               
                 //if assign is clicked
-                else if (assign != null)
+                if (assign != null)
                 {
-                    //retreiving the teacher with the credentials recieved from the form using the register teaacher view model.
-                    retrieveAssignment = db.Teacher.Where(a => a.grade == rvm.grade && a.subject == rvm.subject && a.user.fullName == rvm.fullName).ToList();
-                    //getting the teacher UID
-                    foreach (var k in retrieveAssignment)
-                    {
-                        teacherID = k.user.Id;
-                    }
+                //retreiving the teacher with the credentials recieved from the form using the register teaacher view model.
+                retrieveAssignment = db.Teacher.Where(a => a.teacherId == teacherID).FirstOrDefault();
+                //getting the teacher UID
+               
+                        teacherID = retrieveAssignment.user.Id;
+                    
                     //searching the existence of theteacher from the ApplicationUser table 
                     appUser = userManager.FindById(teacherID);
                     //finding out role name and ID of the teacher
@@ -649,30 +849,54 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
                     var oldRoleName = db.Roles.SingleOrDefault(r => r.Id == oldRoleId).Name;
                     //collecting every teacher with the same grade of the current teacher
-                    var teacherList = db.Teacher.Where(a => a.grade == rvm.grade).ToList();
+                    var teacherList = db.Teacher.Where(a => a.grade == retrieveAssignment.grade).ToList();
                     //status flag
                     int status = 0;
                     //iterating if the teachers id having the same grade are assigned unit leader status, if so disabling the previlige to add new academic leader for the specified grade.
-                    foreach (var i in teacherList)
+                   /* foreach (var i in teacherList)
                     {
                         if (ad.IsTeacherorUnitLeader(i.teacherId, "UnitLeader"))
                         {
                             status = status + 1;
                         }
-                    }
+                    }*/
                     //if the status returns 0, meaning there is no teacher with the unit leader role, removing the teacher role of the selected teacher and assigning unitLeader role to it.
                     if (status == 0)
                     {
                         userManager.RemoveFromRole(appUser.Id, oldRoleName);
                         userManager.AddToRole(appUser.Id, "UnitLeader");
+                          
+
+                    //populating the list of teachers to temp3
+                    temp3 = db.Teacher.ToList();
+                    foreach (var k in temp3)
+                    {
+                        //   checking if the teacher has unitleader status, if so checking grade of the grade is same us the value recieved from the view model.
+                        if (ad.IsTeacherorUnitLeader(k.user.Id, "UnitLeader"))
+                        {
+                            if (k.grade == retrieveAssignment.grade)
+                            {
+                                //updating the role of the teacher from unit leader to teacher.
+                                userManager.RemoveFromRole(k.user.Id, "UnitLeader");
+                                userManager.AddToRole(k.user.Id, "Teacher");
+                                userManager.RemoveFromRole(teacherID, "Teacher");
+                                userManager.AddToRole(teacherID, "UnitLeader");
+
+                            }
+
+                        }
+
                     }
-                    else
+
+
+                }
+                else
                     {
                         ViewBag.Message = "Unit leader of the grade already exists.";
                     }
 
                 }
-                //if update is clicked
+            /*    //if update is clicked
                 else if (update != null)
                 {//retrieving the modifyable role user using the register view model and searching for the same credential in the teacher table.
                     retrieveAssignment = db.Teacher.Where(a => a.grade == rvm.grade && a.subject == rvm.subject && a.user.fullName == rvm.fullName).ToList();
@@ -702,7 +926,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                     }
 
 
-                }
+                }*/
             
             //populaing list of teachers in temp 1, so if they have a teacher role, adding them to retreived teacher list.
             temp1 = db.Teacher.ToList();

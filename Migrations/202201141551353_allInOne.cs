@@ -3,16 +3,14 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class addedgroupList : DbMigration
+    public partial class allInOne : DbMigration
     {
         public override void Up()
         {
-            AddColumn("dbo.Assignments", "groupList", c => c.String());
         }
         
         public override void Down()
         {
-            DropColumn("dbo.Assignments", "groupList");
         }
     }
 }

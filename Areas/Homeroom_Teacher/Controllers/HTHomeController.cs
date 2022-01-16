@@ -28,6 +28,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Homeroom_Teacher.Control
             ApplicationDbContext db = new ApplicationDbContext();
             AbsenceRecordViewMoel av = new AbsenceRecordViewMoel();
             AcademicYear ay = new AcademicYear();
+            av.absenceList = new List<AbsenceRecord>();
             ViewBag.messageSuccessStatus = " ";
             //finding the logged on teacher ID
             string currentUserId = User.Identity.GetUserId();
@@ -64,7 +65,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Homeroom_Teacher.Control
             {
                 ViewBag.Message = true;
             }
-            
+            av.absenceList = db.AbsenceRecord.Where(rd => rd.recordDate == recordDate1 && rd.academicPeriod == academicRecord1).ToList();
 
             return View(av);
         }
@@ -75,6 +76,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Homeroom_Teacher.Control
             AbsenceRecord ar = new AbsenceRecord();
             ApplicationDbContext db = new ApplicationDbContext();
             Suspension suspension = new Suspension();
+            arvm.absenceList = new List<AbsenceRecord>();
             string currentUserId = User.Identity.GetUserId();
             AcademicYear ay = new AcademicYear();
             arvm.studentList = htm.getList(currentUserId);
@@ -87,7 +89,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Homeroom_Teacher.Control
             ViewBag.Message = false;
             string academicRecord1 = s.academicYearId + "-" + status;
             DateTime recordDate1 = DateTime.Now.Date;
-            ViewBag.messageSuccessStatus = " ";
+            ViewBag.successfulMessage = " ";
+            ViewBag.messageStatus = " ";
             tempRecord1 = db.AbsenceRecord.Where(y => y.academicPeriod == academicRecord1 && y.recordDate == recordDate1).ToList();
             if (tempRecord1.Count == 0 && add!=null)
             {
@@ -111,7 +114,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Homeroom_Teacher.Control
                                 int v = 0;
                                 db.AbsenceRecord.Add(ar);
                                 db.SaveChanges();
-                            ViewBag.messageSuccessStatus = "Absence Record Added Successfully";
+                            ViewBag.successfulMessage = "Absence Record Added Successfully";
 
 
                             }
@@ -123,7 +126,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Homeroom_Teacher.Control
                             }
                             else if (status == "gap")
                             {
-                                ViewBag.messageSuccessStatus = "Today is a gap";
+                                ViewBag.messageStatus = "Today is a gap";
                             }
                         }
                         }
@@ -167,17 +170,18 @@ namespace LCCS_School_Parent_Communication_System.Areas.Homeroom_Teacher.Control
                             int v = 0;
                             db.AbsenceRecord.Add(ar);
                             db.SaveChanges();
+                                ViewBag.successfulMessage = "Attendance update successful.";
 
                         }
                             else
                             {
                                 if (status == "no")
                                 {
-                                    ViewBag.messageSuccessStatus = "Today doesn't exist in the academic year";
+                                    ViewBag.messageStatus = "Today doesn't exist in the academic year";
                                 }
                                 else if (status == "gap")
                                 {
-                                    ViewBag.messageSuccessStatus = "Today is a gap";
+                                    ViewBag.messageStatus = "Today is a gap";
                                 }
                             }
                         }
@@ -201,7 +205,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Homeroom_Teacher.Control
                 arvm.selectedStudents[i] = k.studentId;
                 i++;
             }
-
+            arvm.absenceList = db.AbsenceRecord.Where(ax => ax.recordDate == d && ax.academicPeriod == academicRecord1).ToList();
             return View(arvm);
 
 

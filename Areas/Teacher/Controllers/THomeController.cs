@@ -11,7 +11,7 @@ using LCCS_School_Parent_Communication_System.Additional_Class;
 
 namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 {
-    [Authorize(Roles = "Teacher")]
+
     
     public class THomeController : Controller
     {
@@ -19,6 +19,97 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         public ActionResult Index()
         {
             return View();
+        }
+        public ActionResult addAssignment()
+        {
+            
+            string currentID = User.Identity.GetUserId();
+            Models.Teacher t = new Models.Teacher();
+            HomeroomTeacherMethod ht = new HomeroomTeacherMethod();
+            AcademicYear temp = new AcademicYear();
+            ApplicationDbContext db = new ApplicationDbContext();
+            assignmentViewModel avm = new assignmentViewModel();
+            avm.studentList = new List<Student>();
+
+            List<Section> s = new List<Section>();
+            avm.listAssignment = new List<Assignment>();
+            avm.listAssignment = db.Assignment.ToList();
+            avm.assignmentType = new List<String>();
+            avm.assignmentType.Add("Individual");
+            avm.assignmentType.Add("Group");
+            avm.sectionList = new List<string>();
+            t = db.Teacher.Where(a => a.teacherId == currentID).FirstOrDefault();
+            string teacherGrade = t.grade.ToString();
+            s = db.Section.Where(a => a.sectionName.StartsWith(teacherGrade)).ToList();
+            string currentAcademicYearName = "";
+            foreach (var k in s)
+            {
+                if (ht.isInAcademicYear(k.academicYearId))
+                {
+                    currentAcademicYearName = k.academicYearId;
+                    break;
+                }
+            }
+            temp = db.AcademicYear.Where(a => a.academicYearName == currentAcademicYearName).FirstOrDefault();
+            string quarter = ht.whichQuarter(currentAcademicYearName);
+            var currentSections = db.Section.Where(a => a.academicYearId == currentAcademicYearName);
+            avm.studentList = db.Student.Where(a => a.academicYearId == currentAcademicYearName).ToList();
+            foreach (var k in currentSections)
+            {
+                avm.sectionList.Add(k.sectionName);
+            }
+            
+            return PartialView(avm);
+        }
+        [HttpPost]
+        public ActionResult addAssignment(assignmentViewModel avm, string file, string assignmentType, string sectionName)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            HomeroomTeacherMethod ht = new HomeroomTeacherMethod();
+            Assignment a = new Assignment();
+            ViewBag.selectedType = " ";
+            ViewBag.selectedSection = " ";
+            ViewBag.successfulMessage = " ";
+            ViewBag.failedMessage = " ";
+            int currentSectionID = 0;
+
+            var currentSection = new List<Section>();
+            currentSection = db.Section.Where(g => g.sectionName == sectionName).ToList();
+            foreach (var k in currentSection)
+            {
+                if (ht.isInAcademicYear(k.academicYearId))
+                {
+                    currentSectionID = k.sectionId;
+                    break;
+                }
+            }
+            var theSection = db.Section.Where(g => g.sectionId == currentSectionID).FirstOrDefault();
+            string currentQuarter = ht.whichQuarter(theSection.academicYearId);
+
+            if (currentSectionID != 0 && assignmentType != null && ht.beforeQuarterEnd(Convert.ToDateTime(avm.submissionDate), theSection.academicYearId) && (currentQuarter == "Q1" || currentQuarter == "Q2" || currentQuarter == "Q3" || currentQuarter == "Q4"))
+            {
+                a.sectionID = currentSectionID;
+                a.assignmentType = assignmentType;
+                if (assignmentType == "Group" && avm.numberOfGroupMembers >= 2)
+                    a.numberOfMembers = avm.numberOfGroupMembers;
+                a.datePosted = DateTime.Now.Date;
+                a.submissionDate = Convert.ToDateTime(avm.submissionDate).Date;
+                a.yearlyQuarter = theSection.academicYearId + "-" + currentQuarter;
+                int length = file.Length;
+                byte[] upload = new byte[length];
+                //file.InputStream.Read(upload, 0, length);
+                a.assignmentDocument = upload;
+                db.Assignment.Add(a);
+                db.SaveChanges();
+                ViewBag.successfulMessage = "Assignment added Successfully.";
+            }
+            else
+            {
+                ViewBag.failedMessage = "Invalid Assignment";
+            }
+
+
+            return PartialView("addAssignment");
         }
         public ActionResult assignmentManagement()
         {
@@ -89,6 +180,9 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         {
             ViewBag.selectedType = " ";
             ViewBag.selectedSection = " ";
+            ViewBag.successfulMessage = " ";
+       
+            ViewBag.failedMessage = " ";
             string currentID = User.Identity.GetUserId();
             ApplicationDbContext db = new ApplicationDbContext();
             Assignment a = new Assignment();
@@ -128,6 +222,11 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                     a.assignmentDocument = upload;
                     db.Assignment.Add(a);
                     db.SaveChanges();
+                    ViewBag.successfulMessage = "Assignment added Successfully.";
+                }
+                else
+                {
+                    ViewBag.failedMessage = "Invalid Assignment";
                 }
 
 
@@ -172,6 +271,11 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                         }
 
                         db.SaveChanges();
+                        ViewBag.successfulMessage = "Assignment updated Successfully.";
+                    }
+                    else
+                    {
+                        ViewBag.failedMessage = "Update failed.";
                     }
                 }
             }

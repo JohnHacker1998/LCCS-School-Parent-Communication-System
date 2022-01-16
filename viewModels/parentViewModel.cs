@@ -11,8 +11,10 @@ namespace LCCS_School_Parent_Communication_System.viewModels
     {
         [Required(ErrorMessage = "Please enter Full Name")]
         [Display(Name = "Full Name")]
+        [RegularExpression(@"([A-Z]{1}[a-z]{2,} ){2}([A-Z]{1}[a-z]{2,})", ErrorMessage = "Fullname isnot valid.")]
         public String fullName { get; set; }
         [Required(ErrorMessage = "Email is Required")]
+        [RegularExpression(@"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$", ErrorMessage = "Email is not valid.")]
         [Display(Name = "Email")]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public String email { get; set; }

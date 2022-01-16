@@ -1,0 +1,135 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.assignmentViewModel
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            minDate: new Date(),
+
+
+        });
+        $('#assignmentType').change(function () {
+
+            $("#assignmentType").change(function () {
+                var a = $("#assignmentType Option:Selected").text();
+                if (a == "Group") {
+                    $("#groupRelated").show();
+
+                }
+                else {
+                    $("#groupRelated").hide();
+                }
+            })
+
+
+        }).change();
+    });
+</script>
+
+<html>
+<body>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-red">
+                <h4 class="modal-title text-white" id="title">Register Registrar</h4>
+                <button type="button" class="close btn bg-red" data-dismiss="modal">
+                    <span aria-hidden="true" class="text-white">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                @if (ViewBag.successfulMessage != " " && ViewBag.successfulMessage != null)
+                {
+                    <div class="alert alert-success">
+                        @ViewBag.ViewBag.successfulMessage
+                    </div>
+                }
+                @if (ViewBag.failedMessage != " " && ViewBag.failedMessage != null)
+                {
+                    <div class="alert alert-danger">
+                        <script type="text/javascript">
+                            function test() { $.growl({ title: "Growl", message: "The kitten is awake!" }); }
+
+                            test();</script>
+                        @ViewBag.failedMessage
+                    </div>
+                }
+
+            <form action="addAssignment" id="error" autocomplete="off">
+
+                <div class="form-group">
+                    @Html.LabelFor(a => a.assignmentType, new { @class = "form-label mt-2" })
+                    <div class="container row">
+                        <select id="assignmentType" name="assignmentType" readonly class="form-control">
+                            @foreach (var i in Model.assignmentType)
+                            {
+                                if (i == ViewBag.selectedType)
+                                {
+                                    <option value=@i selected>@i</option>
+                                }
+                                else
+                                {
+                                    <option value=@i>@i</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                </div>
+                <div id="groupRelated" style="display:none">
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.numberOfGroupMembers, new { @class = "form-label mt-2" })
+                        <div class="container row">@Html.EditorFor(a => a.numberOfGroupMembers, new { htmlAttributes = new { @class = "form-control" } })</div>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(a => a.sectionID, new { @class = "form-label mt-2" })
+                    <div class="container row">
+                        <select id="sectionName" name="sectionName" readonly class="form-control">
+                            @foreach (var i in Model.sectionList)
+                            {
+                                if (i == ViewBag.selectedSection)
+                                {
+                                    <option value=@i selected>@i</option>
+                                }
+                                else
+                                {
+                                    <option value=@i>@i</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(a=>a.submissionDate, new { @class = "form-label mt-2" })
+                    <div class="container row">@Html.EditorFor(a => a.submissionDate, new { htmlAttributes = new { @class = "datepicker form-control" } })</div>
+                    <div class="container row">@Html.ValidationMessageFor(a => a.submissionDate, "", new { @class = "text-danger" })</div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(l => l.assignmentDocument, new { @class = "form-label mt-2" })
+                    <div class="container row"><input type="file" name="file" class="form-control" /></div>
+                    
+                </div>
+            </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="save" data-save="modal">Register</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<style>
+    .row, .row > * {
+        padding: 0 !important;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+</style>
+
