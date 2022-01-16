@@ -1,15 +1,11 @@
-﻿@model LCCS_School_Parent_Communication_System.viewModels.ProfileEditUserName
+﻿@model LCCS_School_Parent_Communication_System.viewModels.SectionViewModel
 
 <html>
-<head>
-</head>
 <body>
-
-
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-red">
-                <h4 class="modal-title" id="title">Change UserName</h4>
+                <h4 class="modal-title text-white" id="title">Update Section</h4>
                 <button type="button" class="close btn bg-red" data-dismiss="modal">
                     <span aria-hidden="true" class="text-white">&times;</span>
                 </button>
@@ -29,29 +25,28 @@
                     </div>
                 }
 
-                <form action="EditUserName" id="error" autocomplete="off">
+                <form action="EditSection" id="error" autocomplete="off">
+                    @Html.HiddenFor(h=>h.ID);
                     <div class="form-group">
-                        @Html.LabelFor(l => l.userName, new { @class = "form-label mt-2" })
-                        <div class="container row">@Html.EditorFor(e => e.userName, new { @class = "form-control" })</div>
-                        <div class="container row">@Html.ValidationMessageFor(v => v.userName, null, new { @class = "text-danger" })</div>
-
-                        @*@Html.LabelFor(l => l.userName)
-                        @Html.EditorFor(e => e.userName, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(v => v.userName)*@
+                        <select id="teachers" name="teachers" class="form-control">
+                            @foreach (var i in Model.teachers)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        </select>
                     </div>
+
                 </form>
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-save="modal">Change</button>
+                <button type="button" class="btn btn-primary" id="save" data-save="modal">Update</button>
             </div>
         </div>
     </div>
 
-
 </body>
 </html>
-
 <style>
     .row, .row > * {
         padding: 0 !important;
@@ -59,3 +54,4 @@
         margin-left: 0 !important;
     }
 </style>
+

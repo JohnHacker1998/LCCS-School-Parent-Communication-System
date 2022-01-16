@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using LCCS_School_Parent_Communication_System.viewModels;
 using Microsoft.AspNet.Identity;
+using System.Data.Entity;
 
 namespace LCCS_School_Parent_Communication_System.Additional_Class
 {
@@ -29,7 +30,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
         }
 
         //function to update user information
-        public void UpdateTeacher(Teacher teacher)
+        public Boolean UpdateTeacher(Teacher teacher)
         {
             //update teacher with the new information
             ApplicationDbContext context = new ApplicationDbContext();
@@ -42,11 +43,19 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             teacherUP.subject = teacher.subject;
             teacherUP.user.fullName = teacher.user.fullName;
             teacherUP.grade = teacher.grade;
-            context.SaveChanges();
+            int result= context.SaveChanges();
+            if (result > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         //function to delete teacher information
-        public void DeleteTeacher(string id)
+        public Boolean DeleteTeacher(string id)
         {
             //delete teacher record using teacher id
             ApplicationDbContext context = new ApplicationDbContext();
@@ -55,7 +64,17 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             //delete teacher record
             teacher = context.Teacher.Find(id);
             context.Teacher.Remove(teacher);
-            context.SaveChanges();
+            //context.Entry(teacher).State = EntityState.Modified;
+            int result =context.SaveChanges();
+            
+            if (result > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public Boolean validateDuration(AcademicYear ay)

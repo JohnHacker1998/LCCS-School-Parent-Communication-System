@@ -21,44 +21,41 @@
                 @if (ViewBag.error != null)
                 {
                     <div class="alert alert-danger">
-                        <script type="text/javascript">function test() { $.growl({ title: "Growl", message: "The kitten is awake!" }); }
-
-                            test();</script>
                         @ViewBag.error
                     </div>
                 }
                 
-                <form action="Register" id="error" autocomplete="off">
-                    
-                        <div class="form-group">
-                            @Html.LabelFor(l => l.fullName, new { @class = "form-label mt-2" })
-                            <div class="container row">@Html.EditorFor(e => e.fullName,new { @class = "form-control"})</div>
-                            <div class="container row">@Html.ValidationMessageFor(v => v.fullName, null, new { @class = "text-danger" })</div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(l => l.email, new { @class = "form-label mt-2" })
-                            <div class="container row">@Html.EditorFor(e => e.email, new { @class = "form-control" })</div>
-                            <div class="container row">@Html.ValidationMessageFor(v => v.email, "", new { @class = "text-danger" })</div>
-                        </div>
-                        <div class="form-group">
-                            <div class="container row">
-                                <div class="col-4">
-                                    @Html.LabelFor(l => l.grade, new { @class = "form-label mt-2" })
-                                    <div class="container row">@Html.EditorFor(e => e.grade, new { @class = "form-control" })</div>
-                                    <div class="container row">@Html.ValidationMessageFor(v => v.grade, "", new { @class = "text-danger" })</div>
-                                </div>
-                                <div class="col-1">
+            <form action="Register" id="error" autocomplete="off">
 
-                                </div>
-                                <div class="col-7">
-                                    @Html.LabelFor(l => l.subject, new { @class = "form-label mt-2" })
-                                    <div class="container row">@Html.EditorFor(e => e.subject, new { @class = "form-control" })</div>
-                                    <div class="container row">@Html.ValidationMessageFor(v => v.subject, "", new { @class = "text-danger" })</div>
-                                </div>
-                            </div>
+                <div class="form-group">
+                    @Html.LabelFor(l => l.fullName, new { @class = "form-label mt-2" })
+                    <div class="container row">@Html.EditorFor(e => e.fullName, new { @class = "form-control" })</div>
+                    <div class="container row">@Html.ValidationMessageFor(v => v.fullName, null, new { @class = "text-danger" })</div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(l => l.email, new { @class = "form-label mt-2" })
+                    <div class="container row">@Html.EditorFor(e => e.email, new { @class = "form-control" })</div>
+                    <div class="container row">@Html.ValidationMessageFor(v => v.email, "", new { @class = "text-danger" })</div>
+                </div>
+                <div class="form-group">
+                    <div class="container row">
+                        <div class="col-4">
+                            @Html.LabelFor(l => l.grade, new { @class = "form-label mt-2" })
+                            <div class="container row">@Html.EditorFor(e => e.grade, new { @class = "form-control" })</div>
+                            <div class="container row">@Html.ValidationMessageFor(v => v.grade, "", new { @class = "text-danger" })</div>
                         </div>
-                    
-                </form>
+                        <div class="col-1">
+
+                        </div>
+                        <div class="col-7">
+                            @Html.LabelFor(l => l.subject, new { @class = "form-label mt-2" })
+                            <div class="container row">@Html.EditorFor(e => e.subject, new { @class = "form-control" })</div>
+                            <div class="container row">@Html.ValidationMessageFor(v => v.subject, "", new { @class = "text-danger" })</div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
             </div>
 
             <div class="modal-footer">

@@ -136,7 +136,7 @@ namespace LCCS_School_Parent_Communication_System.Controllers
             return View(profileViewModel);
         }
 
-        public ActionResult EditFullName(string id)
+        public ActionResult EditFullName()
         {
             //basic objects
             ApplicationDbContext context = new ApplicationDbContext();
@@ -169,7 +169,20 @@ namespace LCCS_School_Parent_Communication_System.Controllers
                 //update fullName
                 var user = context.Users.Find(uId);
                 user.fullName = profileEditFullName.fullName;
-                context.SaveChanges();
+                int success=context.SaveChanges();
+
+                if (success > 0)
+                {
+                    ViewBag.complete = "Full Name Updated Successfully";
+                }
+                else
+                {
+                    ViewBag.error = "Update Failed!!";
+                }
+            }
+            else
+            {
+                ViewBag.error = "Name Taken By Another Account";
             }
 
             return PartialView("EditFullName", profileEditFullName);
@@ -210,7 +223,20 @@ namespace LCCS_School_Parent_Communication_System.Controllers
                 //update username
                 var user = context.Users.Find(uId);
                 user.UserName = profileEditUserName.userName;
-                context.SaveChanges();
+                int success=context.SaveChanges();
+
+                if (success > 0)
+                {
+                    ViewBag.complete = "UserName Updated Successfully";
+                }
+                else
+                {
+                    ViewBag.error = "Update Failed!!";
+                }
+            }
+            else
+            {
+                ViewBag.error = "UserName Already Taken.";
             }
 
             return PartialView("EditUserName", profileEditUserName);
@@ -234,14 +260,19 @@ namespace LCCS_School_Parent_Communication_System.Controllers
             //change password
             var result = userManager.ChangePassword(uId, profileEditPassword.oldPassword, profileEditPassword.newPassword);
 
-            //display error message
-            foreach (var error in result.Errors)
+            if (result.Succeeded)
             {
-                ModelState.AddModelError("changepass", error);
+                ViewBag.complete = "Password Updated Successfully";
             }
-
-
-            return PartialView("EditPassword");
+            else
+            {
+                //display error message
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("changepass", error);
+                }
+            }
+            return PartialView("EditPassword",profileEditPassword);
         }
 
 
