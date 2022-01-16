@@ -136,6 +136,128 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             return PartialView("Register");
         }
 
+        public ActionResult EditTeacher(string id)
+        {
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            var userStore = new ApplicationUserStore(context);
+            var userManager = new ApplicationUserManager(userStore);
+            UpdateTeacherModal updateTeacher = new UpdateTeacherModal();
+            Teacher teacher = new Teacher();
+
+            //check teacher role before editing
+            if (!(userManager.IsInRole(id, "UnitLeader") || userManager.IsInRole(id, "HomeRoom")))
+            {
+                //populate the selected teacher data in to the update form
+                teacher = context.Teacher.Find(id);
+                updateTeacher.Id = id;
+                updateTeacher.fullName = teacher.user.fullName;
+                updateTeacher.subject = teacher.subject;
+                updateTeacher.grade = teacher.grade;
+
+            }
+            else
+            {
+                //error message for additional role
+                ViewBag.geterror = "Unable To Edit. Teacher has Another Role Associated";
+            }
+            return PartialView("EditTeacher",updateTeacher);
+        }
+
+        [HttpPost]
+        public ActionResult EditTeacher(UpdateTeacherModal updateTeacher)
+        {
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            Teacher teacherUp = new Teacher(1);
+            AcademicDirector academicDirector = new AcademicDirector();
+
+            var checkFullName = context.Users.Where(u => u.fullName == updateTeacher.fullName && u.Id != updateTeacher.Id).FirstOrDefault();
+
+            //check if no duplicate name exist
+            if (checkFullName == null)
+            {
+                teacherUp.teacherId = updateTeacher.Id;
+                teacherUp.grade = updateTeacher.grade;
+                teacherUp.user.fullName = updateTeacher.fullName;
+                teacherUp.subject = updateTeacher.subject;
+
+                //update teacher record 
+                Boolean result= academicDirector.UpdateTeacher(teacherUp);
+
+                if (result)
+                {
+                    //update successful message
+                    ViewBag.complete = "Update Completed Successfully";
+                }
+                else
+                {
+                    ViewBag.error = "Update Failed!!";
+                }
+                
+            }
+            else
+            {
+                //error message for duplicate Full Name
+                ViewBag.error = "Full Name Already Taken By Another Account";
+            }
+            return PartialView("EditTeacher",updateTeacher);
+        }
+
+
+        public ActionResult DeleteTeacher(string id)
+        {
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            var userStore = new ApplicationUserStore(context);
+            var userManager = new ApplicationUserManager(userStore);
+            DeleteTeacherModal deleteTeacher = new DeleteTeacherModal();
+
+            deleteTeacher.Id = id;
+            //check role
+            if (!(userManager.IsInRole(id, "UnitLeader") || userManager.IsInRole(id, "HomeRoom")))
+            {
+                ViewBag.message = "Are You Sure Do You Want Delete This Teacher?";
+            }
+            else
+            {
+                //error message due to additional role
+                ViewBag.error = "Unable To Delete. Teacher has Another Role Associated";
+
+            }
+            return PartialView("DeleteTeacher",deleteTeacher);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteTeacher(DeleteTeacherModal deleteTeacher)
+        {
+            AcademicDirector academicDirector = new AcademicDirector();
+            Collection collection = new Collection();
+
+            Boolean delete= academicDirector.DeleteTeacher(deleteTeacher.Id);
+            if (delete)
+            {
+                string status = await collection.DeleteUser(deleteTeacher.Id);
+
+                if (status == "successful")
+                {
+                    //sucess message
+                    ViewBag.complete = "Deletion Completed Successfully";                 
+                }
+                else
+                {
+                    //failure message
+                    ViewBag.posterror = "Deletion Failed";
+                }
+            }
+            else
+            {
+                ViewBag.posterror = "Deletion Failed";
+            }
+            
+            return PartialView("DeleteTeacher");
+        }
+
         public ActionResult RegisterTeacher()
         {
 
@@ -731,20 +853,282 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         }
 
         
-       
+        public ActionResult AddSection()
+        {
+            //object declaration
+            AcademicDirector academicDirector = new AcademicDirector();
+            SectionViewModel sectionViewModel = new SectionViewModel();
 
+            sectionViewModel = academicDirector.populateFormData();
+            return PartialView("AddSection",sectionViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult AddSection(SectionViewModel sectionViewModel, string letter, string teachers, string academicYears)
+        {
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            var userStore = new ApplicationUserStore(context);
+            var userManager = new ApplicationUserManager(userStore);
+            SectionViewModel sectionViewModelExtra = new SectionViewModel();
+            AcademicDirector academicDirector = new AcademicDirector();
+            Section section = new Section();
+
+            //check if the record doesn't exist
+            sectionViewModelExtra = academicDirector.searchSection(sectionViewModel.grade, letter);
+            if (sectionViewModelExtra == null)
+            {
+                //get teacher Id and academic year Id 
+                var findTeacher = context.Teacher.Where(t => t.user.fullName == teachers).FirstOrDefault();
+
+                if (findTeacher.grade == sectionViewModel.grade)
+                {
+                    section.teacherId = findTeacher.teacherId;
+                    section.academicYearId = academicYears;
+
+                    //concatenate grade and section letter as a sectionName
+                    section.sectionName = sectionViewModel.grade.ToString() + letter;
+
+                    //save section record
+                    context.Section.Add(section);
+                    int sucess = context.SaveChanges();
+
+                    if (sucess > 0)
+                    {
+                        //assign HomeRoom role for the selected teacher(remove teacher role)
+                        userManager.RemoveFromRole(section.teacherId, "Teacher");
+                        userManager.AddToRole(section.teacherId, "HomeRoom");
+
+                        //success message
+                        ViewBag.complete = "Section Created Successfully";
+                    }
+                    else
+                    {
+                        //error message
+                        ViewBag.error = "Failed to Create Section!!";
+                    }
+                }
+                else
+                {
+                    ViewBag.error = "Failed to Create Section. Teacher Not Teach on the Specified Grade";
+                }
+            }
+            else
+            {
+                //error message
+                ViewBag.error = "Section Already Exist. Either on Selected or Other Active Academic Year";
+            }
+
+            //populate selection list
+            sectionViewModel = academicDirector.populateFormData();
+
+            return PartialView("AddSection",sectionViewModel);
+        }
+
+
+        public ActionResult EditSection(string id)
+        {
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            SectionViewModel sectionViewModel = new SectionViewModel();
+            AcademicDirector academicDirector = new AcademicDirector();
+            var userStore = new ApplicationUserStore(context);
+            var userManager = new ApplicationUserManager(userStore);
+            sectionViewModel.teachers = new List<string>();
+
+            //parse the passed id
+            int Id = int.Parse(id);
+            
+            var getId = context.Section.Find(Id);
+
+            int getGrade = int.Parse(getId.sectionName.Substring(0, getId.sectionName.Length-1));
+            var gradeTeacher = context.Teacher.Where(t=>t.grade==getGrade).ToList();
+
+            if (gradeTeacher.Count != 0)
+            {
+                foreach (var validTeachers in gradeTeacher)
+                {
+                    if (userManager.IsInRole(validTeachers.teacherId, "Teacher"))
+                    {
+                        sectionViewModel.teachers.Add(validTeachers.user.fullName);
+                    }
+                }
+            }
+            
+
+            var getTeacher = context.Teacher.Where(t=>t.teacherId==getId.teacherId).FirstOrDefault();
+
+            //include section home room in to the teacher selection
+
+            sectionViewModel.teachers.Insert(0, getTeacher.user.fullName);
+            sectionViewModel.ID = Id;
+            ViewBag.teacher = getTeacher.user.fullName;
+
+            //get acadamic year of the section record
+            //ViewBag.academicYear = getId.academicYearId;
+
+            return PartialView("EditSection",sectionViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult EditSection(SectionViewModel sectionViewModel,string teachers)
+        {
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            var userStore = new ApplicationUserStore(context);
+            var userManager = new ApplicationUserManager(userStore);
+
+            var sectionRecord = context.Section.Find(sectionViewModel.ID);
+
+            //demote role from HomeRoom to Teacher
+            userManager.RemoveFromRole(sectionRecord.teacherId, "HomeRoom");
+            userManager.AddToRole(sectionRecord.teacherId, "Teacher");
+
+            var newTeacherId = context.Teacher.Where(t => t.user.fullName == teachers).FirstOrDefault();
+
+            //get section to update using sectionId
+            sectionRecord.teacherId = newTeacherId.teacherId;
+
+            //update section
+            int sucess=context.SaveChanges();
+
+            if (sucess > 0)
+            {
+                //promote role from Teacher to HomeRoom
+                userManager.RemoveFromRole(newTeacherId.teacherId, "Teacher");
+                userManager.AddToRole(newTeacherId.teacherId, "HomeRoom");
+
+                ViewBag.complete = "Section Updated Successfully";
+            }
+            else
+            {
+                ViewBag.error = "Section Update Failed";
+            }
+
+            sectionViewModel.teachers.Clear();
+            var getId = context.Section.Find(sectionViewModel.ID);
+
+            int getGrade = int.Parse(getId.sectionName.Substring(0, getId.sectionName.Length - 1));
+            var gradeTeacher = context.Teacher.Where(t => t.grade == getGrade).ToList();
+
+            if (gradeTeacher.Count != 0)
+            {
+                foreach (var validTeachers in gradeTeacher)
+                {
+                    if (userManager.IsInRole(validTeachers.teacherId, "Teacher"))
+                    {
+                        sectionViewModel.teachers.Add(validTeachers.user.fullName);
+                    }
+                }
+            }
+
+
+            var getTeacher = context.Teacher.Where(t => t.teacherId == getId.teacherId).FirstOrDefault();
+
+            //include section home room in to the teacher selection
+
+            sectionViewModel.teachers.Insert(0, getTeacher.user.fullName);
+            sectionViewModel.ID = sectionViewModel.ID;
+            ViewBag.teacher = getTeacher.user.fullName;
+
+            return PartialView("EditSection",sectionViewModel);
+        }
+
+        public ActionResult DeleteSection(string id)
+        {
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            SectionViewModel sectionViewModel = new SectionViewModel();
+
+            int Id = int.Parse(id);
+
+            var getSection = context.Section.Find(Id);
+
+            var checkStudent = context.Student.Where(s => s.sectionName == getSection.sectionName && s.academicYearId == getSection.academicYearId).ToList();
+
+            if (checkStudent.Count == 0)
+            {
+                ViewBag.message = "Are You Sure Do You Want to Delete This Section?";
+            }
+            else
+            {
+                ViewBag.error = "Unable to Delete Section. Students are Enrolled";
+            }
+
+            
+            sectionViewModel.ID = Id;
+            return PartialView("DeleteSection",sectionViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteSection(SectionViewModel sectionViewModel)
+        {
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            var userStore = new ApplicationUserStore(context);
+            var userManager = new ApplicationUserManager(userStore);
+
+
+            //delete section
+            var sectionRecord = context.Section.Find(sectionViewModel.ID);
+
+            //demote role from HoomRoom to Teacher
+            userManager.RemoveFromRole(sectionRecord.teacherId, "HomeRoom");
+            userManager.AddToRole(sectionRecord.teacherId, "Teacher");
+
+            context.Section.Remove(sectionRecord);
+            int success=context.SaveChanges();
+
+            if (success > 0)
+            {
+                //successful message
+                ViewBag.complete = "Section Deleted Successfully";
+            }
+            else
+            {
+                userManager.RemoveFromRole(sectionRecord.teacherId, "Teacher");
+                userManager.AddToRole(sectionRecord.teacherId, "HomeRoom");
+                ViewBag.posterror = "Section Deletion Failed!!";
+            }
+          
+            return PartialView("DeleteSection");
+        }
 
         public ActionResult SectionManagement()
         {
             //Academic Director object
             AcademicDirector academicDirector = new AcademicDirector();
+            ApplicationDbContext context = new ApplicationDbContext();
+            SectionViewModel sectionViewModel = new SectionViewModel();
+            sectionViewModel.sections = new List<Section>();
 
             //viewbag element
             ViewBag.search = false;
             ViewBag.upHidden = "hidden";
             ViewBag.read = false;
 
-            return View(academicDirector.populateFormData());
+            var allAcadamicYears = context.AcademicYear.ToList();
+
+            if (allAcadamicYears.Count != 0)
+            {
+                foreach (var getAcadamicYear in allAcadamicYears)
+                {
+                    //check today is in between start and end date of the specific academic year
+                    if (!(DateTime.Compare(DateTime.Now, getAcadamicYear.durationStart) < 0 || DateTime.Compare(DateTime.Now, getAcadamicYear.durationEnd) > 0))
+                    {
+                        var listOfSections = context.Section.Where(s => s.academicYearId == getAcadamicYear.academicYearName).ToList();
+                        if (listOfSections.Count > 0)
+                        {
+                            foreach (var getSection in listOfSections)
+                            {
+                                sectionViewModel.sections.Add(getSection);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return View(sectionViewModel);
         
         }
 
@@ -850,7 +1234,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
                     if (sectionRecord != null)
                     {
-                        //demote role from HoomRoom to Teacher
+                        //demote role from HomeRoom to Teacher
                         userManager.RemoveFromRole(sectionRecord.teacherId, "HoomRoom");
                         userManager.AddToRole(sectionRecord.teacherId, "Teacher");
                         var newTeacherId = context.Teacher.Where(t => t.user.fullName == teachers).FirstOrDefault();

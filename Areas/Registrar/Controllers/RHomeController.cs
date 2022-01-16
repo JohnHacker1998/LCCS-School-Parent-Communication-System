@@ -4,6 +4,7 @@ using LCCS_School_Parent_Communication_System.Models;
 using LCCS_School_Parent_Communication_System.viewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -162,14 +163,239 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
 
         }
 
+        public ActionResult RegisterStudent()
+        {
+            StudentViewModel studentViewModel = new StudentViewModel();
+            studentViewModel.sectionName = new List<string>();
+            RegistrarMethod registrarMethod = new RegistrarMethod();
+
+            studentViewModel.sectionName = registrarMethod.populateSection();
+            return PartialView("RegisterStudent",studentViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult RegisterStudent(StudentViewModel studentViewModel,string sectionName)
+        {
+            ApplicationDbContext context = new ApplicationDbContext();
+            Student student = new Student();
+            RegistrarMethod registrarMethod = new RegistrarMethod();
+
+            var studentExist = context.Student.Where(s => s.fullName == studentViewModel.fullName).FirstOrDefault();
+
+            if (studentExist == null)
+            {
+                //get selected section academic year
+                var academicYears = context.AcademicYear.ToList();
+                foreach (var getAcadamicYear in academicYears)
+                {
+                    if (!(DateTime.Compare(DateTime.Now, getAcadamicYear.durationStart) < 0 || DateTime.Compare(DateTime.Now, getAcadamicYear.durationEnd) > 0))
+                    {
+                        var sectionRecord = context.Section.Where(s => s.sectionName == sectionName && s.academicYearId == getAcadamicYear.academicYearName).ToList();
+                        if (sectionRecord.Count != 0)
+                        {
+                            //populate student object
+                            student.academicYearId = getAcadamicYear.academicYearName;
+                            break;
+                        }
+                    }
+                }
+
+                student.fullName = studentViewModel.fullName;
+                student.sectionName = sectionName;
+
+                //register Student
+                context.Student.Add(student);
+                int success=context.SaveChanges();
+
+                if (success > 0)
+                {
+                    //success message
+                    ViewBag.complete = "Student Registered Successfully";
+                }
+                else
+                {
+                    ViewBag.error = "Student Registration Failed!!";
+                }
+
+                
+            }
+            else
+            {
+                //error message
+                ViewBag.error = "Student Already Exist";
+            }
+
+            studentViewModel.sectionName = registrarMethod.populateSection();
+
+            return PartialView("RegisterStudent",studentViewModel);
+        }
+
+        public ActionResult EditStudent(string id)
+        {
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            RegistrarMethod registrarMethod = new RegistrarMethod();
+            Student student = new Student();
+            StudentViewModel studentViewModel = new StudentViewModel();
+            studentViewModel.sectionName = new List<string>();
+
+            int Id = int.Parse(id);
+
+            //populate the data using the id passed
+            student = context.Student.Find(Id);
+            studentViewModel.Id = student.studentId;
+            studentViewModel.fullName = student.fullName;
+            
+
+            studentViewModel.sectionName = registrarMethod.populateSection();
+
+            var sectionExist = studentViewModel.sectionName.Find(f => f.Equals(student.sectionName));
+
+            if (sectionExist == null)
+            {
+                studentViewModel.sectionName.Add(student.sectionName);
+            }
+
+            ViewBag.section = student.sectionName;
+
+            return PartialView("EditStudent",studentViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult EditStudent(StudentViewModel studentViewModel,string sectionName)
+        {
+
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            RegistrarMethod registrarMethod = new RegistrarMethod();
+
+            //find student by using id
+            var studentUp = context.Student.Find(studentViewModel.Id);
+
+            //check if the new name is unique
+            var name = context.Student.Where(s => s.fullName == studentUp.fullName && s.studentId != studentUp.studentId).FirstOrDefault();
+            if (name == null)
+            {
+                studentUp.fullName = studentViewModel.fullName;
+
+                var academicYears = context.AcademicYear.ToList();
+                foreach (var getActive in academicYears)
+                {
+                    //get the active academic years
+                    if (!(DateTime.Compare(DateTime.Now, getActive.durationStart) < 0 || DateTime.Compare(DateTime.Now, getActive.durationEnd) > 0))
+                    {
+                        var getSection = context.Section.Where(s => s.academicYearId == getActive.academicYearName && s.sectionName == sectionName).FirstOrDefault();
+
+                        if (getSection != null)
+                        {
+                            studentUp.sectionName = sectionName;
+                            studentUp.academicYearId = getActive.academicYearName;
+
+                            context.Entry(studentUp).State = EntityState.Modified;
+                            int success = context.SaveChanges();
+
+                            if (success > 0)
+                            {
+                                //success message
+                                ViewBag.complete = "Student Updated Successfully";
+                            }
+                            else
+                            {
+                                //error message
+                                ViewBag.error = "Update Failed!!";
+                            }
+
+                        }
+                        else
+                        {
+                            //error message
+                            ViewBag.error = "Section is Not Active";
+                        }
+
+                    }
+                }
+            }
+            else
+            {
+                //error message
+                ViewBag.error = "Student with the Given Name Already Exist";
+            }
+
+            studentViewModel.sectionName = registrarMethod.populateSection();
+
+            var student = context.Student.Find(studentViewModel.Id);
+
+            var sectionExist = studentViewModel.sectionName.Find(f => f.Equals(student.sectionName));
+
+            if (sectionExist == null)
+            {
+                studentViewModel.sectionName.Add(student.sectionName);
+            }
+
+            ViewBag.section = student.sectionName;
+
+            studentViewModel.Id = studentViewModel.Id;
+
+            return PartialView("EditStudent",studentViewModel);
+        }
+
+        public ActionResult DeleteStudent(string id)
+        {
+            StudentViewModel studentViewModel = new StudentViewModel();
+            studentViewModel.Id = int.Parse(id);
+
+            ViewBag.message = "Are You Sure Do You Want to Delete this Student and Associated Parent?";
+
+            return PartialView("DeleteStudent",studentViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteStudent(StudentViewModel studentViewModel)
+        {
+
+            //context object
+            ApplicationDbContext contextExtra = new ApplicationDbContext();
+            ApplicationDbContext context = new ApplicationDbContext();
+
+            //search for student and associated parents
+            var parentDelete = contextExtra.Parent.Where(p => p.studentId == studentViewModel.Id).ToList(); ;
+            var studentDelete = context.Student.Find(studentViewModel.Id);
+
+            //delete associated parents
+            if (parentDelete.Count != 0)
+            {
+                foreach (var getParent in parentDelete)
+                {
+                    contextExtra.Parent.Remove(getParent);
+                    contextExtra.SaveChanges();
+                }
+            }
+
+            //delete student record
+            context.Student.Remove(studentDelete);
+            int success=context.SaveChanges();
+
+            if (success > 0)
+            {
+                //delete success message
+                ViewBag.complete = "Delete Completed Successfully";
+            }
+            else
+            {
+                //error message
+                ViewBag.posterror = "Deletion Failed!!";
+            }
+
+            return PartialView("DeleteStudent");
+        }
 
         public ActionResult StudentManagement()
         {
             //basic objects
             ApplicationDbContext context = new ApplicationDbContext();
             StudentViewModel studentViewModel = new StudentViewModel();
-            RegistrarMethod registrarMethod = new RegistrarMethod();
-            studentViewModel.sectionName = new List<string>();
+            ////RegistrarMethod registrarMethod = new RegistrarMethod();
+            studentViewModel.student = new List<Student>();
             //to get active academic years
             //we need to get the academic year id
             //then if and for loop
@@ -192,7 +418,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
             //}
 
             //populate available sections
-            studentViewModel.sectionName = registrarMethod.populateSection();
+            ////studentViewModel.sectionName = registrarMethod.populateSection();
+            studentViewModel.student = context.Student.ToList();
 
             //viewbag elements used in the UI 
             ViewBag.edit = false;
@@ -321,21 +548,31 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
                             //get the active academic years
                             if (!(DateTime.Compare(DateTime.Now, getActive.durationStart) < 0 || DateTime.Compare(DateTime.Now, getActive.durationEnd) > 0))
                             {
-                                var getSection = context.Section.Where(s => s.academicYearId == getActive.academicYearName && s.sectionName == studentUp.sectionName).FirstOrDefault();
+                                var getSection = context.Section.Where(s => s.academicYearId == getActive.academicYearName && s.sectionName == sectionName).FirstOrDefault();
 
                                 if (getSection != null)
                                 {
                                     studentUp.sectionName = sectionName;
                                     studentUp.academicYearId = getActive.academicYearName;
-                                    context.SaveChanges();
 
-                                    //success message
-                                    ViewBag.upMessage = "Student Updated Successfully";
+                                    int success=context.SaveChanges();
+
+                                    if (success>0)
+                                    {
+                                        //success message
+                                        ViewBag.complete = "Student Updated Successfully";
+                                    }
+                                    else
+                                    {
+                                        //error message
+                                        ViewBag.error = "Update Failed!!";
+                                    }
+                                    
                                 }
                                 else
                                 {
                                     //error message
-                                    ViewBag.upMessage = "Section is Not Active";
+                                    ViewBag.error = "Section is Not Active";
                                 }
 
                             }
@@ -344,7 +581,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
                     else
                     {
                         //error message
-                        ViewBag.duplicate = "Student with the Given Name Already Exist";
+                        ViewBag.error = "Student with the Given Name Already Exist";
                     }
 
                     studentViewModel.sectionName = registrarMethod.populateSection();

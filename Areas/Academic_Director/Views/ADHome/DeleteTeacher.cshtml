@@ -1,0 +1,54 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.DeleteTeacherModal
+
+<html>
+<body>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-red">
+                <h4 class="modal-title text-white" id="title">Delete Teacher</h4>
+                <button type="button" class="close btn bg-red" data-dismiss="modal">
+                    <span aria-hidden="true" class="text-white">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                @if (ViewBag.message != null)
+                {
+                    @ViewBag.message
+                }
+                @if (ViewBag.error != null)
+                {
+                    <div class="alert alert-danger">
+                        @ViewBag.error
+                    </div>
+                }
+
+                @if (ViewBag.complete != null)
+                {
+                    <div class="alert alert-success">
+                        @ViewBag.complete
+                    </div>
+                }
+
+                @if (ViewBag.posterror != null)
+                {
+                    <div class="alert alert-danger">
+                        @ViewBag.posterror
+                    </div>
+                }
+                <form action="DeleteTeacher" id="error">
+
+                    @Html.HiddenFor(h => h.Id)
+                </form>
+            </div>
+            @if (ViewBag.message != null)
+            {
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="confirm" data-save="modal">Confirm</button>
+                </div>
+            }
+        </div>
+    </div>
+
+</body>
+</html>

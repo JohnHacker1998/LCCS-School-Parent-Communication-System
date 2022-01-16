@@ -9,6 +9,8 @@ namespace LCCS_School_Parent_Communication_System.viewModels
 {
     public class SectionViewModel
     {
+        public int ID { get; set; }
+
         [Required(ErrorMessage = "Please enter Grade")]
         [Range(9, 12, ErrorMessage = "Please enter correct value")]
         [Display(Name = "Grade")]
@@ -22,6 +24,8 @@ namespace LCCS_School_Parent_Communication_System.viewModels
         [Required(ErrorMessage = "Required")]
         [Display(Name = "Academic Year")]
         public List<string> academicYears { get; set; }
+
+        public List<Section> sections { get; set; }
         
     }
 }
