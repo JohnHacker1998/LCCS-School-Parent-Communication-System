@@ -1,0 +1,30 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.groupStructureViewModel
+@{
+    ViewBag.Title = "addGroupStructure";
+}
+
+
+
+@using (Html.BeginForm("addGroupStructure", "THome", FormMethod.Post))
+{
+    @Html.LabelFor(a => a.academicQuarter);
+    @Html.EditorFor(a => a.academicQuarter);
+
+    @Html.LabelFor(a => a.sectionList);
+    <select class="form-control" name="selectSections">
+        @foreach (var k in Model.sectionList)
+        {
+            <option id=@k>@k</option>
+        }
+    </select>
+    @Html.LabelFor(a => a.groupStructureName);
+    @Html.EditorFor(a => a.groupStructureName);
+
+    @Html.LabelFor(a => a.minNumberOfMembers);
+    @Html.EditorFor(a => a.minNumberOfMembers);
+
+    @Html.LabelFor(a => a.maxNumberOfMembers);
+    @Html.EditorFor(a => a.maxNumberOfMembers);
+
+   <input type="submit" name="add" value="Add" />
+}

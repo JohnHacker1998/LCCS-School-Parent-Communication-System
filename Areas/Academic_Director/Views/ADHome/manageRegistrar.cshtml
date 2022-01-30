@@ -3,57 +3,115 @@
     ViewBag.Title = "manageRegistrar";
 }
 
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#RegistrarManagementViewModel" data-url="@Url.Action("registerRegistrar")">Register</button>
+<div class="modal" id="myModal" role="dialog" data-backdrop="static" tabindex="-1" data-url="@Url.Action("registerRegistrar")"></div>
 
+<script>
+    $(document).ready(function () {
+        $('#tblRegistrarList').DataTable();
+    });
+</script>
 
-@using (Html.BeginForm("manageRegistrar", "ADHome", new { area = "Academic_Director" }, FormMethod.Post))
-{
-
-    <div class="row">
-        <div class="form-group col-xl-6">
-            @Html.LabelFor(a => a.fullName)
-            @Html.EditorFor(a => a.fullName, new { htmlAttributes = new { @class = "form-control" } })
-
-        </div>
-        <div class="form-group col-xl-6">
-            @Html.LabelFor(a => a.email)
-            @Html.EditorFor(a => a.email, new { htmlAttributes = new { @class = "form-control" } })
-
-        </div>
-    </div>
-    <div class=" text-center">
-        <input type="submit" value="Register" name="register" class="btn btn-primary" />
-    </div>
-  
-}
-<div class="alert alert-danger" role="alert">
-    @ViewBag.Message
-    @Html.ValidationSummary()
-</div>
-
-
-<table class="table table-striped">
-    <tr>
-        <th scope="col">Username</th>
-        <th scope="col">Full Name</th>
-        <th scope="col">Email</th>
-    </tr>
-
-    @foreach (var usr in Model.registrarList)
+@*@using (Html.BeginForm("manageRegistrar", "ADHome", new { area = "Academic_Director" }, FormMethod.Post))
     {
-        <tr>
-            <td>@usr.UserName</td>
-            <td>@usr.fullName</td>
-            <td>@usr.Email</td>
-            <td>
-                @using (Html.BeginForm("manageRegistrar", "ADHome", new { theID = usr.Id }, FormMethod.Post))
-                {
-                    <input type="submit" value="Delete" name="delete" class="btn btn-danger" />
 
-                }
-            </td>
-        </tr>
+        <div class="row">
+            <div class="form-group col-xl-6">
+                @Html.LabelFor(a => a.fullName)
+                @Html.EditorFor(a => a.fullName, new { htmlAttributes = new { @class = "form-control" } })
+
+            </div>
+            <div class="form-group col-xl-6">
+                @Html.LabelFor(a => a.email)
+                @Html.EditorFor(a => a.email, new { htmlAttributes = new { @class = "form-control" } })
+
+            </div>
+        </div>
+        <div class=" text-center">
+            <input type="submit" value="Register" name="register" class="btn btn-primary" />
+        </div>
+
     }
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Message
+        @Html.ValidationSummary()
+    </div>
+*@
+<div class="container mb-3 mt-3">
+    <table class="table table-striped table-bordered" id="tblRegistrarList">
+        <thead>
+            <tr>
+                <th scope="col">Username</th>
+                <th scope="col">Full Name</th>
+                <th scope="col">Email</th>
+                <td scope="col"></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var usr in Model.registrarList)
+            {
+                <tr>
+                    <td>@usr.UserName</td>
+                    <td>@usr.fullName</td>
+                    <td>@usr.Email</td>
+                   
+                    <td>
+                        @using (Html.BeginForm("manageRegistrar", "ADHome", new { theID = usr.Id }, FormMethod.Post))
+                        {
+                            <input type="submit" value="Delete" name="delete" class="btn btn-danger" />
+
+                        }
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+</div>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var view = $('#myModal');
+            $('[data-toggle="modal"]').click(function () {
+                var url = $(this).data('url');
+                $.get(url).done(function (data) {
+                    view.html(data);
+                    view.modal('show');
+                });
+            });
+
+            view.on('click', '[data-save="modal"]', function (event) {
+
+                var form = $(this).parents('.modal').find('form');
+                var actionUrl = form.attr('action');
+                var sendData = form.serialize();
+                $.validator.unobtrusive.parse("#error");
+                ValidationForm();
+                if (ValidationForm()) {
+                    $.post(actionUrl, sendData).done(function (data) {
+                        //view.modal('hide');
+                        view.html(data);
+                        view.modal('show');
+                    });
+                }
+
+            });
+            view.on('hide.bs.modal', function () {                location.reload();            });
 
 
+            view.on('click', '[data-dismiss="modal"]', function (event) {
+                view.modal('hide');
+            });
 
-</table>
+            function ValidationForm() {
+                if (!$("#error").valid()) {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+        });
+
+    </script>

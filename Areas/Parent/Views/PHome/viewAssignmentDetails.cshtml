@@ -3,20 +3,27 @@
     ViewBag.Title = "viewAssignmentDetails";
 }
 
-<h2>viewAssignmentDetails</h2>
-<
-@if (Model.assignmentType == "Group")
-{
-    <h1>@Model.assignmentType</h1>
-    <h1>@Model.datePosted</h1>
-    <h1>@Model.section.sectionName</h1>
-    <h1>@Model.numberOfMembers</h1>
-    <h1>@Model.submissionDate</h1>
-}
-@if (Model.assignmentType == "Individual")
-{
-    <h1>@Model.assignmentType</h1>
-    <h1>@Model.datePosted</h1>
-    <h1>@Model.section.sectionName</h1>   
-    <h1>@Model.submissionDate</h1>
-}
+<h2>Assignment Details</h2>
+
+<table class="table table-striped table-bordered" >
+    <thead>
+        <tr>
+            <th scope="col">Assignment Type</th>
+            <th scope="col">Date Posted</th>
+            <th scope="col">Section</th>
+            <th scope="col"> Number of Group Members </ th >
+            <th scope="col">Submission Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.assignmentType</td>
+            <td>@Model.datePosted.ToShortDateString()</td>
+            <td>@Model.section.sectionName</td>
+            <td>@Model.numberOfMembers</td>
+            <td>@Model.submissionDate.ToShortDateString()</td>
+        </tr>
+    </tbody>
+  
+
+</table>

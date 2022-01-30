@@ -1,0 +1,63 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.RegistrarManagementViewModel
+
+<html>
+<body>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-red">
+                <h4 class="modal-title text-white" id="title">Register Registrar</h4>
+                <button type="button" class="close btn bg-red" data-dismiss="modal">
+                    <span aria-hidden="true" class="text-white">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                @if (ViewBag.addedSuccessfully != " " && ViewBag.addedSuccessfully !=null)
+                {
+                <div class="alert alert-success">
+                    @ViewBag.addedSuccessfully
+                </div>
+                }
+                @if (ViewBag.Message != " " && ViewBag.Message != null)
+                {
+                    <div class="alert alert-danger">
+                        <script type="text/javascript">
+function test() { $.growl({ title: "Growl", message: "The kitten is awake!" }); }
+
+                            test();</script>
+                        @ViewBag.Message
+                    </div>
+                }
+
+                <form action="registerRegistrar" id="error" autocomplete="off">
+
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.fullName,new { @class = "form-label mt-2" })
+                        <div class="container row">@Html.EditorFor(a => a.fullName, new { htmlAttributes = new { @class = "form-control" } })</div>
+                        <div class="container row">@Html.ValidationMessageFor(a => a.fullName, null, new { @class = "text-danger" })</div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(l => l.email, new { @class = "form-label mt-2" })
+                        <div class="container row">@Html.EditorFor(a => a.email, new { htmlAttributes = new { @class = "form-control" } })</div>
+                        <div class="container row">@Html.ValidationMessageFor(a => a.email, "", new { @class = "text-danger" })</div>
+                    </div>
+                
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="save" data-save="modal">Register</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<style>
+    .row, .row > * {
+        padding: 0 !important;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+</style>

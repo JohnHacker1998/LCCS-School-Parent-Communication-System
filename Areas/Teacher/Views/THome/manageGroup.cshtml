@@ -1,0 +1,65 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.groupStructureViewModel
+@{
+    ViewBag.Title = "manageGroup";
+}
+
+<h2>manageGroup</h2>
+<script>
+    $(document).ready(function () {
+        $('#tblGroupStructureList').DataTable();
+    });
+</script>
+
+<div class="container mb-3 mt-3">
+    <table class="table table-striped table-bordered" id="tblGroupStructureList">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Academic Quarter</th>
+                <th scope="col">Group Structure Name</th>
+                <th scope="col">Section Name</th>
+                <th scope="col">Min Number of Members</th>
+                <th scope="col">Max Number of Members</th>
+                <th scope="col">
+                    @using (Html.BeginForm("addGroupStructure", "THome", FormMethod.Get))
+                    {
+                        <input type="submit" name="add" value="Add" />
+                    }
+                </th>
+            </tr>
+        </thead>
+
+        @foreach (var k in Model.groupList)
+        {
+            <tbody>
+                <tr>
+                    <td>@k.groupStructureId</td>
+                    <td>@k.academicQuarter</td>
+                    <td>@k.groupStructureName</td>
+                    <td>@k.section.sectionName</td>
+                    <td>@k.minNumberOfMembers</td>
+                    <td>@k.maxNumberOfMembers</td>
+                    <td>
+                        @using (Html.BeginForm("manageGroup", "THome", new { grId = k.groupStructureId.ToString() }, FormMethod.Post))
+                        {
+
+                            <input type="submit" name="delete" value="Delete" class="btn btn-danger" />
+                            <input type="submit" name="select" value="Update" class="btn btn-primary" />
+
+
+                        }
+                        @using (Html.BeginForm("classifyGroup", "THome", new { grId = k.groupStructureId.ToString() }, FormMethod.Post))
+                        {
+                            <input type="submit" name="classify" value="Classify" class="btn btn-primary" />
+                        }
+                        </td>
+                </tr>
+            </tbody>
+
+        }
+
+    </table>
+
+
+</div>
+

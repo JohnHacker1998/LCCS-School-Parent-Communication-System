@@ -29,17 +29,50 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
 
             if (!(DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday))
             {
-                
-                lateComerViewModel.ID = Int32.Parse(id);
-                ViewBag.message = "Are You Sure Do You Want To Declare Student As LateComer?";
-            }
-            else
-            {
-                //error message weekend
-                ViewBag.error = "You are Not Allowed To Access on the Weekend";
-            }
-            return PartialView("AddLateComer",lateComerViewModel);
-        }
+                if (ModelState.IsValid || late != null)
+                {
+                    //get unitleader info
+                    string tId = User.Identity.GetUserId().ToString();
+                    var teacher = context.Teacher.Where(t => t.teacherId == tId).FirstOrDefault();
+
+                    //check search button is clicked
+                    if (search != null)
+                    {
+
+                        //get all academic years
+                        var academicYears = context.AcademicYear.ToList();
+                        int x = 0;
+                        foreach (var getActive in academicYears)
+                        {
+                            //get start and end dates to check if today is in the middle
+                            if (!(DateTime.Compare(DateTime.Now, getActive.durationStart) < 0 || DateTime.Compare(DateTime.Now, getActive.durationEnd) > 0))
+                            {
+                                //search student by student name in active academic years
+                                lateComerViewModel.students = context.Student.Where(s => s.fullName.StartsWith(lateComerViewModel.studentName) && s.academicYearId == getActive.academicYearName && s.sectionName.StartsWith(teacher.grade.ToString())).ToList();
+                            }
+                        }
+
+                        if (lateComerViewModel.students.Count != 0)
+                        {
+                            //check the student is suspended or not
+                            foreach (var checkStudent in lateComerViewModel.students)
+                            {
+                                var studentSuspended = context.Suspension.Where(s => s.studentId == checkStudent.studentId).FirstOrDefault();
+                                if (studentSuspended != null)
+                                {
+                                    //check if the suspention time elapsed
+                                    if (DateTime.Compare(studentSuspended.endDate, DateTime.Now) < 0)
+                                    {
+                                        //remove student from suspention table
+                                        context.Suspension.Remove(studentSuspended);
+                                    }
+                                    else
+                                    {
+                                        //remove student from search list
+                                        lateComerViewModel.students.Remove(checkStudent);
+                                    }
+                                }
+                            }
 
         public ActionResult AddLateComer(LateComerViewModel lateComerViewModel)
         {

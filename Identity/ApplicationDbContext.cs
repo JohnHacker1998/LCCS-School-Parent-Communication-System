@@ -27,6 +27,12 @@ namespace LCCS_School_Parent_Communication_System.Identity
         public DbSet<AbsenceRecord> AbsenceRecord { get; set; }
         public DbSet<Evidence> Evidence { get; set; }
         public DbSet<Assignment> Assignment { get; set; }
+        public DbSet<GroupStructure> GroupStructure { get; set; }
+        public DbSet<GroupAssignment> GroupAssignment { get; set; }
+        public DbSet<Group> Group { get; set; }
+        public DbSet<StudentGroupList> StudentGroupList { get; set; }
+        public DbSet<GroupStructureAssignment> GroupStructureAssignment { get; set; }
+
 
 
     }

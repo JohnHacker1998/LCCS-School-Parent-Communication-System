@@ -17,12 +17,18 @@ namespace LCCS_School_Parent_Communication_System.Models
         public string assignmentType { get; set; }
         [ForeignKey("section")]
         public int sectionID { get; set; }
-        public int numberOfMembers { get; set; }
+       
        public DateTime submissionDate { get; set; }
-        public byte[] assignmentDocument { get; set; }
+        public string assignmentName { get; set; }
+        public int markPercentage { get; set; }
         
-        public string groupList { get; set; }
+        public byte[] assignmentDocument { get; set; }
+        [ForeignKey("teacher")]
+        public string teacherId { get; set; }
+        public int numberOfMembers { get; set; }
         public virtual Section section { get; set; }
+        public virtual Teacher teacher { get; set; }
+
        
     }
 }

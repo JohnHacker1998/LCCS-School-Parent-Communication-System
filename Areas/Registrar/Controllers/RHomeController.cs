@@ -22,6 +22,72 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
         {
             return View();
         }
+        public ActionResult registerParent(string sid)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            parentViewModel pv = new parentViewModel();
+            Student st = new Student();
+            int translatedID = int.Parse(sid);
+            st = db.Student.Where(a => a.studentId == translatedID).FirstOrDefault();
+            pv.studentFullName = st.fullName;
+            pv.studentId = translatedID;
+            return PartialView(pv);
+        }
+        [HttpPost]
+        public ActionResult registerParent(parentViewModel pv)
+        {
+            ViewBag.addedSuccessfully = " ";
+            ViewBag.existenceMessage = " ";
+            ViewBag.Message = " ";
+           ApplicationDbContext db = new ApplicationDbContext();
+            Collection c = new Collection();
+            RegisterViewModel rv = new RegisterViewModel();
+            RegistrarMethod rm = new RegistrarMethod();
+            Models.Parent parent = new Models.Parent();
+            //adding the parent information to registerViewModel rv  abd adding to identity user table
+            List<Models.Parent> l = new List<Models.Parent>();
+            //searching for a parent with the same student id
+            l = db.Parent.Where(a => a.studentId == pv.studentId).ToList();
+            //if there are is 1 or no parents related to the student, it is allowed to relate the student with a parent,
+            if (l.Count < 2)
+            {
+                //adding the parent information into the viewmodel of the register user 
+                //checking the a user exists with the same username or fullname as of the being registered parent
+                if (c.checkUserExistence(pv.email, pv.fullName))
+                {
+                    //if user exists, adding the parent information into the identity user table and parent table.
+                    rv.email = pv.email;
+                    rv.fullName = pv.fullName;
+                    rv.username = c.generateUserName();
+                    rv.password = c.generatePassword();
+                    rv.phoneNumber = pv.phoneNumber;
+
+
+                    string ide = rm.RegisterParent(rv, "Parent");
+
+                    if (ide != null)
+                    {
+                        //adding parent to the parent table 
+                        parent.parentId = ide;
+                        parent.studentId = pv.studentId;
+                        db.Parent.Add(parent);
+                        db.SaveChanges();
+                        c.sendMail(rv.email, rv.username, rv.password);
+                        ViewBag.addedSuccessfully = "Parent is Added Successfully";
+                    }
+                }
+                else
+                {
+                    ViewBag.existenceMessage = "User already exists.";
+                }
+
+            }
+            else
+            {
+                ViewBag.Message = "More than two parents cannot be added.";
+            }
+            return PartialView("registerParent");
+        }
         public ActionResult parentManagement()
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -30,6 +96,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
             parent.parentList = new List<Models.Parent>();
             parent.parentList = db.Parent.ToList();
             parent.studentList = new List<Student>();
+            parent.studentList = db.Student.ToList();
 
             return View(parent);
         }
@@ -149,7 +216,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
                 //if delete is clicked
                 else if (delete != null)
                 {
-                    ModelState.Clear();
+                    
                     //deleting the parent information from the identity user and from the parent table.
                     p = db.Parent.Find(pid);
                     db.Parent.Remove(p);
@@ -159,6 +226,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
 
                 }
             }
+            pv.studentList = db.Student.ToList();
+            pv.parentList = db.Parent.ToList();
             return View(pv);
 
         }

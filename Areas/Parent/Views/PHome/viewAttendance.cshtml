@@ -30,9 +30,15 @@
         			header: {
             			left: 'prev,next',
             			center: 'title',
-                        right: ''
+                        right: 'month,agendaWeek,agendaDay'
                         
-					},
+                    },
+                    buttonText: {
+                        today: 'today',
+                        month: 'month',
+                        week: 'week',
+                        day: 'day'
+                    },
             		firstDay: 1, //The day that each week begins (Monday=1)
             		slotMinutes: 60,
             		events: '@Url.RouteUrl(new{ action="GetEvents", controller="PHome"})'
