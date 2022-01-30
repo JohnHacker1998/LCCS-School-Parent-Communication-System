@@ -141,7 +141,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             var userStore = new ApplicationUserStore(context);
             var userManager = new ApplicationUserManager(userStore);
             UpdateTeacherModal updateTeacher = new UpdateTeacherModal();
-            Teacher teacher = new Teacher();
+            Models.Teacher teacher = new Models.Teacher();
 
             //check teacher role before editing
             if (!(userManager.IsInRole(id, "UnitLeader") || userManager.IsInRole(id, "HomeRoom")))
@@ -167,7 +167,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         {
             //object declaration
             ApplicationDbContext context = new ApplicationDbContext();
-            Teacher teacherUp = new Teacher(1);
+            Models.Teacher teacherUp = new Models.Teacher(1);
             AcademicDirector academicDirector = new AcademicDirector();
 
             var checkFullName = context.Users.Where(u => u.fullName == updateTeacher.fullName && u.Id != updateTeacher.Id).FirstOrDefault();

@@ -129,8 +129,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
                     //check if the student absence record
                     if (absenceRecord != null)
                     {
-                        var currentDay = DateTime.Now.ToShortDateString();
-                        var presenceRecord = context.AbsenceRecord.Where(a => a.studentId == parent.studentId && a.recordDate == yesterday.Date).FirstOrDefault();
+                        var currentDay = DateTime.Now.Date;
+                        var presenceRecord = context.AbsenceRecord.Where(a => a.studentId == parent.studentId && a.recordDate == currentDay.Date).FirstOrDefault();
 
                         //check today attendance record
                         if (presenceRecord == null)
@@ -138,11 +138,11 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
                             Evidence duplicateEvidence;
                             if (secondParent == null)
                             {
-                                duplicateEvidence = context.Evidence.Where(e => e.parentId == pId && e.dateUpload == yesterday.Date).FirstOrDefault();
+                                duplicateEvidence = context.Evidence.Where(e => e.parentId == pId && e.dateUpload == currentDay.Date).FirstOrDefault();
                             }
                             else
                             {
-                                duplicateEvidence = context.Evidence.Where(e => (e.parentId == pId && e.dateUpload == yesterday.Date) || (e.parentId == secondParent.parentId && e.dateUpload == yesterday.Date)).FirstOrDefault();
+                                duplicateEvidence = context.Evidence.Where(e => (e.parentId == pId && e.dateUpload == currentDay.Date) || (e.parentId == secondParent.parentId && e.dateUpload == yesterday.Date)).FirstOrDefault();
                             }
 
                             //check if the eviedence is provided once
@@ -262,7 +262,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
                     {
                         if (DateTime.Compare(DateTime.Now.Date, x.submissionDate) <= 0 )
                         {
-                            if(x.assignmentType=="Individual" || (x.assignmentType=="Group" && x.groupList!=null))
+                            if(x.assignmentType=="Individual" || (x.assignmentType=="Group" ))
                             temp.Add(x);
                         }
                         

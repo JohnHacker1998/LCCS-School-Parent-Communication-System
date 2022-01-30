@@ -720,7 +720,10 @@
     <Content Include="Areas\Academic_Director\Views\ADHome\registerAcademicYear.cshtml" />
     <Content Include="Areas\Academic_Director\Views\ADHome\updateAcademicYear.cshtml" />
     <Content Include="Areas\Registrar\Views\RHome\registerParent.cshtml" />
+    <Content Include="Areas\Teacher\Views\THome\modalAddAssignment.cshtml" />
     <Content Include="Areas\Teacher\Views\THome\addAssignment.cshtml" />
+    <Content Include="Areas\Teacher\Views\THome\manageGroup.cshtml" />
+    <Content Include="Areas\Teacher\Views\THome\addGroupStructure.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -841,19 +844,24 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
-    <Compile Include="Migrations\202201141551353_allInOne.cs" />
-    <Compile Include="Migrations\202201141551353_allInOne.designer.cs">
-      <DependentUpon>202201141551353_allInOne.cs</DependentUpon>
+    <Compile Include="Migrations\202201281828494_allINONe2.cs" />
+    <Compile Include="Migrations\202201281828494_allINONe2.designer.cs">
+      <DependentUpon>202201281828494_allINONe2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AbsenceRecord.cs" />
     <Compile Include="Models\AcademicYear.cs" />
     <Compile Include="Models\Assignment.cs" />
     <Compile Include="Models\Evidence.cs" />
+    <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\GroupAssignment.cs" />
+    <Compile Include="Models\GroupStructure.cs" />
+    <Compile Include="Models\GroupStructureAssignment.cs" />
     <Compile Include="Models\LateComer.cs" />
     <Compile Include="Models\Parent.cs" />
     <Compile Include="Models\Section.cs" />
     <Compile Include="Models\Student.cs" />
+    <Compile Include="Models\StudentGroupList.cs" />
     <Compile Include="Models\Suspension.cs" />
     <Compile Include="Models\Teacher.cs" />
     <Compile Include="Models\Warning.cs" />
@@ -864,6 +872,7 @@
     <Compile Include="viewModels\assignmentViewModel.cs" />
     <Compile Include="viewModels\EvidenceApprovalViewModel.cs" />
     <Compile Include="viewModels\ForgotPasswordViewModel.cs" />
+    <Compile Include="viewModels\groupStructureViewModel.cs" />
     <Compile Include="viewModels\LateComerViewModel.cs" />
     <Compile Include="viewModels\calanderEvents.cs" />
     <Compile Include="viewModels\LoginViewModel.cs" />
@@ -946,8 +955,8 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202201141551353_allInOne.resx">
-      <DependentUpon>202201141551353_allInOne.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202201281828494_allINONe2.resx">
+      <DependentUpon>202201281828494_allINONe2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

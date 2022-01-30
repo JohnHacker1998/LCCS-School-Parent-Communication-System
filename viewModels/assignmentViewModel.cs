@@ -33,6 +33,10 @@ namespace LCCS_School_Parent_Communication_System.viewModels
         public string sectionName { get; set; }
         public string[] studentArray { get; set; }
 
-        
+        public string assignmentName { get; set; }
+        public int markPercentage { get; set; }
+
+
+
     }
 }

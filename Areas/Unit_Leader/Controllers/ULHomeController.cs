@@ -57,10 +57,11 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
 
                         //get all academic years
                         var academicYears = context.AcademicYear.ToList();
+                        int x = 0;
                         foreach (var getActive in academicYears)
                         {
                             //get start and end dates to check if today is in the middle
-                            if (!(DateTime.Compare(DateTime.Now, getActive.durationStart) < 0 || DateTime.Compare(DateTime.Now, getActive.durationStart) > 0))
+                            if (!(DateTime.Compare(DateTime.Now, getActive.durationStart) < 0 || DateTime.Compare(DateTime.Now, getActive.durationEnd) > 0))
                             {
                                 //search student by student name in active academic years
                                 lateComerViewModel.students = context.Student.Where(s => s.fullName.StartsWith(lateComerViewModel.studentName) && s.academicYearId == getActive.academicYearName && s.sectionName.StartsWith(teacher.grade.ToString())).ToList();

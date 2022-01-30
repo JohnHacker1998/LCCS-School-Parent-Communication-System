@@ -18,7 +18,7 @@
     });
 </script>
 
-@using (Html.BeginForm("assignmentManagement", "THome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+@*@using (Html.BeginForm("assignmentManagement", "THome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
 {
     @Html.HiddenFor(a => a.assignmentID);
 
@@ -64,7 +64,7 @@
     <input type="submit" name="update" value="Update" />
 
 
-}
+}*@
 
 @*<script type="text/javascript">
 
@@ -131,8 +131,15 @@
                 <th scope="col">Submission Date</th>
 
                 <th scope="col">Number of Members</th>
-                
-                <th scope="col">@*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#assignmentViewModel" data-url="@Url.Action("addAssignment")">Register</button>*@</th>
+                <th scope="col">Assignment Name</th>
+                <th scope="col">Mark Percentage</th>
+
+                <th scope="col">
+                    @using (Html.BeginForm("addAssignment", "THome", FormMethod.Get))
+                    {
+                        <input type="submit" name="add" value="Add" />
+                    }
+                </th>
             </tr>
         </thead>
 
@@ -147,23 +154,25 @@
                     <td>@k.submissionDate.ToShortDateString()</td>
 
                     <td>@k.numberOfMembers</td>
+                    <td>@k.assignmentName</td>
+                    <td>@k.markPercentage</td>
 
                     <td>
                         @using (Html.BeginForm("assignmentManagement", "THome", new { assId = k.assignmentId.ToString() }, FormMethod.Post))
                         {
 
                             <input type="submit" name="delete" value="Delete" class="btn btn-danger" />
-                            <input type="submit" name="select" value="Select" class="btn btn-primary"/>
+                            <input type="submit" name="select" value="Select" class="btn btn-primary" />
 
                         }
                         @* <button type="button" class="btn btn-primary" data-toggle="updateModal" data-target="#AcademicYearViewModel" data-url="@Url.Action("updateAssignment")" data-id="@k.assignmentId.ToString()">Edit</button>*@
+                        @*
+                            @if (k.assignmentType == "Group" && k.groupList == null)
+                            {
 
-                        @if (k.assignmentType == "Group" && k.groupList == null)
-                        {
+                                <input type="submit" class="btnModal btn btn-primary" id="btnModal" value="Create Group" />
 
-                            <input type="submit" class="btnModal btn btn-primary" id="btnModal" value="Create Group" />
-
-                        }
+                            }*@
                     </td>
                 </tr>
             </tbody>
@@ -171,237 +180,8 @@
         }
 
     </table>
+
+
 </div>
-    <div class="modal" tabindex="-1" role="dialog" id="exampleModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Create Group</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-
-                    @using (Html.BeginForm("assignmentManagement", "THome", FormMethod.Post, new { id = "groupForm" }))
-                    {
-                        <div class="form-group">
-                            @Html.LabelFor(p => p.assignmentID, new { @class = "form-label mt-2" })
-                            <div class="container row"> @Html.TextBoxFor(p => p.assignmentID, new { @id = "assignmentID1", @name = "assignmentID1", @readonly = true })</div>
-
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(p => p.sectionName, new { @class = "form-label mt-2" })
-                            <div class="container row"> @Html.TextBoxFor(p => p.sectionName, new { @id = "sectionName1", @name = "sectionName1", @readonly = true })</div>
-
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(p => p.numberOfGroupMembers, new { @class = "form-label mt-2" })
-                            <div class="container row"> @Html.TextBoxFor(p => p.numberOfGroupMembers, new { @id = "gMembers", @name = "gMembers", @readonly = true })</div>
-
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <select id="stdList" class="studentList1" multiple>
-                                </select>
-                            </div>
-                            <div class="col-6">
-                                <select id="groupedStudentList" class="studentList2" name="groupedStudentList" multiple>
-                                </select>
-                            </div>
-                        </div>
-                        <input type="text" name="txtValue" id="txtValue" style="display:none" />
-                        <input type="submit" id="btnSubmitGrouping" name="btnSubmitGrouping" value="Submit Group" style="display:none" />
-
-                    }
-
-                    <input type="submit" id="btnAssign" name="btnAssign" value="Assign" />
-                    <input type="submit" id="btnRemove" name="btnRemove" value="Remove" />
-                </div>
-                <div class="modal-footer">
-                    @* <button type="button" class="btn btn-primary">Save changes</button>*@
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    @if (ViewBag.successfulMessage != " " && ViewBag.successfulMessage != null)
-    {
-        <div class="alert alert-success">
-            @ViewBag.ViewBag.successfulMessage
-        </div>
-    }
-    @if (ViewBag.failedMessage != " " && ViewBag.failedMessage != null)
-    {
-        <div class="alert alert-danger">
-            <script type="text/javascript">
-                function test() { $.growl({ title: "Growl", message: "The kitten is awake!" }); }
-
-                test();</script>
-            @ViewBag.failedMessage
-        </div>
-    }
-
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('.datepicker').datepicker({
-                minDate: new Date(),
-
-
-            });
-            $('#assignmentType').change(function () {
-
-                $("#assignmentType").change(function () {
-                    var a = $("#assignmentType Option:Selected").text();
-                    if (a == "Group") {
-                        $("#groupRelated").show();
-
-                    }
-                    else {
-                        $("#groupRelated").hide();
-                    }
-                })
-
-
-            }).change();
-
-            $(".modal").on("hidden.bs.modal", function () {
-                $(".modal-body1").html("");
-            });
-        });
-
-
-    </script>
-    <script>
-
-    $(document).ready(function () {
-
-        $('.btnModal').on('click', function () {
-
-            $('#exampleModal').modal('show');
-
-            $tr = $(this).closest('tr');
-
-            var data = $tr.children("td").map(function () {
-                return $(this).text();
-            }).get();
-
-            console.log(data);
-
-            $('#assignmentID1').val(data[0]); //set value
-            $('#sectionID1').val(data[1]); //set value
-            $('#sectionName1').val(data[2]); //set value
-            $('#gMembers').val(data[5]); //set value
-
-            var arr = JSON.parse('@Html.Raw(Json.Encode(@Model.studentArray))')
-
-            $('#stdList').empty()
-            $('#groupedStudentList').empty()
-           for (let x = 0; x < @Model.studentArray.Length; x++){
-            if (arr[x] == data[2]) {
-
-                $('#stdList').append('<option value=' + arr[x+1] + '>' + arr[x+1] + '</option>');
-
-            }
-            x++;
-        }
-            $('option').mousedown(function (e) {
-
-                  e.preventDefault();
-                    $(this).prop('selected', !$(this).prop('selected'));
-                    return false;
-
-            });
-
-
-
-        });
-    });
-
-
-
-    </script>
-    <script type="text/javascript">
-
-
-        $(document).ready(function () {
-            $('#btnAssign').on('click', function () {
-                $("#stdList option[value='']").each(function () {
-                    $(this).remove();
-                });
-                $("#groupedStudentList option[value='']").each(function () {
-                    $(this).remove();
-                });
-                var custom = $("#gMembers").val()
-                console.log(custom)
-                var count = $("#stdList :selected").length;
-                console.log(count)
-                if (count > custom) {
-                    alert("Hello! I am an alert box!!");
-                }
-                else if (count <= custom) {
-                    var name = $("#stdList :selected").text();
-                    var tbl = name.split(',');
-                    var values = "*";
-                    var selected = $("#stdList option:selected");
-                    selected.each(function () {
-                        values += $(this).html() + "-";
-
-                    });
-
-                    $('#groupedStudentList').append('<option value=' + values + '>' + values + '</option>');
-                    $("#stdList option:selected").remove();
-                    console.log(values)
-                    if ($('#stdList').children().length == 0) {
-                        $("#btnSubmitGrouping").show();
-                    }
-                    else {
-                        $("#btnSubmitGrouping").hide();
-                    }
-                }
-
-
-            });
-        });
-        $(document).ready(function () {
-            $('#btnRemove').on('click', function () {
-                $("#stdList option[value='']").each(function () {
-                    $(this).remove();
-                });
-                $("#groupedStudentList option[value='']").each(function () {
-                    $(this).remove();
-                });
-
-                var count = $("#groupedStudentList :selected").length;
-                var name = $("#groupedStudentList :selected").text();
-                if (count == 1) {
-                    let text = name;
-                    let txtCount = text.length;
-                    let text2 = text.substring(1, txtCount);
-                    var arrFirst = text2.split("-");
-                    for (let y = 0; y < arrFirst.length; y++) {
-                        $('#stdList').append('<option value=' + arrFirst[y] + '>' + arrFirst[y] + '</option>');
-                        $("#groupedStudentList option:selected").remove();
-
-                    }
-                    if ($('#stdList').children().length == 0) {
-                        $("#btnSubmitGrouping").show();
-                    }
-                    else {
-                        $("#btnSubmitGrouping").hide();
-                    }
-                }
-            });
-        });
-        $(document).ready(function () {
-            $('#btnSubmitGrouping').on('click', function () {
-                $("#groupedStudentList option").prop('selected', true);
-                var value = $("#groupedStudentList option:selected").text();
-                $('#txtValue').val(value);
-            });
-
-        });
-    </script>
 
 
