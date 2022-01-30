@@ -7,13 +7,13 @@ namespace LCCS_School_Parent_Communication_System.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class updatedAssignment : IMigrationMetadata
+    public sealed partial class allinone : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(updatedAssignment));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(allinone));
         
         string IMigrationMetadata.Id
         {
-            get { return "202201121219599_updatedAssignment"; }
+            get { return "202201281448115_allinone"; }
         }
         
         string IMigrationMetadata.Source

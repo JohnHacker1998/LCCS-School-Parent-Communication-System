@@ -6,7 +6,7 @@
         <div class="modal-content">
             <div class="modal-header bg-red">
                 <h4 class="modal-title text-white" id="title">Register Teacher</h4>
-                <button type="button" class="close btn bg-red" data-dismiss="modal">
+                <button type="button" id="exit" class="close btn bg-red" data-dismiss="modal">
                     <span aria-hidden="true" class="text-white">&times;</span>
                 </button>
             </div>
@@ -14,48 +14,54 @@
             <div class="modal-body">
                 @if (ViewBag.complete != null)
                 {
-                    <div class="alert alert-success">
+                    <div class="alert alert-success" id="hide">
                         @ViewBag.complete
                     </div>
                 }
                 @if (ViewBag.error != null)
                 {
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger" id="hide">
                         @ViewBag.error
                     </div>
                 }
-                
-            <form action="Register" id="error" autocomplete="off">
 
-                <div class="form-group">
-                    @Html.LabelFor(l => l.fullName, new { @class = "form-label mt-2" })
-                    <div class="container row">@Html.EditorFor(e => e.fullName, new { @class = "form-control" })</div>
-                    <div class="container row">@Html.ValidationMessageFor(v => v.fullName, null, new { @class = "text-danger" })</div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(l => l.email, new { @class = "form-label mt-2" })
-                    <div class="container row">@Html.EditorFor(e => e.email, new { @class = "form-control" })</div>
-                    <div class="container row">@Html.ValidationMessageFor(v => v.email, "", new { @class = "text-danger" })</div>
-                </div>
-                <div class="form-group">
-                    <div class="container row">
-                        <div class="col-4">
-                            @Html.LabelFor(l => l.grade, new { @class = "form-label mt-2" })
-                            <div class="container row">@Html.EditorFor(e => e.grade, new { @class = "form-control" })</div>
-                            <div class="container row">@Html.ValidationMessageFor(v => v.grade, "", new { @class = "text-danger" })</div>
-                        </div>
-                        <div class="col-1">
+                <div class="d-flex justify-content-center ">
+                    <div id="holder" class="d-none text-danger" role="status">
 
-                        </div>
-                        <div class="col-7">
-                            @Html.LabelFor(l => l.subject, new { @class = "form-label mt-2" })
-                            <div class="container row">@Html.EditorFor(e => e.subject, new { @class = "form-control" })</div>
-                            <div class="container row">@Html.ValidationMessageFor(v => v.subject, "", new { @class = "text-danger" })</div>
-                        </div>
                     </div>
                 </div>
 
-            </form>
+                <form action="Register" id="error" autocomplete="off">
+
+                    <div class="form-group">
+                        @Html.LabelFor(l => l.fullName, new { @class = "form-label mt-2" })
+                        <div class="container row">@Html.EditorFor(e => e.fullName, new { @class = "form-control" })</div>
+                        <div class="container row">@Html.ValidationMessageFor(v => v.fullName, null, new { @class = "text-danger" })</div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(l => l.email, new { @class = "form-label mt-2" })
+                        <div class="container row">@Html.EditorFor(e => e.email, new { @class = "form-control" })</div>
+                        <div class="container row">@Html.ValidationMessageFor(v => v.email, "", new { @class = "text-danger" })</div>
+                    </div>
+                    <div class="form-group">
+                        <div class="container row">
+                            <div class="col-4">
+                                @Html.LabelFor(l => l.grade, new { @class = "form-label mt-2" })
+                                <div class="container row">@Html.EditorFor(e => e.grade, new { htmlAttributes = new { @min = 9 } })</div>
+                                <div class="container row">@Html.ValidationMessageFor(v => v.grade, "", new { @class = "text-danger" })</div>
+                            </div>
+                            <div class="col-1">
+
+                            </div>
+                            <div class="col-7">
+                                @Html.LabelFor(l => l.subject, new { @class = "form-label mt-2" })
+                                <div class="container row">@Html.EditorFor(e => e.subject, new { @class = "form-control" })</div>
+                                <div class="container row">@Html.ValidationMessageFor(v => v.subject, "", new { @class = "text-danger" })</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
             </div>
 
             <div class="modal-footer">
@@ -75,3 +81,39 @@
 </style>
 
 
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var view = $('#myModal');
+        const element = document.getElementById("holder");
+        const hidden = document.getElementById('hide');
+        const save = document.getElementById('save');
+        const exit = document.getElementById('exit');
+        view.on('click', '[data-save="modal"]', function (event) {
+
+            $.validator.unobtrusive.parse("#error");
+            ValidationForm();
+            if (ValidationForm()) {
+                if (element != null) {
+                    element.classList.remove("d-none");
+                    element.classList.add("spinner-border");
+                    save.classList.add("disabled");
+                    exit.classList.add("disabled");
+                }
+                if (hidden != null) {
+                    hidden.classList.add("d-none");
+                }
+            }
+        });
+
+        function ValidationForm() {
+            if (!$("#error").valid()) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+    });
+
+</script>

@@ -677,6 +677,8 @@
     <Content Include="Areas\Teacher\Views\THome\assignmentManagement.cshtml" />
     <Content Include="Areas\Parent\Views\PHome\viewAssignment.cshtml" />
     <Content Include="Areas\Parent\Views\PHome\viewAssignmentDetails.cshtml" />
+    <Content Include="Areas\Unit_Leader\Views\ULHome\AddLateComer.cshtml" />
+    <Content Include="Areas\Unit_Leader\Views\ULHome\SendWarning.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -795,7 +797,10 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
-   
+    <Compile Include="Migrations\202201281448115_allinone.cs" />
+    <Compile Include="Migrations\202201281448115_allinone.designer.cs">
+      <DependentUpon>202201281448115_allinone.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AbsenceRecord.cs" />
     <Compile Include="Models\AcademicYear.cs" />
@@ -865,7 +870,6 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Account\profile.cshtml" />
-    <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\_test.cshtml" />
     <Content Include="Views\Account\edit.cshtml" />
@@ -873,6 +877,7 @@
     <Content Include="Views\Account\EditPassword.cshtml" />
     <Content Include="Views\Account\EditFullName.cshtml" />
     <Content Include="Scripts\jquery.validate.unobtrusive.bootstrap.min.js.map" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -896,7 +901,11 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
-
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202201281448115_allinone.resx">
+      <DependentUpon>202201281448115_allinone.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

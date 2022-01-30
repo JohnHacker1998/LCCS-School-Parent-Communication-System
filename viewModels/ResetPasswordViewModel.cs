@@ -21,7 +21,7 @@ namespace LCCS_School_Parent_Communication_System.viewModels
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Compare("password", ErrorMessage = "The Password and Confirmation Password do not Match.")]
         public string confirmPassword { get; set; }
 
         public string code { get; set; }

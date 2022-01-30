@@ -9,9 +9,8 @@ namespace LCCS_School_Parent_Communication_System.viewModels
 {
     public class LateComerViewModel
     {
-        [Required(ErrorMessage = "Please enter Student name")]
-        [Display(Name = "Student Name")]
-        public string studentName { get; set; }
+        
+        public int ID { get; set; }
 
         public List<Student> students { get; set; }
     }

@@ -61,7 +61,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
                 {
                     ModelState.Clear();
                     //if studentFullName returns with value
-                    if (pv.studentFullName != null && regex.IsMatch(pv.studentFullName))
+                    if (pv.studentFullName != null || regex.IsMatch(pv.studentFullName))
                     {
                         //searching the student from the student table and enabling the view to display the student list of the student using viewbag.
                         ViewBag.startStudent = true;
@@ -422,204 +422,204 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
             studentViewModel.student = context.Student.ToList();
 
             //viewbag elements used in the UI 
-            ViewBag.edit = false;
-            ViewBag.search = false;
-            ViewBag.update = "hidden";
+            //ViewBag.edit = false;
+            //ViewBag.search = false;
+            //ViewBag.update = "hidden";
 
             return View(studentViewModel);
         }
-        [HttpPost]
-        public ActionResult StudentManagement(StudentViewModel studentViewModel, string sectionName, string register, string search, string update, string delete, string edit, int id)
-        {
-            //basic objects
-            ApplicationDbContext context = new ApplicationDbContext();
-            RegistrarMethod registrarMethod = new RegistrarMethod();
-            Student student = new Student();
-            studentViewModel.sectionName = new List<string>();
+        //[HttpPost]
+        //public ActionResult StudentManagement(StudentViewModel studentViewModel, string sectionName, string register, string search, string update, string delete, string edit, int id)
+        //{
+        //    //basic objects
+        //    ApplicationDbContext context = new ApplicationDbContext();
+        //    RegistrarMethod registrarMethod = new RegistrarMethod();
+        //    Student student = new Student();
+        //    studentViewModel.sectionName = new List<string>();
 
-            //viewbag elements for UI
-            ViewBag.edit = false;
-            ViewBag.search = false;
-            ViewBag.update = "hidden";
+        //    //viewbag elements for UI
+        //    ViewBag.edit = false;
+        //    ViewBag.search = false;
+        //    ViewBag.update = "hidden";
 
-            if (ModelState.IsValid || (search != null && ModelState.IsValidField("fullName")) || edit != null || delete != null)
-            {
-                if (register != null)
-                {
-                    //check if student already exist(duplicate)
-                    var studentExist = context.Student.Where(s => s.fullName == studentViewModel.fullName).FirstOrDefault();
+        //    if (ModelState.IsValid || (search != null && ModelState.IsValidField("fullName")) || edit != null || delete != null)
+        //    {
+        //        if (register != null)
+        //        {
+        //            //check if student already exist(duplicate)
+        //            var studentExist = context.Student.Where(s => s.fullName == studentViewModel.fullName).FirstOrDefault();
 
-                    if (studentExist == null)
-                    {
-                        //get selected section academic year
-                        var academicYears = context.AcademicYear.ToList();
-                        foreach (var getAcadamicYear in academicYears)
-                        {
-                            if (!(DateTime.Compare(DateTime.Now, getAcadamicYear.durationStart) < 0 || DateTime.Compare(DateTime.Now, getAcadamicYear.durationEnd) > 0))
-                            {
-                                var sectionRecord = context.Section.Where(s => s.sectionName == sectionName && s.academicYearId == getAcadamicYear.academicYearName).ToList();
-                                if (sectionRecord.Count != 0)
-                                {
-                                    //populate student object
-                                    student.academicYearId = getAcadamicYear.academicYearName;
-                                    break;
-                                }
-                            }
-                        }
+        //            if (studentExist == null)
+        //            {
+        //                //get selected section academic year
+        //                var academicYears = context.AcademicYear.ToList();
+        //                foreach (var getAcadamicYear in academicYears)
+        //                {
+        //                    if (!(DateTime.Compare(DateTime.Now, getAcadamicYear.durationStart) < 0 || DateTime.Compare(DateTime.Now, getAcadamicYear.durationEnd) > 0))
+        //                    {
+        //                        var sectionRecord = context.Section.Where(s => s.sectionName == sectionName && s.academicYearId == getAcadamicYear.academicYearName).ToList();
+        //                        if (sectionRecord.Count != 0)
+        //                        {
+        //                            //populate student object
+        //                            student.academicYearId = getAcadamicYear.academicYearName;
+        //                            break;
+        //                        }
+        //                    }
+        //                }
 
-                        student.fullName = studentViewModel.fullName;
-                        student.sectionName = sectionName;
+        //                student.fullName = studentViewModel.fullName;
+        //                student.sectionName = sectionName;
 
-                        //register Student
-                        context.Student.Add(student);
-                        context.SaveChanges();
+        //                //register Student
+        //                context.Student.Add(student);
+        //                context.SaveChanges();
 
-                        //success message
-                        ViewBag.add = "Student Registered Successfully";
-                    }
-                    else
-                    {
-                        //error message
-                        ViewBag.add = "Student Already Exist";
-                    }
+        //                //success message
+        //                ViewBag.add = "Student Registered Successfully";
+        //            }
+        //            else
+        //            {
+        //                //error message
+        //                ViewBag.add = "Student Already Exist";
+        //            }
 
-                    studentViewModel.sectionName = registrarMethod.populateSection();
+        //            studentViewModel.sectionName = registrarMethod.populateSection();
 
-                }
-                else if (search != null)
-                {
-                    //search student
-                    studentViewModel.student = new List<Student>();
-                    studentViewModel.student = context.Student.Where(s => s.fullName.StartsWith(studentViewModel.fullName)).ToList();
+        //        }
+        //        else if (search != null)
+        //        {
+        //            //search student
+        //            studentViewModel.student = new List<Student>();
+        //            studentViewModel.student = context.Student.Where(s => s.fullName.StartsWith(studentViewModel.fullName)).ToList();
 
-                    //populate section list
-                    studentViewModel.sectionName = registrarMethod.populateSection();
+        //            //populate section list
+        //            studentViewModel.sectionName = registrarMethod.populateSection();
 
-                    if (studentViewModel.student.Count != 0)
-                    {
-                        //viewbag element for UI purpose
-                        ViewBag.search = true;
-                    }
-                    else
-                    {
-                        //error message
-                        ViewBag.found = "Record Not Found";
-                    }
-                    int x = 0;
+        //            if (studentViewModel.student.Count != 0)
+        //            {
+        //                //viewbag element for UI purpose
+        //                ViewBag.search = true;
+        //            }
+        //            else
+        //            {
+        //                //error message
+        //                ViewBag.found = "Record Not Found";
+        //            }
+        //            int x = 0;
 
-                }
-                else if (edit != null)
-                {
-                    //viewbag elements used for UI
-                    ViewBag.edit = true;
-                    ViewBag.update = " ";
+        //        }
+        //        else if (edit != null)
+        //        {
+        //            //viewbag elements used for UI
+        //            ViewBag.edit = true;
+        //            ViewBag.update = " ";
 
-                    //populate the data using the id passed
-                    student = context.Student.Find(id);
-                    studentViewModel.Id = student.studentId;
-                    studentViewModel.fullName = student.fullName;
-                    studentViewModel.sectionName = new List<string>();
+        //            //populate the data using the id passed
+        //            student = context.Student.Find(id);
+        //            studentViewModel.Id = student.studentId;
+        //            studentViewModel.fullName = student.fullName;
+        //            studentViewModel.sectionName = new List<string>();
 
-                    studentViewModel.sectionName = registrarMethod.populateSection();
+        //            studentViewModel.sectionName = registrarMethod.populateSection();
 
-                    var sectionExist = studentViewModel.sectionName.Find(f => f.Equals(student.sectionName));
+        //            var sectionExist = studentViewModel.sectionName.Find(f => f.Equals(student.sectionName));
 
-                    if (sectionExist == null)
-                    {
-                        studentViewModel.sectionName.Add(student.sectionName);
-                    }
+        //            if (sectionExist == null)
+        //            {
+        //                studentViewModel.sectionName.Add(student.sectionName);
+        //            }
 
-                    ViewBag.section = student.sectionName;
-                }
-                else if (update != null)
-                {
-                    //find student by using id
-                    var studentUp = context.Student.Find(studentViewModel.Id);
+        //            ViewBag.section = student.sectionName;
+        //        }
+        //        else if (update != null)
+        //        {
+        //            //find student by using id
+        //            var studentUp = context.Student.Find(studentViewModel.Id);
 
-                    //check if the new name is unique
-                    var name = context.Student.Where(s => s.fullName == studentUp.fullName && s.studentId != studentUp.studentId).FirstOrDefault();
-                    if (name == null)
-                    {
-                        studentUp.fullName = studentViewModel.fullName;
+        //            //check if the new name is unique
+        //            var name = context.Student.Where(s => s.fullName == studentUp.fullName && s.studentId != studentUp.studentId).FirstOrDefault();
+        //            if (name == null)
+        //            {
+        //                studentUp.fullName = studentViewModel.fullName;
 
-                        var academicYears = context.AcademicYear.ToList();
-                        foreach (var getActive in academicYears)
-                        {
-                            //get the active academic years
-                            if (!(DateTime.Compare(DateTime.Now, getActive.durationStart) < 0 || DateTime.Compare(DateTime.Now, getActive.durationEnd) > 0))
-                            {
-                                var getSection = context.Section.Where(s => s.academicYearId == getActive.academicYearName && s.sectionName == sectionName).FirstOrDefault();
+        //                var academicYears = context.AcademicYear.ToList();
+        //                foreach (var getActive in academicYears)
+        //                {
+        //                    //get the active academic years
+        //                    if (!(DateTime.Compare(DateTime.Now, getActive.durationStart) < 0 || DateTime.Compare(DateTime.Now, getActive.durationEnd) > 0))
+        //                    {
+        //                        var getSection = context.Section.Where(s => s.academicYearId == getActive.academicYearName && s.sectionName == sectionName).FirstOrDefault();
 
-                                if (getSection != null)
-                                {
-                                    studentUp.sectionName = sectionName;
-                                    studentUp.academicYearId = getActive.academicYearName;
+        //                        if (getSection != null)
+        //                        {
+        //                            studentUp.sectionName = sectionName;
+        //                            studentUp.academicYearId = getActive.academicYearName;
 
-                                    int success=context.SaveChanges();
+        //                            int success=context.SaveChanges();
 
-                                    if (success>0)
-                                    {
-                                        //success message
-                                        ViewBag.complete = "Student Updated Successfully";
-                                    }
-                                    else
-                                    {
-                                        //error message
-                                        ViewBag.error = "Update Failed!!";
-                                    }
+        //                            if (success>0)
+        //                            {
+        //                                //success message
+        //                                ViewBag.complete = "Student Updated Successfully";
+        //                            }
+        //                            else
+        //                            {
+        //                                //error message
+        //                                ViewBag.error = "Update Failed!!";
+        //                            }
                                     
-                                }
-                                else
-                                {
-                                    //error message
-                                    ViewBag.error = "Section is Not Active";
-                                }
+        //                        }
+        //                        else
+        //                        {
+        //                            //error message
+        //                            ViewBag.error = "Section is Not Active";
+        //                        }
 
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //error message
-                        ViewBag.error = "Student with the Given Name Already Exist";
-                    }
+        //                    }
+        //                }
+        //            }
+        //            else
+        //            {
+        //                //error message
+        //                ViewBag.error = "Student with the Given Name Already Exist";
+        //            }
 
-                    studentViewModel.sectionName = registrarMethod.populateSection();
-                    ViewBag.update = "hidden";
-                }
-                else if (delete != null)
-                {
-                    //context object
-                    ApplicationDbContext contextExtra = new ApplicationDbContext();
+        //            studentViewModel.sectionName = registrarMethod.populateSection();
+        //            ViewBag.update = "hidden";
+        //        }
+        //        else if (delete != null)
+        //        {
+        //            //context object
+        //            ApplicationDbContext contextExtra = new ApplicationDbContext();
 
-                    //search for student and associated parents
-                    var parentDelete = contextExtra.Parent.Where(p => p.studentId == id).ToList(); ;
-                    var studentDelete = context.Student.Find(id);
+        //            //search for student and associated parents
+        //            var parentDelete = contextExtra.Parent.Where(p => p.studentId == id).ToList(); ;
+        //            var studentDelete = context.Student.Find(id);
 
-                    //delete associated parents
-                    if (parentDelete.Count != 0)
-                    {
-                        foreach (var getParent in parentDelete)
-                        {
-                            contextExtra.Parent.Remove(getParent);
-                            contextExtra.SaveChanges();
-                        }
-                    }
+        //            //delete associated parents
+        //            if (parentDelete.Count != 0)
+        //            {
+        //                foreach (var getParent in parentDelete)
+        //                {
+        //                    contextExtra.Parent.Remove(getParent);
+        //                    contextExtra.SaveChanges();
+        //                }
+        //            }
 
-                    //delete student record
-                    context.Student.Remove(studentDelete);
-                    context.SaveChanges();
+        //            //delete student record
+        //            context.Student.Remove(studentDelete);
+        //            context.SaveChanges();
 
-                    //delete success message
-                    ViewBag.delete = "Delete Completed Successfully";
+        //            //delete success message
+        //            ViewBag.delete = "Delete Completed Successfully";
 
-                    studentViewModel.sectionName = registrarMethod.populateSection();
+        //            studentViewModel.sectionName = registrarMethod.populateSection();
 
-                }
-            }
+        //        }
+        //    }
             
-            return View(studentViewModel);
-        }
+        //    return View(studentViewModel);
+        //}
 
     }
 }

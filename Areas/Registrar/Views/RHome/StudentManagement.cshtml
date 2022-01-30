@@ -17,6 +17,7 @@
             var url = $(this).data('url');
             $.get(url).done(function (data) {
                 view.html(data);
+                view.modal({ backdrop: 'static', keyboard: false })
                 view.modal('show');
             });
         });
@@ -25,6 +26,7 @@
             var url = $(this).data('url')+'?id='+$(this).data('id');
             $.get(url).done(function (data) {
                 view.html(data);
+                view.modal({ backdrop: 'static', keyboard: false })
                 view.modal('show');
             });
         });
@@ -40,6 +42,7 @@
                 $.post(actionUrl, sendData).done(function (data) {
                     //view.modal('hide');
                     view.html(data);
+                    view.modal({ backdrop: 'static', keyboard: false })
                     view.modal('show');
                 });
             }

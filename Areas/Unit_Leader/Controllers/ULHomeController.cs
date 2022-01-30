@@ -22,167 +22,173 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
             return View();
         }
 
-        public ActionResult LateComerManagement()
+        public ActionResult AddLateComer(string id)
         {
-            //viewbag element used for UI
-            ViewBag.search = false;
-            return View();
+
+            LateComerViewModel lateComerViewModel = new LateComerViewModel();
+
+            if (!(DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday))
+            {
+                
+                lateComerViewModel.ID = Int32.Parse(id);
+                ViewBag.message = "Are You Sure Do You Want To Declare Student As LateComer?";
+            }
+            else
+            {
+                //error message weekend
+                ViewBag.error = "You are Not Allowed To Access on the Weekend";
+            }
+            return PartialView("AddLateComer",lateComerViewModel);
         }
-        [HttpPost]
-        public ActionResult LateComerManagement(LateComerViewModel lateComerViewModel, string id, string late, string search)
+
+        public ActionResult AddLateComer(LateComerViewModel lateComerViewModel)
         {
+
             //basic objects
             ApplicationDbContext context = new ApplicationDbContext();
             Suspension suspension = new Suspension();
+            Collection collection = new Collection();
+            LateComer lateComer = new LateComer();
+
+
+            int count = 0;
+            //get unitleader info
+            string tId = User.Identity.GetUserId().ToString();
+            var teacher = context.Teacher.Where(t => t.teacherId == tId).FirstOrDefault();
+
+            //get how mach time the student is late and increment it by 1
+            var lateRecord = context.LateComer.Where(l => l.studentId == lateComerViewModel.ID).ToList();
+            if (lateRecord.Count != 0)
+            {
+                //get the late days count
+                foreach (var getCount in lateRecord)
+                {
+                    if (count < getCount.dayCount)
+                    {
+                        count = getCount.dayCount;
+                    }
+                }
+            }
+
+            if (collection.currentQuarter(lateComerViewModel.ID) == " ")
+            {
+                //error message
+                ViewBag.posterror = "Time is not Bounded in a Quarter";
+            }
+            else
+            {
+                //populate latecomer object
+                lateComer.academicPeriod = collection.currentQuarter(lateComerViewModel.ID);
+                lateComer.dayCount = count + 1;
+                lateComer.lateDate = DateTime.Now;
+                lateComer.studentId = lateComerViewModel.ID;
+
+                //save latecomer record
+                context.LateComer.Add(lateComer);
+                context.SaveChanges();
+
+                //send warning message if the counter reaches 3
+                if (lateComer.dayCount == 3 || lateComer.dayCount == 7 || lateComer.dayCount == 11)
+                {
+                    //warning object
+                    Warning warning = new Warning();
+
+                    //populate warning object
+                    warning.studentId = lateComerViewModel.ID;
+                    warning.WarningReadStatus = "No";
+                    warning.grade = teacher.grade;
+                    warning.warningType = "LateComer";
+                    warning.academicYear = collection.currentQuarter(lateComerViewModel.ID);
+                    warning.warningDate = DateTime.Now.Date;
+
+                    //save warning
+                    context.Warning.Add(warning);
+                    context.SaveChanges();
+                }
+                else if (lateComer.dayCount == 4 || lateComer.dayCount == 8 || lateComer.dayCount == 12)
+                {
+                    //suspend student for two days
+                    suspension.studentId = lateComerViewModel.ID;
+                    suspension.startDate = DateTime.Now;
+                    do
+                    {
+                        suspension.startDate = suspension.startDate.AddDays(1);
+                    }
+                    while (suspension.startDate.DayOfWeek == DayOfWeek.Saturday || suspension.startDate.DayOfWeek == DayOfWeek.Sunday);
+
+                    suspension.endDate = suspension.startDate;
+                    do
+                    {
+                        suspension.endDate = suspension.endDate.AddDays(1);
+                    }
+                    while (suspension.endDate.DayOfWeek == DayOfWeek.Saturday || suspension.endDate.DayOfWeek == DayOfWeek.Sunday);
+
+                    //save suspension record
+                    context.Suspension.Add(suspension);
+                    context.SaveChanges();
+                }
+
+                //success message
+                ViewBag.complete = "LateComer Recorded Successfully";
+            }
+
+
+            return PartialView("AddLateComer");
+        }
+
+        public ActionResult LateComerManagement()
+        {
+
+            //basic objects
+            ApplicationDbContext context = new ApplicationDbContext();
+            Suspension suspension = new Suspension();
+            LateComerViewModel lateComerViewModel = new LateComerViewModel();
             lateComerViewModel.students = new List<Student>();
             LateComer lateComer = new LateComer();
             Collection collection = new Collection();
-            //Teacher teacher = new Teacher();
 
-            //viewbag element used for UI
-            ViewBag.search = false;
-
-
-            if(!(DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday))
+            if (!(DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday))
             {
-                if (ModelState.IsValid || late != null)
+
+                //get unitleader info
+                string tId = User.Identity.GetUserId().ToString();
+                var teacher = context.Teacher.Where(t => t.teacherId == tId).FirstOrDefault();
+
+                //get all academic years
+                var academicYears = context.AcademicYear.ToList();
+                foreach (var getActive in academicYears)
                 {
-                    //get unitleader info
-                    string tId = User.Identity.GetUserId().ToString();
-                    var teacher = context.Teacher.Where(t => t.teacherId == tId).FirstOrDefault();
-
-                    //check search button is clicked
-                    if (search != null)
+                    //get start and end dates to check if today is in the middle
+                    if (!(DateTime.Compare(DateTime.Now, getActive.durationStart) < 0 || DateTime.Compare(DateTime.Now, getActive.durationStart) > 0))
                     {
-
-                        //get all academic years
-                        var academicYears = context.AcademicYear.ToList();
-                        foreach (var getActive in academicYears)
-                        {
-                            //get start and end dates to check if today is in the middle
-                            if (!(DateTime.Compare(DateTime.Now, getActive.durationStart) < 0 || DateTime.Compare(DateTime.Now, getActive.durationStart) > 0))
-                            {
-                                //search student by student name in active academic years
-                                lateComerViewModel.students = context.Student.Where(s => s.fullName.StartsWith(lateComerViewModel.studentName) && s.academicYearId == getActive.academicYearName && s.sectionName.StartsWith(teacher.grade.ToString())).ToList();
-                            }
-                        }
-
-                        if (lateComerViewModel.students.Count != 0)
-                        {
-                            //check the student is suspended or not
-                            foreach (var checkStudent in lateComerViewModel.students)
-                            {
-                                var studentSuspended = context.Suspension.Where(s => s.studentId == checkStudent.studentId).FirstOrDefault();
-                                if (studentSuspended != null)
-                                {
-                                    //check if the suspention time elapsed
-                                    if (DateTime.Compare(studentSuspended.endDate, DateTime.Now) < 0)
-                                    {
-                                        //remove student from suspention table
-                                        context.Suspension.Remove(studentSuspended);
-                                    }
-                                    else
-                                    {
-                                        //remove student from search list
-                                        lateComerViewModel.students.Remove(checkStudent);
-                                    }
-                                }
-                            }
-
-                            //viewbag element
-                            ViewBag.search = true;
-                        }
-                        else
-                        {
-                            //error message
-                            ViewBag.found = "Record Not Found";
-                        }
+                        //search student by grade in active academic years
+                        lateComerViewModel.students = context.Student.Where(s => s.academicYearId == getActive.academicYearName && s.sectionName.StartsWith(teacher.grade.ToString())).ToList();
                     }
-                    //check late button is clicked
-                    else if (late != null)
+                }
+
+                if (lateComerViewModel.students.Count != 0)
+                {
+                    //check the student is suspended or not
+                    foreach (var checkStudent in lateComerViewModel.students)
                     {
-                        //remove errors
-                        ModelState.Remove("studentName");
-
-                        int count = 0;
-                        int ID = Int32.Parse(id);
-
-                        //get how mach time the student is late and increment it by 1
-                        var lateRecord = context.LateComer.Where(l => l.studentId == ID).ToList();
-                        if (lateRecord.Count != 0)
+                        var studentSuspended = context.Suspension.Where(s => s.studentId == checkStudent.studentId).FirstOrDefault();
+                        if (studentSuspended != null)
                         {
-                            //get the late days count
-                            foreach (var getCount in lateRecord)
+                            //check if the suspention time elapsed
+                            if (DateTime.Compare(studentSuspended.endDate, DateTime.Now) < 0)
                             {
-                                if (count < getCount.dayCount)
-                                {
-                                    count = getCount.dayCount;
-                                }
-                            }
-                        }
-
-                        if (collection.currentQuarter(ID) == " ")
-                        {
-                            //error message
-                            ViewBag.error = "Time is not Bounded in a Quarter";
-                        }
-                        else
-                        {
-                            //populate latecomer object
-                            lateComer.academicPeriod = collection.currentQuarter(ID);
-                            lateComer.dayCount = count + 1;
-                            lateComer.lateDate = DateTime.Now;
-                            lateComer.studentId = ID;
-
-                            //save latecomer record
-                            context.LateComer.Add(lateComer);
-                            context.SaveChanges();
-
-                            //send warning message if the counter reaches 3
-                            if (lateComer.dayCount == 3 || lateComer.dayCount == 7 || lateComer.dayCount == 11)
-                            {
-                                //warning object
-                                Warning warning = new Warning();
-
-                                //populate warning object
-                                warning.studentId = ID;
-                                warning.WarningReadStatus = "No";
-                                warning.grade = teacher.grade;
-                                warning.warningType = "LateComer";
-                                warning.academicYear = collection.currentQuarter(ID);
-                                warning.warningDate = DateTime.Now.Date;
-
-                                //save warning
-                                context.Warning.Add(warning);
+                                //remove student from suspention table
+                                context.Suspension.Remove(studentSuspended);
                                 context.SaveChanges();
                             }
-                            else if (lateComer.dayCount == 4 || lateComer.dayCount == 8 || lateComer.dayCount == 12)
+                            else
                             {
-                                //suspend student for two days
-                                suspension.studentId = ID;
-                                suspension.startDate = DateTime.Now;
-                                do
-                                {
-                                    suspension.startDate = suspension.startDate.AddDays(1);
-                                }
-                                while (suspension.startDate.DayOfWeek == DayOfWeek.Saturday || suspension.startDate.DayOfWeek == DayOfWeek.Sunday);
-
-                                suspension.endDate = suspension.startDate;
-                                do
-                                {
-                                    suspension.endDate = suspension.endDate.AddDays(1);
-                                }
-                                while (suspension.endDate.DayOfWeek == DayOfWeek.Saturday || suspension.endDate.DayOfWeek == DayOfWeek.Sunday);
-
-                                //save suspension record
-                                context.Suspension.Add(suspension);
-                                context.SaveChanges();
+                                //remove student from search list
+                                lateComerViewModel.students.Remove(checkStudent);
                             }
-
-                            //success message
-                            ViewBag.message = "LateComer Recorded Successfully";
                         }
                     }
+
                 }
             }
             else
@@ -191,9 +197,235 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
                 ViewBag.message = "You are Not Allowed To Access on the Weekend";
             }
 
+            return View();
+        }
+        //[HttpPost]
+        //public ActionResult LateComerManagement(LateComerViewModel lateComerViewModel, string id, string late, string search)
+        //{
+        //    //basic objects
+        //    ApplicationDbContext context = new ApplicationDbContext();
+        //    Suspension suspension = new Suspension();
+        //    lateComerViewModel.students = new List<Student>();
+        //    LateComer lateComer = new LateComer();
+        //    Collection collection = new Collection();
+        //    //Teacher teacher = new Teacher();
+
+        //    //viewbag element used for UI
+        //    ViewBag.search = false;
+
+
+        //    if(!(DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday))
+        //    {
+        //        if (ModelState.IsValid || late != null)
+        //        {
+        //            //get unitleader info
+        //            string tId = User.Identity.GetUserId().ToString();
+        //            var teacher = context.Teacher.Where(t => t.teacherId == tId).FirstOrDefault();
+
+        //            //check search button is clicked
+        //            if (search != null)
+        //            {
+
+        //                //get all academic years
+        //                var academicYears = context.AcademicYear.ToList();
+        //                foreach (var getActive in academicYears)
+        //                {
+        //                    //get start and end dates to check if today is in the middle
+        //                    if (!(DateTime.Compare(DateTime.Now, getActive.durationStart) < 0 || DateTime.Compare(DateTime.Now, getActive.durationStart) > 0))
+        //                    {
+        //                        //search student by student name in active academic years
+        //                        //lateComerViewModel.students = context.Student.Where(s => s.fullName.StartsWith(lateComerViewModel.studentName) && s.academicYearId == getActive.academicYearName && s.sectionName.StartsWith(teacher.grade.ToString())).ToList();
+        //                    }
+        //                }
+
+        //                if (lateComerViewModel.students.Count != 0)
+        //                {
+        //                    //check the student is suspended or not
+        //                    foreach (var checkStudent in lateComerViewModel.students)
+        //                    {
+        //                        var studentSuspended = context.Suspension.Where(s => s.studentId == checkStudent.studentId).FirstOrDefault();
+        //                        if (studentSuspended != null)
+        //                        {
+        //                            //check if the suspention time elapsed
+        //                            if (DateTime.Compare(studentSuspended.endDate, DateTime.Now) < 0)
+        //                            {
+        //                                //remove student from suspention table
+        //                                context.Suspension.Remove(studentSuspended);
+        //                            }
+        //                            else
+        //                            {
+        //                                //remove student from search list
+        //                                lateComerViewModel.students.Remove(checkStudent);
+        //                            }
+        //                        }
+        //                    }
+
+        //                    //viewbag element
+        //                    ViewBag.search = true;
+        //                }
+        //                else
+        //                {
+        //                    //error message
+        //                    ViewBag.found = "Record Not Found";
+        //                }
+        //            }
+        //            //check late button is clicked
+        //            else if (late != null)
+        //            {
+        //                //remove errors
+        //                ModelState.Remove("studentName");
+
+        //                int count = 0;
+        //                int ID = Int32.Parse(id);
+
+        //                //get how mach time the student is late and increment it by 1
+        //                var lateRecord = context.LateComer.Where(l => l.studentId == ID).ToList();
+        //                if (lateRecord.Count != 0)
+        //                {
+        //                    //get the late days count
+        //                    foreach (var getCount in lateRecord)
+        //                    {
+        //                        if (count < getCount.dayCount)
+        //                        {
+        //                            count = getCount.dayCount;
+        //                        }
+        //                    }
+        //                }
+
+        //                if (collection.currentQuarter(ID) == " ")
+        //                {
+        //                    //error message
+        //                    ViewBag.error = "Time is not Bounded in a Quarter";
+        //                }
+        //                else
+        //                {
+        //                    //populate latecomer object
+        //                    lateComer.academicPeriod = collection.currentQuarter(ID);
+        //                    lateComer.dayCount = count + 1;
+        //                    lateComer.lateDate = DateTime.Now;
+        //                    lateComer.studentId = ID;
+
+        //                    //save latecomer record
+        //                    context.LateComer.Add(lateComer);
+        //                    context.SaveChanges();
+
+        //                    //send warning message if the counter reaches 3
+        //                    if (lateComer.dayCount == 3 || lateComer.dayCount == 7 || lateComer.dayCount == 11)
+        //                    {
+        //                        //warning object
+        //                        Warning warning = new Warning();
+
+        //                        //populate warning object
+        //                        warning.studentId = ID;
+        //                        warning.WarningReadStatus = "No";
+        //                        warning.grade = teacher.grade;
+        //                        warning.warningType = "LateComer";
+        //                        warning.academicYear = collection.currentQuarter(ID);
+        //                        warning.warningDate = DateTime.Now.Date;
+
+        //                        //save warning
+        //                        context.Warning.Add(warning);
+        //                        context.SaveChanges();
+        //                    }
+        //                    else if (lateComer.dayCount == 4 || lateComer.dayCount == 8 || lateComer.dayCount == 12)
+        //                    {
+        //                        //suspend student for two days
+        //                        suspension.studentId = ID;
+        //                        suspension.startDate = DateTime.Now;
+        //                        do
+        //                        {
+        //                            suspension.startDate = suspension.startDate.AddDays(1);
+        //                        }
+        //                        while (suspension.startDate.DayOfWeek == DayOfWeek.Saturday || suspension.startDate.DayOfWeek == DayOfWeek.Sunday);
+
+        //                        suspension.endDate = suspension.startDate;
+        //                        do
+        //                        {
+        //                            suspension.endDate = suspension.endDate.AddDays(1);
+        //                        }
+        //                        while (suspension.endDate.DayOfWeek == DayOfWeek.Saturday || suspension.endDate.DayOfWeek == DayOfWeek.Sunday);
+
+        //                        //save suspension record
+        //                        context.Suspension.Add(suspension);
+        //                        context.SaveChanges();
+        //                    }
+
+        //                    //success message
+        //                    ViewBag.message = "LateComer Recorded Successfully";
+        //                }
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        //error message weekend
+        //        ViewBag.message = "You are Not Allowed To Access on the Weekend";
+        //    }
+
             
 
-            return View(lateComerViewModel);
+        //    return View(lateComerViewModel);
+        //}
+
+
+        public ActionResult SendWarning(string id)
+        {
+            WarningViewModel warningViewModel = new WarningViewModel();
+
+            if (!(DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday))
+            {
+
+                warningViewModel.ID = Int32.Parse(id);
+                ViewBag.message = "Are You Sure Do You Want To Send Warning Message For Selected Student?";
+            }
+            else
+            {
+                //error message weekend
+                ViewBag.error = "You are Not Allowed To Access on the Weekend";
+            }
+
+            return PartialView("SendWarning",warningViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult SendWarning(WarningViewModel warningViewModel)
+        {
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            Warning warningobj = new Warning();
+            Collection collection = new Collection();
+
+            //parse the passed id to int
+            //int ID = Int32.Parse(warningViewModel.ID);
+            string quarter = collection.currentQuarter(warningViewModel.ID);
+
+            //get teacher grade from login info
+            string tId = User.Identity.GetUserId().ToString();
+            var teacher = context.Teacher.Where(t => t.teacherId == tId).FirstOrDefault();
+
+            //populate warning object
+            warningobj.academicYear = quarter;
+            warningobj.warningDate = DateTime.Now.Date;
+            warningobj.WarningReadStatus = "No";
+            warningobj.warningType = "Atendance";
+            warningobj.studentId = warningViewModel.ID;
+            warningobj.grade = teacher.grade;
+
+            context.Warning.Add(warningobj);
+            int result=context.SaveChanges();
+            if (result > 0)
+            {
+                //warning send message
+                ViewBag.complete = "Warning Send Successfully";
+            }
+            else
+            {
+                //fail message
+                ViewBag.posterror = "Send Warning Failed!!";
+            }
+            
+
+            return PartialView("SendWarning");
         }
 
         public ActionResult WarningManagement()

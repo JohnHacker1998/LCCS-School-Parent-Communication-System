@@ -1,27 +1,39 @@
-﻿@model LCCS_School_Parent_Communication_System.viewModels.StudentViewModel
+﻿@model LCCS_School_Parent_Communication_System.viewModels.LateComerViewModel
 
 <html>
 <body>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-red">
-                <h4 class="modal-title text-white" id="title">Register Student</h4>
-                <button type="button" id="exit" class="close btn" data-dismiss="modal">
+                <h4 class="modal-title text-white" id="title">LateComer</h4>
+                <button type="button" id="exit" class="close btn bg-red" data-dismiss="modal">
                     <span aria-hidden="true" class="text-white">&times;</span>
                 </button>
             </div>
 
             <div class="modal-body">
+                @if (ViewBag.message != null)
+                {
+                    @ViewBag.message
+                }
+                @if (ViewBag.error != null)
+                {
+                    <div class="alert alert-danger" id="hide">
+                        @ViewBag.error
+                    </div>
+                }
+
                 @if (ViewBag.complete != null)
                 {
                     <div class="alert alert-success" id="hide">
                         @ViewBag.complete
                     </div>
                 }
-                @if (ViewBag.error != null)
+
+                @if (ViewBag.posterror != null)
                 {
                     <div class="alert alert-danger" id="hide">
-                        @ViewBag.error
+                        @ViewBag.posterror
                     </div>
                 }
 
@@ -31,39 +43,23 @@
                     </div>
                 </div>
 
-                <form action="RegisterStudent" id="error" autocomplete="off">
+                <form action="AddLateComer" id="error">
 
-                    <div class="form-group">
-                        @Html.LabelFor(l => l.fullName, new { @class = "form-label mt-2" })
-                        <div class="container row">@Html.EditorFor(e => e.fullName, new { @class = "form-control" })</div>
-                        <div class="container row">@Html.ValidationMessageFor(v => v.fullName, null, new { @class = "text-danger" })</div>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(lbl => lbl.sectionName, new { @class = "form-label mt-2" })
-                        <div class="container row">@Html.DropDownListFor(tb => tb.sectionName, new SelectList(Model.sectionName), new { htmlAttributes = new { @class = "form-control " } })</div>
-                        <div class="container row">@Html.ValidationMessageFor(v => v.sectionName, "", new { @class = "text-danger" })</div>
-
-
-                    </div>
-
+                    @Html.HiddenFor(h => h.ID)
                 </form>
             </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="save" data-save="modal">Register</button>
-            </div>
+            @if (ViewBag.message != null)
+            {
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="save" data-save="modal">Confirm</button>
+                </div>
+            }
         </div>
     </div>
 
 </body>
 </html>
-<style>
-    .row, .row > * {
-        padding: 0 !important;
-        margin-right: 0 !important;
-        margin-left: 0 !important;
-    }
-</style>
+
 
 <script type="text/javascript">
 

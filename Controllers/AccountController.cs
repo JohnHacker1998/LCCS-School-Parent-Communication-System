@@ -292,7 +292,7 @@ namespace LCCS_School_Parent_Communication_System.Controllers
 
         public ActionResult ForgotPassword()
         {
-            return View();
+            return PartialView("ForgotPassword");
         }
 
         [HttpPost]
@@ -304,6 +304,49 @@ namespace LCCS_School_Parent_Communication_System.Controllers
 
 
             var user = appDbContext.Users.Where(u => u.Email == forgotPasswordViewModel.email).FirstOrDefault();
+            if (user != null)
+            {
+                var provider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("LCCS_School_Parent_Communication_System");
+
+                UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                userManager.UserTokenProvider = new Microsoft.AspNet.Identity.Owin.DataProtectorTokenProvider<ApplicationUser>(provider.Create("PasswordReset"));
+
+
+                string code = await userManager.GeneratePasswordResetTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                //await userManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                try
+                {
+                    //create the mail message
+                    MailMessage message = new MailMessage("lideta.catholic.cathedral@gmail.com", user.Email);
+                    message.Subject = "Reset Password";
+                    message.Body = "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>";
+                    message.IsBodyHtml = true;
+
+                    //define the host and port number
+                    SmtpClient smtp = new SmtpClient();
+                    smtp.EnableSsl = true;
+                    smtp.Host = "smtp.gmail.com";
+                    smtp.Port = 587;
+
+                    //send mail using sender credential
+                    NetworkCredential networkCredential = new NetworkCredential("lideta.catholic.cathedral@gmail.com", "Lccs@pi$s@65");
+                    smtp.UseDefaultCredentials = true;
+                    smtp.Credentials = networkCredential;
+                    smtp.Send(message);
+
+                    ViewBag.complete = "Reset Password Link Send to Your Email";
+                }
+                catch (Exception e)
+                {
+                    ViewBag.error = "Failed to Send Password Reset Link";
+                }
+            }
+            else
+            {
+                ViewBag.error = "Failed to Send Password Reset Link";
+            }
 
 
             //var provider = new DpapiDataProtectionProvider("YourAppName");
@@ -318,39 +361,14 @@ namespace LCCS_School_Parent_Communication_System.Controllers
             //UserManager.UserTokenProvider = (IUserTokenProvider<IdentityUser, string>)(new DataProtectorTokenProvider<IdentityUser, string>(provider.Create("UserToken")) as IUserTokenProvider<IdentityUser, string>);
             //UserManager.PasswordResetTokens = new DataProtectorTokenProvider(Startup1.DataProtectionProvider.Create("PasswordReset"));
             
-            var provider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("LCCS_School_Parent_Communication_System");
             
-            UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-            userManager.UserTokenProvider = new Microsoft.AspNet.Identity.Owin.DataProtectorTokenProvider<ApplicationUser>(provider.Create("PasswordReset"));
-
-
-            string code = await userManager.GeneratePasswordResetTokenAsync(user.Id);
-            var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-            await userManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
-            //create the mail message
-            MailMessage message = new MailMessage("lideta.catholic.cathedral@gmail.com", user.Email);
-            message.Subject = "Reset Password";
-            message.Body = "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>";
-            message.IsBodyHtml = true;
-
-            //define the host and port number
-            SmtpClient smtp = new SmtpClient();
-            smtp.EnableSsl = true;
-            smtp.Host = "smtp.gmail.com";
-            smtp.Port = 587;
-
-            //send mail using sender credential
-            NetworkCredential networkCredential = new NetworkCredential("lideta.catholic.cathedral@gmail.com", "Lccs@pi$s@65");
-            smtp.UseDefaultCredentials = true;
-            smtp.Credentials = networkCredential;
-            smtp.Send(message);
+            
 
 
             //string code = userManager.GeneratePasswordResetToken(user.Id);
             //var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
             //await userManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-            return RedirectToAction("Login", "Account");
+            return PartialView("ForgotPassword");
         }
 
        
@@ -370,14 +388,26 @@ namespace LCCS_School_Parent_Communication_System.Controllers
 
             var user = context.Users.Where(u => u.Email == resetPasswordViewModel.email).FirstOrDefault();
 
-            var provider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("LCCS_School_Parent_Communication_System");
-            userManager.UserTokenProvider = new Microsoft.AspNet.Identity.Owin.DataProtectorTokenProvider<ApplicationUser>(provider.Create("PasswordReset"));
-
-            var result = await userManager.ResetPasswordAsync(user.Id, resetPasswordViewModel.code, resetPasswordViewModel.password);
-            if (result.Succeeded)
+            if (user != null)
             {
-                return RedirectToAction("Login", "Account");
+                var provider = new Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider("LCCS_School_Parent_Communication_System");
+                userManager.UserTokenProvider = new Microsoft.AspNet.Identity.Owin.DataProtectorTokenProvider<ApplicationUser>(provider.Create("PasswordReset"));
+
+                var result = await userManager.ResetPasswordAsync(user.Id, resetPasswordViewModel.code, resetPasswordViewModel.password);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                else
+                {
+                    ViewBag.error = "Unable to Reset Password!!";
+                }
             }
+            else
+            {
+                ViewBag.error = "Unable to Reset Password!!";
+            }
+            
            
             return View();
         }

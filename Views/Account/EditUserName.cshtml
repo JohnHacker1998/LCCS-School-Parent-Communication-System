@@ -10,7 +10,7 @@
         <div class="modal-content">
             <div class="modal-header bg-red">
                 <h4 class="modal-title" id="title">Change UserName</h4>
-                <button type="button" class="close btn bg-red" data-dismiss="modal">
+                <button type="button" id="exit" class="close btn bg-red" data-dismiss="modal">
                     <span aria-hidden="true" class="text-white">&times;</span>
                 </button>
             </div>
@@ -18,16 +18,22 @@
             <div class="modal-body">
                 @if (ViewBag.complete != null)
                 {
-                    <div class="alert alert-success">
+                    <div class="alert alert-success" id="hide">
                         @ViewBag.complete
                     </div>
                 }
                 @if (ViewBag.error != null)
                 {
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger" id="hide">
                         @ViewBag.error
                     </div>
                 }
+
+                <div class="d-flex justify-content-center ">
+                    <div id="holder" class="d-none text-danger" role="status">
+
+                    </div>
+                </div>
 
                 <form action="EditUserName" id="error" autocomplete="off">
                     <div class="form-group">
@@ -36,14 +42,14 @@
                         <div class="container row">@Html.ValidationMessageFor(v => v.userName, null, new { @class = "text-danger" })</div>
 
                         @*@Html.LabelFor(l => l.userName)
-                        @Html.EditorFor(e => e.userName, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(v => v.userName)*@
+                @Html.EditorFor(e => e.userName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(v => v.userName)*@
                     </div>
                 </form>
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-save="modal">Change</button>
+                <button type="button" class="btn btn-primary" id="save" data-save="modal">Change</button>
             </div>
         </div>
     </div>
@@ -59,3 +65,40 @@
         margin-left: 0 !important;
     }
 </style>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var view = $('#myModal');
+        const element = document.getElementById("holder");
+        const hidden = document.getElementById('hide');
+        const save = document.getElementById('save');
+        const exit = document.getElementById('exit');
+        view.on('click', '[data-save="modal"]', function (event) {
+
+            $.validator.unobtrusive.parse("#error");
+            ValidationForm();
+            if (ValidationForm()) {
+                if (element != null) {
+                    element.classList.remove("d-none");
+                    element.classList.add("spinner-border");
+                    save.classList.add("disabled");
+                    exit.classList.add("disabled");
+                }
+                if (hidden != null) {
+                    hidden.classList.add("d-none");
+                }
+            }
+        });
+
+        function ValidationForm() {
+            if (!$("#error").valid()) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+    });
+
+</script>
