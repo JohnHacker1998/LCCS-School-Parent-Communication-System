@@ -646,5 +646,55 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             gsv.studentList = db.Student.Where(a => a.sectionName == gs.section.sectionName && a.academicYearId == extractingAcademicYear[0]).ToList();
             return View();
         }
+
+        public ActionResult GradeManagement()
+        {
+            //basic objects
+            ApplicationDbContext context = new ApplicationDbContext();
+            StudentViewModel studentViewModel = new StudentViewModel();
+            studentViewModel.student = new List<Student>();
+
+            var allAcadamicYears = context.AcademicYear.ToList();
+            string tId = User.Identity.GetUserId().ToString();
+            var teacher = context.Teacher.Find(tId);
+
+            if (allAcadamicYears.Count != 0)
+            {
+                foreach (var getAcadamicYear in allAcadamicYears)
+                {
+                    //check today is in between start and end date of the specific academic year
+                    if (!(DateTime.Compare(DateTime.Now, getAcadamicYear.durationStart) < 0 || DateTime.Compare(DateTime.Now, getAcadamicYear.durationEnd) > 0))
+                    {
+                        var listOfSections = context.Section.Where(s => s.academicYearId == getAcadamicYear.academicYearName && s.sectionName.StartsWith(teacher.grade.ToString())).ToList();
+                        if (listOfSections.Count > 0)
+                        {
+                            foreach (var getSection in listOfSections)
+                            {
+                                var studentinSection = context.Student.Where(s=>s.sectionName==getSection.sectionName && s.academicYearId==getAcadamicYear.academicYearName).ToList();
+
+                                if (studentinSection.Count != 0)
+                                {
+                                    foreach (var getStudents in studentinSection)
+                                    {
+                                        studentViewModel.student.Add(getStudents);
+                                    }
+                                }                                
+          
+                            }
+                        }
+                    }
+                }
+            }
+
+            
+
+            return View();
+        }
+
+        public ActionResult AddGrade()
+        {
+
+            return PartialView("AddGrade");
+        }
     }
 }

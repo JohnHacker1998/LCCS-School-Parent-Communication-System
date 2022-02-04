@@ -1,0 +1,188 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.AddScheduleModal
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            minDate: new Date(),
+
+
+        });
+    });
+</script>
+
+<html>
+<body>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-red">
+                <h4 class="modal-title text-white" id="title">Edit Schedule</h4>
+                <button type="button" id="exit" class="close btn bg-red" data-dismiss="modal">
+                    <span aria-hidden="true" class="text-white">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                @if (ViewBag.complete != null)
+                {
+                    <div class="alert alert-success" id="hide">
+                        @ViewBag.complete
+                    </div>
+                }
+
+                @if (ViewBag.error != null)
+                {
+                    <div class="alert alert-danger" id="hide">
+                        @ViewBag.error
+                    </div>
+                }
+
+                <div class="d-flex justify-content-center ">
+                    <div id="holder" class="d-none text-danger" role="status">
+
+                    </div>
+                </div>
+
+
+                <form action="EditSchedule" id="error" autocomplete="off">
+
+                    @Html.HiddenFor(h => h.scheduleId)
+                    @Html.HiddenFor(h => h.grade)
+
+                    <div class="form-group">
+                        <div class="container row">
+                            <div class="form-group">
+                                @Html.LabelFor(a => a.scheduleDate, new { @class = "form-label mt-2" })
+                                <div class="container row"> @Html.EditorFor(a => a.scheduleDate, new { htmlAttributes = new { @readonly = true, @class = "datepicker form-control" } })</div>
+                                <div class="container row">@Html.ValidationMessageFor(a => a.scheduleDate, null, new { @class = "text-danger" })</div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-12">
+                            @Html.LabelFor(l => l.scheduleFor, new { @class = "form-label mt-2" })
+                            <div class="container row">@Html.DropDownListFor(tb => tb.scheduleFor, new SelectList(Model.scheduleFor), "Select Schedule Reason", new { @class = "form-control", onchange = "bothDisabled()" })</div>
+                            <div class="container row">@Html.ValidationMessageFor(v => v.scheduleFor, "", new { @class = "text-danger" })</div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(l => l.subject, new { @class = "form-label mt-2" })
+                        <div class="container row">@Html.EditorFor(e => e.subject, new { @class = "form-control" })</div>
+                        <div class="container row">@Html.ValidationMessageFor(v => v.subject, null, new { @class = "text-danger" })</div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="container row">
+                            <div class="col-5">
+                                @Html.LabelFor(l => l.percentage, new { @class = "form-label mt-2" })
+                                <div class="container row">@Html.EditorFor(e => e.percentage, new { htmlAttributes = new { @min = 5, @max = 100, @step = 5 } })</div>
+                                <div class="container row">@Html.ValidationMessageFor(v => v.percentage, null, new { @class = "text-danger" })</div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-info" id="save" data-save="modal">Update</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<style>
+    .row, .row > * {
+        padding: 0 !important;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+</style>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var view = $('#myModal');
+        const element = document.getElementById("holder");
+        const hidden = document.getElementById('hide');
+        const save = document.getElementById('save');
+        const exit = document.getElementById('exit');
+        view.on('click', '[data-save="modal"]', function (event) {
+
+            $.validator.unobtrusive.parse("#error");
+            ValidationForm();
+            if (ValidationForm()) {
+                if (element != null) {
+                    element.classList.remove("d-none");
+                    element.classList.add("spinner-border");
+                    save.classList.add("disabled");
+                    exit.classList.add("disabled");
+                }
+                if (hidden != null) {
+                    hidden.classList.add("d-none");
+                }
+            }
+        });
+
+
+        function ValidationForm() {
+            if (!$("#error").valid()) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+    });
+
+    function bothDisabled() {
+        var dDown = document.getElementById("scheduleFor");
+        var subj = document.getElementById("subject");
+        var percent = document.getElementById("percentage");
+
+        var strUser = dDown.options[dDown.selectedIndex].value;
+        if (strUser == "Reassessment") {
+            percent.setAttribute("disabled", "disabled");
+            subj.setAttribute("disabled", "disabled");
+        }
+        else {
+            percent.removeAttribute("disabled");
+            subj.removeAttribute("disabled");
+        }
+    }
+</script>
+
+
+@if (ViewBag.schedule == "Continious Assessment Test")
+{
+    <script>
+        var dDown = document.getElementById("scheduleFor");
+        dDown.value = "Continious Assessment Test";
+    </script>
+
+}
+else if (ViewBag.schedule == "Reassessment")
+{
+    <script>
+        var dDown = document.getElementById("scheduleFor");
+        dDown.value = "Reassessment";
+        var subj = document.getElementById("subject");
+        var percent = document.getElementById("percentage");
+
+        percent.setAttribute("disabled", "disabled");
+        subj.setAttribute("disabled", "disabled");
+    </script>
+}
+else if (ViewBag.schedule == "Final Exam")
+{
+    <script>
+        var dDown = document.getElementById("scheduleFor");
+        dDown.value = "Final Exam";
+    </script>
+}

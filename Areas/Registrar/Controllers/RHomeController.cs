@@ -249,6 +249,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
             Student student = new Student();
             RegistrarMethod registrarMethod = new RegistrarMethod();
 
+            studentViewModel.fullName = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(studentViewModel.fullName.ToLower());
+
             var studentExist = context.Student.Where(s => s.fullName == studentViewModel.fullName).FirstOrDefault();
 
             if (studentExist == null)

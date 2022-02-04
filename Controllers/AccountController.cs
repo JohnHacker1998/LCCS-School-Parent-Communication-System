@@ -162,6 +162,9 @@ namespace LCCS_School_Parent_Communication_System.Controllers
             //get current user id
             string uId = User.Identity.GetUserId().ToString();
 
+
+            profileEditFullName.fullName= System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(profileEditFullName.fullName.ToLower());
+
             //check if the new fullName is already taken 
             var duplicate = context.Users.Where(u => u.fullName == profileEditFullName.fullName && u.Id != uId).FirstOrDefault();
             if (duplicate == null)

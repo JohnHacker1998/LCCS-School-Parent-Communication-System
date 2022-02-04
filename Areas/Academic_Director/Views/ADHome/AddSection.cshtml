@@ -39,7 +39,7 @@
                         <div class="container row">
                             <div class="col-4">
                                 @Html.LabelFor(l => l.grade, new { @class = "form-label mt-2" })
-                                <div class="container row">@Html.EditorFor(e => e.grade,new { htmlAttributes = new { @min = 9 } })</div>
+                                <div class="container row">@Html.EditorFor(e => e.grade,new { htmlAttributes = new { @min = 9,@max=12 } })</div>
                                 <div class="container row">@Html.ValidationMessageFor(v => v.grade, null, new { @class = "text-danger" })</div>
                             </div>
                             <div class="col-1"></div>

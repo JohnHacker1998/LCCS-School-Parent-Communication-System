@@ -99,17 +99,27 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
 
-                        <a class="nav-link" href="@Url.Action("viewAttendance","PHome")">
+                        <a class="nav-link" href="@Url.Action("viewAttendance", "PHome")">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             View Attendance
                         </a>
-                        <a class="nav-link" href="@Url.Action("EvidenceManagement","PHome")">
+                        <a class="nav-link" href="@Url.Action("EvidenceManagement", "PHome")">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Evidence Management
                         </a>
-                        <a class="nav-link" href="@Url.Action("WarningList","PHome")">
+                        <a class="nav-link" href="@Url.Action("WarningList", "PHome")">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Warning List
+                            @{
+                                LCCS_School_Parent_Communication_System.Identity.ApplicationDbContext context = new LCCS_School_Parent_Communication_System.Identity.ApplicationDbContext();
+                                var user = context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+
+                                var parent = context.Parent.Where(p => p.parentId == user.Id).FirstOrDefault();
+
+                                var warnings = context.Warning.Where(w => w.studentId == parent.studentId && w.WarningReadStatus == "No").ToList();
+
+                                <span class="position-absolute end-0 translate-middle badge rounded-pill bg-danger">@warnings.Count</span>
+                            }
                         </a>
                         <a class="nav-link" href="@Url.Action("viewAssignment","PHome")">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
