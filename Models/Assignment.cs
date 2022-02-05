@@ -25,7 +25,8 @@ namespace LCCS_School_Parent_Communication_System.Models
         public byte[] assignmentDocument { get; set; }
         [ForeignKey("teacher")]
         public string teacherId { get; set; }
-        public int numberOfMembers { get; set; }
+    
+        public string fileName { get; set; }
         public virtual Section section { get; set; }
         public virtual Teacher teacher { get; set; }
 

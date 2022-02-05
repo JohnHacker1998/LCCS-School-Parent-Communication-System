@@ -29,12 +29,19 @@ namespace LCCS_School_Parent_Communication_System.viewModels
         public List<String> assignmentType { get; set; }
         public List<String> sectionList { get; set; }
         public List<Student> studentList { get; set; }
-        public int numberOfGroupMembers { get; set; }
+  
         public string sectionName { get; set; }
         public string[] studentArray { get; set; }
 
         public string assignmentName { get; set; }
         public int markPercentage { get; set; }
+
+        public List<GroupStructure> groupStructureList { get; set; }
+
+        public List<Group> groupList { get; set; }
+
+        public List<GroupStructure> gsList { get; set; }
+        public int groupStructureId { get; set; }
 
 
 
