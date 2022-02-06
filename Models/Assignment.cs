@@ -18,7 +18,7 @@ namespace LCCS_School_Parent_Communication_System.Models
         [ForeignKey("section")]
         public int sectionID { get; set; }
        
-       public DateTime submissionDate { get; set; }
+        public DateTime submissionDate { get; set; }
         public string assignmentName { get; set; }
         public int markPercentage { get; set; }
         
