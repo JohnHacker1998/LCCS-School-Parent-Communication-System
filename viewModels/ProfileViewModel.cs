@@ -11,13 +11,13 @@ namespace LCCS_School_Parent_Communication_System.viewModels
     public class ProfileViewModel
     {
         
-        [Display(Name = "Full Name")]
+        [Display(Name = "NAME")]
         public string fullName { get; set; }
 
-        [Display(Name = "Email Address")]
+        [Display(Name = "EMAIL")]
         public string email { get; set; }
 
-        [Display(Name = "UserName")]
+        [Display(Name = "USERNAME")]
         public string userName { get; set; }
 
         public ApplicationUser user { get; set; }

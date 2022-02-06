@@ -1,12 +1,13 @@
-﻿@model LCCS_School_Parent_Communication_System.viewModels.RegisterTeacherViewModel
+﻿@model LCCS_School_Parent_Communication_System.viewModels.ScheduleViewModel
+@{
 
-
+}
 
 <script>
         $(document).ready(function () {
             $('#myTable').DataTable();
         });
-    </script>
+</script>
 
 <script type="text/javascript">
 
@@ -32,18 +33,21 @@
 
         view.on('click', '[data-save="modal"]', function (event) {
 
-            var form = $(this).parents('.modal').find('form');
-            var actionUrl = form.attr('action');
+
+           var form = $(this).parents('.modal').find('form');
+           var actionUrl = form.attr('action');
             var sendData = form.serialize();
-            $.validator.unobtrusive.parse("#error");
-            ValidationForm();
-            if (ValidationForm()) {
+
+           $.validator.unobtrusive.parse("#error");
+           ValidationForm();
+           if (ValidationForm()) {
                 $.post(actionUrl, sendData).done(function (data) {
                     //view.modal('hide');
                     view.html(data);
                     view.modal({ backdrop: 'static', keyboard: false })
                     view.modal('show');
                 });
+
             }
 
         });
@@ -60,41 +64,43 @@
                 return false;
             }
             else {
+
                 return true;
+
             }
         }
     });
 
 </script>
 
-    
 <div class="container mt-5 bg-light border-top border-bottom border-4 rounded-3">
-    <h1 class="border-bottom border-5 p-3 mb-4">Teachers</h1>
+    <h1 class="border-bottom border-5 p-3 mb-4">Schedules</h1>
     <table class="table table-striped table-bordered" id="myTable">
         <thead>
             <tr>
-                <th scope="col">Full Name</th>
-                <th scope="col">Email</th>
+                <th scope="col">Schedule Date</th>
                 <th scope="col">Grade</th>
                 <th scope="col">Subject</th>
-                <th scope="col" class="text-center"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#registerTeacherModal" data-url="@Url.Action("Register")"><i class="fas fa-plus fa-lg"></i></button></th>
+                <th scope="col">Schedule For</th>
+                <th scope="col">Percent</th>
+                <th scope="col" class="text-center"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSectionModal" data-url="@Url.Action("AddSchedule")"><i class="fas fa-plus fa-lg"></i></button></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var list in Model.teacherList)
+            @foreach (var list in Model.schedule)
             {
-                <tr>
-                    <td>@list.user.fullName</td>
-                    <td>@list.user.Email</td>
-                    <td>@list.grade</td>
-                    <td>@list.subject</td>
-                    <td class="text-center">
+            <tr>
+                <td>@list.scheduleDate.ToShortDateString()</td>
+                <td>@list.grade</td>
+                <td>@list.subject</td>
+                <td>@list.scheduleFor</td>
+                <td>@list.percentage</td>
+                <td class="text-center">
 
-                        <button type="button" class="btn btn-info" data-toggle="modalsession" data-target="#updateTeacherModal" data-url="@Url.Action("EditTeacher")" data-id="@list.teacherId"><i class="fas fa-edit fa-lg text-white"></i></button>
-                        <button type="button" class="btn btn-danger" data-toggle="modalsession" data-target="#deleteTeacherModal" data-url="@Url.Action("DeleteTeacher")" data-id="@list.teacherId"><i class="fas fa-trash-alt fa-lg"></i></button>
-                        
-                    </td>
-                </tr>
+                    <button type="button" class="btn btn-info" data-toggle="modalsession" data-target="#updateSectionModal" data-url="@Url.Action("EditSchedule")" data-id="@list.scheduleId"><i class="fas fa-edit fa-lg text-white"></i></button>
+
+                </td>
+            </tr>
             }
         </tbody>
         <tfoot>
@@ -104,10 +110,10 @@
     </table>
 </div>
 
-<div class="modal" id="myModal" role="dialog" data-backdrop="static" tabindex="-1" data-url="@Url.Action("Register")" ></div>
+<div class="modal" id="myModal" role="dialog" data-backdrop="static" tabindex="-1" data-url="@Url.Action("Register")"></div>
 
 <style>
-  /*.row{
-      padding:0 !important;
-  }*/
+    .row {
+        padding: 0 !important;
+    }
 </style>

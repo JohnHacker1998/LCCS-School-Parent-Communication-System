@@ -33,6 +33,8 @@ namespace LCCS_School_Parent_Communication_System.Identity
         public DbSet<StudentGroupList> StudentGroupList { get; set; }
         public DbSet<GroupStructureAssignment> GroupStructureAssignment { get; set; }
 
+        public DbSet<Schedule> Schedule { get; set; }
+
 
 
     }

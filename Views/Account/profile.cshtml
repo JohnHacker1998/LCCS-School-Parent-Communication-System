@@ -1,8 +1,6 @@
 ﻿
 @model LCCS_School_Parent_Communication_System.viewModels.ProfileViewModel
-@{
-    Layout = null;
-}
+
 
 <!DOCTYPE html>
 
@@ -15,6 +13,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">*@
+
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
 
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
     <script src="~/Scripts/jquery.validate.js"></script>
@@ -42,33 +42,47 @@
         }
     </script>
 
-    <div class="col-md-12 " style="background-color:black; padding:3em;text-align:right;">
-        <button class="btn text-white" onclick="back()">Back to Home</button>
+    <div class="bg-secondary text-end">
+        <button class="btn text-white p-4" onclick="back()"><i class="fas fa-home fa-2x"></i></button>
     </div>
 
-    <div class="container text-center align-middle p-5">
-        <div class="row">
-            @Html.LabelFor(lbl => lbl.user.fullName)
-            <label class="form-label mt-2" data-toggle="modal" data-target="#editFullName" data-url="@Url.Action("EditFullName")" data-id="1">@Model.fullName</label>
-            <br />
-        </div>
-        <hr class="line" />
+    <div class="container">
+        <div class="container text-center">
+            <div><i class="fas fa-user-circle mt-5 fa-10x text-secondary"></i></div>
 
-        <div class="row">
-            @Html.LabelFor(lbl => lbl.user.Email)
-            <label class="form-label mt-2" data-toggle="modal" data-target="#edit" data-url="@Url.Action("edit")">@Model.email</label>
-            <br />
-            <hr class="line" />
+            <div class="row mt-4">
+                @*@Html.LabelFor(lbl => lbl.fullName)*@
+                <h4>Your Profile</h4>
+            </div>
+
+
+
+            <hr class="col-6 mx-auto" />
+
         </div>
-        <div class="row">
-            @Html.LabelFor(lbl => lbl.user.UserName)
-            <label class="form-label mt-2" data-toggle="modal" data-target="#editUserName" data-url="@Url.Action("EditUserName")">@Model.userName</label>
-            <br />
-            <hr class="line" />
+        
+        
+        <div class="row mt-5">
+            <div class="col-3"></div>
+            <h6 class="col-2">@Html.LabelFor(lbl => lbl.fullName, new { @class = "form-label text-secondary" })</h6>
+            
+            <label class="form-label col-4" data-toggle="modal" data-target="#editFullName" data-url="@Url.Action("EditFullName")" data-id="1">@Model.fullName</label>
         </div>
-        <div class="row">
-            <lable>Password</lable>
-            <label class="form-label mt-2" data-toggle="modal" data-target="#editPassword" data-url="@Url.Action("EditPassword")">********</label>
+        
+        <div class="row mt-3">
+            <div class="col-3"></div>
+            <h6 class="col-2">@Html.LabelFor(lbl => lbl.email, new { @class = "form-label text-secondary" })</h6>
+            <label class="form-label col-4" data-toggle="modal" data-target="#edit" data-url="@Url.Action("edit")">@Model.email</label>
+        </div>
+        <div class="row mt-3">
+            <div class="col-3"></div>
+            <h6 class="col-2">@Html.LabelFor(lbl => lbl.userName, new { @class = "form-label text-secondary" })</h6>
+            <label class="form-label col-4" data-toggle="modal" data-target="#editUserName" data-url="@Url.Action("EditUserName")">@Model.userName</label>
+        </div>
+        <div class="row mt-3">
+            <div class="col-3"></div>
+            <h6 class="col-2"><lable class="form-label text-secondary">PASSWORD</lable></h6>
+            <label class="form-label col-4" data-toggle="modal" data-target="#editPassword" data-url="@Url.Action("EditPassword")">••••••••</label>
         </div>
         <div class="modal" id="myModal" role="dialog" data-url="@Url.Action("edit")"></div>
 
@@ -86,6 +100,7 @@
             var url = $(this).data('url');
             $.get(url).done(function (data) {
                 view.html(data);
+                view.modal({ backdrop: 'static', keyboard: false })
                 view.modal('show');
             });
         });
@@ -101,6 +116,7 @@
                 $.post(actionUrl, sendData).done(function (data) {
                     //view.modal('hide');
                     view.html(data);
+                    view.modal({ backdrop: 'static', keyboard: false })
                     view.modal('show');
                 });
             }
@@ -133,5 +149,9 @@
     textarea.input-validation-error,
     select.input-validation-error {
         border: 1px solid #CD0A0A;
+    }
+
+    body{
+        padding-top:0 !important;
     }
 </style>

@@ -20,8 +20,10 @@
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
     <IISExpressSSLPort>44376</IISExpressSSLPort>
-    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
-    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressAnonymousAuthentication>
+    </IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>
+    </IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
@@ -867,6 +869,13 @@
     <Content Include="Areas\Teacher\Views\THome\viewGroup.cshtml" />
     <Content Include="Areas\Teacher\Views\THome\addGroupAssignment.cshtml" />
     <Content Include="Areas\Teacher\Views\THome\updateAssignment.cshtml" />
+    <Content Include="Areas\Unit_Leader\Views\ULHome\AddLateComer.cshtml" />
+    <Content Include="Areas\Unit_Leader\Views\ULHome\SendWarning.cshtml" />
+    <Content Include="Areas\Unit_Leader\Views\ULHome\success.cshtml" />
+    <Content Include="Areas\Academic_Director\Views\ADHome\ScheduleManagement.cshtml" />
+    <Content Include="Areas\Academic_Director\Views\ADHome\AddSchedule.cshtml" />
+    <Content Include="Areas\Academic_Director\Views\ADHome\EditSchedule.cshtml" />
+    <Content Include="Areas\Teacher\Views\THome\GradeManagement.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -987,19 +996,7 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
-    <Compile Include="Migrations\202201281828494_allINONe2.cs" />
-    <Compile Include="Migrations\202201281828494_allINONe2.designer.cs">
-      <DependentUpon>202201281828494_allINONe2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202202031207007_updatedGroupStructure.cs" />
-    <Compile Include="Migrations\202202031207007_updatedGroupStructure.designer.cs">
-      <DependentUpon>202202031207007_updatedGroupStructure.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202202041952449_furtherUpdates.cs" />
-    <Compile Include="Migrations\202202041952449_furtherUpdates.designer.cs">
-      <DependentUpon>202202041952449_furtherUpdates.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
+   
     <Compile Include="Models\AbsenceRecord.cs" />
     <Compile Include="Models\AcademicYear.cs" />
     <Compile Include="Models\Assignment.cs" />
@@ -1010,6 +1007,7 @@
     <Compile Include="Models\GroupStructureAssignment.cs" />
     <Compile Include="Models\LateComer.cs" />
     <Compile Include="Models\Parent.cs" />
+    <Compile Include="Models\Schedule.cs" />
     <Compile Include="Models\Section.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\StudentGroupList.cs" />
@@ -1019,6 +1017,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="viewModels\AbsenceRecordViewMoel.cs" />
     <Compile Include="viewModels\AcademicYearViewModel.cs" />
+    <Compile Include="viewModels\AddScheduleModal.cs" />
     <Compile Include="viewModels\DeleteTeacherModal.cs" />
     <Compile Include="viewModels\assignmentViewModel.cs" />
     <Compile Include="viewModels\EvidenceApprovalViewModel.cs" />
@@ -1039,6 +1038,7 @@
     <Compile Include="viewModels\RegisterViewModel.cs" />
     <Compile Include="viewModels\RegistrarManagementViewModel.cs" />
     <Compile Include="viewModels\ResetPasswordViewModel.cs" />
+    <Compile Include="viewModels\ScheduleViewModel.cs" />
     <Compile Include="viewModels\SectionViewModel.cs" />
     <Compile Include="viewModels\StudentViewModel.cs" />
     <Compile Include="viewModels\UpdateTeacherModal.cs" />
@@ -1074,6 +1074,7 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Views\Account\profile.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\_test.cshtml" />
@@ -1082,6 +1083,7 @@
     <Content Include="Views\Account\EditPassword.cshtml" />
     <Content Include="Views\Account\EditFullName.cshtml" />
     <Content Include="Scripts\jquery.validate.unobtrusive.bootstrap.min.js.map" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\profile.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -1107,16 +1109,7 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202201281828494_allINONe2.resx">
-      <DependentUpon>202201281828494_allINONe2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202202031207007_updatedGroupStructure.resx">
-      <DependentUpon>202202031207007_updatedGroupStructure.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202202041952449_furtherUpdates.resx">
-      <DependentUpon>202202041952449_furtherUpdates.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
+
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

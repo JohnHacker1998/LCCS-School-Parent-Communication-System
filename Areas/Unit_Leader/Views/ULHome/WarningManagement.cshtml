@@ -5,58 +5,144 @@
 
 
 
-
-<table class="table table-striped">
-    <tr>
-        <th scope="col">Student Name</th>
-        <th scope="col">Section</th>
-        <th scope="col"></th>
-    </tr>
-
-    @foreach (var item in Model.eligible)
-    {
-        <tr>
-            <td>@item.fullName</td>
-            <td>@item.sectionName</td>
-            <td>
-                @using (Html.BeginForm("WarningManagement", "ULHome", new { id = item.studentId.ToString() }, FormMethod.Post))
-                {
-                    <input type="submit" value="Send Warning" name="warning" class="btn btn-warning" />
-                }
-            </td>
-        </tr>
-    }
-
-</table>
-<div class="alert alert-danger" role="alert">
-    @ViewBag.message
-   </div>
-
-
-
-    <table class="table table-striped">
-        <tr>
-            <th scope="col">Send Date</th>
-            <th scope="col">Student Name</th>
-            <th scope="col">Section</th>
-            <th scope="col">Type</th>
-            <th scope="col">Parent Name</th>
-            <th scope="col">Phone Number</th>
-        </tr>
-        @{
-            int i = 0;
-            foreach (var item in Model.nonViewed)
-            {
+    <div class="container bg-light border-top border-bottom border-4 rounded-3">
+        <h1 class="border-bottom border-5 p-3 mb-4">Eligiable Students</h1>
+        <table class="table table-striped table-bordered" id="myTable">
+            <thead>
                 <tr>
-                    <td>@item.warningDate</td>
-                    <td>@item.student.fullName</td>
-                    <td>@item.student.sectionName</td>
-                    <td>@item.warningType</td>
-                    <td>@Model.parentName[i]</td>
-                    <td>@Model.parentPhone[i]</td>
+                    <th scope="col">Student Name</th>
+                    <th scope="col">Section</th>
+                    <th scope="col"></th>
                 </tr>
-                i++;
+            </thead>
+            <tbody>
+                @foreach (var item in Model.eligible)
+                {
+                    <tr>
+                        <td>@item.fullName</td>
+                        <td>@item.sectionName</td>
+                        <td>
+
+                            <button type="button" class="btn btn-danger" data-toggle="modalsession" data-target="#updateTeacherModal" data-url="@Url.Action("SendWarning")" data-id="@item.studentId">Send Warning</button>
+
+                            @*@using (Html.BeginForm("WarningManagement", "ULHome", new { id = item.studentId.ToString() }, FormMethod.Post))
+                            {
+                                <input type="submit" value="Send Warning" name="warning" class="btn btn-warning" />
+                            }*@
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+
+            </tfoot>
+
+        </table>
+    </div>
+@*<div class="alert alert-danger" role="alert">
+    @ViewBag.message
+</div>*@
+
+
+<div class="container mt-5 bg-light border-top border-bottom border-4 rounded-3">
+<h1 class="border-bottom border-5 p-3 mb-4">Non-Viewed Warnings</h1>
+    <table class="table table-striped table-bordered" id="myTable2">
+        <thead>
+            <tr>
+                <th scope="col">Send Date</th>
+                <th scope="col">Student Name</th>
+                <th scope="col">Section</th>
+                <th scope="col">Type</th>
+                <th scope="col">Parent Name</th>
+                <th scope="col">Phone Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 0;
+                foreach (var item in Model.nonViewed)
+                {
+                    <tr>
+                        <td>@item.warningDate</td>
+                        <td>@item.student.fullName</td>
+                        <td>@item.student.sectionName</td>
+                        <td>@item.warningType</td>
+                        <td>@Model.parentName[i]</td>
+                        <td>@Model.parentPhone[i]</td>
+                    </tr>
+                    i++;
+                }
+            }
+        </tbody>
+        <tfoot>
+
+        </tfoot>
+    </table>
+</div>
+<script>
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+             $('#myTable2').DataTable();
+        });
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var view = $('#myModal');
+        $('[data-toggle="modal"]').click(function () {
+            var url = $(this).data('url');
+            $.get(url).done(function (data) {
+                view.html(data);
+                view.modal({ backdrop: 'static', keyboard: false })
+                view.modal('show');
+            });
+        });
+
+        $('[data-toggle="modalsession"]').click(function () {
+            var url = $(this).data('url')+'?id='+$(this).data('id');
+            $.get(url).done(function (data) {
+                view.html(data);
+                view.modal({ backdrop: 'static', keyboard: false })
+                view.modal('show');
+            });
+        });
+
+        view.on('click', '[data-save="modal"]', function (event) {
+
+            var form = $(this).parents('.modal').find('form');
+            var actionUrl = form.attr('action');
+            var sendData = form.serialize();
+            $.validator.unobtrusive.parse("#error");
+            ValidationForm();
+            if (ValidationForm()) {
+                $.post(actionUrl, sendData).done(function (data) {
+                    //view.modal('hide');
+                    view.html(data);
+                    view.modal({ backdrop: 'static', keyboard: false })
+                    view.modal('show');
+                });
+            }
+
+        });
+
+        view.on('click', '[data-dismiss="modal"]', function (event) {
+            view.modal('hide');
+        });
+
+        view.on('hide.bs.modal', function () {
+            location.reload();
+        });
+        function ValidationForm() {
+            if (!$("#error").valid()) {
+                return false;
+            }
+            else {
+                return true;
             }
         }
-    </table>
+    });
 
+</script>
+
+<div class="modal" id="myModal" role="dialog" data-backdrop="static" tabindex="-1" data-url="@Url.Action("Register")"></div>
