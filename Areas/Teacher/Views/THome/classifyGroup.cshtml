@@ -1,0 +1,243 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.groupViewModel
+@{
+    ViewBag.Title = "classifyGroup";
+
+}
+
+<!-- JS & CSS library of MultiSelect plugin -->
+<script src="https://phpcoder.tech/multiselect/js/jquery.multiselect.js"></script>
+<link rel="stylesheet" href="https://phpcoder.tech/multiselect/css/jquery.multiselect.css">
+
+<h2>classifyGroup</h2>
+<style>
+    .container {
+        width: 50%;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('#tblGroupStructureList').DataTable();
+          });
+</script>
+
+<div class="container">
+    @using (Html.BeginForm("classifyGroup", "THome", FormMethod.Post))
+    {
+        @Html.HiddenFor(a => a.groupStructureID);
+
+        <div class="row mt-3">
+            <div class="col-lg-4">
+                @Html.LabelFor(a => a.minMembers, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-lg-8">
+                <div class="row">@Html.EditorFor(a => a.minMembers, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-lg-4">
+                @Html.LabelFor(a => a.maxMembers, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-lg-8">
+                <div class="row">@Html.EditorFor(a => a.maxMembers, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-lg-4">
+                @Html.LabelFor(a => a.studentList, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-lg-8">
+                <div class="row">
+                    <select multiple id="cg" class="selectpicker form-control" data-live-search="true">
+                        @foreach (var k in Model.studentList)
+                        {
+                            <option value=@k.studentId>@k.fullName</option>
+
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-lg-4">
+                @Html.LabelFor(a => a.groupName, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-lg-8">
+                <div class="row">@Html.EditorFor(a => a.groupName, new { htmlAttributes = new { @class = "form-control" } })</div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12"> <div class="row py-2"><input type="submit" name="add" value="Submit" id="sulu" class="btn btn-primary"></div></div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+        <input type="text" id="txtValue" name="txtValue" style="display:none" />
+        if (ViewBag.enableMultiGroup == true)
+        {
+            <div class="row mt-2">
+                <div class="col-12">
+                    <div class="row py-2">
+                        <input type="submit" name="btnSubmitGrouping" value="Submit Grouping" class="btn btn-primary" id="btnSubmitGrouping1" />
+                        </div>
+                    </div>
+            </div>
+        }
+        else
+        {
+            <input type="submit" name="btnSubmitGrouping" value="Submit Grouping" class="btn btn-primary" id="btnSubmitGrouping1" style="display:none" />
+        }
+    }
+</div>
+<div class="bg-danger invDan" style="display:none">
+    Please select within the range of values.
+</div>
+
+
+<div class="container-fluid mb-3 mt-3 ">
+    <table class="table table-striped table-bordered" id="tblGroupStructureList">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Group Structure Name</th>
+                <th scope="col">Group Name</th>
+                @for (int x = 1; x <= Model.maxMembers; x++)
+                {
+                    <th scope="col">Member @x</th>
+                }
+                <th scope="col">Min Number of Members</th>
+                <th scope="col">Max Number of Members</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+
+        @foreach (var k in Model.groupList)
+        {
+            <tbody>
+                <tr>
+                    <td>@k.groupId</td>
+                    <td>@k.groupStructure.groupStructureName</td>
+                    <td>@k.groupName</td>
+                    @for (int x = 0; x < Model.maxMembers; x++)
+                    {
+                        foreach (var j in Model.groupMembers)
+                        {
+                            if (j.groupId == k.groupId)
+                            {
+                                <td>@j.student.fullName</td>
+                                x++;
+
+                            }
+
+                        }
+                        while (x < Model.maxMembers)
+                        {
+                            <td>-</td>
+                            x++;
+                        }
+                    }
+                    <td>@k.groupStructure.minNumberOfMembers</td>
+                    <td>@k.groupStructure.maxNumberOfMembers</td>
+                    <td>
+                        @using (Html.BeginForm("classifyGroup", "THome", new { grID = k.groupId.ToString(), skr = k.groupName }, FormMethod.Post))
+                        {
+                            @Html.HiddenFor(a => a.groupStructureID);
+                            <input type="submit" name="delete" value="Delete" class="btn btn-danger" />
+
+
+                        }
+
+                    </td>
+                </tr>
+            </tbody>
+
+        }
+
+    </table>
+    @if (ViewBag.successMessage != " " && ViewBag.successMessage != null)
+    {
+        <div class="alert alert-success">
+            @ViewBag.successMessage
+        </div>
+    }
+    @if (ViewBag.ErrorExists != " " && ViewBag.ErrorExists != null)
+    {
+        <div class="alert alert-danger">
+
+            @ViewBag.ErrorExists
+        </div>
+    }
+    @if (ViewBag.ErrorMembers != " " && ViewBag.ErrorMembers != null)
+    {
+        <div class="alert alert-danger">
+
+            @ViewBag.ErrorMembers
+        </div>
+    }
+
+
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $('#sulu').click(function () {
+            var count = $("#cg option:selected").length;
+            console.log(count)
+
+                var values = "*";
+                var selected = $("#cg option:selected");
+                selected.each(function () {
+                    values += $(this).html() + "-";
+
+                });
+                $('#txtValue').val(values)
+            console.log(values)
+            if ($('#cg').children().length == 0) {
+                $("#btnSubmitGrouping1").show();
+            }
+            else {
+                $("#btnSubmitGrouping1").hide();
+            }
+
+
+
+        });
+            });
+
+
+
+    @*$(document).ready(function () {
+        $("#lsStudent").selectr({
+
+
+        });
+        $('#sulu').click(function () {
+            var count = $("#lsStudent:selected").length;
+
+            if (count > 4) {
+
+
+                var values = "*";
+                var selected = $("#selectgor option:selected");
+                selected.each(function () {
+                    values += $(this).html() + "-";
+
+                });
+                console.log(values)
+            }
+        });
+    });*@
+
+</script>
+

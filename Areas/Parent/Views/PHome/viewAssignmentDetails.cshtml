@@ -2,28 +2,51 @@
 @{
     ViewBag.Title = "viewAssignmentDetails";
 }
+<style>
+    .rowx{
+        padding-bottom:12%
+    }
+</style>
 
-<h2>Assignment Details</h2>
 
-<table class="table table-striped table-bordered" >
-    <thead>
-        <tr>
-            <th scope="col">Assignment Type</th>
-            <th scope="col">Date Posted</th>
-            <th scope="col">Section</th>
-            <th scope="col"> Number of Group Members </ th >
-            <th scope="col">Submission Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>@Model.assignmentType</td>
-            <td>@Model.datePosted.ToShortDateString()</td>
-            <td>@Model.section.sectionName</td>
-            <td>@Model.numberOfMembers</td>
-            <td>@Model.submissionDate.ToShortDateString()</td>
-        </tr>
-    </tbody>
-  
 
-</table>
+<div class="container">
+    <div class="row"><div class="col-12 bg-light border-bottom border-top border-4 mb-2"><h2>Assignment Details</h2></div></div>
+    <div class="row gx-4">
+        <div class="col-md-4">
+            <div class="row">
+                <table class="table">
+                    <tr class="rowx row">
+                        <td><h3>Subject</h3></td>
+                        <td>@Model.teacher.subject</td>
+                    </tr>
+                    <tr class="rowx row">
+                        <td><h3>Assignment Type</h3></td>
+                        <td>@Model.assignmentType</td>
+                    </tr>
+                    <tr class="rowx row">
+                        <td><h3>Date Posted</h3></td>
+                        <td>@Model.datePosted.ToShortDateString()</td>
+                    </tr>
+                    <tr class="rowx row">
+                        <td><h3>Section</h3></td>
+                        <td>@Model.section.sectionName</td>
+                    </tr>
+                    <tr class="rowx row">
+                        <td><h3>Submission Date</h3></td>
+                        <td>@Model.submissionDate.ToShortDateString()</td>
+                    </tr>
+
+
+                </table>
+            </div>
+        </div>
+        <div class="col-md-8 ml-md-3">
+            @{
+                var base1 = Convert.ToBase64String(Model.assignmentDocument);
+                var src = string.Format("data:application/pdf;base64,{0}", base1);
+                <iframe src="@src" class="w-100 h-100"></iframe>
+            }
+        </div>
+    </div>
+</div>

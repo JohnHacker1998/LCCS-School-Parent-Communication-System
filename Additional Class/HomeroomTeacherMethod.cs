@@ -10,12 +10,13 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
 {
     public class HomeroomTeacherMethod
     {
-        public List<SelectListItem> getList(string currentUserId)
+        public List<Student> getList(string currentUserId)
         {
 
             ApplicationDbContext db = new ApplicationDbContext();
-            List<SelectListItem> items = new List<SelectListItem>();
+           /* List<SelectListItem> items = new List<SelectListItem>();*/
             List<Student> studentLS = new List<Student>();
+            List<Student> tempStud = new List<Student>();
 
             studentLS = checkSuspension(currentUserId);
 
@@ -30,13 +31,14 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
 
                         
                         }*/
-                        items.Add(new SelectListItem { Text = k.fullName, Value = k.studentId.ToString() });
+                        //items.Add(new SelectListItem { Text = k.fullName, Value = k.studentId.ToString() });
+                        tempStud.Add(k);
                     }
-                    return items;
+                    return tempStud;
                 }
             }
 
-            return items;
+            return tempStud;
         }
         public List<Student> checkSuspension(string currentUserId)
         {

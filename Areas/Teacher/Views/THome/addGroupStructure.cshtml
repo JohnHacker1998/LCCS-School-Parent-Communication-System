@@ -3,28 +3,76 @@
     ViewBag.Title = "addGroupStructure";
 }
 
+<style>
+    .container {
+        width: 60%;
+    }
+</style>
+<div class="container">
+    @using (Html.BeginForm("addGroupStructure", "THome", FormMethod.Post))
+    {
+        <div class="row mt-3">
+            <div class="col-lg-4">
+                @Html.LabelFor(a => a.academicQuarter, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-lg-8">
+                <div class="row"> @Html.EditorFor(a => a.academicQuarter, new { htmlAttributes = new {@readonly=true, @class = "form-control" } })</div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-lg-4">
+                @Html.LabelFor(a => a.sectionList, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-lg-8">
+                <div class="row">
+                    <select class="form-control" name="selectSections">
+                        @foreach (var k in Model.sectionList)
+                        {
+                            <option id=@k>@k</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-lg-4">
+                @Html.LabelFor(a => a.groupStructureName, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-lg-8">
+                <div class="row"> @Html.EditorFor(a => a.groupStructureName, new { htmlAttributes = new { @class = "form-control" } })</div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-lg-4">
+                @Html.LabelFor(a => a.minNumberOfMembers, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-lg-8">
+                <div class="row">
+                    @Html.EditorFor(a => a.minNumberOfMembers, new { htmlAttributes = new { @min = 2, @class = "form-control" } })
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-lg-4">
+                @Html.LabelFor(a => a.maxNumberOfMembers, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-lg-8">
+                <div class="row">
+                    @Html.EditorFor(a => a.maxNumberOfMembers, new { htmlAttributes = new { @min = 2, @class = "form-control" } })
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12"> <div class="row py-2"> <input type="submit" name="add" value="ADD" class="btn btn-primary" /></div></div>
+        </div>
+    }
+</div>
 
 
-@using (Html.BeginForm("addGroupStructure", "THome", FormMethod.Post))
-{
-    @Html.LabelFor(a => a.academicQuarter);
-    @Html.EditorFor(a => a.academicQuarter);
 
-    @Html.LabelFor(a => a.sectionList);
-    <select class="form-control" name="selectSections">
-        @foreach (var k in Model.sectionList)
-        {
-            <option id=@k>@k</option>
-        }
-    </select>
-    @Html.LabelFor(a => a.groupStructureName);
-    @Html.EditorFor(a => a.groupStructureName);
 
-    @Html.LabelFor(a => a.minNumberOfMembers);
-    @Html.EditorFor(a => a.minNumberOfMembers);
 
-    @Html.LabelFor(a => a.maxNumberOfMembers);
-    @Html.EditorFor(a => a.maxNumberOfMembers);
 
-   <input type="submit" name="add" value="Add" />
-}
