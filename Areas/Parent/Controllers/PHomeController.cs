@@ -361,5 +361,68 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
             return View(ass);
         }
 
+        public ActionResult ViewResult()
+        {
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            UpdateResultViewModel updateResultViewModel = new UpdateResultViewModel();
+            updateResultViewModel.results = new List<Result>();
+
+            Section identifyYear = new Section();
+
+            string pId = User.Identity.GetUserId().ToString();
+            var parent = context.Parent.Find(pId);
+
+            var results = context.Result.Where(r=>r.studentId==parent.studentId).ToList();
+
+            if (results.Count!=0)
+            {
+                foreach(var getResults in results)
+                {
+                    string[] yearQuarter = getResults.academicYear.Split('-');
+
+                    if (yearQuarter[1]=="Q1")
+                    {
+                        yearQuarter[0] = "Quarter1";
+                    }
+                    else if (yearQuarter[1] == "Q2")
+                    {
+                        yearQuarter[0] = "Quarter2";
+                    }
+                    else if (yearQuarter[1] == "Q3")
+                    {
+                        yearQuarter[0] = "Quarter3";
+                    }
+                    else if (yearQuarter[1] == "Q4")
+                    {
+                        yearQuarter[0] = "Quarter4";
+                    }
+                    getResults.academicYear = "Grade " + getResults.grade.ToString() + '-' + yearQuarter[0];
+                    updateResultViewModel.results.Add(getResults);
+
+                }
+            }
+
+            //var allAcadamicYears = context.AcademicYear.ToList();
+
+            //foreach (var getAcadamicYear in allAcadamicYears)
+            //{
+            //    //check today is in between start and end date of the specific academic year
+            //    if (!(DateTime.Compare(DateTime.Now, getAcadamicYear.durationStart) < 0 || DateTime.Compare(DateTime.Now, getAcadamicYear.durationEnd) > 0))
+            //    {
+            //        identifyYear = context.Section.Where(s => s.sectionName.StartsWith(teacher.grade.ToString()) && s.academicYearId == getAcadamicYear.academicYearName).FirstOrDefault();
+            //        if (identifyYear != null)
+            //        {
+            //            break;
+            //        }
+            //    }
+            //}
+
+            //var getYear = context.AcademicYear.Find(identifyYear.academicYearId);
+            //var quarter = homeroomTeacherMethod.whichQuarter(identifyYear.academicYearId);
+
+            return View(updateResultViewModel);
+        }
+
     }
 }

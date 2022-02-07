@@ -1026,15 +1026,412 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                 }
             }
 
-            
+            //give zero to assesements on the gradeManagement------------------------------------
 
-            return View();
+            return View(studentViewModel);
         }
 
-        public ActionResult AddGrade()
+        public ActionResult AddGrade(string id)
         {
 
-            return PartialView("AddGrade");
+            //need to get assignment submittion dates past same quarter
+            //need past exam schedules same quarter
+            //check exam schedule attendance student present or absent
+            //date-which one format
+
+            //retrive the dates
+
+
+            //dates,result,feedback
+
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            HomeroomTeacherMethod homeroomTeacherMethod = new HomeroomTeacherMethod();
+            AddGradeModal addGradeModal = new AddGradeModal();
+            addGradeModal.dates = new List<string>();
+
+            string tId = User.Identity.GetUserId().ToString();
+            var teacher = context.Teacher.Find(tId);
+            addGradeModal.studentId = int.Parse(id);
+
+            Section identifyYear = new Section();
+
+            var allAcadamicYears = context.AcademicYear.ToList();
+
+            foreach (var getAcadamicYear in allAcadamicYears)
+            {
+                //check today is in between start and end date of the specific academic year
+                if (!(DateTime.Compare(DateTime.Now, getAcadamicYear.durationStart) < 0 || DateTime.Compare(DateTime.Now, getAcadamicYear.durationEnd) > 0))
+                {
+                    identifyYear = context.Section.Where(s => s.sectionName.StartsWith(teacher.grade.ToString()) && s.academicYearId == getAcadamicYear.academicYearName).FirstOrDefault();
+                    if (identifyYear != null)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            var getYear = context.AcademicYear.Find(identifyYear.academicYearId);
+            var quarter = homeroomTeacherMethod.whichQuarter(identifyYear.academicYearId);
+            
+            var schedules = context.Schedule.Where(s=>s.academicYear==getYear.academicYearName+"-"+quarter && (s.subject==teacher.subject || s.subject=="All") && s.grade==teacher.grade).ToList();
+
+            if (schedules.Count != 0)
+            {
+                foreach (var getSchedule in schedules)
+                {
+                    if (DateTime.Compare(DateTime.Now.Date, getSchedule.scheduleDate.Date) > 0)
+                    {
+                        addGradeModal.dates.Add(getSchedule.scheduleDate.ToShortDateString()+"-"+getSchedule.scheduleFor);
+
+                        //if(getSchedule.scheduleFor!= "Reassessment")
+                        //{
+                        //    var absentStudent = context.AbsenceRecord.Where(a=>a.recordDate==getSchedule.scheduleDate.Date && a.student.sectionName.StartsWith(teacher.grade.ToString()) && a.academicPeriod==getYear.academicYearName+"-"+quarter && a.evidenceFlag==null).ToList();
+
+                        //    if (absentStudent.Count!=0)
+                        //    {
+                        //        foreach(var getStudent in absentStudent)
+                        //        {
+                        //            DateTime nextDay = getSchedule.scheduleDate.Add(TimeSpan.FromDays(1)).Date;
+
+                        //            var absent = context.AbsenceRecord.Where(a => a.studentId == getStudent.studentId && a.recordDate == nextDay && a.evidenceFlag == null).FirstOrDefault();
+                        //        }
+                        //    }
+                        //}
+                    }
+                    
+                }
+            }
+
+            var assignments = context.Assignment.Where(a => a.yearlyQuarter == getYear.academicYearName + "-" + quarter && a.teacher.subject == teacher.subject && a.teacher.grade == teacher.grade).ToList();
+
+            if (assignments.Count != 0)
+            {
+                foreach (var getAssignments in assignments)
+                {
+                    if (DateTime.Compare(DateTime.Now.Date, getAssignments.submissionDate.Date) > 0)
+                    {
+                        addGradeModal.dates.Add(getAssignments.submissionDate.ToShortDateString()+"-"+getAssignments.assignmentType);
+                    }
+
+                }
+            }
+
+
+            return PartialView("AddGrade",addGradeModal);
+        }
+
+        [HttpPost]
+        public ActionResult AddGrade(AddGradeModal addGradeModal,string dates)
+        {
+
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            Section identifyYear = new Section();
+            HomeroomTeacherMethod homeroomTeacherMethod = new HomeroomTeacherMethod();
+            Result result = new Result();
+
+            //continious assesement and final exam check attendance percentage
+            //reassesement check attendance percentage if two add them up
+            //assignment check attendance percentage
+            //check duplicate
+            //give zero to assesements on the gradeManagement
+
+            string tId = User.Identity.GetUserId().ToString();
+            var teacher = context.Teacher.Find(tId);
+            string[] dateTaken = dates.Split('-');
+            DateTime date = DateTime.Parse(dateTaken[0]).Date;
+
+            //Reassessment
+
+            if (dateTaken[1]== "Continious Assessment Test" || dateTaken[1]== "Final Exam")
+            {
+                var schedule = context.Schedule.Where(s=>s.scheduleDate==date && s.grade==teacher.grade && s.subject==teacher.subject).FirstOrDefault();
+                var attendance = context.AbsenceRecord.Where(a => a.studentId == addGradeModal.studentId && a.recordDate == date).FirstOrDefault();
+
+                if (attendance == null)
+                {
+                    if (addGradeModal.result <= schedule.percentage)
+                    {
+                        var duplicate = context.Result.Where(r => r.scheduleId == schedule.scheduleId && r.studentId == addGradeModal.studentId).FirstOrDefault();
+
+                        if (duplicate == null)
+                        {
+                            result.teacherId = tId;
+                            result.studentId = addGradeModal.studentId;
+                            result.result = addGradeModal.result;
+                            result.feedback = addGradeModal.feedback;
+                            result.scheduleId = schedule.scheduleId;
+                            result.assignmentId = null;
+                            result.resultFor = dateTaken[1];
+                            result.percent = schedule.percentage;
+                            result.academicYear = schedule.academicYear;
+                            result.grade = teacher.grade;
+
+                            context.Result.Add(result);
+                            int success= context.SaveChanges();
+
+                            if (success > 0)
+                            {
+                                ViewBag.complete = "Result Recorded Successfully";
+                            }
+                            else
+                            {
+                                //error failed to record result
+                                ViewBag.error = "Failed to Record Result!!";
+                            }
+                        }
+                        else
+                        {
+                            //error result already exist
+                            ViewBag.error = "Result Record Already Exist!!";
+                        }
+                    }
+                    else
+                    {
+                        //error result excced percentage
+                        ViewBag.error = "Result Exceed the Score limit";
+                    }
+                }
+                else
+                {
+                    //error absent on that day
+                    ViewBag.error = "Student Didn't Take the Assessment";
+                }
+            }
+            else if (dateTaken[1]=="Group" || dateTaken[1]=="Individual")
+            {
+                var assignment = context.Assignment.Where(a=>a.submissionDate==date && a.teacher.grade==teacher.grade && a.teacher.subject==teacher.subject).FirstOrDefault();
+                var attendance = context.AbsenceRecord.Where(a => a.studentId == addGradeModal.studentId && a.recordDate == date && a.evidenceFlag==null).FirstOrDefault();
+
+                if (attendance == null)
+                {
+                    if (addGradeModal.result <= assignment.markPercentage)
+                    {
+                        var duplicate = context.Result.Where(r => r.assignmentId == assignment.assignmentId && r.studentId == addGradeModal.studentId).FirstOrDefault();
+
+                        if (duplicate == null)
+                        {
+                            result.teacherId = tId;
+                            result.studentId = addGradeModal.studentId;
+                            result.result = addGradeModal.result;
+                            result.feedback = addGradeModal.feedback;
+                            result.scheduleId = null;
+                            result.assignmentId = assignment.assignmentId;
+                            result.resultFor = dateTaken[1];
+                            result.percent = assignment.markPercentage;
+                            result.academicYear = assignment.yearlyQuarter;
+                            result.grade = teacher.grade;
+
+                            context.Result.Add(result);
+                            int success = context.SaveChanges();
+
+                            if (success > 0)
+                            {
+                                ViewBag.complete = "Result Recorded Successfully";
+                            }
+                            else
+                            {
+                                //error failed to record result
+                                ViewBag.error = "Failed to Record Result!!";
+                            }
+                        }
+                        else
+                        {
+                            //error result already exist
+                            ViewBag.error = "Result Record Already Exist!!";
+                        }
+                    }
+                    else
+                    {
+                        //error result excced percentage
+                        ViewBag.error = "Result Exceed the Score limit";
+                    }
+                }
+                else
+                {
+                    //error absent on that day
+                    ViewBag.error = "Student Didn't Take the Assessment";
+                }
+            }
+            else if (dateTaken[1]== "Reassessment")
+            {
+                //get all miss by subject
+                var allAcadamicYears = context.AcademicYear.ToList();
+
+                foreach (var getAcadamicYear in allAcadamicYears)
+                {
+                    //check today is in between start and end date of the specific academic year
+                    if (!(DateTime.Compare(DateTime.Now, getAcadamicYear.durationStart) < 0 || DateTime.Compare(DateTime.Now, getAcadamicYear.durationEnd) > 0))
+                    {
+                        identifyYear = context.Section.Where(s => s.sectionName.StartsWith(teacher.grade.ToString()) && s.academicYearId == getAcadamicYear.academicYearName).FirstOrDefault();
+                        if (identifyYear != null)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                var getYear = context.AcademicYear.Find(identifyYear.academicYearId);
+                var quarter = homeroomTeacherMethod.whichQuarter(identifyYear.academicYearId);
+                int sum = 0;
+
+                var reassessment = context.Schedule.Where(s => s.scheduleDate == date && s.scheduleFor == "Reassessment").FirstOrDefault();
+                var schedule = context.Schedule.Where(s=>s.academicYear==getYear.academicYearName+"-"+quarter && s.grade==teacher.grade && s.subject==teacher.subject).ToList();
+                if (schedule.Count != 0)
+                {
+                    foreach (var getSchedules in schedule)
+                    {
+                        var getPercent = context.AbsenceRecord.Where(a => a.studentId == addGradeModal.studentId && a.academicPeriod == getYear.academicYearName + "-" + quarter && a.recordDate == getSchedules.scheduleDate && a.evidenceFlag== "AcceptableReason").FirstOrDefault();
+
+                        if (getPercent!=null)
+                        {
+                            sum += getSchedules.percentage;
+                        }
+                    }
+
+                    if (sum != 0)
+                    {
+                        var duplicate = context.Result.Where(r => r.scheduleId == reassessment.scheduleId && r.studentId == addGradeModal.studentId).FirstOrDefault();
+
+                        if (duplicate == null)
+                        {
+                            result.teacherId = tId;
+                            result.studentId = addGradeModal.studentId;
+                            result.result = addGradeModal.result;
+                            result.feedback = addGradeModal.feedback;
+                            result.scheduleId = reassessment.scheduleId;
+                            result.assignmentId = null;
+                            result.resultFor = dateTaken[1];
+                            result.percent = sum;
+                            result.academicYear = reassessment.academicYear;
+                            result.grade = teacher.grade;
+
+                            context.Result.Add(result);
+                            int success = context.SaveChanges();
+
+                            if (success > 0)
+                            {
+                                ViewBag.complete = "Result Recorded Successfully";
+                            }
+                            else
+                            {
+                                //error failed to record result
+                                ViewBag.error = "Failed to Record Result!!";
+                            }
+                        }
+                        else
+                        {
+                            //error result already exist
+                            ViewBag.error = "Result Record Already Exist!!";
+                        }
+                    }
+                    else
+                    {
+                        //error student not valid for reassesement
+                        ViewBag.error = "Student not Valid for Reassessment";
+                    }
+                }
+                else
+                {
+                    //error you cant give reassesement result(no schedules before reassesement)
+                    ViewBag.error = "You Don't have Any Previous Assesement to Give Reassessment";
+                }
+
+            }
+
+            return PartialView("AddGrade", addGradeModal);
+        }
+
+        public ActionResult UpdateResultManagement()
+        {
+            //get students previous current quarter same teacher
+
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            UpdateResultViewModel updateResultViewModel = new UpdateResultViewModel();
+            updateResultViewModel.results = new List<Result>();
+            HomeroomTeacherMethod homeroomTeacherMethod = new HomeroomTeacherMethod();
+
+            string tId = User.Identity.GetUserId().ToString();
+            var teacher = context.Teacher.Find(tId);
+
+            Section identifyYear = new Section();
+
+            var allAcadamicYears = context.AcademicYear.ToList();
+
+            foreach (var getAcadamicYear in allAcadamicYears)
+            {
+                //check today is in between start and end date of the specific academic year
+                if (!(DateTime.Compare(DateTime.Now, getAcadamicYear.durationStart) < 0 || DateTime.Compare(DateTime.Now, getAcadamicYear.durationEnd) > 0))
+                {
+                    identifyYear = context.Section.Where(s => s.sectionName.StartsWith(teacher.grade.ToString()) && s.academicYearId == getAcadamicYear.academicYearName).FirstOrDefault();
+                    if (identifyYear != null)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            var getYear = context.AcademicYear.Find(identifyYear.academicYearId);
+            var quarter = homeroomTeacherMethod.whichQuarter(identifyYear.academicYearId);
+
+            var results = context.Result.Where(r=>r.teacherId==tId && r.academicYear==getYear.academicYearName+"-"+quarter).ToList();
+            if (results.Count != 0)
+            {
+                foreach(var getResults in results)
+                {
+                    updateResultViewModel.results.Add(getResults);
+                }
+            }
+
+            return View(updateResultViewModel);
+        }
+
+        public ActionResult UpdateResult(string id)
+        {
+
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            UpdateGradeModal updateGradeModal = new UpdateGradeModal();
+
+            int rId = int.Parse(id);
+
+            var result = context.Result.Find(rId);
+
+            updateGradeModal.result = result.result;
+            updateGradeModal.feedback = result.feedback;
+            updateGradeModal.resultId = rId;
+
+            return PartialView("UpdateResult",updateGradeModal);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateResult(UpdateGradeModal updateGradeModal)
+        {
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+
+            var result = context.Result.Find(updateGradeModal.resultId);
+
+            if (updateGradeModal.result<=result.percent)
+            {
+                result.result = updateGradeModal.result;
+                result.feedback = updateGradeModal.feedback;
+
+                int success= context.SaveChanges();
+                if (success > 0)
+                {
+                    ViewBag.complete = "Result Updated Successfully";
+                }
+                else
+                {
+                    ViewBag.error = "Failed to Update Result";
+                }
+            }
+
+            return PartialView("UpdateResult",updateGradeModal);
+
         }
     }
 }

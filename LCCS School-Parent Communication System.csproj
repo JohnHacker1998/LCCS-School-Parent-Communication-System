@@ -874,6 +874,10 @@
     <Content Include="Areas\Academic_Director\Views\ADHome\AddSchedule.cshtml" />
     <Content Include="Areas\Academic_Director\Views\ADHome\EditSchedule.cshtml" />
     <Content Include="Areas\Teacher\Views\THome\GradeManagement.cshtml" />
+    <Content Include="Areas\Teacher\Views\THome\AddGrade.cshtml" />
+    <Content Include="Areas\Teacher\Views\THome\UpdateResultManagement.cshtml" />
+    <Content Include="Areas\Teacher\Views\THome\UpdateResult.cshtml" />
+    <Content Include="Areas\Parent\Views\PHome\ViewResult.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -1005,6 +1009,7 @@
     <Compile Include="Models\GroupStructureAssignment.cs" />
     <Compile Include="Models\LateComer.cs" />
     <Compile Include="Models\Parent.cs" />
+    <Compile Include="Models\Result.cs" />
     <Compile Include="Models\Schedule.cs" />
     <Compile Include="Models\Section.cs" />
     <Compile Include="Models\Student.cs" />
@@ -1015,6 +1020,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="viewModels\AbsenceRecordViewMoel.cs" />
     <Compile Include="viewModels\AcademicYearViewModel.cs" />
+    <Compile Include="viewModels\AddGradeModal.cs" />
     <Compile Include="viewModels\AddScheduleModal.cs" />
     <Compile Include="viewModels\announcementViewModel.cs" />
     <Compile Include="viewModels\DeleteTeacherModal.cs" />
@@ -1040,6 +1046,8 @@
     <Compile Include="viewModels\ScheduleViewModel.cs" />
     <Compile Include="viewModels\SectionViewModel.cs" />
     <Compile Include="viewModels\StudentViewModel.cs" />
+    <Compile Include="viewModels\UpdateGradeModal.cs" />
+    <Compile Include="viewModels\UpdateResultViewModel.cs" />
     <Compile Include="viewModels\UpdateTeacherModal.cs" />
     <Compile Include="viewModels\WarningViewModel.cs" />
   </ItemGroup>
