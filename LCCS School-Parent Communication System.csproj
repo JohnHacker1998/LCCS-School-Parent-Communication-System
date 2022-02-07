@@ -994,13 +994,9 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
-    <Compile Include="Migrations\202202060716239_allInOne.cs" />
-    <Compile Include="Migrations\202202060716239_allInOne.designer.cs">
-      <DependentUpon>202202060716239_allInOne.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AbsenceRecord.cs" />
     <Compile Include="Models\AcademicYear.cs" />
+    <Compile Include="Models\Announcement.cs" />
     <Compile Include="Models\Assignment.cs" />
     <Compile Include="Models\Evidence.cs" />
     <Compile Include="Models\Group.cs" />
@@ -1020,6 +1016,7 @@
     <Compile Include="viewModels\AbsenceRecordViewMoel.cs" />
     <Compile Include="viewModels\AcademicYearViewModel.cs" />
     <Compile Include="viewModels\AddScheduleModal.cs" />
+    <Compile Include="viewModels\announcementViewModel.cs" />
     <Compile Include="viewModels\DeleteTeacherModal.cs" />
     <Compile Include="viewModels\assignmentViewModel.cs" />
     <Compile Include="viewModels\EvidenceApprovalViewModel.cs" />
@@ -1109,11 +1106,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\202202060716239_allInOne.resx">
-      <DependentUpon>202202060716239_allInOne.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
