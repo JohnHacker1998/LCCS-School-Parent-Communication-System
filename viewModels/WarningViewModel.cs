@@ -16,5 +16,7 @@ namespace LCCS_School_Parent_Communication_System.viewModels
         public List<string> parentName { get; set; }
 
         public List<string> parentPhone { get; set; }
+
+        
     }
 }

@@ -27,15 +27,15 @@
                 <th scope="col" style="width:20%" colspan="2">
                     @using (Html.BeginForm("addGroupStructure", "THome", FormMethod.Get))
                     {
-                        <input type="submit" name="add" value="Add" class="btn btn-primary" style="width:100%"/>
+                        <input type="submit" name="add" value="Add" class="btn btn-primary" style="width:100%" />
                     }
                 </th>
             </tr>
         </thead>
+        <tbody>
+            @foreach (var k in Model.groupList)
+            {
 
-        @foreach (var k in Model.groupList)
-        {
-            <tbody>
                 <tr>
                     <td>@k.groupStructureId</td>
                     <td>@k.academicQuarter</td>
@@ -74,11 +74,11 @@
 
                     </td>
                 </tr>
-            </tbody>
 
-        }
 
-    </table>
+            }
+        </tbody>
+        </table>
 
 
 </div>

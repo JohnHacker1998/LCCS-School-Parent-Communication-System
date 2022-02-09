@@ -28,5 +28,10 @@ namespace LCCS_School_Parent_Communication_System.Models
         public string WarningReadStatus { get; set; }
 
         public virtual Student student { get; set; }
+
+        public Warning()
+        {
+            Student student = new Student();
+        }
     }
 }

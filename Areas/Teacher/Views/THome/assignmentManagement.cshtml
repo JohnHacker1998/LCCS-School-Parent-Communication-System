@@ -134,17 +134,17 @@
                 <th scope="col">Section Name</th>
                 <th scope="col">Min Number of Members</th>
                 <th scope="col">Max Number of Members</th>
-                
+
 
                 <th scope="col">
-                   Actions
+                    Actions
                 </th>
             </tr>
         </thead>
+        <tbody>
+            @foreach (var k in Model.gsList)
+            {
 
-        @foreach (var k in Model.gsList)
-        {
-            <tbody>
                 <tr>
                     <td>@k.groupStructureId</td>
                     <td>@k.academicQuarter</td>
@@ -160,14 +160,14 @@
                             <input type="submit" name="add" value="Add Group Assignment" class="btn btn-primary" />
                             <input type="text" name="txtAdd" value=@k.groupStructureId.ToString() style="display:none" />
                         }
-                        
+
                     </td>
                 </tr>
-            </tbody>
 
-        }
 
-    </table>
+            }
+        </tbody>
+        </table>
 
 
 </div>

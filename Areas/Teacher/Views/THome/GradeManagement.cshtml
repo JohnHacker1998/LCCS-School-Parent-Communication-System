@@ -89,8 +89,9 @@
                     <td class="text-center">
 
                         <button type="button" class="btn btn-primary" data-toggle="modalsession" data-target="#updateSectionModal" data-url="@Url.Action("AddGrade")" data-id="@list.studentId"><i class="fas fa-plus fa-lg"></i></button>
-                        <button type="button" class="btn btn-danger" data-toggle="modalsession" data-target="#deleteSectionModal" data-url="@Url.Action("DeleteStudent")" data-id="@list.studentId"><i class="fas fa-trash-alt fa-lg"></i></button>
-
+                        <a class="btn btn-info" href="@Url.Action("UpdateResultManagement","THome",new { id = list.studentId })">
+                            <i class="fas fa-edit fa-lg text-white"></i>
+                        </a>
                     </td>
                 </tr>
             }

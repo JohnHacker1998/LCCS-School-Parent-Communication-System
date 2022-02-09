@@ -43,7 +43,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
             
             if (s != null) {
                 string k = s.sectionName;
-                string temp = k.Substring(0, 2);
+                string temp = k.Substring(0, k.Length-1);
                 int gr = int.Parse(temp);
                 ls = db.Schedule.Where(ax => ax.grade == gr).ToList();
                 if (ls != null)
@@ -422,6 +422,166 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
             //var quarter = homeroomTeacherMethod.whichQuarter(identifyYear.academicYearId);
 
             return View(updateResultViewModel);
+        }
+
+        public ActionResult GenerateGeneralReport()
+        {
+            //grades all subject sum with in a quarter
+            //no of absent dates
+
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            HomeroomTeacherMethod homeroomTeacherMethod = new HomeroomTeacherMethod();
+            Section identifyYear = new Section();
+            ReportViewModel reportViewModel = new ReportViewModel();
+            reportViewModel.subject = new List<string>();
+            reportViewModel.score = new List<int>();
+            reportViewModel.outOf = new List<int>();
+
+            int miss = 0;
+            int reason = 0;
+            int nonReason = 0;
+            int percentSum = 0;
+            int resultSum = 0;
+            int assesementTotal = 0;
+            int completeTotal = 0;
+            int incompeleteTotal = 0;
+            int reassesementTotal = 0;
+
+            string pId = User.Identity.GetUserId().ToString();
+            var parent = context.Parent.Find(pId);
+
+            var allAcadamicYears = context.AcademicYear.ToList();
+
+            foreach (var getAcadamicYear in allAcadamicYears)
+            {
+                //check today is in between start and end date of the specific academic year
+                if (!(DateTime.Compare(DateTime.Now, getAcadamicYear.durationStart) < 0 || DateTime.Compare(DateTime.Now, getAcadamicYear.durationEnd) > 0))
+                {
+                    identifyYear = context.Section.Where(s => s.sectionName==parent.student.sectionName && s.academicYearId == getAcadamicYear.academicYearName).FirstOrDefault();
+                    if (identifyYear != null)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            var getYear = context.AcademicYear.Find(identifyYear.academicYearId);
+            var quarter = homeroomTeacherMethod.whichQuarter(identifyYear.academicYearId);
+
+            var results = context.Result.Where(r=>r.studentId==parent.studentId && r.academicYear==getYear.academicYearName+"-"+quarter).ToList();
+            List<string> uniqueSubject = new List<string>();
+            if (results.Count!=0)
+            {
+                foreach (var getSubject in results)
+                {
+                    uniqueSubject.Add(getSubject.teacher.subject);
+                }
+
+                reportViewModel.subject = uniqueSubject.Distinct().ToList();
+
+                foreach (var getResults in reportViewModel.subject)
+                {
+                    var subjectResult = context.Result.Where(r => r.teacher.subject == getResults && r.studentId == parent.studentId && r.academicYear == getYear.academicYearName + "-" + quarter).ToList();
+                    
+
+                    foreach (var getDetails in subjectResult)
+                    {
+                        percentSum += getDetails.percent;
+                        resultSum += getDetails.result;
+
+                        if (getDetails.feedback == "Student is Absent On the Assesement Day")
+                        {
+                            miss++;
+                        }
+                    }
+
+                    reportViewModel.score.Add(resultSum);
+                    reportViewModel.outOf.Add(percentSum);
+
+                }
+            }
+            
+            //reportViewModel.missed = miss;
+
+            var absenceRecord = context.AbsenceRecord.Where(a=>a.academicPeriod == getYear.academicYearName + "-" + quarter).ToList();
+            var lateRecord = context.LateComer.Where(l => l.academicPeriod == getYear.academicYearName + "-" + quarter).ToList();
+
+            if (absenceRecord.Count != 0)
+            {
+                foreach (var getAbsent in absenceRecord)
+                {
+                    if (getAbsent.evidenceFlag == null)
+                    {
+                        nonReason++;
+                    }
+                    else
+                    {
+                        reason++;
+                    }
+                }
+            }
+
+            reportViewModel.absentDays = absenceRecord.Count;
+            reportViewModel.nonReasonable = nonReason;
+            reportViewModel.reasonable = reason;
+            reportViewModel.lateDays = lateRecord.Count;
+
+            //get the subjects
+            //get the results and outof
+            //get missis valid and invalid
+            int grade = int.Parse(parent.student.sectionName.Substring(0, parent.student.sectionName.Length - 1));
+            var numberOfSchedule = context.Schedule.Where(s=>s.grade==grade && s.academicYear==getYear.academicYearName+"-"+quarter).ToList();
+            var numberOfAssignments = context.Assignment.Where(a => a.teacher.grade == grade && a.yearlyQuarter == getYear.academicYearName + "-" + quarter).ToList();
+
+            foreach(var getScheduleNo in numberOfSchedule)
+            {
+                if (DateTime.Compare(DateTime.Now.Date, getScheduleNo.scheduleDate.Date) > 0)
+                {
+                    assesementTotal++;
+                    var absentSchedule = context.AbsenceRecord.Where(a=>a.recordDate==getScheduleNo.scheduleDate.Date && a.academicPeriod== getYear.academicYearName + "-" + quarter && a.studentId==parent.studentId).FirstOrDefault();
+                    if (absentSchedule==null)
+                    {
+                        completeTotal++;
+                    }
+                    var reassesementSchedule = context.AbsenceRecord.Where(a => a.recordDate == getScheduleNo.scheduleDate.Date && a.academicPeriod == getYear.academicYearName + "-" + quarter && a.studentId == parent.studentId && a.evidenceFlag== "AcceptableReason").FirstOrDefault();
+                    if (reassesementSchedule != null)
+                    {
+                        reassesementTotal++;
+                    }
+                }
+            }
+
+            foreach (var getAssignmentNo in numberOfAssignments)
+            {
+                if (DateTime.Compare(DateTime.Now.Date, getAssignmentNo.submissionDate.Date) > 0)
+                {
+                    assesementTotal++;
+
+                    var absentSchedule = context.AbsenceRecord.Where(a => a.recordDate == getAssignmentNo.submissionDate.Date && a.academicPeriod == getYear.academicYearName + "-" + quarter && a.studentId == parent.studentId && a.evidenceFlag==null).FirstOrDefault();
+                    if (absentSchedule == null)
+                    {
+                        completeTotal++;
+                    }
+                }   
+            }
+
+            incompeleteTotal = assesementTotal - completeTotal;
+
+            reportViewModel.totalAssesment = assesementTotal;
+            reportViewModel.completeAssesment = completeTotal;
+            reportViewModel.incompleteAssesment = incompeleteTotal;
+            reportViewModel.reassesement = reassesementTotal;
+
+
+
+            //get the  no of assesements given
+            //get no of assesement complete
+            //get no of assesement in complete
+            //get valid reassesement no
+
+
+            return View(reportViewModel);
         }
 
     }

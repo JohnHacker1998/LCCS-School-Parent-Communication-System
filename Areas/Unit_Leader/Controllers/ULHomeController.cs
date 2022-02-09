@@ -430,7 +430,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
             }
             
 
-            return PartialView("SendWarning");
+            return PartialView("SendWarning",warningViewModel);
         }
 
         public ActionResult WarningManagement()
@@ -531,8 +531,9 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
             if (!(DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday))
             {
                 //populate eligible and nonViewed objects
+                warningViewModel = nonViewedWarnings();
                 warningViewModel.eligible = eligibleStudents();
-                warningViewModel.nonViewed = nonViewedWarnings();
+                
             }
             else
             {
@@ -578,15 +579,16 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
                 }
 
                 //populate eligible and nonViewed objects
+                warningViewModel = nonViewedWarnings();
                 warningViewModel.eligible = eligibleStudents();
-                warningViewModel.nonViewed = nonViewedWarnings();
+                
             }
             else
             {
                 //error message weekend
                 ViewBag.message = "You are Not Allowed To Access on the Weekend";
             }
-            return View();
+            return View(warningViewModel);
         }
 
         public ActionResult EvidenceApproval(int id)
@@ -818,7 +820,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
 
         }
 
-        public List<Warning> nonViewedWarnings()
+        public WarningViewModel nonViewedWarnings()
         {
             //basic objects
             ApplicationDbContext context = new ApplicationDbContext();
@@ -857,31 +859,36 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
                                 if (warnings.Count != 0)
                                 {
                                     //populate the nonviewed warnings to the viewmodel object
-                                    warningViewModel.nonViewed.Add(warning);
 
-                                    //parent information
-                                    var parent = context.Parent.Where(p => p.studentId == getStudent.studentId).ToList();
-
-                                    if (parent.Count != 0)
+                                    foreach(var getWarnings in warnings)
                                     {
-                                        if (parent.Count == 1)
+                                        warningViewModel.nonViewed.Add(getWarnings);
+
+                                        //parent information
+                                        var parent = context.Parent.Where(p => p.studentId == getStudent.studentId).ToList();
+
+                                        if (parent.Count != 0)
                                         {
-                                            warningViewModel.parentName.Add(parent[0].user.fullName);
-                                            warningViewModel.parentPhone.Add(parent[0].user.PhoneNumber);
-                                        }
-                                        else if (parent.Count == 2)
-                                        {
-                                            warningViewModel.parentName.Add(parent[0].user.fullName + "/" + parent[1].user.fullName);
-                                            warningViewModel.parentPhone.Add(parent[0].user.PhoneNumber + "/" + parent[1].user.PhoneNumber);
+                                            if (parent.Count == 1)
+                                            {
+                                                warningViewModel.parentName.Add(parent[0].user.fullName);
+                                                warningViewModel.parentPhone.Add(parent[0].user.PhoneNumber);
+                                            }
+                                            else if (parent.Count == 2)
+                                            {
+                                                warningViewModel.parentName.Add(parent[0].user.fullName + "/" + parent[1].user.fullName);
+                                                warningViewModel.parentPhone.Add(parent[0].user.PhoneNumber + "/" + parent[1].user.PhoneNumber);
+                                            }
                                         }
                                     }
+                                    
                                 }
                             }
                         }
                     }
                 }
             }
-            return warningViewModel.nonViewed;
+            return warningViewModel;
         }
     }
 }

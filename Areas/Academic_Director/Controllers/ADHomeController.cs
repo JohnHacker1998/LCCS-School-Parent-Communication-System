@@ -1967,8 +1967,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                         DateTime tomorrow = scheduleDate.Date.Add(TimeSpan.FromDays(1));
 
 
-                        var intervalOne = context.Schedule.Where(s => s.scheduleDate == yesterday && s.grade == addScheduleModal.grade).FirstOrDefault();
-                        var intervalTwo = context.Schedule.Where(s => s.scheduleDate == tomorrow && s.grade == addScheduleModal.grade).FirstOrDefault();
+                        var intervalOne = context.Schedule.Where(s => s.scheduleDate == yesterday && s.grade == addScheduleModal.grade && s.scheduleId != addScheduleModal.scheduleId).FirstOrDefault();
+                        var intervalTwo = context.Schedule.Where(s => s.scheduleDate == tomorrow && s.grade == addScheduleModal.grade && s.scheduleId != addScheduleModal.scheduleId).FirstOrDefault();
 
                         if (intervalOne == null && intervalTwo == null)
                         {
