@@ -28,49 +28,53 @@ namespace LCCS_School_Parent_Communication_System.Areas.Homeroom_Teacher.Control
             ApplicationDbContext db = new ApplicationDbContext();
             AbsenceRecordViewMoel av = new AbsenceRecordViewMoel();
             AcademicYear ay = new AcademicYear();
+            
             av.absenceList = new List<AbsenceRecord>();
             ViewBag.messageSuccessStatus = " ";
             //finding the logged on teacher ID
             string currentUserId = User.Identity.GetUserId();
-            av.studentList = new List<SelectListItem>();
+            av.studentList = new List<Student>();
             //finding the student list of where the teacher is homeroom for
-            av.studentList = htm.getList(currentUserId);
+            var tempStdList = htm.getList(currentUserId);
             //counting number of students in the retrieved list
+            if (tempStdList != null)
+            {
+                DateTime ks = DateTime.Now.Date;
+                foreach(var k in tempStdList)
+                {
+                    AbsenceRecord abs = new AbsenceRecord();
+                    abs = db.AbsenceRecord.Where(ax => ax.recordDate == ks && ax.studentId == k.studentId).FirstOrDefault();
+                    if (abs == null)
+                    {
+                        av.studentList.Add(k);
+                    }
+                }
+            }
             int a = av.studentList.Count();
             //creating an array with the size of the list of the students list to hold the selection on listbox
-            av.selectedStudents = new int[a];
+            DateTime recordDate1 = DateTime.Now.Date;
             Section s = new Section();
+            
             //finding the section where the teacher is homeroom
             s = db.Section.Where(x => x.teacherId == currentUserId).FirstOrDefault();
-            List<AbsenceRecord> absenceList = new List<AbsenceRecord>();
-            //recording the current date as a short date string
-            DateTime d = DateTime.Now.Date;
-            absenceList = db.AbsenceRecord.Where(c => c.recordDate == d).ToList();
+          
             int i = 0;
             ay = db.AcademicYear.Where(r => r.academicYearName == s.academicYearId).FirstOrDefault();
             string status = htm.whichQuarter(s.academicYearId);
-            if (absenceList.Count() != 0) { 
-            foreach (var k in absenceList)
-            {
-                av.selectedStudents[i] = k.studentId;
-                i++;
-            }
-            }
+          
             List<AbsenceRecord> tempRecord1 = new List<AbsenceRecord>();
+            
             ViewBag.Message = false;
             string academicRecord1 = s.academicYearId + "-" + status;
-            DateTime recordDate1 = DateTime.Now.Date;
-            tempRecord1 = db.AbsenceRecord.Where(y => y.academicPeriod == academicRecord1 && y.recordDate == recordDate1).ToList();
-            if (tempRecord1.Count != 0)
-            {
-                ViewBag.Message = true;
-            }
-            av.absenceList = db.AbsenceRecord.Where(rd => rd.recordDate == recordDate1 && rd.academicPeriod == academicRecord1).ToList();
-
+           
+            //recording the current date as a short date string
+            DateTime d = DateTime.Now.Date;
+            av.absenceList = db.AbsenceRecord.Where(c => c.recordDate == d && c.recordDate == recordDate1 && c.academicPeriod == academicRecord1 && c.student.sectionName==s.sectionName).ToList();
+        
             return View(av);
         }
         [HttpPost]
-        public ActionResult addAttendance(AbsenceRecordViewMoel arvm, string add, string update)
+        public ActionResult addAttendance(AbsenceRecordViewMoel arvm, string submit, string delete,string selectedStudents,string gsId)
         {
             HomeroomTeacherMethod htm = new HomeroomTeacherMethod();
             AbsenceRecord ar = new AbsenceRecord();
@@ -84,34 +88,40 @@ namespace LCCS_School_Parent_Communication_System.Areas.Homeroom_Teacher.Control
             s = db.Section.Where(x => x.teacherId == currentUserId).FirstOrDefault();
             ay = db.AcademicYear.Where(r => r.academicYearName == s.academicYearId).FirstOrDefault();
             string status = htm.whichQuarter(s.academicYearId);
-            List<AbsenceRecord> tempRecord = new List<AbsenceRecord>();
+            List<AbsenceRecord> tempRecord = new List<AbsenceRecord>(); 
             List<AbsenceRecord> tempRecord1 = new List<AbsenceRecord>();
             ViewBag.Message = false;
             string academicRecord1 = s.academicYearId + "-" + status;
             DateTime recordDate1 = DateTime.Now.Date;
             ViewBag.successfulMessage = " ";
             ViewBag.messageStatus = " ";
-            tempRecord1 = db.AbsenceRecord.Where(y => y.academicPeriod == academicRecord1 && y.recordDate == recordDate1).ToList();
-            if (tempRecord1.Count == 0 && add!=null)
+           
+            
+            if (submit!=null)
             {
+               
 
-
-                    if (arvm.selectedStudents != null)
+                if (selectedStudents != null)
                     {
-                        List<SelectListItem> selectedItems = arvm.studentList.Where(b => arvm.selectedStudents.Contains(int.Parse(b.Value))).ToList();
-                        int x = 1;
-                        foreach (var j in selectedItems)
+                    String firstSeries = selectedStudents.Substring(1, selectedStudents.Length - 2);
+                                 
+                    List<string> memList = new List<string>();
+                    memList = firstSeries.Split('-').ToList();
+                    
+                   
+                        foreach (var k in memList)
                         {
 
                             if (status == "Q1" || status == "Q2" || status == "Q3" || status == "Q4")
                             {
-
+                            Student std = new Student();
+                            std = db.Student.Where(ax => ax.fullName == k).FirstOrDefault();
                                 ar.academicPeriod = s.academicYearId + "-" + status;
                                 ar.recordDate = DateTime.Now.Date;
-                                ar.studentId = int.Parse(j.Value);
-                                int count = htm.manageCount(ar.academicPeriod, int.Parse(j.Value));
+                            ar.studentId = std.studentId;
+                            
+                                int count = htm.manageCount(ar.academicPeriod, std.studentId);
                                 ar.count = count + 1;
-                                int v = 0;
                                 db.AbsenceRecord.Add(ar);
                                 db.SaveChanges();
                             ViewBag.successfulMessage = "Absence Record Added Successfully";
@@ -133,79 +143,41 @@ namespace LCCS_School_Parent_Communication_System.Areas.Homeroom_Teacher.Control
                     }
                 
             }
-            else if (tempRecord1 != null)
-            {
-                ViewBag.Message = true;
-            }
+            
                         
-            if (update != null)
+          
+            else if (delete != null)
             {
-               
-                    string academicRecord = s.academicYearId + "-" + status;
-                DateTime recordDate = DateTime.Now.Date;
-                    tempRecord = db.AbsenceRecord.Where(y => y.academicPeriod == academicRecord && y.recordDate == recordDate).ToList();
-                if (tempRecord != null || arvm.selectedStudents == null)
+
+                int gsID1 = int.Parse(gsId);
+                AbsenceRecord abs = new AbsenceRecord();
+                abs = db.AbsenceRecord.Where(ax=>ax.recordId==gsID1).FirstOrDefault();
+                db.AbsenceRecord.Remove(abs);
+                db.SaveChanges();
+            }
+            arvm.studentList = new List<Student>();
+           
+            var tempStdList = htm.getList(currentUserId);
+            //counting number of students in the retrieved list
+            if (tempStdList != null)
+            {
+                DateTime ks = DateTime.Now.Date;
+                foreach (var k in tempStdList)
                 {
-
-                    //db.AbsenceRecord.Remove(tempRecord);
-                    for (int v = 0; v < tempRecord.Count; v++)
+                    AbsenceRecord abs = new AbsenceRecord();
+                    abs = db.AbsenceRecord.Where(ax => ax.recordDate == ks && ax.studentId == k.studentId).FirstOrDefault();
+                    if (abs == null)
                     {
-                        db.AbsenceRecord.Remove(tempRecord[v]);
-                        db.SaveChanges();
+                        arvm.studentList.Add(k);
                     }
-                     if (arvm.selectedStudents != null) { 
-
-                    List<SelectListItem> selectedItems = new List<SelectListItem>();
-                    selectedItems = arvm.studentList.Where(b => arvm.selectedStudents.Contains(int.Parse(b.Value))).ToList();
-                    foreach (var j in selectedItems)
-                    {
-                        if (status == "Q1" || status == "Q2" || status == "Q3" || status == "Q4")
-                        {
-
-                            ar.academicPeriod = s.academicYearId + "-" + status;
-                                ar.recordDate = DateTime.Now.Date;
-                            ar.studentId = int.Parse(j.Value);
-                            int count = htm.manageCount(ar.academicPeriod, int.Parse(j.Value));
-                            ar.count = count + 1;
-                            int v = 0;
-                            db.AbsenceRecord.Add(ar);
-                            db.SaveChanges();
-                                ViewBag.successfulMessage = "Attendance update successful.";
-
-                        }
-                            else
-                            {
-                                if (status == "no")
-                                {
-                                    ViewBag.messageStatus = "Today doesn't exist in the academic year";
-                                }
-                                else if (status == "gap")
-                                {
-                                    ViewBag.messageStatus = "Today is a gap";
-                                }
-                            }
-                        }
                 }
-                    }
-                
-               
             }
-            arvm.studentList = new List<SelectListItem>();
-            arvm.studentList = htm.getList(currentUserId);
 
 
-            int a = arvm.studentList.Count();
-            arvm.selectedStudents = new int[a];
-            List<AbsenceRecord> absenceList = new List<AbsenceRecord>();
+            arvm.absenceList = new List<AbsenceRecord>();
+            //recording the current date as a short date string
             DateTime d = DateTime.Now.Date;
-            absenceList = db.AbsenceRecord.Where(c => c.recordDate == d).ToList();
-            int i = 0;
-            foreach (var k in absenceList)
-            {
-                arvm.selectedStudents[i] = k.studentId;
-                i++;
-            }
-            arvm.absenceList = db.AbsenceRecord.Where(ax => ax.recordDate == d && ax.academicPeriod == academicRecord1).ToList();
+           arvm.absenceList = db.AbsenceRecord.Where(c => c.recordDate == d && c.recordDate == recordDate1 && c.academicPeriod == academicRecord1 && c.student.sectionName == s.sectionName).ToList();
             return View(arvm);
 
 

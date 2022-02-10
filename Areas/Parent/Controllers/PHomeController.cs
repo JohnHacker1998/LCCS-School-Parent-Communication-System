@@ -32,12 +32,37 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
             calanderEvents cv = new calanderEvents();
             ApplicationDbContext db = new ApplicationDbContext();
             List<calanderEvents> events = new List<calanderEvents>();
+            List<Schedule> ls = new List<Schedule>();
             string currentUserId = User.Identity.GetUserId();
             Models.Parent p = new Models.Parent();
             p = db.Parent.Where(r => r.parentId == currentUserId).FirstOrDefault();
-           
+            Student s = new Student();
+            s = db.Student.Where(ax => ax.studentId == p.studentId).FirstOrDefault();
            List<AbsenceRecord>  ab = new List<AbsenceRecord>();
             List<LateComer> lc = new List<LateComer>();
+            
+            if (s != null) {
+                string k = s.sectionName;
+                string temp = k.Substring(0, 2);
+                int gr = int.Parse(temp);
+                ls = db.Schedule.Where(ax => ax.grade == gr).ToList();
+                if (ls != null)
+                {
+                    foreach(var ks in ls)
+                    {
+                        events.Add(new calanderEvents()
+                        {
+                            id = ks.scheduleId,
+                            title = ks.scheduleFor+"-"+ks.subject,
+                            start = ks.scheduleDate.ToShortDateString(),
+                            end = ks.scheduleDate.ToShortDateString(),
+                            allDay = true,
+                        }
+
+                      );
+                    }
+                }
+            }
             ab = db.AbsenceRecord.Where(a=>a.studentId==p.studentId).ToList();
             lc = db.LateComer.Where(a => a.studentId == p.studentId).ToList();
             if (ab.Count() != 0) 
@@ -245,6 +270,9 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
             string currentUserID = User.Identity.GetUserId().ToString();
             Models.Parent p = new Models.Parent();
             List<Assignment> ass = new List<Assignment>();
+            GroupStructureAssignment gsa = new GroupStructureAssignment();
+            List<GroupAssignment> gr = new List<GroupAssignment>();
+            List<Group> grList = new List<Group>();
             DateTime d = DateTime.Now.Date;
             Student s = new Student();
             p = db.Parent.Where(x => x.parentId == currentUserID).FirstOrDefault();
@@ -262,8 +290,35 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
                     {
                         if (DateTime.Compare(DateTime.Now.Date, x.submissionDate) <= 0 )
                         {
-                            if(x.assignmentType=="Individual" || (x.assignmentType=="Group" ))
-                            temp.Add(x);
+                            if (x.assignmentType == "Individual") {
+                                temp.Add(x);
+                            }
+                           
+
+                            else if (x.assignmentType == "Group")
+                            {
+                                gsa = db.GroupStructureAssignment.Where(ax => ax.assignmentId == x.assignmentId).FirstOrDefault();
+                                if (gsa != null)
+                                {
+                                    temp.Add(x);
+                                }
+                                gr = db.GroupAssignment.Where(ax => ax.assignmentId == x.assignmentId).ToList();
+                                if (gr != null)
+                                {
+                                    foreach(var m in gr)
+                                    {
+                                        grList = db.Group.Where(ax => ax.groupId == m.grId).ToList();
+                                        foreach(var ix in grList)
+                                        {
+                                            var std = db.StudentGroupList.Where(ax => ax.groupId == ix.groupId && ax.studentId == s.studentId).FirstOrDefault();
+                                            if (std != null)
+                                            {
+                                                temp.Add(x);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                         
                     }

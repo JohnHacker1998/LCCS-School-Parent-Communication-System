@@ -18,6 +18,11 @@
         $('#tblCompletedGroupList').DataTable();
     });
 </script>
+<style>
+    .side {
+        display: inline-block;
+    }
+</style>
 
 @*@using (Html.BeginForm("assignmentManagement", "THome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
     {
@@ -186,7 +191,7 @@
                 <th scope="col">
                     @using (Html.BeginForm("addAssignment", "THome", FormMethod.Get))
                     {
-                        <input type="submit" name="add" value="Add Individual Assignment" />
+                        <input type="submit" name="add" value="Add Individual Assignment" class="btn btn-primary"/>
                     }
                 </th>
             </tr>
@@ -207,29 +212,27 @@
                     <td>@k.fileName</td>
 
                     <td>
-                        @using (Html.BeginForm("assignmentManagement", "THome", new { assId = k.assignmentId.ToString() }, FormMethod.Post))
-                        {
+                        <div class="side">
+                            @using (Html.BeginForm("updateAssignment", "THome", new { assId = k.assignmentId.ToString() }, FormMethod.Get))
+                            {
+                                <input type="submit" name="update" value="Update" class="btn btn-primary" />
+                                <input type="text" name="txtAssignmentID" value=@k.assignmentId style="display:none" />
+                            }
+
+                        </div>
+                        <div class="side">
+                            @using (Html.BeginForm("assignmentManagement", "THome", new { assId = k.assignmentId.ToString() }, FormMethod.Post))
+                            {
 
 
-                            <input type="submit" name="delete" value="Delete" class="btn btn-danger" />
+                                <input type="submit" name="delete" value="Delete" class="btn btn-danger" />
 
 
 
-                        }
-                        @using (Html.BeginForm("updateAssignment", "THome", new { assId = k.assignmentId.ToString() }, FormMethod.Get))
-                        {
-                            <input type="submit" name="update" value="Update" class="btn btn-primary" />
-                            <input type="text" name="txtAssignmentID" value=@k.assignmentId style="display:none" />
-                        }
+                            }
+                        </div>
 
-                        @* <button type="button" class="btn btn-primary" data-toggle="updateModal" data-target="#AcademicYearViewModel" data-url="@Url.Action("updateAssignment")" data-id="@k.assignmentId.ToString()">Edit</button>*@
-                        @*
-        @if (k.assignmentType == "Group" && k.groupList == null)
-        {
 
-            <input type="submit" class="btnModal btn btn-primary" id="btnModal" value="Create Group" />
-
-        }*@
                     </td>
                 </tr>
             </tbody>

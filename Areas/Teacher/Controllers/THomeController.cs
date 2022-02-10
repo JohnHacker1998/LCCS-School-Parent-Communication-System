@@ -421,7 +421,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                 ass.assignmentName = avm.assignmentName;
                 ass.submissionDate = Convert.ToDateTime(avm.submissionDate).Date;
                 ass.markPercentage = avm.markPercentage;
-                if (fileName != null)
+                if (fileName != null && fileName!="")
                 {
                     int length = file.ContentLength;
                     byte[] upload = new byte[length];
@@ -775,13 +775,34 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
            var stdList = db.Student.Where(a => a.sectionName == gs.section.sectionName && a.academicYearId == acadYear).ToList();
             foreach(var ks in stdList)
             {
-                var tempGroupMember = db.StudentGroupList.Where(a => a.studentId == ks.studentId).FirstOrDefault();
+                var tempGroupMember = db.StudentGroupList.Where(a => a.studentId == ks.studentId).ToList();
+
+                
                 if (tempGroupMember == null)
                 {
                     
                     gvm.studentList.Add(ks);
                 }
+                else if (tempGroupMember != null)
+                {
+                    int count = 0;
+                    foreach(var n in tempGroupMember)
+                    {
+                        var x = db.Group.Where(ax => ax.groupId == n.groupId && ax.groupStrId == gs.groupStructureId).FirstOrDefault();
+                        if (x == null)
+                        {
+
+                            count++;
+                        }
+
+                    }
+                    if (count == tempGroupMember.Count()) {
+                    gvm.studentList.Add(ks);
+                    }
+                }
+             
             }
+            
             if (gvm.studentList.Count() == 0)
             {
                 ViewBag.enableMultiGroup = true;
@@ -889,15 +910,37 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             Section s = new Section();
             s = db.Section.Where(xr => xr.sectionId == gs.sectionId).FirstOrDefault();
             var tempStudentList = db.Student.Where(a => a.sectionName == s.sectionName && a.academicYearId== acadYear).ToList();
-            foreach(var k in tempStudentList)
+            foreach (var ks in tempStudentList)
             {
-                var tempGroupMember = db.StudentGroupList.Where(a => a.studentId == k.studentId).FirstOrDefault();
+                var tempGroupMember = db.StudentGroupList.Where(a => a.studentId == ks.studentId).ToList();
+
+
                 if (tempGroupMember == null)
                 {
-                    
-                    gvm.studentList.Add(k);
+
+                    gvm.studentList.Add(ks);
                 }
+                else if (tempGroupMember != null)
+                {
+                    int count = 0;
+                    foreach (var n in tempGroupMember)
+                    {
+                        var x = db.Group.Where(ax => ax.groupId == n.groupId && ax.groupStrId == gs.groupStructureId).FirstOrDefault();
+                        if (x == null)
+                        {
+
+                            count++;
+                        }
+
+                    }
+                    if (count == tempGroupMember.Count())
+                    {
+                        gvm.studentList.Add(ks);
+                    }
+                }
+            
             }
+            
             gvm.groupMembers = db.StudentGroupList.Where(a => a.group.groupStrId == gvm.groupStructureID).ToList();
             gvm.groupList = db.Group.Where(a => a.groupStrId == gvm.groupStructureID).ToList();
             if (gvm.studentList.Count() == 0)

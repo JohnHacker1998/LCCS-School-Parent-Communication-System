@@ -16,12 +16,12 @@ namespace LCCS_School_Parent_Communication_System.viewModels
 
         public string academicPeriod { get; set; }
 
-
+        
         public DateTime recordDate { get; set; }
 
         public int studentId { get; set; }
-        public int[] selectedStudents { get; set; }
-        public IEnumerable<SelectListItem> studentList { get; set; }
+      
+        public List<Student> studentList { get; set; }
         public List<AbsenceRecord> absenceList { get; set; }
 
 
