@@ -106,36 +106,6 @@ namespace LCCS_School_Parent_Communication_System.Controllers
             return View(profileViewModel);
         }
 
-        [HttpPost]
-        public ActionResult profile(ProfileViewModel profileViewModel)
-        {
-            //var appDbContext = new ApplicationDbContext();
-            //var userStore = new ApplicationUserStore(appDbContext);
-            //var userManager = new ApplicationUserManager(userStore);
-
-            //string uId = User.Identity.GetUserId().ToString();
-            //var user = appDbContext.Users.Find(uId);
-
-            //var checkName = appDbContext.Users.Where(u => u.UserName == profileViewModel.userName && u.Id != uId).FirstOrDefault();
-            //if (checkName == null)
-            //{
-            //    user.UserName = profileViewModel.userName;
-            //}
-
-            ////var user = await UserManager.FindByIdAsync(id);
-            ////var token = await UserManager.GeneratePasswordResetTokenAsync(user);
-            ////var result = await UserManager.ResetPasswordAsync(user, token, "MyN3wP@ssw0rd");
-            //var result = userManager.ChangePassword(uId, profileViewModel.password, profileViewModel.newPassword);
-
-            //foreach(var error in result.Errors)
-            //{
-            //    ModelState.AddModelError("changepass", error);
-            //}
-
-           
-            return View(profileViewModel);
-        }
-
         public ActionResult EditFullName()
         {
             //basic objects
@@ -278,21 +248,6 @@ namespace LCCS_School_Parent_Communication_System.Controllers
             return PartialView("EditPassword",profileEditPassword);
         }
 
-
-        //[HttpPost]
-        //public ActionResult edit(ProfileEditUserName profileEditUserName)
-        //{
-
-        //    return PartialView("edit", profileEditUserName);
-        //}
-
-        //public ActionResult edit()
-        //{
-        //    ProfileEditUserName profileEditUserName = new ProfileEditUserName();
-        //    return PartialView("edit", profileEditUserName);
-        //}
-
-
         public ActionResult ForgotPassword()
         {
             return PartialView("ForgotPassword");
@@ -302,10 +257,6 @@ namespace LCCS_School_Parent_Communication_System.Controllers
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel forgotPasswordViewModel)
         {
             var appDbContext = new ApplicationDbContext();
-            //var userStore = new ApplicationUserStore(appDbContext);
-            //var userManager = Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
-
-
             var user = appDbContext.Users.Where(u => u.Email == forgotPasswordViewModel.email).FirstOrDefault();
             if (user != null)
             {
@@ -317,8 +268,7 @@ namespace LCCS_School_Parent_Communication_System.Controllers
 
                 string code = await userManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                //await userManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
+                
                 try
                 {
                     //create the mail message
@@ -348,33 +298,12 @@ namespace LCCS_School_Parent_Communication_System.Controllers
             }
             else
             {
+                //error message
                 ViewBag.error = "Failed to Send Password Reset Link";
             }
 
-
-            //var provider = new DpapiDataProtectionProvider("YourAppName");
-            //UserManager.UserTokenProvider = new DataProtectorTokenProvider<User, string>(provider.Create("UserToken"))
-            //    as IUserTokenProvider<User, string>;
-
-            //var userStore = new UserStore<IdentityUser>();
-            //UserManager<IdentityUser> userManager = new UserManager<IdentityUser>(userStore);
-            //var user = userManager.FindByEmail(forgotPasswordViewModel.email);
-            //var userManager = new ApplicationUserManager(userStore);
-            //var provider = new DpapiDataProtectionProvider(System.Web.Hosting.HostingEnvironment.ApplicationHost.GetSiteName());
-            //UserManager.UserTokenProvider = (IUserTokenProvider<IdentityUser, string>)(new DataProtectorTokenProvider<IdentityUser, string>(provider.Create("UserToken")) as IUserTokenProvider<IdentityUser, string>);
-            //UserManager.PasswordResetTokens = new DataProtectorTokenProvider(Startup1.DataProtectionProvider.Create("PasswordReset"));
-            
-            
-            
-
-
-            //string code = userManager.GeneratePasswordResetToken(user.Id);
-            //var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-            //await userManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
             return PartialView("ForgotPassword");
         }
-
-       
 
         public ActionResult ResetPassword(string code)
         {
@@ -413,9 +342,7 @@ namespace LCCS_School_Parent_Communication_System.Controllers
             
            
             return View();
-        }
-
-        
+        }       
 
     }
 }

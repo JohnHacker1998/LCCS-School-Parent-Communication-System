@@ -30,15 +30,14 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
         public ActionResult Register()
         {
+            //register teacher modal
             return PartialView("Register");
         }
         
         [HttpPost]
         public ActionResult Register(RegisterTeacherModal registerTeacher)
         {
-            ViewBag.complete = null;
-            ViewBag.error = null;
-
+            
             //object declaration
             ApplicationDbContext context = new ApplicationDbContext();
             var userStore = new ApplicationUserStore(context);
@@ -48,7 +47,9 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             Models.Teacher teacher = new Models.Teacher();
             AcademicDirector academicDirector = new AcademicDirector();
 
+            //capitalize the first letters of fullname and subject
             registerTeacher.fullName = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(registerTeacher.fullName.ToLower());
+            registerTeacher.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(registerTeacher.subject.ToLower());
 
             //check for a duplicate record
             if (collection.checkUserExistence(registerTeacher.email, registerTeacher.fullName))
@@ -63,6 +64,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 }
                 while (userManager.FindByName(registerViewModel.username) != null);
 
+                //generate random password
                 registerViewModel.password = collection.generatePassword();
 
                 //create teacher user account using the provided information
@@ -133,7 +135,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 ViewBag.error = "Registration Failed!! Record Exists with the Same Email Address or Full Name";
             }
 
-            return PartialView("Register");
+            return PartialView("Register", registerTeacher);
         }
 
         public ActionResult EditTeacher(string id)
@@ -151,15 +153,15 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 //populate the selected teacher data in to the update form
                 teacher = context.Teacher.Find(id);
                 updateTeacher.Id = id;
-                updateTeacher.fullName = teacher.user.fullName;
-                updateTeacher.subject = teacher.subject;
+                updateTeacher.fullName = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(teacher.user.fullName.ToLower()); ;
+                updateTeacher.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(teacher.subject.ToLower()); ;
                 updateTeacher.grade = teacher.grade;
 
             }
             else
             {
                 //error message for additional role
-                ViewBag.geterror = "Unable To Edit. Teacher has Another Role Associated";
+                ViewBag.geterror = "Update Failed. Teacher has Another Role Associated";
             }
             return PartialView("EditTeacher",updateTeacher);
         }
@@ -214,7 +216,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             DeleteTeacherModal deleteTeacher = new DeleteTeacherModal();
 
             deleteTeacher.Id = id;
-            //check role
+
+            //check teacher doesn't have other assigned role
             if (!(userManager.IsInRole(id, "UnitLeader") || userManager.IsInRole(id, "HomeRoom")))
             {
                 ViewBag.message = "Are You Sure Do You Want Delete This Teacher?";
@@ -234,6 +237,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             AcademicDirector academicDirector = new AcademicDirector();
             Collection collection = new Collection();
 
+            //delete teacher record
             Boolean delete= academicDirector.DeleteTeacher(deleteTeacher.Id);
             if (delete)
             {
@@ -241,7 +245,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
                 if (status == "successful")
                 {
-                    //sucess message
+                    //success message
                     ViewBag.complete = "Deletion Completed Successfully";                 
                 }
                 else
@@ -255,17 +259,12 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 ViewBag.posterror = "Deletion Failed";
             }
             
-            return PartialView("DeleteTeacher");
+            return PartialView("DeleteTeacher",deleteTeacher);
         }
 
         public ActionResult RegisterTeacher()
         {
-
-            //handel viewbag
-            //ViewBag.search = false;
-            //ViewBag.upHidden = "hidden";
-            //ViewBag.disableEmail = false;
-
+            //object declaration
             ApplicationDbContext context = new ApplicationDbContext();
             RegisterTeacherViewModel registerTeacherViewModel = new RegisterTeacherViewModel();
             registerTeacherViewModel.teacherList = context.Teacher.ToList();
@@ -273,197 +272,6 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             return View(registerTeacherViewModel);
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult> RegisterTeacher(RegisterTeacherViewModel registerTeacherViewModel,string register,string search,string update,string edit,string delete,string id)
-        //{
-        //    //viewbag attributes for UI rendering 
-        //    ViewBag.search = false;
-        //    ViewBag.upHidden = "hidden";
-        //    ViewBag.disableEmail = false;
-        //    ApplicationDbContext context = new ApplicationDbContext();
-            
-        //    registerTeacherViewModel.teacherList = context.Teacher.ToList();
-        //    //check if their are no errors arise from user input
-        //    if (ModelState.IsValid || (search!=null && ModelState.IsValidField("fullName")) || edit!=null || delete!=null)
-        //    {
-        //        //basic objects
-        //        //ApplicationDbContext context = new ApplicationDbContext();
-        //        var userStore = new ApplicationUserStore(context);
-        //        var userManager = new ApplicationUserManager(userStore);
-        //        Collection collection = new Collection();
-        //        AcademicDirector academicDirector = new AcademicDirector();
-        //        Models.Teacher teacher = new Models.Teacher();
-        //        ApplicationUser user = new ApplicationUser();
-        //        RegisterViewModel registerViewModel = new RegisterViewModel();
-
-        //        //check if register button is clicked
-        //        if (register != null)
-        //        {
-        //            //check for a duplicate record
-        //            if (collection.checkUserExistence(registerTeacherViewModel.email, registerTeacherViewModel.fullName))
-        //            {
-        //                //populate RegisterViewModel with the inserted data for registration
-        //                registerViewModel.fullName = registerTeacherViewModel.fullName;
-        //                registerViewModel.email = registerTeacherViewModel.email;
-        //                do
-        //                {
-        //                    //check if the username is unique if not regenerate
-        //                    registerViewModel.username = collection.generateUserName();
-        //                }
-        //                while (userManager.FindByName(registerViewModel.username) != null);
-
-        //                registerViewModel.password = collection.generatePassword();
-
-        //                //create teacher user account using the provided information
-        //                string Id = collection.RegisterUser(registerViewModel, "Teacher");
-
-        //                //check if the user registration is completed successfully and record to teacher table  
-        //                if (Id != null)
-        //                {
-        //                    //record other teacher informations
-        //                    teacher.teacherId = Id;
-        //                    teacher.grade = registerTeacherViewModel.grade;
-        //                    teacher.subject = registerTeacherViewModel.subject;
-
-        //                    academicDirector.registerTeacher(teacher);
-
-        //                    //send user credential through email to the new user
-        //                    collection.sendMail(registerViewModel.email, registerViewModel.username, registerViewModel.password);
-
-        //                    //sucessful message
-        //                    ViewBag.registerStatus = "Registration Completed Successfully";
-        //                }
-        //                else
-        //                {
-        //                    //faliure message due to identity register failure
-        //                    ViewBag.registerStatus = "Registration Failed";
-        //                }
-        //            }
-        //            else
-        //            {
-        //                //failure message due to duplicate user
-        //                ViewBag.duplicate = "Teacher Record Exists with the Same Email Address or Full Name";
-        //            }
-        //        }
-        //        //check if search button is clicked
-        //        else if (search != null)
-        //        {
-        //            //remove unwanted error messages
-        //            ModelState.Remove("email");
-        //            ModelState.Remove("grade");
-        //            ModelState.Remove("subject");
-
-        //            //viewbag element for UI 
-        //            ViewBag.search = true;
-
-        //            //search teacher using teacher name
-        //            registerTeacherViewModel.teacherList = context.Teacher.Where(t => t.user.fullName.StartsWith(registerTeacherViewModel.fullName)).ToList();
-
-        //            //check if record exist or not
-        //            if (registerTeacherViewModel.teacherList.Count == 0)
-        //            {
-        //                ViewBag.search = false;
-        //                ViewBag.searchFound = "Record Not Found";
-        //            }
-        //        }
-        //        //check if update button is clicked
-        //        else if (update != null)
-        //        {
-        //            //teacher object
-        //            Models.Teacher teacherUp = new Models.Teacher(1);
-
-        //            //assign the new data to teacherUp object
-        //            var getId = context.Teacher.Where(t => t.user.Email == registerTeacherViewModel.email).FirstOrDefault();
-        //            teacherUp.teacherId = getId.teacherId;
-                    
-        //            var checkFullName = context.Users.Where(u => u.fullName == registerTeacherViewModel.fullName && u.Id != teacherUp.teacherId).FirstOrDefault();
-                    
-        //            //check if no duplicate name exist
-        //            if (checkFullName == null)
-        //            {
-        //                teacherUp.grade = registerTeacherViewModel.grade;
-        //                teacherUp.user.fullName = registerTeacherViewModel.fullName;
-        //                teacherUp.subject = registerTeacherViewModel.subject;
-
-        //                //update teacher record 
-        //                academicDirector.UpdateTeacher(teacherUp);
-
-        //                //update successful message
-        //                ViewBag.updateStatus = "Update Completed Successfully";
-        //                //ViewBag.upHidden = "hidden";
-        //                ViewBag.disableEmail = false;
-        //            }
-        //            else
-        //            {
-        //                //error message for duplicate Full Name
-        //                ViewBag.fullName = "Full Name Already Taken By Another Account";
-        //            }
-        //        }
-        //        //check if edit button is clicked
-        //        else if (edit != null)
-        //        {
-        //            //remove unwanted error messages
-        //            ModelState.Clear();
-
-        //            //check teacher role before editing
-        //            if (!(userManager.IsInRole(id, "UnitLeader") || userManager.IsInRole(id, "HoomRoom")))
-        //            {
-        //                //populate the selected teacher data in to the update form
-        //                registerTeacherViewModel.teacherList = new List<Models.Teacher>();
-        //                teacher = context.Teacher.Find(id);
-        //                registerTeacherViewModel.fullName = teacher.user.fullName;
-        //                registerTeacherViewModel.subject = teacher.subject;
-        //                registerTeacherViewModel.grade = teacher.grade;
-        //                registerTeacherViewModel.email = teacher.user.Email;
-        //                registerTeacherViewModel.teacherList.Add(teacher);
-
-        //                //viewbag elements
-        //                ViewBag.disableEmail = true;
-        //                ViewBag.upHidden = " ";
-        //            }
-        //            else
-        //            {
-        //                //error message for additional role
-        //                ViewBag.role = "Unable To Edit Because Teacher has Another Role Associated";
-        //                ViewBag.upHidden = "hidden";
-        //            }
-                    
-        //        }
-        //        //check if delete button is clicked
-        //        else if (delete != null)
-        //        {
-        //            //viewbag elements
-        //            ViewBag.search = false;
-        //            ViewBag.upHidden = "hidden";
-
-        //            //check role
-        //            if (!(userManager.IsInRole(id, "UnitLeader") && userManager.IsInRole(id, "HoomRoom")))
-        //            {
-        //                //delete the selected user using teacher id
-        //                academicDirector.DeleteTeacher(id);
-        //                string status = await collection.DeleteUser(id);
-
-        //                if (status == "successful")
-        //                {
-        //                    //sucess message
-        //                    ViewBag.deleteStatus = "Deletion Completed Successfully";
-        //                }
-        //                else
-        //                {
-        //                    //failure message
-        //                    ViewBag.deleteStatus = "Deletion Failed";
-        //                }
-        //            }
-        //            else
-        //            {
-        //                //error message due to additional role
-        //                ViewBag.role = "Unable To Delete Because Teacher has Another Role Associated";
-                        
-        //            }
-        //        }
-        //    }
-        //    return View(registerTeacherViewModel);
-        //}
        public ActionResult registerRegistrar()
         {
             return PartialView("registerRegistrar");
@@ -1090,6 +898,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             AcademicDirector academicDirector = new AcademicDirector();
             SectionViewModel sectionViewModel = new SectionViewModel();
 
+            //populate sectionViewModel
             sectionViewModel = academicDirector.populateFormData();
             return PartialView("AddSection",sectionViewModel);
         }
@@ -1104,6 +913,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             SectionViewModel sectionViewModelExtra = new SectionViewModel();
             AcademicDirector academicDirector = new AcademicDirector();
             Section section = new Section();
+            Section validAcademicYear = new Section();
 
             //check if the record doesn't exist
             sectionViewModelExtra = academicDirector.searchSection(sectionViewModel.grade, letter);
@@ -1114,39 +924,70 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
                 if (findTeacher.grade == sectionViewModel.grade)
                 {
-                    section.teacherId = findTeacher.teacherId;
-                    section.academicYearId = academicYears;
+                    //get all active acadamic years
+                    var allAcadamicYears = context.AcademicYear.ToList();
 
-                    //concatenate grade and section letter as a sectionName
-                    section.sectionName = sectionViewModel.grade.ToString() + letter;
-
-                    //save section record
-                    context.Section.Add(section);
-                    int sucess = context.SaveChanges();
-
-                    if (sucess > 0)
+                    if (allAcadamicYears.Count != 0)
                     {
-                        //assign HomeRoom role for the selected teacher(remove teacher role)
-                        userManager.RemoveFromRole(section.teacherId, "Teacher");
-                        userManager.AddToRole(section.teacherId, "HomeRoom");
+                        foreach (var getAcadamicYear in allAcadamicYears)
+                        {
+                            //check today is in between start and end date of the specific academic year
+                            if (!(DateTime.Compare(DateTime.Now, getAcadamicYear.durationStart) < 0 || DateTime.Compare(DateTime.Now, getAcadamicYear.durationEnd) > 0))
+                            {
+                                //check same identity sections exist in other academic years
+                                validAcademicYear = context.Section.Where(s=>s.sectionName.StartsWith(sectionViewModel.grade.ToString()) && s.academicYearId!=academicYears).FirstOrDefault();
+                                if (validAcademicYear != null)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
 
-                        //success message
-                        ViewBag.complete = "Section Created Successfully";
+                    //check same identity sections exist in other academic years
+                    if (validAcademicYear == null)
+                    {
+                        section.teacherId = findTeacher.teacherId;
+                        section.academicYearId = academicYears;
+
+                        //concatenate grade and section letter as a sectionName
+                        section.sectionName = sectionViewModel.grade.ToString() + letter;
+
+                        //save section record
+                        context.Section.Add(section);
+                        int sucess = context.SaveChanges();
+
+                        if (sucess > 0)
+                        {
+                            //assign HomeRoom role for the selected teacher(remove teacher role)
+                            userManager.RemoveFromRole(section.teacherId, "Teacher");
+                            userManager.AddToRole(section.teacherId, "HomeRoom");
+
+                            //success message
+                            ViewBag.complete = "Section Created Successfully";
+                        }
+                        else
+                        {
+                            //error message
+                            ViewBag.error = "Failed to Create Section!!";
+                        }
                     }
                     else
                     {
-                        //error message
-                        ViewBag.error = "Failed to Create Section!!";
+                        //error section with similar identities exist in another active acadamic year 
+                        ViewBag.error = "Section Can Not be Created in This Academic Year";
                     }
+                    
                 }
                 else
                 {
+                    //error message teacher grade not valid to create the specified section
                     ViewBag.error = "Failed to Create Section. Teacher Not Teach on the Specified Grade";
                 }
             }
             else
             {
-                //error message
+                //error message duplicate section
                 ViewBag.error = "Section Already Exist. Either on Selected or Other Active Academic Year";
             }
 
@@ -1175,6 +1016,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             int getGrade = int.Parse(getId.sectionName.Substring(0, getId.sectionName.Length-1));
             var gradeTeacher = context.Teacher.Where(t=>t.grade==getGrade).ToList();
 
+            //get teachers who teach on the specified grade
             if (gradeTeacher.Count != 0)
             {
                 foreach (var validTeachers in gradeTeacher)
@@ -1189,14 +1031,11 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
             var getTeacher = context.Teacher.Where(t=>t.teacherId==getId.teacherId).FirstOrDefault();
 
-            //include section home room in to the teacher selection
+            //include section homeroom in to the teacher selection
 
             sectionViewModel.teachers.Insert(0, getTeacher.user.fullName);
             sectionViewModel.ID = Id;
             ViewBag.teacher = getTeacher.user.fullName;
-
-            //get acadamic year of the section record
-            //ViewBag.academicYear = getId.academicYearId;
 
             return PartialView("EditSection",sectionViewModel);
         }
@@ -1229,10 +1068,12 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 userManager.RemoveFromRole(newTeacherId.teacherId, "Teacher");
                 userManager.AddToRole(newTeacherId.teacherId, "HomeRoom");
 
+                //success message
                 ViewBag.complete = "Section Updated Successfully";
             }
             else
             {
+                //error message
                 ViewBag.error = "Section Update Failed";
             }
 
@@ -1256,7 +1097,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
             var getTeacher = context.Teacher.Where(t => t.teacherId == getId.teacherId).FirstOrDefault();
 
-            //include section home room in to the teacher selection
+            //include section homeroom in to the teacher selection
 
             sectionViewModel.teachers.Insert(0, getTeacher.user.fullName);
             sectionViewModel.ID = sectionViewModel.ID;
@@ -1275,6 +1116,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
             var getSection = context.Section.Find(Id);
 
+            //check if section dont contain student
             var checkStudent = context.Student.Where(s => s.sectionName == getSection.sectionName && s.academicYearId == getSection.academicYearId).ToList();
 
             if (checkStudent.Count == 0)
@@ -1317,8 +1159,11 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             }
             else
             {
+                //remove homeroom from role
                 userManager.RemoveFromRole(sectionRecord.teacherId, "Teacher");
                 userManager.AddToRole(sectionRecord.teacherId, "HomeRoom");
+
+                //error message
                 ViewBag.posterror = "Section Deletion Failed!!";
             }
           
@@ -1333,11 +1178,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             SectionViewModel sectionViewModel = new SectionViewModel();
             sectionViewModel.sections = new List<Section>();
 
-            //viewbag element
-            //ViewBag.search = false;
-            //ViewBag.upHidden = "hidden";
-            //ViewBag.read = false;
-
+            //get active acadamic years
             var allAcadamicYears = context.AcademicYear.ToList();
 
             if (allAcadamicYears.Count != 0)
@@ -1363,182 +1204,6 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         
         }
 
-        //[HttpPost]
-        //public ActionResult SectionManagement(SectionViewModel sectionViewModel,string letter,string teachers,string academicYears,string add, string search, string update, string delete)
-        //{
-        //    //basic objects
-        //    ApplicationDbContext context = new ApplicationDbContext();
-        //    AcademicDirector academicDirector = new AcademicDirector();
-        //    Section section = new Section();
-        //    Models.Teacher teacher = new Models.Teacher();
-        //    var userStore = new ApplicationUserStore(context);
-        //    var userManager = new ApplicationUserManager(userStore);
-        //    SectionViewModel sectionViewModelExtra = new SectionViewModel();
-
-        //    //viewbag element used in UI
-        //    ViewBag.search = false;
-        //    ViewBag.upHidden = "hidden";
-        //    ViewBag.read = false;
-
-        //    if (ModelState.IsValid || (search != null && ModelState.IsValidField("grade")) || delete != null)
-        //    {
-        //        //check if Add button is clicked
-        //        if (add != null)
-        //        {
-        //            //check if the record doesn't exist
-        //            sectionViewModelExtra = academicDirector.searchSection(sectionViewModel.grade, letter);
-        //            if (sectionViewModelExtra == null)
-        //            {
-        //                //get teacher Id and academic year Id 
-        //                var findTeacher = context.Teacher.Where(t => t.user.fullName == teachers).FirstOrDefault();
-        //                section.teacherId = findTeacher.teacherId;
-        //                section.academicYearId = academicYears;
-
-        //                //concatenate grade and section letter as a sectionName
-        //                section.sectionName = sectionViewModel.grade.ToString() + letter;
-
-        //                //save section record
-        //                context.Section.Add(section);
-        //                context.SaveChanges();
-
-        //                //assign HomeRoom role for the selected teacher(remove teacher role)
-        //                userManager.RemoveFromRole(section.teacherId, "Teacher");
-        //                userManager.AddToRole(section.teacherId, "HomeRoom");
-
-        //                //populate selection list
-        //                sectionViewModel = academicDirector.populateFormData();
-
-        //                //success message
-        //                ViewBag.add = "Section Created Successfully";
-        //            }
-        //            else
-        //            {
-        //                //error message
-        //                ViewBag.add = "The Section Already Exist on Either Selected or Other Active Academic Year";
-        //            }
-        //        }
-        //        //check if search button is clicked
-        //        else if (search != null)
-        //        {
-        //            //remove unwanted errors
-        //            ModelState.Remove("teachers");
-        //            ModelState.Remove("academicYears");
-
-        //            //search section record
-        //            sectionViewModelExtra = academicDirector.searchSection(sectionViewModel.grade, letter);
-
-        //            //check if the record exists
-        //            if (sectionViewModelExtra != null)
-        //            {
-        //                //viewbag attribute for UI usage
-        //                ViewBag.search = true;
-        //                ViewBag.upHidden = " ";
-        //                ViewBag.read = true;
-
-        //                //populate other selections in the sectionViewModel
-        //                sectionViewModel = academicDirector.populateFormData();
-
-        //                //include section home room in to the teacher selection
-        //                foreach (var getTeacher in sectionViewModelExtra.teachers)
-        //                {
-        //                    sectionViewModel.teachers.Insert(0, getTeacher);
-        //                    ViewBag.teacher = getTeacher;
-        //                }
-        //                //get acadamic year of the section record
-        //                foreach (var getAcademicYear in sectionViewModelExtra.academicYears)
-        //                {
-        //                    ViewBag.academicYear = getAcademicYear;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                //record not found error message
-        //                ViewBag.found = "Section Not Found";
-        //                sectionViewModel = academicDirector.populateFormData();
-
-        //            }
-        //        }
-        //        else if (update != null)
-        //        {
-        //            //check if it exists (also the year)and update
-        //            var sectionRecord = context.Section.Where(s => s.sectionName == sectionViewModel.grade.ToString() + letter && s.academicYearId == academicYears).FirstOrDefault();
-
-        //            if (sectionRecord != null)
-        //            {
-        //                //demote role from HomeRoom to Teacher
-        //                userManager.RemoveFromRole(sectionRecord.teacherId, "HoomRoom");
-        //                userManager.AddToRole(sectionRecord.teacherId, "Teacher");
-        //                var newTeacherId = context.Teacher.Where(t => t.user.fullName == teachers).FirstOrDefault();
-
-        //                //get section to update using sectionId
-        //                var updateRecord = context.Section.Find(sectionRecord.sectionId);
-        //                updateRecord.teacherId = newTeacherId.teacherId;
-
-        //                //update section
-        //                context.SaveChanges();
-
-        //                //promote role from Teacher to HoomRoom
-        //                userManager.RemoveFromRole(newTeacherId.teacherId, "Teacher");
-        //                userManager.AddToRole(newTeacherId.teacherId, "HomeRoom");
-
-        //            }
-
-        //            //update success message 
-        //            ViewBag.update = "Update Completed Successfully";
-        //            ViewBag.read = false;
-        //            ViewBag.upHidden = "hidden";
-
-        //            //populate form selection options 
-        //            sectionViewModel = academicDirector.populateFormData();
-
-        //        }
-        //        else if (delete != null)
-        //        {
-        //            //remove unwanted errors
-        //            ModelState.Remove("teachers");
-        //            ModelState.Remove("academicYears");
-
-        //            //search section record
-        //            sectionViewModelExtra = academicDirector.searchSection(sectionViewModel.grade, letter);
-
-        //            if (sectionViewModelExtra != null)
-        //            {
-        //                //check if their are no students enrolled in the section
-        //                Student student = new Student();
-        //                var checkStudent = context.Student.Where(s => s.sectionName == sectionViewModelExtra.grade.ToString() + sectionViewModelExtra.letter[0].ToString() && s.academicYearId == sectionViewModelExtra.academicYears[0]).ToList();
-        //                if (checkStudent.Count == 0)
-        //                {
-        //                    //delete section
-        //                    var sectionRecord = context.Section.Where(s => s.sectionName == sectionViewModelExtra.grade.ToString() + sectionViewModelExtra.letter[0].ToString() && s.academicYearId == sectionViewModelExtra.academicYears[0]).FirstOrDefault();
-        //                    context.Section.Remove(sectionRecord);
-        //                    context.SaveChanges();
-
-        //                    //demote role from HoomRoom to Teacher
-        //                    userManager.RemoveFromRole(sectionRecord.teacherId, "HoomRoom");
-        //                    userManager.AddToRole(sectionRecord.teacherId, "Teacher");
-
-        //                    //successful message
-        //                    ViewBag.delete = "Section Deleted Successfully";
-        //                }
-        //                else
-        //                {
-        //                    ViewBag.delete = "Unable to Delete Section. Students are Enrolled";
-        //                }
-        //            }
-        //            else
-        //            {
-        //                //error message
-        //                ViewBag.delete = "Unable to Delete Section Not Found";
-        //            }
-        //        }
-        //    }
-
-            
-
-        //    return View(sectionViewModel);
-        
-        //}
-
         public ActionResult ScheduleManagement()
         {
             //object declaration
@@ -1546,7 +1211,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             ScheduleViewModel scheduleViewModel = new ScheduleViewModel();
             scheduleViewModel.schedule = new List<Schedule>();
 
-            //currentdate<>
+            //get active schedules
             var schedule = context.Schedule.ToList();
 
             if (schedule.Count != 0)
@@ -1566,10 +1231,11 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
         public ActionResult AddSchedule()
         {
-
+            //object declaration
             AddScheduleModal addScheduleModal = new AddScheduleModal();
             addScheduleModal.scheduleFor = new List<string>();
 
+            //populate dropdown
             addScheduleModal.scheduleFor.Add("Continious Assessment Test");
             addScheduleModal.scheduleFor.Add("Final Exam");
             addScheduleModal.scheduleFor.Add("Reassessment");
@@ -1587,14 +1253,16 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
             DateTime scheduleDate = DateTime.Parse(addScheduleModal.scheduleDate).Date;
 
+            //check if schedule date is not current date
             if (DateTime.Compare(DateTime.Now.Date, scheduleDate.Date) != 0)
             {
-
+                //check schedule for duplicate entry
                 var duplicate = context.Schedule.Where(s => s.grade == addScheduleModal.grade && s.subject.ToUpper() == addScheduleModal.subject.ToUpper() && s.scheduleDate == scheduleDate).FirstOrDefault();
                 if (duplicate == null)
                 {
                     Section identifyYear = new Section();
 
+                    //get active academic year
                     var allAcadamicYears = context.AcademicYear.ToList();
 
                     foreach (var getAcadamicYear in allAcadamicYears)
@@ -1615,6 +1283,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                     DateTime quarterStart = DateTime.Now;
                     DateTime quarterEnd = DateTime.Now;
 
+                    //get start and end dates of the quarter
                     if (quarter == "Q1")
                     {
                         quarterStart = getYear.quarterOneStart.Date;
@@ -1637,24 +1306,176 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                     }
 
 
-
+                    //schedule for Continious Assessment
                     if (scheduleFor == "Continious Assessment Test")
                     {
+                        //get yesterday and tomorrow date from schedule date
                         DateTime yesterday = scheduleDate.Date.Subtract(TimeSpan.FromDays(1));
                         DateTime tomorrow = scheduleDate.Date.Add(TimeSpan.FromDays(1));
 
-
+                        //check if their are schedules before and after the schedule date   
                         var intervalOne = context.Schedule.Where(s => s.scheduleDate == yesterday && s.grade == addScheduleModal.grade).FirstOrDefault();
                         var intervalTwo = context.Schedule.Where(s => s.scheduleDate == tomorrow && s.grade == addScheduleModal.grade).FirstOrDefault();
 
                         if (intervalOne == null && intervalTwo == null)
                         {
-
+                            //check if schedule date is in the quarter duration
                             if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
                             {
+                                //get percentage and subject details
                                 var percent = context.Schedule.Where(s => s.subject.ToUpper() == addScheduleModal.subject.ToUpper() && s.grade == addScheduleModal.grade && s.academicYear == getYear.academicYearName + "-" + quarter).ToList();
                                 var assignmentPercent = context.Assignment.Where(a => a.yearlyQuarter == getYear.academicYearName + "-" + quarter && a.teacher.subject.ToUpper() == addScheduleModal.subject.ToUpper()).ToList();
+                                var subject = context.Teacher.Where(s => s.grade == addScheduleModal.grade && s.subject.ToUpper() == addScheduleModal.subject.ToUpper()).FirstOrDefault();
 
+                                //check if their is a teacher who teaches the specified subject
+                                if (subject != null)
+                                {
+                                    //get previous assesement percentages
+                                    if (percent.Count != 0 || assignmentPercent.Count != 0)
+                                    {
+                                        int sum = 0;
+                                        if (percent.Count != 0)
+                                        {
+                                            foreach (var getPercent in percent)
+                                            {
+                                                sum += getPercent.percentage;
+                                            }
+                                        }
+                                        if (assignmentPercent.Count != 0)
+                                        {
+                                            foreach (var getPercent in assignmentPercent)
+                                            {
+                                                sum += getPercent.markPercentage;
+                                            }
+                                        }
+
+                                        sum += addScheduleModal.percentage;
+
+                                        //check previous and current scheduled assesement not excced 100%
+                                        if (sum <= 100)
+                                        {
+                                            schedule.academicYear = getYear.academicYearName + "-" + quarter;
+                                            schedule.grade = addScheduleModal.grade;
+                                            schedule.percentage = addScheduleModal.percentage;
+                                            schedule.scheduleDate = scheduleDate.Date;
+                                            schedule.scheduleFor = scheduleFor;
+                                            schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
+
+                                            context.Schedule.Add(schedule);
+                                            int result = context.SaveChanges();
+
+                                            if (result > 0)
+                                            {
+                                                //success message
+                                                ViewBag.complete = "Schedule Successfully Scheduled";
+                                            }
+                                            else
+                                            {
+                                                //error message
+                                                ViewBag.error = "Failed To Create Schedule!!";
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //error message percentage excced 100% limit
+                                            ViewBag.error = "The Percentage Exceed Subject Score Limit in a Quarter";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //populate schedule object
+                                        schedule.academicYear = getYear.academicYearName + "-" + quarter;
+                                        schedule.grade = addScheduleModal.grade;
+                                        schedule.percentage = addScheduleModal.percentage;
+                                        schedule.scheduleDate = scheduleDate.Date;
+                                        schedule.scheduleFor = scheduleFor;
+                                        schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
+
+                                        //record schedule
+                                        context.Schedule.Add(schedule);
+                                        int result = context.SaveChanges();
+
+                                        if (result > 0)
+                                        {
+                                            //success message
+                                            ViewBag.complete = "Schedule Successfully Scheduled";
+                                        }
+                                        else
+                                        {
+                                            //error message
+                                            ViewBag.error = "Failed To Create Schedule!!";
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    //error no one teaches the subject
+                                    ViewBag.error = "No Teacher Teaches The Specified Subject";
+                                }
+                                
+                            }
+                            else
+                            {
+                                //error message schedule date out of quarter bound
+                                ViewBag.error = "Schedule Out of Current Quarter Bound!!";
+                            }
+
+                        }
+                        else
+                        {
+                            //error message one day gap not satisfied 
+                            ViewBag.error = "Schedule Failed. Not Enough Interval!!";
+                        }
+                    }//schedule for reassesement
+                    else if (scheduleFor == "Reassessment")
+                    {
+                        //check schedule is scheduled in the quarter duration scope
+                        if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
+                        {
+                            //populate schedule object
+                            schedule.academicYear = getYear.academicYearName + "-" + quarter;
+                            schedule.grade = addScheduleModal.grade;
+                            schedule.percentage = 0;
+                            schedule.scheduleDate = scheduleDate.Date;
+                            schedule.scheduleFor = scheduleFor;
+                            schedule.subject = "All";
+
+                            //record schedule
+                            context.Schedule.Add(schedule);
+                            int result = context.SaveChanges();
+
+                            if (result > 0)
+                            {
+                                //success message
+                                ViewBag.complete = "Schedule Successfully Scheduled";
+                            }
+                            else
+                            {
+                                //error message
+                                ViewBag.error = "Failed To Create Schedule!!";
+                            }
+                        }
+                        else
+                        {
+                            //error not in a current quarter
+                            ViewBag.error = "Schedule Out of Current Quarter Bound!!";
+                        }
+
+                    }//schedule final exam
+                    else
+                    {
+                        //check schedule date is in a quarter duration scope 
+
+                        if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
+                        {
+                            //get percent and subject information
+                            var percent = context.Schedule.Where(s => s.subject.ToUpper() == addScheduleModal.subject.ToUpper() && s.grade == addScheduleModal.grade && s.academicYear == getYear.academicYearName + "-" + quarter).ToList();
+                            var assignmentPercent = context.Assignment.Where(a => a.yearlyQuarter == getYear.academicYearName + "-" + quarter && a.teacher.subject.ToUpper() == addScheduleModal.subject.ToUpper()).ToList();
+                            var subject = context.Teacher.Where(s => s.grade == addScheduleModal.grade && s.subject.ToUpper() == addScheduleModal.subject.ToUpper()).FirstOrDefault();
+
+                            //check if teacher exist who teaches the specified subject
+                            if (subject != null)
+                            {
                                 if (percent.Count != 0 || assignmentPercent.Count != 0)
                                 {
                                     int sum = 0;
@@ -1675,8 +1496,10 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
                                     sum += addScheduleModal.percentage;
 
+                                    //check if percentage sum not excced 100%
                                     if (sum <= 100)
                                     {
+                                        //populate schedule object
                                         schedule.academicYear = getYear.academicYearName + "-" + quarter;
                                         schedule.grade = addScheduleModal.grade;
                                         schedule.percentage = addScheduleModal.percentage;
@@ -1684,25 +1507,30 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                                         schedule.scheduleFor = scheduleFor;
                                         schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
 
+                                        //record schedule
                                         context.Schedule.Add(schedule);
                                         int result = context.SaveChanges();
 
                                         if (result > 0)
                                         {
+                                            //success message
                                             ViewBag.complete = "Schedule Successfully Scheduled";
                                         }
                                         else
                                         {
+                                            //error message
                                             ViewBag.error = "Failed To Create Schedule!!";
                                         }
                                     }
                                     else
                                     {
+                                        //error percentage limit exceed 100%
                                         ViewBag.error = "The Percentage Exceed Subject Score Limit in a Quarter";
                                     }
                                 }
                                 else
                                 {
+                                    //populate schedule subject
                                     schedule.academicYear = getYear.academicYearName + "-" + quarter;
                                     schedule.grade = addScheduleModal.grade;
                                     schedule.percentage = addScheduleModal.percentage;
@@ -1710,144 +1538,32 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                                     schedule.scheduleFor = scheduleFor;
                                     schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
 
+                                    //record schedule
                                     context.Schedule.Add(schedule);
                                     int result = context.SaveChanges();
 
                                     if (result > 0)
                                     {
+                                        //success message
                                         ViewBag.complete = "Schedule Successfully Scheduled";
                                     }
                                     else
                                     {
+                                        //error message
                                         ViewBag.error = "Failed To Create Schedule!!";
                                     }
                                 }
                             }
                             else
                             {
-                                ViewBag.error = "Schedule Out of Current Quarter Bound!!";
+                                //error no one teaches the subject
+                                ViewBag.error = "No Teacher Teaches The Specified Subject";
                             }
 
                         }
                         else
                         {
-                            ViewBag.error = "Schedule Failed. Not Enough Interval!!";
-                        }
-                    }
-                    else if (scheduleFor == "Reassessment")
-                    {
-                        //problem percentage and subject unknown critical
-
-
-                        if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
-                        {
-                            schedule.academicYear = getYear.academicYearName + "-" + quarter;
-                            schedule.grade = addScheduleModal.grade;
-                            schedule.percentage = 0;
-                            schedule.scheduleDate = scheduleDate.Date;
-                            schedule.scheduleFor = scheduleFor;
-                            schedule.subject = "All";
-
-                            context.Schedule.Add(schedule);
-                            int result = context.SaveChanges();
-
-                            if (result > 0)
-                            {
-                                ViewBag.complete = "Schedule Successfully Scheduled";
-                            }
-                            else
-                            {
-                                ViewBag.error = "Failed To Create Schedule!!";
-                            }
-                        }
-                        else
-                        {
-                            //error not in a current quarter
-                            ViewBag.error = "Schedule Out of Current Quarter Bound!!";
-                        }
-
-                    }
-                    else
-                    {
-                        //final exam
-
-                        if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
-                        {
-                            var percent = context.Schedule.Where(s => s.subject.ToUpper() == addScheduleModal.subject.ToUpper() && s.grade == addScheduleModal.grade && s.academicYear == getYear.academicYearName + "-" + quarter).ToList();
-                            var assignmentPercent = context.Assignment.Where(a => a.yearlyQuarter == getYear.academicYearName + "-" + quarter && a.teacher.subject.ToUpper() == addScheduleModal.subject.ToUpper()).ToList();
-
-                            if (percent.Count != 0 || assignmentPercent.Count != 0)
-                            {
-                                int sum = 0;
-                                if (percent.Count != 0)
-                                {
-                                    foreach (var getPercent in percent)
-                                    {
-                                        sum += getPercent.percentage;
-                                    }
-                                }
-                                if (assignmentPercent.Count != 0)
-                                {
-                                    foreach (var getPercent in assignmentPercent)
-                                    {
-                                        sum += getPercent.markPercentage;
-                                    }
-                                }
-
-                                sum += addScheduleModal.percentage;
-
-                                if (sum <= 100)
-                                {
-                                    schedule.academicYear = getYear.academicYearName + "-" + quarter;
-                                    schedule.grade = addScheduleModal.grade;
-                                    schedule.percentage = addScheduleModal.percentage;
-                                    schedule.scheduleDate = scheduleDate.Date;
-                                    schedule.scheduleFor = scheduleFor;
-                                    schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
-
-                                    context.Schedule.Add(schedule);
-                                    int result = context.SaveChanges();
-
-                                    if (result > 0)
-                                    {
-                                        ViewBag.complete = "Schedule Successfully Scheduled";
-                                    }
-                                    else
-                                    {
-                                        ViewBag.error = "Failed To Create Schedule!!";
-                                    }
-                                }
-                                else
-                                {
-                                    //error percentage limit
-                                    ViewBag.error = "The Percentage Exceed Subject Score Limit in a Quarter";
-                                }
-                            }
-                            else
-                            {
-                                schedule.academicYear = getYear.academicYearName + "-" + quarter;
-                                schedule.grade = addScheduleModal.grade;
-                                schedule.percentage = addScheduleModal.percentage;
-                                schedule.scheduleDate = scheduleDate.Date;
-                                schedule.scheduleFor = scheduleFor;
-                                schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
-
-                                context.Schedule.Add(schedule);
-                                int result = context.SaveChanges();
-
-                                if (result > 0)
-                                {
-                                    ViewBag.complete = "Schedule Successfully Scheduled";
-                                }
-                                else
-                                {
-                                    ViewBag.error = "Failed To Create Schedule!!";
-                                }
-                            }
-                        }
-                        else
-                        {
-                            //error not in a current quarter
+                            //error not in a current quarter duration scope
                             ViewBag.error = "Schedule Out of Current Quarter Bound!!";
                         }
 
@@ -1856,23 +1572,15 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 }
                 else
                 {
-                    //error duplicate
+                    //error message duplicate schedule
                     ViewBag.error = "Schedule Already Exist!!";
                 }
             }
             else
             {
-                //not today
+                //error message can not schedule on the current date
                 ViewBag.error = "You Can't Schedule For Today";
             }
-
-            //check for duplicate same grade and subject on same day
-            //check for yesterday and tomorrow for continious assessement same grade
-            //reassesement subject all
-            //check percentage 100%
-
-            //get reassessement by combining attendance and schedule information (percentage)
-            //if two exists add them up
 
             return PartialView("AddSchedule",addScheduleModal);
         }
@@ -1888,6 +1596,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
             var schedule = context.Schedule.Find(Id);
 
+            //populate addScheduleObject 
             addScheduleModal.scheduleId = schedule.scheduleId;
             addScheduleModal.scheduleDate = schedule.scheduleDate.ToShortDateString();
             ViewBag.schedule = schedule.scheduleFor;
@@ -1916,29 +1625,14 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
             DateTime scheduleDate = DateTime.Parse(addScheduleModal.scheduleDate).Date;
 
+            //check schedule date is not current date
             if (DateTime.Compare(DateTime.Now.Date, scheduleDate.Date) != 0)
             {
-
+                //check if similar schedule exists
                 var duplicate = context.Schedule.Where(s => s.grade == addScheduleModal.grade && s.subject.ToUpper() == addScheduleModal.subject.ToUpper() && s.scheduleDate == scheduleDate && s.scheduleId!=addScheduleModal.scheduleId).FirstOrDefault();
                 if (duplicate == null)
                 {
-                    //Section identifyYear = new Section();
-
-                    //var allAcadamicYears = context.AcademicYear.ToList();
-
-                    //foreach (var getAcadamicYear in allAcadamicYears)
-                    //{
-                    //    //check today is in between start and end date of the specific academic year
-                    //    if (!(DateTime.Compare(DateTime.Now, getAcadamicYear.durationStart) < 0 || DateTime.Compare(DateTime.Now, getAcadamicYear.durationEnd) > 0))
-                    //    {
-                    //        identifyYear = context.Section.Where(s => s.sectionName.StartsWith(addScheduleModal.grade.ToString()) && s.academicYearId == getAcadamicYear.academicYearName).FirstOrDefault();
-                    //        if (identifyYear != null)
-                    //        {
-                    //            break;
-                    //        }
-                    //    }
-                    //}
-
+                    //get Acadamic year and current quarter
                     string[] yearQuarter = schedule.academicYear.Split('-');
 
                     var getYear = context.AcademicYear.Find(yearQuarter[0]);
@@ -1946,6 +1640,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                     DateTime quarterStart = DateTime.Now;
                     DateTime quarterEnd = DateTime.Now;
 
+                    //get start and end dates of current quarter
                     if (quarter == "Q1")
                     {
                         quarterStart = getYear.quarterOneStart.Date;
@@ -1968,118 +1663,143 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                     }
 
 
-
+                    //update to Continious Assessment
                     if (scheduleFor == "Continious Assessment Test")
                     {
+                        //get yeasterday and tomoorow dates form schedule date
                         DateTime yesterday = scheduleDate.Date.Subtract(TimeSpan.FromDays(1));
                         DateTime tomorrow = scheduleDate.Date.Add(TimeSpan.FromDays(1));
 
-
+                        //check one day interval
                         var intervalOne = context.Schedule.Where(s => s.scheduleDate == yesterday && s.grade == addScheduleModal.grade && s.scheduleId != addScheduleModal.scheduleId).FirstOrDefault();
                         var intervalTwo = context.Schedule.Where(s => s.scheduleDate == tomorrow && s.grade == addScheduleModal.grade && s.scheduleId != addScheduleModal.scheduleId).FirstOrDefault();
 
                         if (intervalOne == null && intervalTwo == null)
                         {
-
+                            //check schedule is with in quarter duartion bound
                             if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
                             {
+                                //get percentage and subject information
                                 var percent = context.Schedule.Where(s => s.subject.ToUpper() == addScheduleModal.subject.ToUpper() && s.grade == addScheduleModal.grade && s.academicYear == getYear.academicYearName + "-" + quarter && s.scheduleId!=addScheduleModal.scheduleId).ToList();
                                 var assignmentPercent = context.Assignment.Where(a => a.yearlyQuarter == getYear.academicYearName + "-" + quarter && a.teacher.subject.ToUpper() == addScheduleModal.subject.ToUpper()).ToList();
+                                var subject = context.Teacher.Where(s => s.grade == addScheduleModal.grade && s.subject.ToUpper() == addScheduleModal.subject.ToUpper()).FirstOrDefault();
 
-                                if (percent.Count != 0 || assignmentPercent.Count != 0)
+                                //check if teaher exist who teaches the specified subject
+                                if (subject != null)
                                 {
-                                    int sum = 0;
-                                    if (percent.Count != 0)
+                                    if (percent.Count != 0 || assignmentPercent.Count != 0)
                                     {
-                                        foreach (var getPercent in percent)
+                                        int sum = 0;
+                                        if (percent.Count != 0)
                                         {
-                                            sum += getPercent.percentage;
+                                            foreach (var getPercent in percent)
+                                            {
+                                                sum += getPercent.percentage;
+                                            }
+                                        }
+                                        if (assignmentPercent.Count != 0)
+                                        {
+                                            foreach (var getPercent in assignmentPercent)
+                                            {
+                                                sum += getPercent.markPercentage;
+                                            }
+                                        }
+
+                                        sum += addScheduleModal.percentage;
+
+                                        //check sum of assesement percentage not exceed 100%
+                                        if (sum <= 100)
+                                        {
+                                            //populate the new data to schedule object
+                                            schedule.percentage = addScheduleModal.percentage;
+                                            schedule.scheduleDate = scheduleDate.Date;
+                                            schedule.scheduleFor = scheduleFor;
+                                            schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
+
+                                            //update schedule
+                                            int result = contextUp.SaveChanges();
+
+                                            if (result > 0)
+                                            {
+                                                //success message
+                                                ViewBag.complete = "Schedule Updated Successfully";
+                                            }
+                                            else
+                                            {
+                                                //error message
+                                                ViewBag.error = "Failed To Update Schedule!!";
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //error message sum of percentage exceed 100%
+                                            ViewBag.error = "The Percentage Exceed Subject Score Limit in a Quarter";
                                         }
                                     }
-                                    if (assignmentPercent.Count != 0)
+                                    else
                                     {
-                                        foreach (var getPercent in assignmentPercent)
-                                        {
-                                            sum += getPercent.markPercentage;
-                                        }
-                                    }
-
-                                    sum += addScheduleModal.percentage;
-
-                                    if (sum <= 100)
-                                    {
+                                        //populate the new data to schedule object
                                         schedule.percentage = addScheduleModal.percentage;
                                         schedule.scheduleDate = scheduleDate.Date;
                                         schedule.scheduleFor = scheduleFor;
                                         schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
-                                        
+
+                                        //update schedule
                                         int result = contextUp.SaveChanges();
 
                                         if (result > 0)
                                         {
+                                            //successful message
                                             ViewBag.complete = "Schedule Updated Successfully";
                                         }
                                         else
                                         {
+                                            //error message
                                             ViewBag.error = "Failed To Update Schedule!!";
                                         }
                                     }
-                                    else
-                                    {
-                                        ViewBag.error = "The Percentage Exceed Subject Score Limit in a Quarter";
-                                    }
                                 }
                                 else
-                                { 
-                                    schedule.percentage = addScheduleModal.percentage;
-                                    schedule.scheduleDate = scheduleDate.Date;
-                                    schedule.scheduleFor = scheduleFor;
-                                    schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
-
-                                    
-                                    int result = contextUp.SaveChanges();
-
-                                    if (result > 0)
-                                    {
-                                        ViewBag.complete = "Schedule Updated Successfully";
-                                    }
-                                    else
-                                    {
-                                        ViewBag.error = "Failed To Update Schedule!!";
-                                    }
+                                {
+                                    //error no one teaches the subject
+                                    ViewBag.error = "No Teacher Teaches The Specified Subject";
                                 }
                             }
                             else
                             {
+                                //error message schedule date out of quarter duration
                                 ViewBag.error = "Schedule Out of Current Quarter Bound!!";
                             }
 
                         }
                         else
                         {
+                            //error message one day interval not satsfied
                             ViewBag.error = "Update Failed. Not Enough Interval!!";
                         }
                     }
                     else if (scheduleFor == "Reassessment")
                     {
-                        //problem percentage and subject unknown critical
-
-
+                        //check schedule date is with in quarter bound
                         if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
                         {
+                            //populate schedule object
                             schedule.percentage = 0;
                             schedule.scheduleDate = scheduleDate.Date;
                             schedule.scheduleFor = scheduleFor;
                             schedule.subject = "All";
                            
+                            //update schedule
                             int result = contextUp.SaveChanges();
 
                             if (result > 0)
                             {
+                                //success message
                                 ViewBag.complete = "Schedule Updated Successfully";
                             }
                             else
                             {
+                                //error message
                                 ViewBag.error = "Failed To Update Schedule!!";
                             }
                         }
@@ -2092,10 +1812,10 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                     }
                     else
                     {
-                        //final exam
-
+                        //check Schedule date is with in quarter bound
                         if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
                         {
+                            //get percentage information
                             var percent = context.Schedule.Where(s => s.subject.ToUpper() == addScheduleModal.subject.ToUpper() && s.grade == addScheduleModal.grade && s.academicYear == getYear.academicYearName + "-" + quarter && s.scheduleId!=addScheduleModal.scheduleId).ToList();
                             var assignmentPercent = context.Assignment.Where(a => a.yearlyQuarter == getYear.academicYearName + "-" + quarter && a.teacher.subject.ToUpper() == addScheduleModal.subject.ToUpper()).ToList();
 
@@ -2119,9 +1839,10 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
                                 sum += addScheduleModal.percentage;
 
+                                //check if sum does not exceed 100%
                                 if (sum <= 100)
                                 {
-                                    
+                                    //populate schedule object
                                     schedule.percentage = addScheduleModal.percentage;
                                     schedule.scheduleDate = scheduleDate.Date;
                                     schedule.scheduleFor = scheduleFor;
@@ -2131,42 +1852,47 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
                                     if (result > 0)
                                     {
+                                        //success message
                                         ViewBag.complete = "Schedule Updated Successfully";
                                     }
                                     else
                                     {
+                                        //error message
                                         ViewBag.error = "Failed To Update Schedule!!";
                                     }
                                 }
                                 else
                                 {
-                                    //error percentage limit
+                                    //error percentage limit excced 100%
                                     ViewBag.error = "The Percentage Exceed Subject Score Limit in a Quarter";
                                 }
                             }
                             else
                             {
-                                
+                                //populate schedule object
                                 schedule.percentage = addScheduleModal.percentage;
                                 schedule.scheduleDate = scheduleDate.Date;
                                 schedule.scheduleFor = scheduleFor;
                                 schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
 
+                                //update schedule
                                 int result = contextUp.SaveChanges();
 
                                 if (result > 0)
                                 {
+                                    //success message
                                     ViewBag.complete = "Schedule Updated Successfully";
                                 }
                                 else
                                 {
+                                    //error message
                                     ViewBag.error = "Failed To Update Schedule!!";
                                 }
                             }
                         }
                         else
                         {
-                            //error not in a current quarter
+                            //error message Schedule date not in the quarter duration boundary
                             ViewBag.error = "Schedule Out of Current Quarter Bound!!";
                         }
 
@@ -2175,18 +1901,15 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 }
                 else
                 {
-                    //error duplicate
+                    //error message duplicate schedule
                     ViewBag.error = "Schedule Already Exist!!";
                 }
             }
             else
             {
-                //not today
+                //error message can not schedule for current date
                 ViewBag.error = "You Can't Schedule For Today";
             }
-
-
-
 
             return PartialView("EditSchedule",addScheduleModal);
         }

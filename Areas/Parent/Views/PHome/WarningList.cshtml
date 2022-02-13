@@ -7,9 +7,6 @@
 
 @foreach (var list in Model)
 {
-    @*<div class="btn-group w-50 ">
-        <a href="/Parent/PHome/ViewWarning/@list.warningId" class="btn btn-primary">Too Many @list.warningType Record</a>
-    </div>*@
 
     <div class="btn-group w-50 ">
         <a href="/Parent/PHome/ViewWarning/@list.warningId" class="list-group-item list-group-item-action">
@@ -36,12 +33,6 @@
                     <p class="mb-1">Grade @list.grade-Quarter4</p>
                 }
             }
-            @*<p class="mb-1">@list.</p>
-            <small>@list.parent.user.PhoneNumber</small>*@
-
-
-
-
         </a>
     </div>
 }
