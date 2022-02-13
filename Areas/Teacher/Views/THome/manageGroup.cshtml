@@ -2,16 +2,21 @@
 @{
     ViewBag.Title = "manageGroup";
 }
+<style>
+   
+</style>
 
-<h2>manageGroup</h2>
 <script>
     $(document).ready(function () {
         $('#tblGroupStructureList').DataTable();
     });
 </script>
 <style>
-    .container{
-        width:95%
+    .container {
+        width: 95%
+    }
+    .side {
+        display: inline-block
     }
 </style>
 <div class="container mb-3 mt-3 ">
@@ -59,17 +64,29 @@
                                 <input type="submit" name="classify" value="Classify" class="btn btn-primary" />
                                 <input type="text" name="txtImportant" value=@k.groupStructureId style="display:none" />
 
-                            }
-                        }
-                        @using (Html.BeginForm("viewGroup", "THome", new { grIdOne = k.groupStructureId.ToString() }, FormMethod.Get))
-                        {
-                            if (k.completeStatus == 1)
-                            {
-                                <input type="submit" name="view" value="View Details" class="btn btn-primary" />
-                                <input type="text" name="txtImportant" value=@k.groupStructureId style="display:none" />
+                                    }
+                                }
 
-                            }
-                        }
+
+                                @using (Html.BeginForm("viewGroup", "THome", new { grIdOne = k.groupStructureId.ToString() }, FormMethod.Get))
+                                {
+                                    if (k.completeStatus == 1)
+                                    {
+                                        <input type="submit" name="view" value="View Details" class="btn btn-primary" />
+                                        <input type="text" name="txtImportant" value=@k.groupStructureId style="display:none" />
+
+                                    }
+                                }
+                            </div>
+                            <div class="side">
+                                @using (Html.BeginForm("manageGroup", "THome", new { grId = k.groupStructureId.ToString() }, FormMethod.Post))
+                                {
+
+                                    <input type="submit" name="delete" value="Delete" class="btn btn-danger" />
+
+                                }
+                            </div>
+
 
 
                     </td>
@@ -81,11 +98,12 @@
         </table>
 
 
-</div>
-@if (ViewBag.cannotDelete != " " && ViewBag.cannotDelete != null)
-{
-    <div class="alert alert-danger">
-
-        @ViewBag.cannotDelete
     </div>
-}
+    </div>
+    @if (ViewBag.cannotDelete != " " && ViewBag.cannotDelete != null)
+    {
+        <div class="alert alert-danger">
+
+            @ViewBag.cannotDelete
+        </div>
+    }

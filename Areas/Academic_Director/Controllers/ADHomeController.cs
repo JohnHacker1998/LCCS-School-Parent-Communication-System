@@ -1906,6 +1906,16 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             return PartialView("EditSchedule",addScheduleModal);
         }
 
+        public ActionResult announcementManagement()
+        {
+            return View();
+        }
+
+        public ActionResult announcementManangement()
+        {
+            return View();
+        }
+
 
     }
 }
