@@ -48,15 +48,16 @@
                     <td>@k.section.sectionName</td>
                     <td>@k.minNumberOfMembers</td>
                     <td>@k.maxNumberOfMembers</td>
-                    <td>
+                    @*<td>
                         @using (Html.BeginForm("manageGroup", "THome", new { grId = k.groupStructureId.ToString() }, FormMethod.Post))
                         {
 
                             <input type="submit" name="delete" value="Delete" class="btn btn-danger" />
 
                         }
-                    </td>
+                    </td>*@
                     <td>
+                        <div class="side">
                         @using (Html.BeginForm("classifyGroup", "THome", new { grIdOne = k.groupStructureId.ToString() }, FormMethod.Get))
                         {
                             if (k.completeStatus == 0)
@@ -99,7 +100,7 @@
 
 
     </div>
-    </div>
+    
     @if (ViewBag.cannotDelete != " " && ViewBag.cannotDelete != null)
     {
         <div class="alert alert-danger">

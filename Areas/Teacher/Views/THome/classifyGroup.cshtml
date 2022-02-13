@@ -1,4 +1,4 @@
-﻿@model LCCS_School_Parent_Communication_System.viewModels.groupViewModel
+﻿@model LCCS_School_Parent_Communication_System.viewModels.classifyGroupViewModel
 @{
     ViewBag.Title = "classifyGroup";
 
@@ -21,6 +21,36 @@
 </script>
 
 <div class="container">
+    @if (ViewBag.successMessage != " " && ViewBag.successMessage != null)
+    {
+        <div class="alert alert-success">
+            @ViewBag.successMessage
+        </div>
+    }
+    @if (ViewBag.ErrorExists != " " && ViewBag.ErrorExists != null)
+    {
+        <div class="alert alert-danger">
+
+            @ViewBag.ErrorExists
+        </div>
+    }
+    @if (ViewBag.ErrorMembers != " " && ViewBag.ErrorMembers != null)
+    {
+        <div class="alert alert-danger">
+
+            @ViewBag.ErrorMembers
+        </div>
+    }
+    @if (ViewBag.ErrorExists2 != " " && ViewBag.ErrorExists2 != null)
+    {
+        <div class="alert alert-danger">
+
+            @ViewBag.ErrorExists2
+        </div>
+    }
+    <div class="bg-danger invDan" style="display:none">
+        Please select within the range of values.
+    </div>
     @using (Html.BeginForm("classifyGroup", "THome", FormMethod.Post))
     {
         @Html.HiddenFor(a => a.groupStructureID);
@@ -65,21 +95,14 @@
             </div>
             <div class="col-lg-8">
                 <div class="row">@Html.EditorFor(a => a.groupName, new { htmlAttributes = new { @class = "form-control" } })</div>
+                <div class="row">@Html.ValidationMessageFor(a => a.groupName, null, new { @class = "text-danger" })</div>
+
             </div>
         </div>
 
         <div class="row mt-5">
             <div class="col-12"> <div class="row py-2"><input type="submit" name="add" value="Submit" id="sulu" class="btn btn-primary"></div></div>
         </div>
-
-
-
-
-
-
-
-
-
 
 
         <input type="text" id="txtValue" name="txtValue" style="display:none" />
@@ -89,8 +112,8 @@
                 <div class="col-12">
                     <div class="row py-2">
                         <input type="submit" name="btnSubmitGrouping" value="Submit Grouping" class="btn btn-primary" id="btnSubmitGrouping1" />
-                        </div>
                     </div>
+                </div>
             </div>
         }
         else
@@ -99,9 +122,7 @@
         }
     }
 </div>
-<div class="bg-danger invDan" style="display:none">
-    Please select within the range of values.
-</div>
+
 
 
 <div class="container-fluid mb-3 mt-3 ">
@@ -164,26 +185,8 @@
         }
 
     </table>
-    @if (ViewBag.successMessage != " " && ViewBag.successMessage != null)
-    {
-        <div class="alert alert-success">
-            @ViewBag.successMessage
-        </div>
-    }
-    @if (ViewBag.ErrorExists != " " && ViewBag.ErrorExists != null)
-    {
-        <div class="alert alert-danger">
-
-            @ViewBag.ErrorExists
-        </div>
-    }
-    @if (ViewBag.ErrorMembers != " " && ViewBag.ErrorMembers != null)
-    {
-        <div class="alert alert-danger">
-
-            @ViewBag.ErrorMembers
-        </div>
-    }
+ 
+   
 
 
 </div>

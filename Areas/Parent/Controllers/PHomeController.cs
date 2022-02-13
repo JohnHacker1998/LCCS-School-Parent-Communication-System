@@ -583,6 +583,25 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
 
             return View(reportViewModel);
         }
+        public ActionResult viewAnnouncementDetails()
+        {
+            Announcement av = new Announcement();
+
+            return View(av);
+        }
+        [HttpPost]
+        public ActionResult viewAnnouncementDetails(string annId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            Announcement av = new Announcement();
+            int annId1 = int.Parse(annId);
+            av = db.Announcement.Where(ax => ax.announcementID == annId1).FirstOrDefault();
+            av.viewedStatus = 1;
+            db.SaveChanges();
+            return View(av);
+        }
+
+
 
     }
 }

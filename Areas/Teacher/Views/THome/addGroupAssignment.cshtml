@@ -1,4 +1,4 @@
-﻿@model LCCS_School_Parent_Communication_System.viewModels.assignmentViewModel
+﻿@model LCCS_School_Parent_Communication_System.viewModels.addGroupAssignmentViewModel
 @{
     ViewBag.Title = "addGroupAssignment";
 }
@@ -34,6 +34,7 @@
             </div>
             <div class="col-lg-8">
                 <div class="row"> @Html.EditorFor(a => a.assignmentName, new { htmlAttributes = new { @class = "form-control" } })</div>
+                <div class="row">@Html.ValidationMessageFor(a => a.assignmentName, null, new { @class = "text-danger" })</div>
             </div>
         </div>
         <div class="row  mt-3">
@@ -43,6 +44,7 @@
             <div class="col-lg-8 ">
                 <div class="row">
                     @Html.EditorFor(a => a.markPercentage, new { htmlAttributes = new { @min = 1, @max = 100, @class = "form-control" } })
+                    <div class="row">@Html.ValidationMessageFor(a => a.markPercentage, null, new { @class = "text-danger" })</div>
                 </div>
             </div>
         </div>
@@ -52,7 +54,7 @@
             </div>
             <div class="col-lg-8 ">
                 <div class="row">
-                    <select id="groupsList1" name="groupsList" class="form-control selectpicker" multiple data-live-search="true">
+                    <select id="groupsList1" name="groupsList" class="form-control selectpicker" multiple data-live-search="true" required>
                         @foreach (var i in Model.groupList)
                         {
 
@@ -70,6 +72,7 @@
             </div>
             <div class="col-lg-8">
                 <div class="row"> @Html.EditorFor(a => a.submissionDate, new { htmlAttributes = new { @class = "datepicker form-control" } })</div>
+                <div class="row">@Html.ValidationMessageFor(a => a.submissionDate, null, new { @class = "text-danger" })</div>
             </div>
 
         </div>
@@ -79,7 +82,7 @@
             </div>
             <div class="col-lg-8">
                 <div class="row">
-                    <input type="file" name="file" class="form-control" id="theFile" />
+                    <input type="file" name="file" class="form-control" id="theFile" required />
                 </div>
             </div>
         </div>
@@ -87,31 +90,40 @@
         <div class="row mt-5">
             <div class="col-12"> <div class="row py-2"><input type="submit" name="add" value="ADD" class="btn btn-primary" id="sulu" /></div></div>
         </div>
-        <input type="text" name="selectedStudents" id="txtSelectedGroups" style="display:none"/>
+        <input type="text" name="selectedStudents" id="txtSelectedGroups" style="display:none" />
         <input type="text" name="fileName" id="filName" style="display:none" />
 
 
     }
-    @* @if (ViewBag.successfulMessage != " " && ViewBag.successfulMessage != null)
-        {
-            <div class="alert alert-success">
-                @ViewBag.successfulMessage
-            </div>
-        }
-        @if (ViewBag.failedMessage != " " && ViewBag.failedMessage != null)
-        {
-            <div class="alert alert-danger">
+    @if (ViewBag.assignmentExists != " " && ViewBag.assignmentExists != null)
+    {
+        <div class="alert alert-danger">
 
-                @ViewBag.failedMessage
-            </div>
-        }
-        @if (ViewBag.doesntFulfillMessage != " " && ViewBag.doesntFulfillMessage != null)
-        {
-            <div class="alert alert-danger">
+            @ViewBag.assignmentExists
+        </div>
+    }
+    @if (ViewBag.OutOfPercentage != " " && ViewBag.OutOfPercentage != null)
+    {
+        <div class="alert alert-danger">
 
-                @ViewBag.doesntFulfillMessage
-            </div>
-        }*@
+            @ViewBag.OutOfPercentage
+        </div>
+    }
+    @if (ViewBag.tudayerror != " " && ViewBag.tudayerror != null)
+    {
+        <div class="alert alert-danger">
+
+            @ViewBag.tudayerror
+        </div>
+    }
+    @if (ViewBag.failedMessage != " " && ViewBag.failedMessage != null)
+    {
+        <div class="alert alert-danger">
+
+            @ViewBag.failedMessage
+        </div>
+    }
+    
 </div>
 
 <script>
@@ -129,16 +141,7 @@
                 });
             $('#txtSelectedGroups').val(values)
             console.log(values)
-           @* var val2 = $("#theFile").name;
-            console.log(val2);
-            $('#filName').val(val2);*@
-            
-          @*  if ($('#cg').children().length == 0) {
-                $("#btnSubmitGrouping1").show();
-            }
-            else {
-                $("#btnSubmitGrouping1").hide();
-            }*@
+    
 
 
 
@@ -152,26 +155,6 @@
 
 
 
-    @*$(document).ready(function () {
-        $("#lsStudent").selectr({
-
-
-        });
-        $('#sulu').click(function () {
-            var count = $("#lsStudent:selected").length;
-
-            if (count > 4) {
-
-
-                var values = "*";
-                var selected = $("#selectgor option:selected");
-                selected.each(function () {
-                    values += $(this).html() + "-";
-
-                });
-                console.log(values)
-            }
-        });
-    });*@
+  
 
 </script>

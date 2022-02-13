@@ -22,6 +22,10 @@ namespace LCCS_School_Parent_Communication_System.Models
         public DateTime endDate { get; set; }
         
         public DateTime postDate { get; set; }
+        public string filName { get; set; }
+        public int updateStatus { get; set; }
+
+        public int viewedStatus { get; set; }
 
 
     }

@@ -35,6 +35,10 @@ namespace LCCS_School_Parent_Communication_System.Identity
 
         public DbSet<Schedule> Schedule { get; set; }
         public DbSet<Result> Result { get; set; }
+        public DbSet<Announcement> Announcement { get; set; }
+        public DbSet<studentAnnouncement> studentAnnouncement { get; set; }
+        public DbSet<gradeAnnouncement> gradeAnnouncements { get; set; }
+        public DbSet<sectionAnnouncement> sectionAnnouncement { get; set; }
 
 
 
