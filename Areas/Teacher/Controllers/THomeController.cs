@@ -989,14 +989,20 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
         public ActionResult GradeManagement()
         {
-            //basic objects
+            //object declaration
             ApplicationDbContext context = new ApplicationDbContext();
+            ApplicationDbContext contextResult = new ApplicationDbContext();
             StudentViewModel studentViewModel = new StudentViewModel();
             studentViewModel.student = new List<Student>();
+            HomeroomTeacherMethod homeroomTeacherMethod = new HomeroomTeacherMethod();
+            Result result = new Result();
 
-            var allAcadamicYears = context.AcademicYear.ToList();
+            //get teacher information
             string tId = User.Identity.GetUserId().ToString();
             var teacher = context.Teacher.Find(tId);
+
+            //get active acadamic year
+            var allAcadamicYears = context.AcademicYear.ToList();
 
             if (allAcadamicYears.Count != 0)
             {
@@ -1005,11 +1011,13 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                     //check today is in between start and end date of the specific academic year
                     if (!(DateTime.Compare(DateTime.Now, getAcadamicYear.durationStart) < 0 || DateTime.Compare(DateTime.Now, getAcadamicYear.durationEnd) > 0))
                     {
+                        //get section
                         var listOfSections = context.Section.Where(s => s.academicYearId == getAcadamicYear.academicYearName && s.sectionName.StartsWith(teacher.grade.ToString())).ToList();
                         if (listOfSections.Count > 0)
                         {
                             foreach (var getSection in listOfSections)
                             {
+                                //get students in that section
                                 var studentinSection = context.Student.Where(s=>s.sectionName==getSection.sectionName && s.academicYearId==getAcadamicYear.academicYearName).ToList();
 
                                 if (studentinSection.Count != 0)
@@ -1017,6 +1025,117 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                                     foreach (var getStudents in studentinSection)
                                     {
                                         studentViewModel.student.Add(getStudents);
+
+                                        //check student is absent on assesement date without reason
+                                        var quarter = homeroomTeacherMethod.whichQuarter(getAcadamicYear.academicYearName);
+                                        var absentCheck = context.AbsenceRecord.Where(a=>a.studentId==getStudents.studentId && a.academicPeriod==getAcadamicYear.academicYearName+"-"+quarter && a.evidenceFlag==null).ToList();
+
+                                        if (absentCheck.Count!=0)
+                                        {
+                                            foreach (var getAbsent in absentCheck)
+                                            {
+                                                //get schedule and assignment record informations
+                                                var schedules = context.Schedule.Where(s => s.academicYear == getAcadamicYear.academicYearName + "-" + quarter && s.subject == teacher.subject && s.grade == teacher.grade && s.scheduleDate==getAbsent.recordDate.Date).FirstOrDefault();
+                                                var assignments = context.Assignment.Where(a => a.yearlyQuarter == getAcadamicYear.academicYearName + "-" + quarter && a.teacher.subject == teacher.subject && a.teacher.grade == teacher.grade && a.submissionDate == getAbsent.recordDate.Date).FirstOrDefault();
+
+                                                //check if absence exist on scheduled assesement date
+                                                if (schedules!=null)
+                                                {
+                                                    //check if it is non evidence absence
+                                                    getAbsent.recordDate = getAbsent.recordDate.Add(TimeSpan.FromDays(1));
+
+                                                    if (DateTime.Compare(DateTime.Now.Date,getAbsent.recordDate.Date)>0)
+                                                    {
+                                                        AbsenceRecord present = new AbsenceRecord();
+                                                        int count = 0;
+
+                                                        do
+                                                        {
+                                                            present = context.AbsenceRecord.Where(a=>a.recordDate==getAbsent.recordDate.Date).FirstOrDefault();
+                                                            getAbsent.recordDate = getAbsent.recordDate.Add(TimeSpan.FromDays(1));
+                                                            if(present == null)
+                                                            {
+                                                                count++;
+                                                            }
+                                                        }
+                                                        while (present!=null && DateTime.Compare(DateTime.Now.Date, getAbsent.recordDate.Date) > 0);
+
+                                                        if(count==1 && DateTime.Compare(DateTime.Now.Date, getAbsent.recordDate.Date) >= 0)
+                                                        {
+                                                            //give the student zero for that assesement
+                                                            var resultDuplicate = context.Result.Where(r => r.studentId == getStudents.studentId && r.scheduleId == schedules.scheduleId).FirstOrDefault();
+                                                            if (resultDuplicate == null)
+                                                            {
+                                                                result.teacherId = tId;
+                                                                result.studentId = getStudents.studentId;
+                                                                result.result = 0;
+                                                                result.feedback = "Student is Absent On the Assesement Day";
+                                                                result.scheduleId = schedules.scheduleId;
+                                                                result.assignmentId = null;
+                                                                result.resultFor = schedules.scheduleFor;
+                                                                result.percent = schedules.percentage;
+                                                                result.academicYear = schedules.academicYear;
+                                                                result.grade = teacher.grade;
+
+                                                                //save result
+                                                                contextResult.Result.Add(result);
+                                                                int success = contextResult.SaveChanges();
+                                                            }
+
+                                                        }
+                                                    }
+                                                }
+                                                if (assignments != null)
+                                                {
+                                                    
+                                                    getAbsent.recordDate = getAbsent.recordDate.Add(TimeSpan.FromDays(1));
+
+                                                    //get absent dates
+                                                    if (DateTime.Compare(DateTime.Now.Date, getAbsent.recordDate.Date) > 0)
+                                                    {
+                                                        AbsenceRecord present = new AbsenceRecord();
+                                                        int count = 0;
+
+                                                        do
+                                                        {
+                                                            present = context.AbsenceRecord.Where(a => a.recordDate == getAbsent.recordDate.Date).FirstOrDefault();
+                                                            getAbsent.recordDate = getAbsent.recordDate.Add(TimeSpan.FromDays(1));
+                                                            if (present == null)
+                                                            {
+                                                                count++;
+                                                            }
+                                                        }
+                                                        while (present != null && DateTime.Compare(DateTime.Now.Date, getAbsent.recordDate.Date) > 0);
+
+                                                        if (count == 1 && DateTime.Compare(DateTime.Now.Date, getAbsent.recordDate.Date) >= 0)
+                                                        {
+                                                            //save data here
+                                                            var resultDuplicate = context.Result.Where(r => r.studentId == getStudents.studentId && r.assignmentId==assignments.assignmentId).FirstOrDefault();
+                                                            if (resultDuplicate == null)
+                                                            {
+                                                                //populate result
+                                                                result.teacherId = tId;
+                                                                result.studentId = getStudents.studentId;
+                                                                result.result = 0;
+                                                                result.feedback = "Student is Absent On the Assesement Day";
+                                                                result.scheduleId = null;
+                                                                result.assignmentId = assignments.assignmentId;
+                                                                result.resultFor = assignments.assignmentType;
+                                                                result.percent = assignments.markPercentage;
+                                                                result.academicYear = assignments.yearlyQuarter;
+                                                                result.grade = teacher.grade;
+
+                                                                //save result
+                                                                contextResult.Result.Add(result);
+                                                                int success = contextResult.SaveChanges();
+                                                            }
+                                                            
+                                                       }
+                                                    }
+                                                }
+                                            }
+                                            
+                                        }
                                     }
                                 }                                
           
@@ -1026,36 +1145,27 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                 }
             }
 
-            //give zero to assesements on the gradeManagement------------------------------------
-
             return View(studentViewModel);
         }
 
         public ActionResult AddGrade(string id)
         {
-
-            //need to get assignment submittion dates past same quarter
-            //need past exam schedules same quarter
-            //check exam schedule attendance student present or absent
-            //date-which one format
-
-            //retrive the dates
-
-
-            //dates,result,feedback
-
             //object declaration
             ApplicationDbContext context = new ApplicationDbContext();
             HomeroomTeacherMethod homeroomTeacherMethod = new HomeroomTeacherMethod();
             AddGradeModal addGradeModal = new AddGradeModal();
             addGradeModal.dates = new List<string>();
 
+            //get teacher information
             string tId = User.Identity.GetUserId().ToString();
             var teacher = context.Teacher.Find(tId);
             addGradeModal.studentId = int.Parse(id);
 
+            int count = 0;
+
             Section identifyYear = new Section();
 
+            //get acadamic year
             var allAcadamicYears = context.AcademicYear.ToList();
 
             foreach (var getAcadamicYear in allAcadamicYears)
@@ -1071,6 +1181,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                 }
             }
 
+            //get acadamic year and quarter
             var getYear = context.AcademicYear.Find(identifyYear.academicYearId);
             var quarter = homeroomTeacherMethod.whichQuarter(identifyYear.academicYearId);
             
@@ -1078,26 +1189,38 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
             if (schedules.Count != 0)
             {
+                foreach(var getSchedule in schedules)
+                {
+                    var checkReassesement = context.AbsenceRecord.Where(a => a.studentId == addGradeModal.studentId && a.recordDate == getSchedule.scheduleDate.Date && a.evidenceFlag== "AcceptableReason").FirstOrDefault();
+                    if (checkReassesement != null)
+                    {
+                        count++;
+                        break;
+                    }
+                }
+
                 foreach (var getSchedule in schedules)
                 {
                     if (DateTime.Compare(DateTime.Now.Date, getSchedule.scheduleDate.Date) > 0)
                     {
-                        addGradeModal.dates.Add(getSchedule.scheduleDate.ToShortDateString()+"-"+getSchedule.scheduleFor);
-
-                        //if(getSchedule.scheduleFor!= "Reassessment")
-                        //{
-                        //    var absentStudent = context.AbsenceRecord.Where(a=>a.recordDate==getSchedule.scheduleDate.Date && a.student.sectionName.StartsWith(teacher.grade.ToString()) && a.academicPeriod==getYear.academicYearName+"-"+quarter && a.evidenceFlag==null).ToList();
-
-                        //    if (absentStudent.Count!=0)
-                        //    {
-                        //        foreach(var getStudent in absentStudent)
-                        //        {
-                        //            DateTime nextDay = getSchedule.scheduleDate.Add(TimeSpan.FromDays(1)).Date;
-
-                        //            var absent = context.AbsenceRecord.Where(a => a.studentId == getStudent.studentId && a.recordDate == nextDay && a.evidenceFlag == null).FirstOrDefault();
-                        //        }
-                        //    }
-                        //}
+                        var duplicate = context.Result.Where(r => r.scheduleId == getSchedule.scheduleId && r.studentId == addGradeModal.studentId).FirstOrDefault();
+                        var attendance = context.AbsenceRecord.Where(a => a.studentId == addGradeModal.studentId && a.recordDate == getSchedule.scheduleDate.Date).FirstOrDefault();
+                        if (duplicate == null && attendance==null)
+                        {
+                            if (getSchedule.scheduleFor!= "Reassessment")
+                            {
+                                addGradeModal.dates.Add(getSchedule.scheduleDate.ToShortDateString() + "-" + getSchedule.scheduleFor);
+                            }
+                            else
+                            {
+                                if (count != 0)
+                                {
+                                    addGradeModal.dates.Add(getSchedule.scheduleDate.ToShortDateString() + "-" + getSchedule.scheduleFor);
+                                }
+                            }
+                            
+                        }
+                        
                     }
                     
                 }
@@ -1111,7 +1234,13 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                 {
                     if (DateTime.Compare(DateTime.Now.Date, getAssignments.submissionDate.Date) > 0)
                     {
-                        addGradeModal.dates.Add(getAssignments.submissionDate.ToShortDateString()+"-"+getAssignments.assignmentType);
+                        var duplicate = context.Result.Where(r => r.assignmentId == getAssignments.assignmentId && r.studentId == addGradeModal.studentId).FirstOrDefault();
+                        var attendance = context.AbsenceRecord.Where(a => a.studentId == addGradeModal.studentId && a.recordDate == getAssignments.submissionDate.Date && a.evidenceFlag==null).FirstOrDefault();
+                        if (duplicate == null && attendance==null)
+                        {
+                            addGradeModal.dates.Add(getAssignments.submissionDate.ToShortDateString() + "-" + getAssignments.assignmentType);
+                        }
+                        
                     }
 
                 }
@@ -1131,32 +1260,19 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             HomeroomTeacherMethod homeroomTeacherMethod = new HomeroomTeacherMethod();
             Result result = new Result();
 
-            //continious assesement and final exam check attendance percentage
-            //reassesement check attendance percentage if two add them up
-            //assignment check attendance percentage
-            //check duplicate
-            //give zero to assesements on the gradeManagement
-
             string tId = User.Identity.GetUserId().ToString();
             var teacher = context.Teacher.Find(tId);
             string[] dateTaken = dates.Split('-');
             DateTime date = DateTime.Parse(dateTaken[0]).Date;
 
-            //Reassessment
+            //result for Continious Assessment Test & Final Exam
 
             if (dateTaken[1]== "Continious Assessment Test" || dateTaken[1]== "Final Exam")
             {
                 var schedule = context.Schedule.Where(s=>s.scheduleDate==date && s.grade==teacher.grade && s.subject==teacher.subject).FirstOrDefault();
-                var attendance = context.AbsenceRecord.Where(a => a.studentId == addGradeModal.studentId && a.recordDate == date).FirstOrDefault();
-
-                if (attendance == null)
-                {
+                
                     if (addGradeModal.result <= schedule.percentage)
                     {
-                        var duplicate = context.Result.Where(r => r.scheduleId == schedule.scheduleId && r.studentId == addGradeModal.studentId).FirstOrDefault();
-
-                        if (duplicate == null)
-                        {
                             result.teacherId = tId;
                             result.studentId = addGradeModal.studentId;
                             result.result = addGradeModal.result;
@@ -1180,38 +1296,20 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                                 //error failed to record result
                                 ViewBag.error = "Failed to Record Result!!";
                             }
-                        }
-                        else
-                        {
-                            //error result already exist
-                            ViewBag.error = "Result Record Already Exist!!";
-                        }
                     }
                     else
                     {
                         //error result excced percentage
                         ViewBag.error = "Result Exceed the Score limit";
                     }
-                }
-                else
-                {
-                    //error absent on that day
-                    ViewBag.error = "Student Didn't Take the Assessment";
-                }
             }
             else if (dateTaken[1]=="Group" || dateTaken[1]=="Individual")
             {
                 var assignment = context.Assignment.Where(a=>a.submissionDate==date && a.teacher.grade==teacher.grade && a.teacher.subject==teacher.subject).FirstOrDefault();
                 var attendance = context.AbsenceRecord.Where(a => a.studentId == addGradeModal.studentId && a.recordDate == date && a.evidenceFlag==null).FirstOrDefault();
 
-                if (attendance == null)
-                {
                     if (addGradeModal.result <= assignment.markPercentage)
                     {
-                        var duplicate = context.Result.Where(r => r.assignmentId == assignment.assignmentId && r.studentId == addGradeModal.studentId).FirstOrDefault();
-
-                        if (duplicate == null)
-                        {
                             result.teacherId = tId;
                             result.studentId = addGradeModal.studentId;
                             result.result = addGradeModal.result;
@@ -1235,24 +1333,12 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                                 //error failed to record result
                                 ViewBag.error = "Failed to Record Result!!";
                             }
-                        }
-                        else
-                        {
-                            //error result already exist
-                            ViewBag.error = "Result Record Already Exist!!";
-                        }
                     }
                     else
                     {
                         //error result excced percentage
                         ViewBag.error = "Result Exceed the Score limit";
                     }
-                }
-                else
-                {
-                    //error absent on that day
-                    ViewBag.error = "Student Didn't Take the Assessment";
-                }
             }
             else if (dateTaken[1]== "Reassessment")
             {
@@ -1292,10 +1378,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
                     if (sum != 0)
                     {
-                        var duplicate = context.Result.Where(r => r.scheduleId == reassessment.scheduleId && r.studentId == addGradeModal.studentId).FirstOrDefault();
-
-                        if (duplicate == null)
-                        {
+                        
                             result.teacherId = tId;
                             result.studentId = addGradeModal.studentId;
                             result.result = addGradeModal.result;
@@ -1319,12 +1402,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                                 //error failed to record result
                                 ViewBag.error = "Failed to Record Result!!";
                             }
-                        }
-                        else
-                        {
-                            //error result already exist
-                            ViewBag.error = "Result Record Already Exist!!";
-                        }
+                        
                     }
                     else
                     {
@@ -1343,7 +1421,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             return PartialView("AddGrade", addGradeModal);
         }
 
-        public ActionResult UpdateResultManagement()
+        public ActionResult UpdateResultManagement(string id)
         {
             //get students previous current quarter same teacher
 
@@ -1355,6 +1433,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
             string tId = User.Identity.GetUserId().ToString();
             var teacher = context.Teacher.Find(tId);
+
+            int Id = int.Parse(id);
 
             Section identifyYear = new Section();
 
@@ -1376,7 +1456,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             var getYear = context.AcademicYear.Find(identifyYear.academicYearId);
             var quarter = homeroomTeacherMethod.whichQuarter(identifyYear.academicYearId);
 
-            var results = context.Result.Where(r=>r.teacherId==tId && r.academicYear==getYear.academicYearName+"-"+quarter).ToList();
+            var results = context.Result.Where(r=>r.teacherId==tId && r.academicYear==getYear.academicYearName+"-"+quarter && r.feedback!= "Student is Absent On the Assesement Day" && r.studentId==Id).ToList();
             if (results.Count != 0)
             {
                 foreach(var getResults in results)
@@ -1429,9 +1509,15 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                     ViewBag.error = "Failed to Update Result";
                 }
             }
+            else
+            {
+                ViewBag.error = "Result Exceed the Score limit";
+            }
 
             return PartialView("UpdateResult",updateGradeModal);
 
         }
+
+        
     }
 }

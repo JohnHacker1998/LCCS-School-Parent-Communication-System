@@ -5,18 +5,34 @@
 
 
 
-@using (Html.BeginForm("EvidenceManagement", "PHome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
-{<div class="row">
-    <div class="form-group col-xl-12">
-        <input type="file" name="file" class="form-control" />
+@using (Html.BeginForm("EvidenceManagement", "PHome", FormMethod.Post, new { @enctype = "multipart/form-data"}))
+{<div class="container text-center">
+        <div class="form-group col-7">
+            <input type="file" name="file" class="form-control" required oninvalid="this.setCustomValidity('Evidence Document Required')" onchange="this.setCustomValidity('')"/>
+        </div>
+
     </div>
-    
-</div>
-    
-     <input type="submit" name="submit" value="Upload" class="btn btn-primary " />
+
+    <input type="submit" name="submit" value="Upload" class="btn btn-primary col-4" />
 
 }
 <br />
-<div class="alert alert-danger" role="alert">
-    @ViewBag.message
+@if (ViewBag.error!=null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.error
     </div>
+}
+
+@if (ViewBag.complete!=null)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewBag.complete
+    </div>
+}
+
+<script type="text/javascript">
+
+    $.validator.unobtrusive.parse("#error");
+
+</script>

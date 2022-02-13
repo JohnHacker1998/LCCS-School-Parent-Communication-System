@@ -1,14 +1,40 @@
 ﻿@model List<LCCS_School_Parent_Communication_System.Models.Warning>
 @{
+                /**/
 
 }
 
 
 @foreach (var list in Model)
 {
-<div class="btn-group w-50 ">
-    <a href="/Parent/PHome/ViewWarning/@list.warningId" class="btn btn-primary">Too Many @list.warningType Record</a>
-</div>
-        }
+
+    <div class="btn-group w-50 ">
+        <a href="/Parent/PHome/ViewWarning/@list.warningId" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">@list.warningType Warning</h5>
+                <small>@list.warningDate.ToShortDateString()</small>
+            </div>
+            @{
+                string[] yearQuarter = list.academicYear.Split('-');
+                if (yearQuarter[1] == "Q1")
+                {
+                    <p class="mb-1">Grade @list.grade-Quarter1</p>
+                }
+                else if (yearQuarter[1] == "Q2")
+                {
+                    <p class="mb-1">Grade @list.grade-Quarter2</p>
+                }
+                else if (yearQuarter[1] == "Q3")
+                {
+                    <p class="mb-1">Grade @list.grade-Quarter3</p>
+                }
+                else if (yearQuarter[1] == "Q4")
+                {
+                    <p class="mb-1">Grade @list.grade-Quarter4</p>
+                }
+            }
+        </a>
+    </div>
+}
 
 

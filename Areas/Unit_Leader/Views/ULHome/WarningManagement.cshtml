@@ -39,9 +39,7 @@
 
         </table>
     </div>
-@*<div class="alert alert-danger" role="alert">
-    @ViewBag.message
-</div>*@
+
 
 
 <div class="container mt-5 bg-light border-top border-bottom border-4 rounded-3">
@@ -63,7 +61,7 @@
                 foreach (var item in Model.nonViewed)
                 {
                     <tr>
-                        <td>@item.warningDate</td>
+                        <td>@item.warningDate.ToShortDateString()</td>
                         <td>@item.student.fullName</td>
                         <td>@item.student.sectionName</td>
                         <td>@item.warningType</td>

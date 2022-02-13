@@ -1,19 +1,10 @@
 ﻿@model LCCS_School_Parent_Communication_System.viewModels.EvidenceApprovalViewModel
 @{
 
-}
-
-@*@using (Html.BeginForm("EvidenceApproval", "ULHome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
-    {
-        <input type="file" name="file" />
-        <input type="submit" name="submit" value="Upload" />
-    }*@
-
-
-    
+}    
 
     <div class="container vh-100">
-        <div class="col-12 h-25 w-100 text-center">
+        <div class="col-12 w-100 text-center">
             @if (ViewBag.view)
             {
                 using (Html.BeginForm("EvidenceApproval", "ULHome", FormMethod.Post))
@@ -22,17 +13,17 @@
                     @Html.HiddenFor(h => h.Id)
                     @Html.ListBoxFor(l => l.days, new SelectList(Model.days), new { @id = "days", @class = "w-50 selectpicker", @data_live_search = "true", @data_actions_box = "true" })
 
-                    <div class="mt-5">
+                    <span>
                         @*<input type="submit"  value="Approve" class="btn btn-primary"  />*@
                         <button id="holder" type="submit" name="approve" class="btn btn-primary">
                             <span id="spin" class=" spinner-border-sm" role="status" aria-hidden="true"></span>
                             Approve
                         </button>
-                    </div>
+                    </span>
                 }
             }
         </div>
-        <div class="col-12 h-75 w-100">
+        <div class="col-12 w-100">
             @if (ViewBag.view)
             {
                 var base1 = Convert.ToBase64String(Model.document);
@@ -61,19 +52,6 @@
                     view.on('click', '[data-save="modal"]', function (event) {
 
                         window.location.href = "/Unit_Leader/ULHome/StudentEvidence";
-
-                        //var form = $(this).parents('.modal').find('form');
-                        //var actionUrl = "/Unit_Leader/ULHome/success";
-                        //var sendData = form.serialize();
-                        
-                        //$.post(actionUrl, sendData).done(function (data) {
-                        //    //view.modal('hide');
-                        //    view.html(data);
-                        //    view.modal({ backdrop: 'static', keyboard: false })
-                        //    view.modal('show');
-                        //});
-                        
-
                     });
 
                 });
