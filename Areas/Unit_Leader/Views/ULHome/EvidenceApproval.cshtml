@@ -15,7 +15,7 @@
 
                     <span>
                         @*<input type="submit"  value="Approve" class="btn btn-primary"  />*@
-                        <button id="holder" type="submit" name="approve" class="btn btn-primary">
+                        <button id="holder" type="submit" name="approve" class="btn btn-primary col-2">
                             <span id="spin" class=" spinner-border-sm" role="status" aria-hidden="true"></span>
                             Approve
                         </button>
@@ -23,7 +23,7 @@
                 }
             }
         </div>
-        <div class="col-12 w-100">
+        <div class="col-12 w-75 h-100 mt-4 m-auto">
             @if (ViewBag.view)
             {
                 var base1 = Convert.ToBase64String(Model.document);
@@ -82,10 +82,22 @@
     $(document).ready(function () {
         var element = document.getElementById("holder");
         var spin = document.getElementById("spin");
-    $('#holder').click(function () {
-        spin.classList.add("spinner-border");
-    });
+        $('#holder').click(function () {
+            spin.classList.add("spinner-border");
         });
+
+        $('#days').change(function () {
+            if ($('#days :selected').length == 0) {
+                document.getElementById("holder").innerText = "Decline";
+                document.getElementById("holder").style.backgroundColor = 'red';
+            }
+            else {
+                document.getElementById("holder").innerText = "Approve";
+                document.getElementById("holder").style.backgroundColor = '#0d6efd';
+            }
+        });
+        
+    });
 
 
 </script>

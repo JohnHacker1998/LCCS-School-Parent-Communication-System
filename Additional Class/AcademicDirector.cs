@@ -60,12 +60,21 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             //delete teacher record using teacher id
             ApplicationDbContext context = new ApplicationDbContext();
             Teacher teacher = new Teacher();
-
+            int result = 0;
             //delete teacher record
             teacher = context.Teacher.Find(id);
-            context.Teacher.Remove(teacher);
+            try
+            {
+                context.Teacher.Remove(teacher);
+                result = context.SaveChanges();
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+            
             //context.Entry(teacher).State = EntityState.Modified;
-            int result =context.SaveChanges();
+            
             
             if (result > 0)
             {

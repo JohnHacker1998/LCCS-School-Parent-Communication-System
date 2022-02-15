@@ -5,34 +5,84 @@
 
 
 
-@using (Html.BeginForm("EvidenceManagement", "PHome", FormMethod.Post, new { @enctype = "multipart/form-data"}))
-{<div class="container text-center">
-        <div class="form-group col-7">
-            <input type="file" name="file" class="form-control" required oninvalid="this.setCustomValidity('Evidence Document Required')" onchange="this.setCustomValidity('')"/>
+@using (Html.BeginForm("EvidenceManagement", "PHome", FormMethod.Post, new { @enctype = "multipart/form-data",@id="form" }))
+{
+    <div class="container text-center vh-100">
+        <div class="form-group m-auto col-7">
+            <input type="file" name="file" id="doc" class="form-control" required />
+            @*oninvalid="this.setCustomValidity('Evidence Document Required')"*@
+            @*onchange="this.setCustomValidity('')"*@
+            <p style="color:red;" id="error" class="d-none text-start pt-2">File Is Required</p>
         </div>
+        @*<input type="submit" name="submit" value="Upload" class="btn btn-primary col-4" />*@
+        <button id="holder" type="submit" name="submit" class="btn btn-primary col-4 mt-3 rounded-pill">
+            <span id="spin" class=" spinner-border-sm" role="status" aria-hidden="true"></span>
+            Upload
+        </button>
 
+        
+        <div class="m-auto col-7 mt-3">
+            @if (ViewBag.error != null)
+            {
+                <div class="alert alert-danger" role="alert" id="alert">
+                    @ViewBag.error
+                </div>
+            }
+
+            @if (ViewBag.complete != null)
+            {
+                <div class="alert alert-success" role="alert" id="alert">
+                    @ViewBag.complete
+                </div>
+            }
+            <div class="alert alert-success d-none" role="alert" id="alert">
+                
+            </div>
+        </div>
     </div>
 
-    <input type="submit" name="submit" value="Upload" class="btn btn-primary col-4" />
-
-}
-<br />
-@if (ViewBag.error!=null)
-{
-    <div class="alert alert-danger" role="alert">
-        @ViewBag.error
-    </div>
+    
 }
 
-@if (ViewBag.complete!=null)
-{
-    <div class="alert alert-success" role="alert">
-        @ViewBag.complete
-    </div>
-}
+
 
 <script type="text/javascript">
+    $(document).ready(function () {
+        var spin = document.getElementById("spin");
+        var message = document.getElementById("alert");
+        var doc = document.getElementById("error");
+        var form = document.getElementById("form");
 
-    $.validator.unobtrusive.parse("#error");
+        $.validator.unobtrusive.parse("#form");
+           ValidationForm();
+        
+        
+        $('#holder').click(function () {
+            if (form["file"].value != "") {
+                spin.classList.add("spinner-border");
+                message.classList.add("d-none");
+                
+            }
+            else {
+                message.classList.add("d-none");
+                doc.classList.remove("d-none");
+                
+            }
+           
+        });
+        
+
+        function ValidationForm() {
+            if ($("#form").valid()) {
+                return true;
+            }
+            else {
+
+                return false;
+               
+            }
+        }
+    });
+
 
 </script>

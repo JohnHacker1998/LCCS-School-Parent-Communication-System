@@ -77,12 +77,7 @@
         </tfoot>
     </table>
 </div>
-<script>
-        $(document).ready(function () {
-            $('#myTable').DataTable();
-             $('#myTable2').DataTable();
-        });
-</script>
+
 
 <script type="text/javascript">
 
@@ -141,6 +136,13 @@
         }
     });
 
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+        $('#myTable2').DataTable();
+    });
 </script>
 
 <div class="modal" id="myModal" role="dialog" data-backdrop="static" tabindex="-1" data-url="@Url.Action("Register")"></div>

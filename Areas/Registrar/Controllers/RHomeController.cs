@@ -440,14 +440,14 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
             var studentDelete = context.Student.Find(studentViewModel.Id);
 
             //delete associated parents
-            if (parentDelete.Count != 0)
-            {
-                foreach (var getParent in parentDelete)
-                {
-                    contextExtra.Parent.Remove(getParent);
-                    contextExtra.SaveChanges();
-                }
-            }
+            //if (parentDelete.Count != 0)
+            //{
+            //    foreach (var getParent in parentDelete)
+            //    {
+            //        contextExtra.Parent.Remove(getParent);
+            //        contextExtra.SaveChanges();
+            //    }
+            //}
 
             //delete student record
             context.Student.Remove(studentDelete);

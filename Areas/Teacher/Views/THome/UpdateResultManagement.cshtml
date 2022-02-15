@@ -3,11 +3,7 @@
 
 }
 
-<script>
-        $(document).ready(function () {
-            $('#myTable').DataTable();
-        });
-</script>
+
 
 <script type="text/javascript">
 
@@ -34,7 +30,7 @@
         view.on('click', '[data-save="modal"]', function (event) {
 
             var form = $(this).parents('.modal').find('form');
-            var actionUrl = form.attr('action');
+            var actionUrl = "/Teacher/THome/ResultUpdate";
             var sendData = form.serialize();
             $.validator.unobtrusive.parse("#error");
             ValidationForm();
@@ -66,6 +62,12 @@
         }
     });
 
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
 </script>
 
 <div class="container bg-light border-top border-bottom border-4 rounded-3">
@@ -101,7 +103,7 @@
 
                 <td class="text-center">
 
-                    <button type="button" class="btn btn-info" data-toggle="modalsession" data-target="#updateSectionModal" data-url="@Url.Action("UpdateResult")" data-id="@list.resultId"><i class="fas fa-edit fa-lg text-white"></i></button>
+                    <button type="button" class="btn btn-info" data-toggle="modalsession" data-target="#updateSectionModal" data-url="@Url.Action("ResultUpdate")" data-id="@list.resultId"><i class="fas fa-edit fa-lg text-white"></i></button>
 
                 </td>
             </tr>

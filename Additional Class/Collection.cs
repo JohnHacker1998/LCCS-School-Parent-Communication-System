@@ -11,6 +11,8 @@ using System.Web.Helpers;
 using LCCS_School_Parent_Communication_System.viewModels;
 using System.Threading.Tasks;
 using LCCS_School_Parent_Communication_System.Models;
+using System.Threading;
+using System.Data.Entity;
 
 namespace LCCS_School_Parent_Communication_System.Additional_Class
 {
@@ -164,12 +166,24 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
             var userStore = new ApplicationUserStore(appDbContext);
             var userManager = new ApplicationUserManager(userStore);
 
-            //delete user account using user id
-            var user = await userManager.FindByIdAsync(id);
-            var result = await userManager.DeleteAsync(user);
+            //CancellationTokenSource source = new CancellationTokenSource(4000);
+            //CancellationToken token = source.Token;
 
+
+            //delete user account using user id
+            var user = appDbContext.Users.Find(id);
+            appDbContext.Users.Remove(user);
+            //appDbContext.Entry(user).State = EntityState.Modified;
+            int result=appDbContext.SaveChanges();
+
+            //if (token.IsCancellationRequested)
+            //{
+            //    return "failed";
+            //}
+
+            //source.Cancel();
             //check if the deletion is successful
-            if (result.Succeeded)
+            if (result>0)
             {
                 return "successful";
             }

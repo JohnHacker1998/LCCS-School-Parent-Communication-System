@@ -317,7 +317,15 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
             //search evidence record
             var evidence = context.Evidence.Find(id);
 
-            var yesterday = DateTime.Now.Subtract(TimeSpan.FromDays(1));
+            DateTime yesterday = DateTime.Now.Date;
+
+            //var yesterday = DateTime.Now.Subtract(TimeSpan.FromDays(1));
+
+            do
+            {
+                yesterday = yesterday.Subtract(TimeSpan.FromDays(1));
+            }
+            while (yesterday.DayOfWeek == DayOfWeek.Saturday || yesterday.DayOfWeek == DayOfWeek.Sunday);
 
             //get all absence days for the specified evidence
             do
@@ -541,6 +549,11 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
                                                 warningViewModel.parentName.Add(parent[0].user.fullName + "/" + parent[1].user.fullName);
                                                 warningViewModel.parentPhone.Add(parent[0].user.PhoneNumber + "/" + parent[1].user.PhoneNumber);
                                             }
+                                        }
+                                        else
+                                        {
+                                            warningViewModel.parentName.Add("Parent Not-Assigned");
+                                            warningViewModel.parentPhone.Add("Parent Not-Assigned");
                                         }
                                     }
                                     

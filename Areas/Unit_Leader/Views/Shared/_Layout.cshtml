@@ -36,7 +36,6 @@
     <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
 
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css" integrity="sha512-mR/b5Y7FRsKqrYZou7uysnOdCIJib/7r5QeJMFvLNHNhtye3xJp1TdJVPLtetkukFn227nKpXD9OjUc09lx97Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js" integrity="sha512-FHZVRMUW9FsXobt+ONiix6Z0tIkxvQfxtCSirkKc5Sb4TKHmqq1dZa8DphF0XqKb3ldLu/wgMa8mT6uXiLlRlw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
@@ -84,6 +83,19 @@
                         <a class="nav-link" href="@Url.Action("StudentEvidence","ULHome")">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Student Evidence
+                            @{
+                                LCCS_School_Parent_Communication_System.Identity.ApplicationDbContext context = new LCCS_School_Parent_Communication_System.Identity.ApplicationDbContext();
+                                var user = context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+
+                                var currentDate = DateTime.Now.Date;
+                                var teacher = context.Teacher.Where(t => t.teacherId == user.Id).FirstOrDefault();
+
+                                var evidence = context.Evidence.Where(e => e.parent.student.sectionName.StartsWith(teacher.grade.ToString()) && e.approvalStatus == "Provided" && e.dateUpload == currentDate).ToList();
+                                if (evidence.Count != 0)
+                                {
+                                    <span class="position-absolute end-0 translate-middle badge rounded-pill bg-danger">@evidence.Count</span>
+                                }
+                            }
                         </a>
                         <a class="nav-link" href="@Url.Action("WarningManagement","ULHome")">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>

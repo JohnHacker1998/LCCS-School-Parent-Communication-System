@@ -37,6 +37,64 @@ namespace LCCS_School_Parent_Communication_System.Identity
         public DbSet<Result> Result { get; set; }
 
 
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Parent>()
+                   .HasRequired(j => j.student)
+                   .WithMany()
+                   .HasForeignKey(j=>j.studentId)
+                   .WillCascadeOnDelete(true);
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Suspension>()
+                   .HasRequired(j => j.student)
+                   .WithMany()
+                   .HasForeignKey(j => j.studentId)
+                   .WillCascadeOnDelete(true);
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<LateComer>()
+                   .HasRequired(j => j.student)
+                   .WithMany()
+                   .HasForeignKey(j => j.studentId)
+                   .WillCascadeOnDelete(true);
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Warning>()
+                   .HasRequired(j => j.student)
+                   .WithMany()
+                   .HasForeignKey(j => j.studentId)
+                   .WillCascadeOnDelete(true);
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<AbsenceRecord>()
+                   .HasRequired(j => j.student)
+                   .WithMany()
+                   .HasForeignKey(j => j.studentId)
+                   .WillCascadeOnDelete(true);
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<StudentGroupList>()
+                   .HasRequired(j => j.student)
+                   .WithMany()
+                   .HasForeignKey(j => j.studentId)
+                   .WillCascadeOnDelete(true);
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Result>()
+                   .HasRequired(j => j.student)
+                   .WithMany()
+                   .HasForeignKey(j => j.studentId)
+                   .WillCascadeOnDelete(true);
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Evidence>()
+                   .HasRequired(j => j.parent)
+                   .WithMany()
+                   .HasForeignKey(j => j.parentId)
+                   .WillCascadeOnDelete(true);
+            base.OnModelCreating(modelBuilder);
+        }
 
 
     }

@@ -1,27 +1,39 @@
 ﻿@model List<LCCS_School_Parent_Communication_System.Models.Evidence>
 @{
-   
+
 }
 
 
     <div class="list-group container">
-        @foreach (var list in Model)
+
+        @if (Model.Count != 0)
         {
-            <div class="btn-group w-50 ">
-                <a href="/Unit_Leader/ULHome/EvidenceApproval/@list.evidenceId" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">@list.parent.student.fullName</h5>
-                        <small>@list.parent.student.sectionName</small>
-                    </div>
-                    <p class="mb-1">Uploaded By: @list.parent.user.fullName</p>
-                    <small>@list.parent.user.PhoneNumber</small>
+            foreach (var list in Model)
+            {
+                <div class="btn-group w-50 ">
+                    <a href="/Unit_Leader/ULHome/EvidenceApproval/@list.evidenceId" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">@list.parent.student.fullName</h5>
+                            <small>@list.parent.student.sectionName</small>
+                        </div>
+                        <p class="mb-1">Uploaded By: @list.parent.user.fullName</p>
+                        <small>@list.parent.user.PhoneNumber</small>
 
 
 
-                    
-                </a>
-            </div>
+
+                    </a>
+                </div>
+            }
         }
+        else
+        {
+    <div class="container text-center">
+        <h4 class="border-2 border-bottom border-top">Their are No Evidences to review</h4>
+    </div>
+            
+        }
+
     </div>
 
 

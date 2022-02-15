@@ -1232,6 +1232,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             addScheduleModal.scheduleFor.Add("Final Exam");
             addScheduleModal.scheduleFor.Add("Reassessment");
 
+            addScheduleModal.scheduleDate = null;
+
             return PartialView("AddSchedule",addScheduleModal);
         }
 
@@ -1244,85 +1246,232 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             Schedule schedule = new Schedule();
 
             DateTime scheduleDate = DateTime.Parse(addScheduleModal.scheduleDate).Date;
-
-            //check if schedule date is not current date
-            if (DateTime.Compare(DateTime.Now.Date, scheduleDate.Date) != 0)
+            //check schedule date is not on a weekend
+            if(scheduleDate.DayOfWeek != DayOfWeek.Sunday || scheduleDate.DayOfWeek != DayOfWeek.Saturday)
             {
-                //check schedule for duplicate entry
-                var duplicate = context.Schedule.Where(s => s.grade == addScheduleModal.grade && s.subject.ToUpper() == addScheduleModal.subject.ToUpper() && s.scheduleDate == scheduleDate).FirstOrDefault();
-                if (duplicate == null)
+                //check if schedule date is not current date
+                if (DateTime.Compare(DateTime.Now.Date, scheduleDate.Date) != 0)
                 {
-                    Section identifyYear = new Section();
-
-                    //get active academic year
-                    var allAcadamicYears = context.AcademicYear.ToList();
-
-                    foreach (var getAcadamicYear in allAcadamicYears)
+                    //check schedule for duplicate entry
+                    var duplicate = context.Schedule.Where(s => s.grade == addScheduleModal.grade && s.subject.ToUpper() == addScheduleModal.subject.ToUpper() && s.scheduleDate == scheduleDate).FirstOrDefault();
+                    if (duplicate == null)
                     {
-                        //check today is in between start and end date of the specific academic year
-                        if (!(DateTime.Compare(DateTime.Now, getAcadamicYear.durationStart) < 0 || DateTime.Compare(DateTime.Now, getAcadamicYear.durationEnd) > 0))
+                        Section identifyYear = new Section();
+
+                        //get active academic year
+                        var allAcadamicYears = context.AcademicYear.ToList();
+
+                        foreach (var getAcadamicYear in allAcadamicYears)
                         {
-                            identifyYear = context.Section.Where(s => s.sectionName.StartsWith(addScheduleModal.grade.ToString()) && s.academicYearId == getAcadamicYear.academicYearName).FirstOrDefault();
-                            if (identifyYear != null)
+                            //check today is in between start and end date of the specific academic year
+                            if (!(DateTime.Compare(DateTime.Now, getAcadamicYear.durationStart) < 0 || DateTime.Compare(DateTime.Now, getAcadamicYear.durationEnd) > 0))
                             {
-                                break;
+                                identifyYear = context.Section.Where(s => s.sectionName.StartsWith(addScheduleModal.grade.ToString()) && s.academicYearId == getAcadamicYear.academicYearName).FirstOrDefault();
+                                if (identifyYear != null)
+                                {
+                                    break;
+                                }
                             }
                         }
-                    }
 
-                    var getYear = context.AcademicYear.Find(identifyYear.academicYearId);
-                    var quarter = homeroomTeacherMethod.whichQuarter(identifyYear.academicYearId);
-                    DateTime quarterStart = DateTime.Now;
-                    DateTime quarterEnd = DateTime.Now;
+                        var getYear = context.AcademicYear.Find(identifyYear.academicYearId);
+                        var quarter = homeroomTeacherMethod.whichQuarter(identifyYear.academicYearId);
+                        DateTime quarterStart = DateTime.Now;
+                        DateTime quarterEnd = DateTime.Now;
 
-                    //get start and end dates of the quarter
-                    if (quarter == "Q1")
-                    {
-                        quarterStart = getYear.quarterOneStart.Date;
-                        quarterEnd = getYear.quarterOneEnd.Date;
-                    }
-                    else if (quarter == "Q2")
-                    {
-                        quarterStart = getYear.quarterTwoStart.Date;
-                        quarterEnd = getYear.quarterTwoEnd.Date;
-                    }
-                    else if (quarter == "Q3")
-                    {
-                        quarterStart = getYear.quarterThreeStart.Date;
-                        quarterEnd = getYear.quarterThreeEnd.Date;
-                    }
-                    else if (quarter == "Q4")
-                    {
-                        quarterStart = getYear.quarterFourStart.Date;
-                        quarterEnd = getYear.quarterFourEnd.Date;
-                    }
-
-
-                    //schedule for Continious Assessment
-                    if (scheduleFor == "Continious Assessment Test")
-                    {
-                        //get yesterday and tomorrow date from schedule date
-                        DateTime yesterday = scheduleDate.Date.Subtract(TimeSpan.FromDays(1));
-                        DateTime tomorrow = scheduleDate.Date.Add(TimeSpan.FromDays(1));
-
-                        //check if their are schedules before and after the schedule date   
-                        var intervalOne = context.Schedule.Where(s => s.scheduleDate == yesterday && s.grade == addScheduleModal.grade).FirstOrDefault();
-                        var intervalTwo = context.Schedule.Where(s => s.scheduleDate == tomorrow && s.grade == addScheduleModal.grade).FirstOrDefault();
-
-                        if (intervalOne == null && intervalTwo == null)
+                        //get start and end dates of the quarter
+                        if (quarter == "Q1")
                         {
-                            //check if schedule date is in the quarter duration
+                            quarterStart = getYear.quarterOneStart.Date;
+                            quarterEnd = getYear.quarterOneEnd.Date;
+                        }
+                        else if (quarter == "Q2")
+                        {
+                            quarterStart = getYear.quarterTwoStart.Date;
+                            quarterEnd = getYear.quarterTwoEnd.Date;
+                        }
+                        else if (quarter == "Q3")
+                        {
+                            quarterStart = getYear.quarterThreeStart.Date;
+                            quarterEnd = getYear.quarterThreeEnd.Date;
+                        }
+                        else if (quarter == "Q4")
+                        {
+                            quarterStart = getYear.quarterFourStart.Date;
+                            quarterEnd = getYear.quarterFourEnd.Date;
+                        }
+
+
+                        //schedule for Continious Assessment
+                        if (scheduleFor == "Continious Assessment Test")
+                        {
+                            //get yesterday and tomorrow date from schedule date
+                            DateTime yesterday = scheduleDate.Date.Subtract(TimeSpan.FromDays(1));
+                            DateTime tomorrow = scheduleDate.Date.Add(TimeSpan.FromDays(1));
+
+                            //check if their are schedules before and after the schedule date   
+                            var intervalOne = context.Schedule.Where(s => s.scheduleDate == yesterday && s.grade == addScheduleModal.grade).FirstOrDefault();
+                            var intervalTwo = context.Schedule.Where(s => s.scheduleDate == tomorrow && s.grade == addScheduleModal.grade).FirstOrDefault();
+
+                            if (intervalOne == null && intervalTwo == null)
+                            {
+                                //check if schedule date is in the quarter duration
+                                if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
+                                {
+                                    //get percentage and subject details
+                                    var percent = context.Schedule.Where(s => s.subject.ToUpper() == addScheduleModal.subject.ToUpper() && s.grade == addScheduleModal.grade && s.academicYear == getYear.academicYearName + "-" + quarter).ToList();
+                                    var assignmentPercent = context.Assignment.Where(a => a.yearlyQuarter == getYear.academicYearName + "-" + quarter && a.teacher.subject.ToUpper() == addScheduleModal.subject.ToUpper()).ToList();
+                                    var subject = context.Teacher.Where(s => s.grade == addScheduleModal.grade && s.subject.ToUpper() == addScheduleModal.subject.ToUpper()).FirstOrDefault();
+
+                                    //check if their is a teacher who teaches the specified subject
+                                    if (subject != null)
+                                    {
+                                        //get previous assesement percentages
+                                        if (percent.Count != 0 || assignmentPercent.Count != 0)
+                                        {
+                                            int sum = 0;
+                                            if (percent.Count != 0)
+                                            {
+                                                foreach (var getPercent in percent)
+                                                {
+                                                    sum += getPercent.percentage;
+                                                }
+                                            }
+                                            if (assignmentPercent.Count != 0)
+                                            {
+                                                foreach (var getPercent in assignmentPercent)
+                                                {
+                                                    sum += getPercent.markPercentage;
+                                                }
+                                            }
+
+                                            sum += addScheduleModal.percentage;
+
+                                            //check previous and current scheduled assesement not excced 100%
+                                            if (sum <= 100)
+                                            {
+                                                schedule.academicYear = getYear.academicYearName + "-" + quarter;
+                                                schedule.grade = addScheduleModal.grade;
+                                                schedule.percentage = addScheduleModal.percentage;
+                                                schedule.scheduleDate = scheduleDate.Date;
+                                                schedule.scheduleFor = scheduleFor;
+                                                schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
+
+                                                context.Schedule.Add(schedule);
+                                                int result = context.SaveChanges();
+
+                                                if (result > 0)
+                                                {
+                                                    //success message
+                                                    ViewBag.complete = "Schedule Successfully Scheduled";
+                                                }
+                                                else
+                                                {
+                                                    //error message
+                                                    ViewBag.error = "Failed To Create Schedule!!";
+                                                }
+                                            }
+                                            else
+                                            {
+                                                //error message percentage excced 100% limit
+                                                ViewBag.error = "The Percentage Exceed Subject Score Limit in a Quarter";
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //populate schedule object
+                                            schedule.academicYear = getYear.academicYearName + "-" + quarter;
+                                            schedule.grade = addScheduleModal.grade;
+                                            schedule.percentage = addScheduleModal.percentage;
+                                            schedule.scheduleDate = scheduleDate.Date;
+                                            schedule.scheduleFor = scheduleFor;
+                                            schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
+
+                                            //record schedule
+                                            context.Schedule.Add(schedule);
+                                            int result = context.SaveChanges();
+
+                                            if (result > 0)
+                                            {
+                                                //success message
+                                                ViewBag.complete = "Schedule Successfully Scheduled";
+                                            }
+                                            else
+                                            {
+                                                //error message
+                                                ViewBag.error = "Failed To Create Schedule!!";
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //error no one teaches the subject
+                                        ViewBag.error = "No Teacher Teaches The Specified Subject";
+                                    }
+
+                                }
+                                else
+                                {
+                                    //error message schedule date out of quarter bound
+                                    ViewBag.error = "Schedule Out of Current Quarter Bound!!";
+                                }
+
+                            }
+                            else
+                            {
+                                //error message one day gap not satisfied 
+                                ViewBag.error = "Schedule Failed. Not Enough Interval!!";
+                            }
+                        }//schedule for reassesement
+                        else if (scheduleFor == "Reassessment")
+                        {
+                            //check schedule is scheduled in the quarter duration scope
                             if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
                             {
-                                //get percentage and subject details
+                                //populate schedule object
+                                schedule.academicYear = getYear.academicYearName + "-" + quarter;
+                                schedule.grade = addScheduleModal.grade;
+                                schedule.percentage = 0;
+                                schedule.scheduleDate = scheduleDate.Date;
+                                schedule.scheduleFor = scheduleFor;
+                                schedule.subject = "All";
+
+                                //record schedule
+                                context.Schedule.Add(schedule);
+                                int result = context.SaveChanges();
+
+                                if (result > 0)
+                                {
+                                    //success message
+                                    ViewBag.complete = "Schedule Successfully Scheduled";
+                                }
+                                else
+                                {
+                                    //error message
+                                    ViewBag.error = "Failed To Create Schedule!!";
+                                }
+                            }
+                            else
+                            {
+                                //error not in a current quarter
+                                ViewBag.error = "Schedule Out of Current Quarter Bound!!";
+                            }
+
+                        }//schedule final exam
+                        else
+                        {
+                            //check schedule date is in a quarter duration scope 
+
+                            if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
+                            {
+                                //get percent and subject information
                                 var percent = context.Schedule.Where(s => s.subject.ToUpper() == addScheduleModal.subject.ToUpper() && s.grade == addScheduleModal.grade && s.academicYear == getYear.academicYearName + "-" + quarter).ToList();
                                 var assignmentPercent = context.Assignment.Where(a => a.yearlyQuarter == getYear.academicYearName + "-" + quarter && a.teacher.subject.ToUpper() == addScheduleModal.subject.ToUpper()).ToList();
                                 var subject = context.Teacher.Where(s => s.grade == addScheduleModal.grade && s.subject.ToUpper() == addScheduleModal.subject.ToUpper()).FirstOrDefault();
 
-                                //check if their is a teacher who teaches the specified subject
+                                //check if teacher exist who teaches the specified subject
                                 if (subject != null)
                                 {
-                                    //get previous assesement percentages
                                     if (percent.Count != 0 || assignmentPercent.Count != 0)
                                     {
                                         int sum = 0;
@@ -1343,9 +1492,10 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
                                         sum += addScheduleModal.percentage;
 
-                                        //check previous and current scheduled assesement not excced 100%
+                                        //check if percentage sum not excced 100%
                                         if (sum <= 100)
                                         {
+                                            //populate schedule object
                                             schedule.academicYear = getYear.academicYearName + "-" + quarter;
                                             schedule.grade = addScheduleModal.grade;
                                             schedule.percentage = addScheduleModal.percentage;
@@ -1353,6 +1503,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                                             schedule.scheduleFor = scheduleFor;
                                             schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
 
+                                            //record schedule
                                             context.Schedule.Add(schedule);
                                             int result = context.SaveChanges();
 
@@ -1369,13 +1520,13 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                                         }
                                         else
                                         {
-                                            //error message percentage excced 100% limit
+                                            //error percentage limit exceed 100%
                                             ViewBag.error = "The Percentage Exceed Subject Score Limit in a Quarter";
                                         }
                                     }
                                     else
                                     {
-                                        //populate schedule object
+                                        //populate schedule subject
                                         schedule.academicYear = getYear.academicYearName + "-" + quarter;
                                         schedule.grade = addScheduleModal.grade;
                                         schedule.percentage = addScheduleModal.percentage;
@@ -1404,175 +1555,41 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                                     //error no one teaches the subject
                                     ViewBag.error = "No Teacher Teaches The Specified Subject";
                                 }
-                                
+
                             }
                             else
                             {
-                                //error message schedule date out of quarter bound
+                                //error not in a current quarter duration scope
                                 ViewBag.error = "Schedule Out of Current Quarter Bound!!";
                             }
 
-                        }
-                        else
-                        {
-                            //error message one day gap not satisfied 
-                            ViewBag.error = "Schedule Failed. Not Enough Interval!!";
-                        }
-                    }//schedule for reassesement
-                    else if (scheduleFor == "Reassessment")
-                    {
-                        //check schedule is scheduled in the quarter duration scope
-                        if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
-                        {
-                            //populate schedule object
-                            schedule.academicYear = getYear.academicYearName + "-" + quarter;
-                            schedule.grade = addScheduleModal.grade;
-                            schedule.percentage = 0;
-                            schedule.scheduleDate = scheduleDate.Date;
-                            schedule.scheduleFor = scheduleFor;
-                            schedule.subject = "All";
 
-                            //record schedule
-                            context.Schedule.Add(schedule);
-                            int result = context.SaveChanges();
-
-                            if (result > 0)
-                            {
-                                //success message
-                                ViewBag.complete = "Schedule Successfully Scheduled";
-                            }
-                            else
-                            {
-                                //error message
-                                ViewBag.error = "Failed To Create Schedule!!";
-                            }
                         }
-                        else
-                        {
-                            //error not in a current quarter
-                            ViewBag.error = "Schedule Out of Current Quarter Bound!!";
-                        }
-
-                    }//schedule final exam
+                    }
                     else
                     {
-                        //check schedule date is in a quarter duration scope 
-
-                        if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
-                        {
-                            //get percent and subject information
-                            var percent = context.Schedule.Where(s => s.subject.ToUpper() == addScheduleModal.subject.ToUpper() && s.grade == addScheduleModal.grade && s.academicYear == getYear.academicYearName + "-" + quarter).ToList();
-                            var assignmentPercent = context.Assignment.Where(a => a.yearlyQuarter == getYear.academicYearName + "-" + quarter && a.teacher.subject.ToUpper() == addScheduleModal.subject.ToUpper()).ToList();
-                            var subject = context.Teacher.Where(s => s.grade == addScheduleModal.grade && s.subject.ToUpper() == addScheduleModal.subject.ToUpper()).FirstOrDefault();
-
-                            //check if teacher exist who teaches the specified subject
-                            if (subject != null)
-                            {
-                                if (percent.Count != 0 || assignmentPercent.Count != 0)
-                                {
-                                    int sum = 0;
-                                    if (percent.Count != 0)
-                                    {
-                                        foreach (var getPercent in percent)
-                                        {
-                                            sum += getPercent.percentage;
-                                        }
-                                    }
-                                    if (assignmentPercent.Count != 0)
-                                    {
-                                        foreach (var getPercent in assignmentPercent)
-                                        {
-                                            sum += getPercent.markPercentage;
-                                        }
-                                    }
-
-                                    sum += addScheduleModal.percentage;
-
-                                    //check if percentage sum not excced 100%
-                                    if (sum <= 100)
-                                    {
-                                        //populate schedule object
-                                        schedule.academicYear = getYear.academicYearName + "-" + quarter;
-                                        schedule.grade = addScheduleModal.grade;
-                                        schedule.percentage = addScheduleModal.percentage;
-                                        schedule.scheduleDate = scheduleDate.Date;
-                                        schedule.scheduleFor = scheduleFor;
-                                        schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
-
-                                        //record schedule
-                                        context.Schedule.Add(schedule);
-                                        int result = context.SaveChanges();
-
-                                        if (result > 0)
-                                        {
-                                            //success message
-                                            ViewBag.complete = "Schedule Successfully Scheduled";
-                                        }
-                                        else
-                                        {
-                                            //error message
-                                            ViewBag.error = "Failed To Create Schedule!!";
-                                        }
-                                    }
-                                    else
-                                    {
-                                        //error percentage limit exceed 100%
-                                        ViewBag.error = "The Percentage Exceed Subject Score Limit in a Quarter";
-                                    }
-                                }
-                                else
-                                {
-                                    //populate schedule subject
-                                    schedule.academicYear = getYear.academicYearName + "-" + quarter;
-                                    schedule.grade = addScheduleModal.grade;
-                                    schedule.percentage = addScheduleModal.percentage;
-                                    schedule.scheduleDate = scheduleDate.Date;
-                                    schedule.scheduleFor = scheduleFor;
-                                    schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
-
-                                    //record schedule
-                                    context.Schedule.Add(schedule);
-                                    int result = context.SaveChanges();
-
-                                    if (result > 0)
-                                    {
-                                        //success message
-                                        ViewBag.complete = "Schedule Successfully Scheduled";
-                                    }
-                                    else
-                                    {
-                                        //error message
-                                        ViewBag.error = "Failed To Create Schedule!!";
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                //error no one teaches the subject
-                                ViewBag.error = "No Teacher Teaches The Specified Subject";
-                            }
-
-                        }
-                        else
-                        {
-                            //error not in a current quarter duration scope
-                            ViewBag.error = "Schedule Out of Current Quarter Bound!!";
-                        }
-
-
+                        //error message duplicate schedule
+                        ViewBag.error = "Schedule Already Exist!!";
                     }
                 }
                 else
                 {
-                    //error message duplicate schedule
-                    ViewBag.error = "Schedule Already Exist!!";
+                    //error message can not schedule on the current date
+                    ViewBag.error = "You Can't Schedule For Today";
                 }
             }
             else
             {
-                //error message can not schedule on the current date
-                ViewBag.error = "You Can't Schedule For Today";
+                //error message weekend
+                ViewBag.error = "Can Not Schedule at Weekend Dates";
             }
+            
+            addScheduleModal.scheduleFor.Clear();
+
+            //populate dropdown
+            addScheduleModal.scheduleFor.Add("Continious Assessment Test");
+            addScheduleModal.scheduleFor.Add("Final Exam");
+            addScheduleModal.scheduleFor.Add("Reassessment");
 
             return PartialView("AddSchedule",addScheduleModal);
         }
@@ -1617,90 +1634,120 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
             DateTime scheduleDate = DateTime.Parse(addScheduleModal.scheduleDate).Date;
 
-            //check schedule date is not current date
-            if (DateTime.Compare(DateTime.Now.Date, scheduleDate.Date) != 0)
+            if(scheduleDate.DayOfWeek != DayOfWeek.Sunday || scheduleDate.DayOfWeek != DayOfWeek.Saturday)
             {
-                //check if similar schedule exists
-                var duplicate = context.Schedule.Where(s => s.grade == addScheduleModal.grade && s.subject.ToUpper() == addScheduleModal.subject.ToUpper() && s.scheduleDate == scheduleDate && s.scheduleId!=addScheduleModal.scheduleId).FirstOrDefault();
-                if (duplicate == null)
+                //check schedule date is not current date
+                if (DateTime.Compare(DateTime.Now.Date, scheduleDate.Date) != 0)
                 {
-                    //get Acadamic year and current quarter
-                    string[] yearQuarter = schedule.academicYear.Split('-');
-
-                    var getYear = context.AcademicYear.Find(yearQuarter[0]);
-                    var quarter = yearQuarter[1];
-                    DateTime quarterStart = DateTime.Now;
-                    DateTime quarterEnd = DateTime.Now;
-
-                    //get start and end dates of current quarter
-                    if (quarter == "Q1")
+                    //check if similar schedule exists
+                    var duplicate = context.Schedule.Where(s => s.grade == addScheduleModal.grade && s.subject.ToUpper() == addScheduleModal.subject.ToUpper() && s.scheduleDate == scheduleDate && s.scheduleId != addScheduleModal.scheduleId).FirstOrDefault();
+                    if (duplicate == null)
                     {
-                        quarterStart = getYear.quarterOneStart.Date;
-                        quarterEnd = getYear.quarterOneEnd.Date;
-                    }
-                    else if (quarter == "Q2")
-                    {
-                        quarterStart = getYear.quarterTwoStart.Date;
-                        quarterEnd = getYear.quarterTwoEnd.Date;
-                    }
-                    else if (quarter == "Q3")
-                    {
-                        quarterStart = getYear.quarterThreeStart.Date;
-                        quarterEnd = getYear.quarterThreeEnd.Date;
-                    }
-                    else if (quarter == "Q4")
-                    {
-                        quarterStart = getYear.quarterFourStart.Date;
-                        quarterEnd = getYear.quarterFourEnd.Date;
-                    }
+                        //get Acadamic year and current quarter
+                        string[] yearQuarter = schedule.academicYear.Split('-');
 
+                        var getYear = context.AcademicYear.Find(yearQuarter[0]);
+                        var quarter = yearQuarter[1];
+                        DateTime quarterStart = DateTime.Now;
+                        DateTime quarterEnd = DateTime.Now;
 
-                    //update to Continious Assessment
-                    if (scheduleFor == "Continious Assessment Test")
-                    {
-                        //get yeasterday and tomoorow dates form schedule date
-                        DateTime yesterday = scheduleDate.Date.Subtract(TimeSpan.FromDays(1));
-                        DateTime tomorrow = scheduleDate.Date.Add(TimeSpan.FromDays(1));
-
-                        //check one day interval
-                        var intervalOne = context.Schedule.Where(s => s.scheduleDate == yesterday && s.grade == addScheduleModal.grade && s.scheduleId != addScheduleModal.scheduleId).FirstOrDefault();
-                        var intervalTwo = context.Schedule.Where(s => s.scheduleDate == tomorrow && s.grade == addScheduleModal.grade && s.scheduleId != addScheduleModal.scheduleId).FirstOrDefault();
-
-                        if (intervalOne == null && intervalTwo == null)
+                        //get start and end dates of current quarter
+                        if (quarter == "Q1")
                         {
-                            //check schedule is with in quarter duartion bound
-                            if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
+                            quarterStart = getYear.quarterOneStart.Date;
+                            quarterEnd = getYear.quarterOneEnd.Date;
+                        }
+                        else if (quarter == "Q2")
+                        {
+                            quarterStart = getYear.quarterTwoStart.Date;
+                            quarterEnd = getYear.quarterTwoEnd.Date;
+                        }
+                        else if (quarter == "Q3")
+                        {
+                            quarterStart = getYear.quarterThreeStart.Date;
+                            quarterEnd = getYear.quarterThreeEnd.Date;
+                        }
+                        else if (quarter == "Q4")
+                        {
+                            quarterStart = getYear.quarterFourStart.Date;
+                            quarterEnd = getYear.quarterFourEnd.Date;
+                        }
+
+
+                        //update to Continious Assessment
+                        if (scheduleFor == "Continious Assessment Test")
+                        {
+                            //get yeasterday and tomoorow dates form schedule date
+                            DateTime yesterday = scheduleDate.Date.Subtract(TimeSpan.FromDays(1));
+                            DateTime tomorrow = scheduleDate.Date.Add(TimeSpan.FromDays(1));
+
+                            //check one day interval
+                            var intervalOne = context.Schedule.Where(s => s.scheduleDate == yesterday && s.grade == addScheduleModal.grade && s.scheduleId != addScheduleModal.scheduleId).FirstOrDefault();
+                            var intervalTwo = context.Schedule.Where(s => s.scheduleDate == tomorrow && s.grade == addScheduleModal.grade && s.scheduleId != addScheduleModal.scheduleId).FirstOrDefault();
+
+                            if (intervalOne == null && intervalTwo == null)
                             {
-                                //get percentage and subject information
-                                var percent = context.Schedule.Where(s => s.subject.ToUpper() == addScheduleModal.subject.ToUpper() && s.grade == addScheduleModal.grade && s.academicYear == getYear.academicYearName + "-" + quarter && s.scheduleId!=addScheduleModal.scheduleId).ToList();
-                                var assignmentPercent = context.Assignment.Where(a => a.yearlyQuarter == getYear.academicYearName + "-" + quarter && a.teacher.subject.ToUpper() == addScheduleModal.subject.ToUpper()).ToList();
-                                var subject = context.Teacher.Where(s => s.grade == addScheduleModal.grade && s.subject.ToUpper() == addScheduleModal.subject.ToUpper()).FirstOrDefault();
-
-                                //check if teaher exist who teaches the specified subject
-                                if (subject != null)
+                                //check schedule is with in quarter duartion bound
+                                if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
                                 {
-                                    if (percent.Count != 0 || assignmentPercent.Count != 0)
+                                    //get percentage and subject information
+                                    var percent = context.Schedule.Where(s => s.subject.ToUpper() == addScheduleModal.subject.ToUpper() && s.grade == addScheduleModal.grade && s.academicYear == getYear.academicYearName + "-" + quarter && s.scheduleId != addScheduleModal.scheduleId).ToList();
+                                    var assignmentPercent = context.Assignment.Where(a => a.yearlyQuarter == getYear.academicYearName + "-" + quarter && a.teacher.subject.ToUpper() == addScheduleModal.subject.ToUpper()).ToList();
+                                    var subject = context.Teacher.Where(s => s.grade == addScheduleModal.grade && s.subject.ToUpper() == addScheduleModal.subject.ToUpper()).FirstOrDefault();
+
+                                    //check if teaher exist who teaches the specified subject
+                                    if (subject != null)
                                     {
-                                        int sum = 0;
-                                        if (percent.Count != 0)
+                                        if (percent.Count != 0 || assignmentPercent.Count != 0)
                                         {
-                                            foreach (var getPercent in percent)
+                                            int sum = 0;
+                                            if (percent.Count != 0)
                                             {
-                                                sum += getPercent.percentage;
+                                                foreach (var getPercent in percent)
+                                                {
+                                                    sum += getPercent.percentage;
+                                                }
+                                            }
+                                            if (assignmentPercent.Count != 0)
+                                            {
+                                                foreach (var getPercent in assignmentPercent)
+                                                {
+                                                    sum += getPercent.markPercentage;
+                                                }
+                                            }
+
+                                            sum += addScheduleModal.percentage;
+
+                                            //check sum of assesement percentage not exceed 100%
+                                            if (sum <= 100)
+                                            {
+                                                //populate the new data to schedule object
+                                                schedule.percentage = addScheduleModal.percentage;
+                                                schedule.scheduleDate = scheduleDate.Date;
+                                                schedule.scheduleFor = scheduleFor;
+                                                schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
+
+                                                //update schedule
+                                                int result = contextUp.SaveChanges();
+
+                                                if (result > 0)
+                                                {
+                                                    //success message
+                                                    ViewBag.complete = "Schedule Updated Successfully";
+                                                }
+                                                else
+                                                {
+                                                    //error message
+                                                    ViewBag.error = "Failed To Update Schedule!!";
+                                                }
+                                            }
+                                            else
+                                            {
+                                                //error message sum of percentage exceed 100%
+                                                ViewBag.error = "The Percentage Exceed Subject Score Limit in a Quarter";
                                             }
                                         }
-                                        if (assignmentPercent.Count != 0)
-                                        {
-                                            foreach (var getPercent in assignmentPercent)
-                                            {
-                                                sum += getPercent.markPercentage;
-                                            }
-                                        }
-
-                                        sum += addScheduleModal.percentage;
-
-                                        //check sum of assesement percentage not exceed 100%
-                                        if (sum <= 100)
+                                        else
                                         {
                                             //populate the new data to schedule object
                                             schedule.percentage = addScheduleModal.percentage;
@@ -1713,7 +1760,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
 
                                             if (result > 0)
                                             {
-                                                //success message
+                                                //successful message
                                                 ViewBag.complete = "Schedule Updated Successfully";
                                             }
                                             else
@@ -1722,150 +1769,36 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                                                 ViewBag.error = "Failed To Update Schedule!!";
                                             }
                                         }
-                                        else
-                                        {
-                                            //error message sum of percentage exceed 100%
-                                            ViewBag.error = "The Percentage Exceed Subject Score Limit in a Quarter";
-                                        }
                                     }
                                     else
                                     {
-                                        //populate the new data to schedule object
-                                        schedule.percentage = addScheduleModal.percentage;
-                                        schedule.scheduleDate = scheduleDate.Date;
-                                        schedule.scheduleFor = scheduleFor;
-                                        schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
-
-                                        //update schedule
-                                        int result = contextUp.SaveChanges();
-
-                                        if (result > 0)
-                                        {
-                                            //successful message
-                                            ViewBag.complete = "Schedule Updated Successfully";
-                                        }
-                                        else
-                                        {
-                                            //error message
-                                            ViewBag.error = "Failed To Update Schedule!!";
-                                        }
+                                        //error no one teaches the subject
+                                        ViewBag.error = "No Teacher Teaches The Specified Subject";
                                     }
                                 }
                                 else
                                 {
-                                    //error no one teaches the subject
-                                    ViewBag.error = "No Teacher Teaches The Specified Subject";
+                                    //error message schedule date out of quarter duration
+                                    ViewBag.error = "Schedule Out of Current Quarter Bound!!";
                                 }
+
                             }
                             else
                             {
-                                //error message schedule date out of quarter duration
-                                ViewBag.error = "Schedule Out of Current Quarter Bound!!";
-                            }
-
-                        }
-                        else
-                        {
-                            //error message one day interval not satsfied
-                            ViewBag.error = "Update Failed. Not Enough Interval!!";
-                        }
-                    }
-                    else if (scheduleFor == "Reassessment")
-                    {
-                        //check schedule date is with in quarter bound
-                        if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
-                        {
-                            //populate schedule object
-                            schedule.percentage = 0;
-                            schedule.scheduleDate = scheduleDate.Date;
-                            schedule.scheduleFor = scheduleFor;
-                            schedule.subject = "All";
-                           
-                            //update schedule
-                            int result = contextUp.SaveChanges();
-
-                            if (result > 0)
-                            {
-                                //success message
-                                ViewBag.complete = "Schedule Updated Successfully";
-                            }
-                            else
-                            {
-                                //error message
-                                ViewBag.error = "Failed To Update Schedule!!";
+                                //error message one day interval not satsfied
+                                ViewBag.error = "Update Failed. Not Enough Interval!!";
                             }
                         }
-                        else
+                        else if (scheduleFor == "Reassessment")
                         {
-                            //error not in a current quarter
-                            ViewBag.error = "Schedule Out of Current Quarter Bound!!";
-                        }
-
-                    }
-                    else
-                    {
-                        //check Schedule date is with in quarter bound
-                        if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
-                        {
-                            //get percentage information
-                            var percent = context.Schedule.Where(s => s.subject.ToUpper() == addScheduleModal.subject.ToUpper() && s.grade == addScheduleModal.grade && s.academicYear == getYear.academicYearName + "-" + quarter && s.scheduleId!=addScheduleModal.scheduleId).ToList();
-                            var assignmentPercent = context.Assignment.Where(a => a.yearlyQuarter == getYear.academicYearName + "-" + quarter && a.teacher.subject.ToUpper() == addScheduleModal.subject.ToUpper()).ToList();
-
-                            if (percent.Count != 0 || assignmentPercent.Count != 0)
-                            {
-                                int sum = 0;
-                                if (percent.Count != 0)
-                                {
-                                    foreach (var getPercent in percent)
-                                    {
-                                        sum += getPercent.percentage;
-                                    }
-                                }
-                                if (assignmentPercent.Count != 0)
-                                {
-                                    foreach (var getPercent in assignmentPercent)
-                                    {
-                                        sum += getPercent.markPercentage;
-                                    }
-                                }
-
-                                sum += addScheduleModal.percentage;
-
-                                //check if sum does not exceed 100%
-                                if (sum <= 100)
-                                {
-                                    //populate schedule object
-                                    schedule.percentage = addScheduleModal.percentage;
-                                    schedule.scheduleDate = scheduleDate.Date;
-                                    schedule.scheduleFor = scheduleFor;
-                                    schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
-
-                                    int result = contextUp.SaveChanges();
-
-                                    if (result > 0)
-                                    {
-                                        //success message
-                                        ViewBag.complete = "Schedule Updated Successfully";
-                                    }
-                                    else
-                                    {
-                                        //error message
-                                        ViewBag.error = "Failed To Update Schedule!!";
-                                    }
-                                }
-                                else
-                                {
-                                    //error percentage limit excced 100%
-                                    ViewBag.error = "The Percentage Exceed Subject Score Limit in a Quarter";
-                                }
-                            }
-                            else
+                            //check schedule date is with in quarter bound
+                            if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
                             {
                                 //populate schedule object
-                                schedule.percentage = addScheduleModal.percentage;
+                                schedule.percentage = 0;
                                 schedule.scheduleDate = scheduleDate.Date;
                                 schedule.scheduleFor = scheduleFor;
-                                schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
+                                schedule.subject = "All";
 
                                 //update schedule
                                 int result = contextUp.SaveChanges();
@@ -1881,27 +1814,128 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                                     ViewBag.error = "Failed To Update Schedule!!";
                                 }
                             }
+                            else
+                            {
+                                //error not in a current quarter
+                                ViewBag.error = "Schedule Out of Current Quarter Bound!!";
+                            }
+
                         }
                         else
                         {
-                            //error message Schedule date not in the quarter duration boundary
-                            ViewBag.error = "Schedule Out of Current Quarter Bound!!";
+                            //check Schedule date is with in quarter bound
+                            if (!(DateTime.Compare(scheduleDate.Date, quarterStart) < 0 || DateTime.Compare(scheduleDate.Date, quarterEnd) > 0))
+                            {
+                                //get percentage information
+                                var percent = context.Schedule.Where(s => s.subject.ToUpper() == addScheduleModal.subject.ToUpper() && s.grade == addScheduleModal.grade && s.academicYear == getYear.academicYearName + "-" + quarter && s.scheduleId != addScheduleModal.scheduleId).ToList();
+                                var assignmentPercent = context.Assignment.Where(a => a.yearlyQuarter == getYear.academicYearName + "-" + quarter && a.teacher.subject.ToUpper() == addScheduleModal.subject.ToUpper()).ToList();
+
+                                if (percent.Count != 0 || assignmentPercent.Count != 0)
+                                {
+                                    int sum = 0;
+                                    if (percent.Count != 0)
+                                    {
+                                        foreach (var getPercent in percent)
+                                        {
+                                            sum += getPercent.percentage;
+                                        }
+                                    }
+                                    if (assignmentPercent.Count != 0)
+                                    {
+                                        foreach (var getPercent in assignmentPercent)
+                                        {
+                                            sum += getPercent.markPercentage;
+                                        }
+                                    }
+
+                                    sum += addScheduleModal.percentage;
+
+                                    //check if sum does not exceed 100%
+                                    if (sum <= 100)
+                                    {
+                                        //populate schedule object
+                                        schedule.percentage = addScheduleModal.percentage;
+                                        schedule.scheduleDate = scheduleDate.Date;
+                                        schedule.scheduleFor = scheduleFor;
+                                        schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
+
+                                        int result = contextUp.SaveChanges();
+
+                                        if (result > 0)
+                                        {
+                                            //success message
+                                            ViewBag.complete = "Schedule Updated Successfully";
+                                        }
+                                        else
+                                        {
+                                            //error message
+                                            ViewBag.error = "Failed To Update Schedule!!";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //error percentage limit excced 100%
+                                        ViewBag.error = "The Percentage Exceed Subject Score Limit in a Quarter";
+                                    }
+                                }
+                                else
+                                {
+                                    //populate schedule object
+                                    schedule.percentage = addScheduleModal.percentage;
+                                    schedule.scheduleDate = scheduleDate.Date;
+                                    schedule.scheduleFor = scheduleFor;
+                                    schedule.subject = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(addScheduleModal.subject.ToLower());
+
+                                    //update schedule
+                                    int result = contextUp.SaveChanges();
+
+                                    if (result > 0)
+                                    {
+                                        //success message
+                                        ViewBag.complete = "Schedule Updated Successfully";
+                                    }
+                                    else
+                                    {
+                                        //error message
+                                        ViewBag.error = "Failed To Update Schedule!!";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //error message Schedule date not in the quarter duration boundary
+                                ViewBag.error = "Schedule Out of Current Quarter Bound!!";
+                            }
+
+
                         }
-
-
+                    }
+                    else
+                    {
+                        //error message duplicate schedule
+                        ViewBag.error = "Schedule Already Exist!!";
                     }
                 }
                 else
                 {
-                    //error message duplicate schedule
-                    ViewBag.error = "Schedule Already Exist!!";
+                    //error message can not schedule for current date
+                    ViewBag.error = "You Can't Schedule For Today";
                 }
             }
             else
             {
-                //error message can not schedule for current date
-                ViewBag.error = "You Can't Schedule For Today";
+                //error message weekend
+                ViewBag.error = "Can Not Schedule at Weekend Dates";
             }
+
+            
+
+            addScheduleModal.scheduleFor.Clear();
+
+            //populate dropdown
+            addScheduleModal.scheduleFor.Add("Continious Assessment Test");
+            addScheduleModal.scheduleFor.Add("Final Exam");
+            addScheduleModal.scheduleFor.Add("Reassessment");
 
             return PartialView("EditSchedule",addScheduleModal);
         }

@@ -1270,75 +1270,95 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             if (dateTaken[1]== "Continious Assessment Test" || dateTaken[1]== "Final Exam")
             {
                 var schedule = context.Schedule.Where(s=>s.scheduleDate==date && s.grade==teacher.grade && s.subject==teacher.subject).FirstOrDefault();
-                
+                var duplicate = context.Result.Where(r => r.scheduleId == schedule.scheduleId && r.studentId == addGradeModal.studentId).FirstOrDefault();
+
+                if (duplicate == null)
+                {
                     if (addGradeModal.result <= schedule.percentage)
                     {
-                            result.teacherId = tId;
-                            result.studentId = addGradeModal.studentId;
-                            result.result = addGradeModal.result;
-                            result.feedback = addGradeModal.feedback;
-                            result.scheduleId = schedule.scheduleId;
-                            result.assignmentId = null;
-                            result.resultFor = dateTaken[1];
-                            result.percent = schedule.percentage;
-                            result.academicYear = schedule.academicYear;
-                            result.grade = teacher.grade;
+                        result.teacherId = tId;
+                        result.studentId = addGradeModal.studentId;
+                        result.result = addGradeModal.result;
+                        result.feedback = addGradeModal.feedback;
+                        result.scheduleId = schedule.scheduleId;
+                        result.assignmentId = null;
+                        result.resultFor = dateTaken[1];
+                        result.percent = schedule.percentage;
+                        result.academicYear = schedule.academicYear;
+                        result.grade = teacher.grade;
 
-                            context.Result.Add(result);
-                            int success= context.SaveChanges();
+                        context.Result.Add(result);
+                        int success = context.SaveChanges();
 
-                            if (success > 0)
-                            {
-                                ViewBag.complete = "Result Recorded Successfully";
-                            }
-                            else
-                            {
-                                //error failed to record result
-                                ViewBag.error = "Failed to Record Result!!";
-                            }
+                        if (success > 0)
+                        {
+                            ViewBag.complete = "Result Recorded Successfully";
+                        }
+                        else
+                        {
+                            //error failed to record result
+                            ViewBag.error = "Failed to Record Result!!";
+                        }
                     }
                     else
                     {
                         //error result excced percentage
                         ViewBag.error = "Result Exceed the Score limit";
                     }
+                }
+                else
+                {
+                    //error message duplicate
+                    ViewBag.error = "Result Already Exist!!";
+                }
+                    
             }
             else if (dateTaken[1]=="Group" || dateTaken[1]=="Individual")
             {
                 var assignment = context.Assignment.Where(a=>a.submissionDate==date && a.teacher.grade==teacher.grade && a.teacher.subject==teacher.subject).FirstOrDefault();
                 var attendance = context.AbsenceRecord.Where(a => a.studentId == addGradeModal.studentId && a.recordDate == date && a.evidenceFlag==null).FirstOrDefault();
+                var duplicate = context.Result.Where(r => r.assignmentId == assignment.assignmentId && r.studentId == addGradeModal.studentId).FirstOrDefault();
 
+                if (duplicate == null)
+                {
                     if (addGradeModal.result <= assignment.markPercentage)
                     {
-                            result.teacherId = tId;
-                            result.studentId = addGradeModal.studentId;
-                            result.result = addGradeModal.result;
-                            result.feedback = addGradeModal.feedback;
-                            result.scheduleId = null;
-                            result.assignmentId = assignment.assignmentId;
-                            result.resultFor = dateTaken[1];
-                            result.percent = assignment.markPercentage;
-                            result.academicYear = assignment.yearlyQuarter;
-                            result.grade = teacher.grade;
+                        result.teacherId = tId;
+                        result.studentId = addGradeModal.studentId;
+                        result.result = addGradeModal.result;
+                        result.feedback = addGradeModal.feedback;
+                        result.scheduleId = null;
+                        result.assignmentId = assignment.assignmentId;
+                        result.resultFor = dateTaken[1];
+                        result.percent = assignment.markPercentage;
+                        result.academicYear = assignment.yearlyQuarter;
+                        result.grade = teacher.grade;
 
-                            context.Result.Add(result);
-                            int success = context.SaveChanges();
+                        context.Result.Add(result);
+                        int success = context.SaveChanges();
 
-                            if (success > 0)
-                            {
-                                ViewBag.complete = "Result Recorded Successfully";
-                            }
-                            else
-                            {
-                                //error failed to record result
-                                ViewBag.error = "Failed to Record Result!!";
-                            }
+                        if (success > 0)
+                        {
+                            ViewBag.complete = "Result Recorded Successfully";
+                        }
+                        else
+                        {
+                            //error failed to record result
+                            ViewBag.error = "Failed to Record Result!!";
+                        }
                     }
                     else
                     {
                         //error result excced percentage
                         ViewBag.error = "Result Exceed the Score limit";
                     }
+                }
+                else
+                {
+                    //error message duplicate
+                    ViewBag.error = "Result Already Exist!!";
+                }
+                
             }
             else if (dateTaken[1]== "Reassessment")
             {
@@ -1364,21 +1384,25 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
                 var reassessment = context.Schedule.Where(s => s.scheduleDate == date && s.scheduleFor == "Reassessment").FirstOrDefault();
                 var schedule = context.Schedule.Where(s=>s.academicYear==getYear.academicYearName+"-"+quarter && s.grade==teacher.grade && s.subject==teacher.subject).ToList();
-                if (schedule.Count != 0)
+                var duplicate = context.Result.Where(r => r.scheduleId == reassessment.scheduleId && r.studentId == addGradeModal.studentId).FirstOrDefault();
+
+                if (duplicate == null)
                 {
-                    foreach (var getSchedules in schedule)
+                    if (schedule.Count != 0)
                     {
-                        var getPercent = context.AbsenceRecord.Where(a => a.studentId == addGradeModal.studentId && a.academicPeriod == getYear.academicYearName + "-" + quarter && a.recordDate == getSchedules.scheduleDate && a.evidenceFlag== "AcceptableReason").FirstOrDefault();
-
-                        if (getPercent!=null)
+                        foreach (var getSchedules in schedule)
                         {
-                            sum += getSchedules.percentage;
-                        }
-                    }
+                            var getPercent = context.AbsenceRecord.Where(a => a.studentId == addGradeModal.studentId && a.academicPeriod == getYear.academicYearName + "-" + quarter && a.recordDate == getSchedules.scheduleDate && a.evidenceFlag == "AcceptableReason").FirstOrDefault();
 
-                    if (sum != 0)
-                    {
-                        
+                            if (getPercent != null)
+                            {
+                                sum += getSchedules.percentage;
+                            }
+                        }
+
+                        if (sum != 0)
+                        {
+
                             result.teacherId = tId;
                             result.studentId = addGradeModal.studentId;
                             result.result = addGradeModal.result;
@@ -1402,19 +1426,26 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                                 //error failed to record result
                                 ViewBag.error = "Failed to Record Result!!";
                             }
-                        
+
+                        }
+                        else
+                        {
+                            //error student not valid for reassesement
+                            ViewBag.error = "Student not Valid for Reassessment";
+                        }
                     }
                     else
                     {
-                        //error student not valid for reassesement
-                        ViewBag.error = "Student not Valid for Reassessment";
+                        //error you cant give reassesement result(no schedules before reassesement)
+                        ViewBag.error = "You Don't have Any Previous Assesement to Give Reassessment";
                     }
                 }
                 else
                 {
-                    //error you cant give reassesement result(no schedules before reassesement)
-                    ViewBag.error = "You Don't have Any Previous Assesement to Give Reassessment";
+                    //error message duplicate
+                    ViewBag.error = "Result Already Exist!!";
                 }
+                
 
             }
 
@@ -1456,10 +1487,10 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             var getYear = context.AcademicYear.Find(identifyYear.academicYearId);
             var quarter = homeroomTeacherMethod.whichQuarter(identifyYear.academicYearId);
 
-            var results = context.Result.Where(r=>r.teacherId==tId && r.academicYear==getYear.academicYearName+"-"+quarter && r.feedback!= "Student is Absent On the Assesement Day" && r.studentId==Id).ToList();
+            var results = context.Result.Where(r => r.teacherId == tId && r.academicYear == getYear.academicYearName + "-" + quarter && r.feedback != "Student is Absent On the Assesement Day" && r.studentId == Id).ToList();
             if (results.Count != 0)
             {
-                foreach(var getResults in results)
+                foreach (var getResults in results)
                 {
                     updateResultViewModel.results.Add(getResults);
                 }
@@ -1468,7 +1499,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             return View(updateResultViewModel);
         }
 
-        public ActionResult UpdateResult(string id)
+        public ActionResult ResultUpdate(string id)
         {
 
             //object declaration
@@ -1483,23 +1514,23 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             updateGradeModal.feedback = result.feedback;
             updateGradeModal.resultId = rId;
 
-            return PartialView("UpdateResult",updateGradeModal);
+            return PartialView("ResultUpdate", updateGradeModal);
         }
 
         [HttpPost]
-        public ActionResult UpdateResult(UpdateGradeModal updateGradeModal)
+        public ActionResult ResultUpdate(UpdateGradeModal updateGradeModal)
         {
             //object declaration
             ApplicationDbContext context = new ApplicationDbContext();
 
             var result = context.Result.Find(updateGradeModal.resultId);
 
-            if (updateGradeModal.result<=result.percent)
+            if (updateGradeModal.result <= result.percent)
             {
                 result.result = updateGradeModal.result;
                 result.feedback = updateGradeModal.feedback;
 
-                int success= context.SaveChanges();
+                int success = context.SaveChanges();
                 if (success > 0)
                 {
                     ViewBag.complete = "Result Updated Successfully";
@@ -1514,10 +1545,10 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                 ViewBag.error = "Result Exceed the Score limit";
             }
 
-            return PartialView("UpdateResult",updateGradeModal);
+            return PartialView("ResultUpdate", updateGradeModal);
 
         }
 
-        
+
     }
 }

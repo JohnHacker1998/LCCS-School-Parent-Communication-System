@@ -47,15 +47,16 @@
                 <form action="AddSchedule" id="error" autocomplete="off">
 
                     <div class="form-group">
-                        <div class="container row">
-                            <div class="form-group">
-                                @Html.LabelFor(a => a.scheduleDate, new { @class = "form-label mt-2" })
-                                <div class="container row"> @Html.EditorFor(a => a.scheduleDate, new { htmlAttributes = new {@readonly=true,@class = "datepicker form-control" } })</div>
-                                <div class="container row">@Html.ValidationMessageFor(a => a.scheduleDate, null, new { @class = "text-danger" })</div>
-                            </div>
-                        </div>
+                        @*<div class="container row">*@
 
+                        @Html.LabelFor(a => a.scheduleDate, new { @class = "form-label mt-2" })
+                        <div class="container row"> @Html.TextBoxFor(e => e.scheduleDate, new {@class = "datepicker form-control",@id="inputs"})</div>
+                        <div class="container row">@Html.ValidationMessageFor(v => v.scheduleDate, null, new { @class = "text-danger", @id="message"})</div>
 
+                        @*</div>*@
+                    </div>
+                    <div class="form-group">
+                        
 
                         <div class="col-12">
                             @Html.LabelFor(l => l.scheduleFor, new { @class = "form-label mt-2" })
@@ -116,8 +117,20 @@
         const hidden = document.getElementById('hide');
         const save = document.getElementById('save');
         const exit = document.getElementById('exit');
-        view.on('click', '[data-save="modal"]', function (event) {
+        const messa=document.getElementById('message');
+        
+        $("#inputs").keydown(function (event) {
+            event.preventDefault();
+        });
 
+        $("#inputs").change(function (event) {
+            messa.innerHTML = '';
+            document.getElementById("inputs").classList.remove("input-validation-error");
+            
+        });
+
+        view.on('click', '[data-save="modal"]', function (event) {
+            
             $.validator.unobtrusive.parse("#error");
             ValidationForm();
             if (ValidationForm()) {

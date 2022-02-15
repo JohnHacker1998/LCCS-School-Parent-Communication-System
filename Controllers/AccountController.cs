@@ -244,6 +244,7 @@ namespace LCCS_School_Parent_Communication_System.Controllers
                 {
                     ModelState.AddModelError("changepass", error);
                 }
+                ViewBag.error = "error";
             }
             return PartialView("EditPassword",profileEditPassword);
         }

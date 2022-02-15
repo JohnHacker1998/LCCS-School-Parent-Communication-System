@@ -1,11 +1,7 @@
 ﻿@model LCCS_School_Parent_Communication_System.viewModels.RegisterTeacherViewModel
 
 
-<script>
-        $(document).ready(function () {
-            $('#myTable').DataTable();
-        });
-    </script>
+
 
 <script type="text/javascript">
 
@@ -21,7 +17,7 @@
         });
 
         $('[data-toggle="modalsession"]').click(function () {
-            var url = $(this).data('url')+'?id='+$(this).data('id');
+            var url = $(this).data('url') + '?id=' + $(this).data('id');
             $.get(url).done(function (data) {
                 view.html(data);
                 view.modal({ backdrop: 'static', keyboard: false })
@@ -66,7 +62,12 @@
 
 </script>
 
-    
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+</script>
+
 <div class="container mt-5 bg-light border-top border-bottom border-4 rounded-3">
     <h1 class="border-bottom border-5 p-3 mb-4">Teachers</h1>
     <table class="table table-striped table-bordered" id="myTable">
@@ -91,7 +92,7 @@
 
                         <button type="button" class="btn btn-info" data-toggle="modalsession" data-target="#updateTeacherModal" data-url="@Url.Action("EditTeacher")" data-id="@list.teacherId"><i class="fas fa-edit fa-lg text-white"></i></button>
                         <button type="button" class="btn btn-danger" data-toggle="modalsession" data-target="#deleteTeacherModal" data-url="@Url.Action("DeleteTeacher")" data-id="@list.teacherId"><i class="fas fa-trash-alt fa-lg"></i></button>
-                        
+
                     </td>
                 </tr>
             }
@@ -103,10 +104,10 @@
     </table>
 </div>
 
-<div class="modal" id="myModal" role="dialog" data-backdrop="static" tabindex="-1" data-url="@Url.Action("Register")" ></div>
+<div class="modal" id="myModal" role="dialog" data-backdrop="static" tabindex="-1" data-url="@Url.Action("Register")"></div>
 
 <style>
-  /*.row{
-      padding:0 !important;
-  }*/
+      /*.row{
+        padding:0 !important;
+    }*/
 </style>
