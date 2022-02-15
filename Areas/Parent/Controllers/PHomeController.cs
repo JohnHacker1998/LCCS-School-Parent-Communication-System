@@ -57,6 +57,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
                             start = ks.scheduleDate.ToShortDateString(),
                             end = ks.scheduleDate.ToShortDateString(),
                             allDay = true,
+                            backgroundColor="blue",
                         }
 
                       );
@@ -77,6 +78,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
                         start = g.recordDate.ToShortDateString(),
                         end =g.recordDate.ToShortDateString(),
                         allDay = true,
+                        backgroundColor="red",
                     }
 
                         );
@@ -90,6 +92,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
                             start = g.recordDate.ToShortDateString(),
                             end = g.recordDate.ToShortDateString(),
                             allDay = true,
+                            backgroundColor="green"
                         }
 
                                                 );
@@ -107,6 +110,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
                         start = m.lateDate.ToShortDateString(),
                         end = m.lateDate.ToShortDateString(),
                         allDay = true,
+                        backgroundColor="black",
                     }
                         );
                 }

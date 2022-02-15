@@ -1,9 +1,8 @@
-﻿@model LCCS_School_Parent_Communication_System.viewModels.assignmentViewModel
+﻿@model LCCS_School_Parent_Communication_System.viewModels.addGroupAssignmentViewModel
 @{
     ViewBag.Title = "addGroupAssignment";
 }
 
-<h2>addGroupAssignment</h2>
 
 <style>
     .container {
@@ -18,84 +17,102 @@
 
 
         });
-        
+
     });
 
 </script>
 
-
-<div class="container">
-    @using (Html.BeginForm("addGroupAssignment", "THome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
-    {
-        @Html.HiddenFor(a => a.groupStructureId)
-        <div class="row mt-3">
-            <div class="col-lg-4">
-                @Html.LabelFor(a => a.assignmentName, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-            <div class="col-lg-8">
-                <div class="row"> @Html.EditorFor(a => a.assignmentName, new { htmlAttributes = new { @class = "form-control" } })</div>
-            </div>
-        </div>
-        <div class="row  mt-3">
-            <div class="col-lg-4 ">
-                @Html.LabelFor(a => a.markPercentage)
-            </div>
-            <div class="col-lg-8 ">
-                <div class="row">
-                    @Html.EditorFor(a => a.markPercentage, new { htmlAttributes = new { @min = 1, @max = 100, @class = "form-control" } })
-                </div>
-            </div>
-        </div>
-        <div class="row  mt-3">
-            <div class="col-lg-4 ">
-                @Html.LabelFor(a => a.groupList)
-            </div>
-            <div class="col-lg-8 ">
-                <div class="row">
-                    <select id="groupsList1" name="groupsList" class="form-control selectpicker" multiple data-live-search="true">
-                        @foreach (var i in Model.groupList)
-                        {
-
-                            <option value=@i>@i.groupName</option>
-
-                        }
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-3">
-            <div class="col-lg-4 ">
-                @Html.LabelFor(a => a.submissionDate)
-            </div>
-            <div class="col-lg-8">
-                <div class="row"> @Html.EditorFor(a => a.submissionDate, new { htmlAttributes = new { @class = "datepicker form-control" } })</div>
-            </div>
-
-        </div>
-        <div class="row mt-3">
-            <div class="col-lg-4 ">
-                @Html.LabelFor(a => a.assignmentDocument)
-            </div>
-            <div class="col-lg-8">
-                <div class="row">
-                    <input type="file" name="file" class="form-control" id="theFile" />
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-5">
-            <div class="col-12"> <div class="row py-2"><input type="submit" name="add" value="ADD" class="btn btn-primary" id="sulu" /></div></div>
-        </div>
-        <input type="text" name="selectedStudents" id="txtSelectedGroups" style="display:none"/>
-        <input type="text" name="fileName" id="filName" style="display:none" />
-
-
-    }
-    @* @if (ViewBag.successfulMessage != " " && ViewBag.successfulMessage != null)
+    <div class="container mb-3 mt-3 bg-light border-top border-bottom-0 border-4 rounded-3 ">
+        <h1 class="border-bottom border-5 p-3 mb-4">Add Group Assignment</h1>
+        @using (Html.BeginForm("addGroupAssignment", "THome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
         {
-            <div class="alert alert-success">
-                @ViewBag.successfulMessage
+            @Html.HiddenFor(a => a.groupStructureId)
+            <div class="row mt-3">
+                <div class="col-lg-4">
+                    @Html.LabelFor(a => a.assignmentName, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                <div class="col-lg-8">
+                    <div class="row"> @Html.EditorFor(a => a.assignmentName, new { htmlAttributes = new { @class = "form-control" } })</div>
+                    <div class="row">@Html.ValidationMessageFor(a => a.assignmentName, null, new { @class = "text-danger" })</div>
+                </div>
+            </div>
+            <div class="row  mt-3">
+                <div class="col-lg-4 ">
+                    @Html.LabelFor(a => a.markPercentage)
+                </div>
+                <div class="col-lg-8 ">
+                    <div class="row">
+                        @Html.EditorFor(a => a.markPercentage, new { htmlAttributes = new { @min = 1, @max = 100, @class = "form-control" } })
+                        <div class="row">@Html.ValidationMessageFor(a => a.markPercentage, null, new { @class = "text-danger" })</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row  mt-3">
+                <div class="col-lg-4 ">
+                    @Html.LabelFor(a => a.groupList)
+                </div>
+                <div class="col-lg-8 ">
+                    <div class="row">
+                        <select id="groupsList1" name="groupsList" class="form-control selectpicker" multiple data-live-search="true" required>
+                            @foreach (var i in Model.groupList)
+                            {
+
+                                <option value=@i>@i.groupName</option>
+
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-lg-4 ">
+                    @Html.LabelFor(a => a.submissionDate)
+                </div>
+                <div class="col-lg-8">
+                    <div class="row"> @Html.EditorFor(a => a.submissionDate, new { htmlAttributes = new { @class = "datepicker form-control" } })</div>
+                    <div class="row">@Html.ValidationMessageFor(a => a.submissionDate, null, new { @class = "text-danger" })</div>
+                </div>
+
+            </div>
+            <div class="row mt-3">
+                <div class="col-lg-4 ">
+                    @Html.LabelFor(a => a.assignmentDocument)
+                </div>
+                <div class="col-lg-8">
+                    <div class="row">
+                        <input type="file" name="file" class="form-control" id="theFile" required />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-12"> <div class="row py-2"><input type="submit" name="add" value="ADD" class="btn btn-primary" id="sulu" /></div></div>
+            </div>
+            <input type="text" name="selectedStudents" id="txtSelectedGroups" style="display:none" />
+            <input type="text" name="fileName" id="filName" style="display:none" />
+
+
+        }
+        @if (ViewBag.assignmentExists != " " && ViewBag.assignmentExists != null)
+        {
+            <div class="alert alert-danger">
+
+                @ViewBag.assignmentExists
+            </div>
+        }
+        @if (ViewBag.OutOfPercentage != " " && ViewBag.OutOfPercentage != null)
+        {
+            <div class="alert alert-danger">
+
+                @ViewBag.OutOfPercentage
+            </div>
+        }
+        @if (ViewBag.tudayerror != " " && ViewBag.tudayerror != null)
+        {
+            <div class="alert alert-danger">
+
+                @ViewBag.tudayerror
             </div>
         }
         @if (ViewBag.failedMessage != " " && ViewBag.failedMessage != null)
@@ -105,73 +122,45 @@
                 @ViewBag.failedMessage
             </div>
         }
-        @if (ViewBag.doesntFulfillMessage != " " && ViewBag.doesntFulfillMessage != null)
+        @if (ViewBag.incorrectFIleType != " " && ViewBag.incorrectFIleType != null)
         {
             <div class="alert alert-danger">
 
-                @ViewBag.doesntFulfillMessage
+                @ViewBag.incorrectFIleType
             </div>
-        }*@
-</div>
+        }
 
-<script>
-    $(document).ready(function () {
+    </div>
 
-        $('#sulu').click(function () {
-            var count = $("#groupsList1 option:selected").length;
-            console.log(count)
+    <script>
+        $(document).ready(function () {
+
+            $('#sulu').click(function () {
+                var count = $("#groupsList1 option:selected").length;
+                console.log(count)
 
                 var values = "*";
-            var selected = $("#groupsList1 option:selected");
+                var selected = $("#groupsList1 option:selected");
                 selected.each(function () {
                     values += $(this).html() + "-";
 
                 });
-            $('#txtSelectedGroups').val(values)
-            console.log(values)
-           @* var val2 = $("#theFile").name;
-            console.log(val2);
-            $('#filName').val(val2);*@
-            
-          @*  if ($('#cg').children().length == 0) {
-                $("#btnSubmitGrouping1").show();
-            }
-            else {
-                $("#btnSubmitGrouping1").hide();
-            }*@
-
-
-
-        });
-       $('input[type="file"]').change(function (e) {
-            var file = e.target.files[0].name;
-            console.log(file);
-            $('#filName').val(file);
-        });
-            });
-
-
-
-    @*$(document).ready(function () {
-        $("#lsStudent").selectr({
-
-
-        });
-        $('#sulu').click(function () {
-            var count = $("#lsStudent:selected").length;
-
-            if (count > 4) {
-
-
-                var values = "*";
-                var selected = $("#selectgor option:selected");
-                selected.each(function () {
-                    values += $(this).html() + "-";
-
-                });
+                $('#txtSelectedGroups').val(values)
                 console.log(values)
-            }
-        });
-    });*@
 
-</script>
+
+
+
+            });
+            $('input[type="file"]').change(function (e) {
+                var file = e.target.files[0].name;
+                console.log(file);
+                $('#filName').val(file);
+            });
+        });
+
+
+
+
+
+    </script>

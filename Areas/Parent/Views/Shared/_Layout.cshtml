@@ -6,12 +6,12 @@
 
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     @*<link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <script src="~/Scripts/modernizr-2.8.3.js"></script>
-    <script src="~/Scripts/jquery-ui-1.13.0.min.js"></script>
-    <script src="~/Scripts/jquery-2.0.0.min.js"></script>
-    <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
-    <link href="~/Areas/Parent/css/styles.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />*@
+        <script src="~/Scripts/modernizr-2.8.3.js"></script>
+        <script src="~/Scripts/jquery-ui-1.13.0.min.js"></script>
+        <script src="~/Scripts/jquery-2.0.0.min.js"></script>
+        <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+        <link href="~/Areas/Parent/css/styles.css" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />*@
 
 
     <link href="~/Areas/Parent/css/styles.css" rel="stylesheet" />
@@ -41,7 +41,9 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css" />
 
 
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
 
     <style>
         input.input-validation-error,
@@ -57,45 +59,68 @@
 
     <style type="text/css">
 
-            .fc-day-top {
+          @*  .fc-day-top {
                 border-color: solid red 3px;
                 background-color:red;
-            }
+            }*@
 
            @* .fc-today {
                 background: red !important;
                 color: white;
             }*@
 
+           .side{
+               display:inline-block
+           }
+          
 
-            .fc-highlight {
-                background: red !important;
-                color: white;
-            }
+        #jj:hover {
+            background-color: lightgray;
+        }
 
-            .fc-row .fc-content-skeleton td, .fc-row .fc-helper-skeleton td {
-                border-color: inherit !important;
-            }
+        #jj:active {
+            color: black;
+        }
+        #jj{
 
-            .dayWithEvent {
-                background: red;
-                cursor: pointer;
-                color: white;
-            }
+        }
 
-            .change-bg {
-                background-color: red !important;
-            }
+        .ak {
+            max-height: 280px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            overflow-wrap: break-word;
+        }
 
-            #calendar .fc-content {
-                background-color: red;
-                font-size: 80%;
-            }
 
-            #calendar .fc-event {
-                border-color: red;
-                background-color: red
-            }
+        .dropdownMenuButton {
+            margin-left: -7em;
+        }
+        #side2 {
+            font-family: 'Open Sans', sans-serif
+        }
+        #side3{
+            padding-left:10em;
+        }
+        .updated{
+           padding-left:23em;
+           color:orange;
+
+        }
+        #kali {
+            color: orange;
+            font-style: italic;
+        }
+
+        #cir {
+            height: 25px;
+            width: 25px;
+            background-color: red;
+            border-radius: 100px;
+        }
+        #greame{
+            margin-left:-1.5em;
+        }
     </style>
 
 </head>
@@ -109,7 +134,328 @@
         <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
         </form>
         <!-- Navbar-->
-        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+
+
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4 gx-4">
+
+
+            <li class="nav-item dropdown pe-4">
+                <a id="navbarDropdown1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> <i class="fa fa-bell" style="color:white"></i><span class="badge" id="arxr"></span></a>
+                <ul class="dropdown-menu dropdown-menu-end ak" aria-labelledby="navbarDropdown1" style="width:400px">
+                    @{
+                        LCCS_School_Parent_Communication_System.Identity.ApplicationDbContext db = new LCCS_School_Parent_Communication_System.Identity.ApplicationDbContext();
+                        List<LCCS_School_Parent_Communication_System.Models.Announcement> gx = new List<LCCS_School_Parent_Communication_System.Models.Announcement>();
+                        LCCS_School_Parent_Communication_System.Models.Parent pa = new LCCS_School_Parent_Communication_System.Models.Parent();
+                        LCCS_School_Parent_Communication_System.Models.Student s = new LCCS_School_Parent_Communication_System.Models.Student();
+                        LCCS_School_Parent_Communication_System.Models.Section sec = new LCCS_School_Parent_Communication_System.Models.Section();
+                        List<LCCS_School_Parent_Communication_System.Models.gradeAnnouncement> gra = new List<LCCS_School_Parent_Communication_System.Models.gradeAnnouncement>();
+                        List<LCCS_School_Parent_Communication_System.Models.sectionAnnouncement> sa = new List<LCCS_School_Parent_Communication_System.Models.sectionAnnouncement>();
+                        List<LCCS_School_Parent_Communication_System.Models.studentAnnouncement> stdA = new List<LCCS_School_Parent_Communication_System.Models.studentAnnouncement>();
+                        string parentName = User.Identity.Name;
+                        LCCS_School_Parent_Communication_System.Additional_Class.HomeroomTeacherMethod ht = new LCCS_School_Parent_Communication_System.Additional_Class.HomeroomTeacherMethod();
+                        pa = db.Parent.Where(ax => ax.user.UserName == parentName).FirstOrDefault();
+                        s = db.Student.Where(ax => ax.studentId == pa.studentId).FirstOrDefault();
+                        sec = db.Section.Where(ax => ax.sectionName == s.sectionName && ax.academicYearId == s.academicYearId).FirstOrDefault();
+                        string stdGrade = sec.sectionName.Substring(0, sec.sectionName.Length - 1);
+                        int stdGrade1 = int.Parse(sec.sectionName.Substring(0, sec.sectionName.Length - 1));
+                        var gra1 = db.gradeAnnouncements.Where(ax => ax.grade == stdGrade1).ToList();
+                        if (gra1 != null)
+                        {
+                            foreach (var isg in gra1)
+                            {
+                                var gra2 = db.Announcement.Where(ax => ax.announcementID == isg.announcementId).FirstOrDefault();
+                                if (DateTime.Compare(DateTime.Now.Date, gra2.endDate.Date) <= 0)
+                                {
+                                    gx.Add(gra2);
+                                }
+                            }
+                        }
+                        var secLS = db.sectionAnnouncement.Where(ax => ax.sectionId == sec.sectionId).ToList();
+                        if (secLS != null)
+                        {
+                            foreach (var k in secLS)
+                            {
+                                var secLS2 = db.Announcement.Where(ax => ax.announcementID == k.announcementId).FirstOrDefault();
+                                if (DateTime.Compare(DateTime.Now.Date, secLS2.endDate.Date) <= 0)
+                                {
+                                    gx.Add(secLS2);
+                                }
+                            }
+                        }
+                        var stdLS = db.studentAnnouncement.Where(ax => ax.studentId == s.studentId).ToList();
+                        if (stdLS != null)
+                        {
+                            foreach (var k in stdLS)
+                            {
+                                var stdLS2 = db.Announcement.Where(ax => ax.announcementID == k.announcementId).FirstOrDefault();
+                                if (DateTime.Compare(DateTime.Now.Date, stdLS2.endDate.Date) <= 0)
+                                {
+                                    gx.Add(stdLS2);
+                                }
+                            }
+                        }
+                        var gAll = db.Announcement.Where(ax => ax.announcementType == "all").ToList();
+                        if (gAll != null)
+                        {
+                            foreach (var k in gAll)
+                            {
+
+                                if (DateTime.Compare(DateTime.Now.Date, k.endDate.Date) <= 0)
+                                {
+                                    gx.Add(k);
+                                }
+                            }
+                        }
+                        var ikea = gx.Where(ax => ax.viewedStatus == 0).ToList();
+                        if (gx.Count()==0)
+                        {
+                            <li>
+
+
+                                <button class="dropdown-item container-fluid" id="jj" disabled>
+                                    <div class="">
+
+                                        <div class="row" >
+                                            <h3>No Announcements Yet</h3>
+
+
+
+                                        </div>
+                                    </div>
+                                </button>
+                            </li>
+                        }
+                        else if (gx != null)
+                        {
+                            int x = 1;
+                            <li>
+                                <script>
+                                    $(document).ready(function () {
+                                        if (@ikea.Count() > 0) {
+                                            $("#arxr").text(@ikea.Count());
+                                        }
+                            });
+                                </script>
+                            </li>
+
+                            foreach (var k in gx)
+                            {
+
+                                if (x < gx.Count())
+                                {
+                                    using (Html.BeginForm("viewAnnouncementDetails", "PHome", new
+                                    {
+                                        annId = k.announcementID
+                                    }, FormMethod.Post))
+                                    {
+                                        if (k.updateStatus == 0)
+                                        {
+
+                                            <li>
+
+
+                                                <button class="dropdown-item container-fluid" id="jj">
+                                                    <div class="">
+
+                                                        <div class="row" id="xrd1">
+                                                            <div class="col-1">
+                                                                <h1></h1>
+                                                            </div>
+                                                            <div class="col-9" id="greame">
+                                                                <div class="row"><h4>@k.announcementTitle</h4></div>
+                                                                <div class="row">
+                                                                    <div class="col-8 mt-3 ">
+                                                                        @k.postDate.ToShortDateString()
+                                                                    </div>
+                                                                    <div class="col-4 mt-3" id="kali" style="display:none">
+                                                                        Updated
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+                                                            <script>
+
+                                                            $(document).ready(function () {
+                                                                $("#navbarDropdown1").click(function () {
+                                                                 if (@k.viewedStatus == 0) {
+                                                                    $('#xrd1').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                }
+                                                                else {
+                                                                    $('#xrd1').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                }
+                                                                });
+
+                                                            });
+
+                                                            </script>
+
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            </li>
+                                            <li><hr class="dropdown-divider" /></li>
+                                        }
+                                        else
+                                        {
+                                            <li>
+
+                                                <button class="dropdown-item container-fluid" id="jj">
+                                                    <div class="">
+                                                        <div class="row" id="xrd1">
+                                                            <div class="col-1  mt-3 ">
+                                                                <h1></h1>
+                                                            </div>
+                                                            <div class="col-9" id="greame">
+                                                                <div class="row"><h4>@k.announcementTitle</h4></div>
+                                                                <div class="row">
+                                                                    <div class="col-8 mt-3 ">
+                                                                        @k.postDate.ToShortDateString()
+                                                                    </div>
+                                                                    <div class="col-4 mt-3" id="kali">
+                                                                        Updated
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <script>
+
+                                                            $(document).ready(function () {
+                                                                $("#navbarDropdown1").click(function () {
+                                                                 if (@k.viewedStatus == 0) {
+                                                                    $('#xrd1').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                }
+                                                                else {
+                                                                    $('#xrd1').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                }
+                                                                });
+
+                                                            });
+
+                                                            </script>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            </li>
+                                            <li><hr class="dropdown-divider" /></li>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    using (Html.BeginForm("viewAnnouncementDetails", "PHome", new
+                                    {
+                                        annId = k.announcementID
+                                    }, FormMethod.Post))
+                                    {
+                                        if (k.updateStatus == 0)
+                                        {
+                                            <li>
+
+                                                <button class="dropdown-item container-fluid" id="jj">
+                                                    <div class="">
+                                                        <div class="row" id="xrd1">
+                                                            <div class="col-1  mt-3 ">
+                                                                <h1></h1>
+                                                            </div>
+                                                            <div class="col-9" id="greame">
+                                                                <div class="row"><h4>@k.announcementTitle</h4></div>
+                                                                <div class="row">
+                                                                    <div class="col-8 mt-3 ">
+                                                                        @k.postDate.ToShortDateString()
+                                                                    </div>
+                                                                    <div class="col-4 mt-3" id="kali" style="display:none">
+                                                                        Updated
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                                <script>
+
+                                                            $(document).ready(function () {
+                                                                $("#navbarDropdown1").click(function () {
+                                                                 if (@k.viewedStatus == 0) {
+                                                                    $('#xrd1').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                }
+                                                                else {
+                                                                    $('#xrd1').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                }
+                                                                });
+
+                                                            });
+
+                                                </script>
+                                            </li>
+
+
+                                        }
+                                        else
+                                        {
+                                            <li>
+
+                                                <button class="dropdown-item container-fluid" id="jj">
+                                                    <div class="">
+                                                        <div class="row " id="xrd1">
+                                                            <div class="col-1  mt-3">
+                                                                <h1></h1>
+                                                            </div>
+                                                            <div class="col-9" id="greame">
+                                                                <div class="row"><h4>@k.announcementTitle</h4></div>
+                                                                <div class="row">
+                                                                    <div class="col-8 mt-3 ">
+                                                                        @k.postDate.ToShortDateString()
+                                                                    </div>
+                                                                    <div class="col-4 mt-3" id="kali">
+                                                                        Updated
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+
+
+                                                            <script>
+
+                                                            $(document).ready(function () {
+                                                                $("#navbarDropdown1").click(function () {
+                                                                 if (@k.viewedStatus == 0) {
+                                                                    $('#xrd1').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                }
+                                                                else {
+                                                                    $('#xrd1').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                }
+                                                                });
+
+                                                            });
+
+                                                            </script>
+
+
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                            </li>
+
+                                        }
+                                    }
+                                }
+                                x++;
+                            }
+                        }
+
+
+
+
+                    }
+
+
+                </ul>
+            </li>
+
             <li class="nav-item dropdown">
                 <a id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw bg-custom"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -191,3 +537,6 @@
 </body>
 </html>
 
+<script>
+    
+</script>

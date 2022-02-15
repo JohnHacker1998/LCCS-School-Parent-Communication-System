@@ -51,6 +51,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
             //if there are is 1 or no parents related to the student, it is allowed to relate the student with a parent,
             if (l.Count < 2)
             {
+
+                pv.fullName= System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(pv.fullName.ToLower());
                 //adding the parent information into the viewmodel of the register user 
                 //checking the a user exists with the same username or fullname as of the being registered parent
                 if (c.checkUserExistence(pv.email, pv.fullName))
@@ -96,7 +98,16 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
             parent.parentList = new List<Models.Parent>();
             parent.parentList = db.Parent.ToList();
             parent.studentList = new List<Student>();
-            parent.studentList = db.Student.ToList();
+            var studentList = db.Student.ToList();
+            foreach(var k in studentList)
+            {
+                var parentcheckList = db.Parent.Where(ax => ax.studentId == k.studentId).ToList();
+                if (parentcheckList.Count() <= 1)
+                {
+                    parent.studentList.Add(k);
+                }
+            }
+           
 
             return View(parent);
         }
@@ -216,18 +227,32 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
                 //if delete is clicked
                 else if (delete != null)
                 {
+                    if (pid != null) { 
                     
                     //deleting the parent information from the identity user and from the parent table.
                     p = db.Parent.Find(pid);
+                    var Parent = db.Parent.Where(ax => ax.parentId == pid).FirstOrDefault();
+                    if (Parent != null) { 
                     db.Parent.Remove(p);
                     db.SaveChanges();
 
                     string status = await c.DeleteUser(pid);
+                    }
 
                 }
+                }
             }
-            pv.studentList = db.Student.ToList();
+            
             pv.parentList = db.Parent.ToList();
+            var studentList = db.Student.ToList();
+            foreach (var k in studentList)
+            {
+                var parentcheckList = db.Parent.Where(ax => ax.studentId == k.studentId).ToList();
+                if (parentcheckList.Count() <= 1)
+                {
+                   pv.studentList.Add(k);
+                }
+            }
             return View(pv);
 
         }

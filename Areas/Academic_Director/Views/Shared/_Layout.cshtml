@@ -45,11 +45,13 @@
 
     <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
-    
+
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css" />
 
 
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css" integrity="sha512-mR/b5Y7FRsKqrYZou7uysnOdCIJib/7r5QeJMFvLNHNhtye3xJp1TdJVPLtetkukFn227nKpXD9OjUc09lx97Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js" integrity="sha512-FHZVRMUW9FsXobt+ONiix6Z0tIkxvQfxtCSirkKc5Sb4TKHmqq1dZa8DphF0XqKb3ldLu/wgMa8mT6uXiLlRlw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
     <link href="~/stylesheets/jquery.growl.css" rel="stylesheet" />
@@ -63,6 +65,8 @@
         select.input-validation-error {
             border: 1px solid #CD0A0A;
         }
+       
+      
     </style>
 </head>
 <body class="sb-nav-fixed">
@@ -92,30 +96,35 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
 
-                        <a class="nav-link" href="@Url.Action("manageRegistrar","ADHome")">
+                        <a class="nav-link" href="@Url.Action("manageRegistrar","ADHome")" >
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Registrar Management
                         </a>
-                        <a class="nav-link" href="@Url.Action("RegisterTeacher","ADHome")">
+                        <a class="nav-link" href="@Url.Action("RegisterTeacher","ADHome")" >
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Teacher Management
                         </a>
-                        <a class="nav-link" href="@Url.Action("SectionManagement","ADHome")">
+                        <a class="nav-link" href="@Url.Action("SectionManagement","ADHome")" >
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Section Management
                         </a>
-                        <a class="nav-link" href="@Url.Action("manageAcademicYear","ADHome")">
+                        <a class="nav-link" href="@Url.Action("manageAcademicYear","ADHome")" >
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Academic Year Management
                         </a>
-                        <a class="nav-link" href="@Url.Action("unitLeaderManagement","ADHome")">
+                        <a class="nav-link" href="@Url.Action("unitLeaderManagement","ADHome")" >
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Unit Leader Designation
                         </a>
-                        <a class="nav-link" href="@Url.Action("ScheduleManagement","ADHome")">
+                        <a class="nav-link" href="@Url.Action("ScheduleManagement","ADHome")" >
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Schedule Management
                         </a>
+                        <a class="nav-link" href="@Url.Action("announcementManagement","ADHome")">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Announcement Management
+                        </a>
+                        
 
 
 

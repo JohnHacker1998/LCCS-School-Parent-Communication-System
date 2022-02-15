@@ -1,4 +1,4 @@
-﻿@model LCCS_School_Parent_Communication_System.viewModels.assignmentViewModel
+﻿@model LCCS_School_Parent_Communication_System.viewModels.addIndividualAssignmentViewModel
 @{
     ViewBag.Title = "addAssignment";
 }
@@ -23,108 +23,148 @@
             $('#filName').val(file);
         });
     });
-  
+
 
 </script>
 
-<div class="container">
-    @using (Html.BeginForm("addAssignment", "THome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
-    {<div class="row mt-3">
-            <div class="col-lg-4">
-                @Html.LabelFor(a => a.assignmentName, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-            <div class="col-lg-8">
-                <div class="row"> @Html.EditorFor(a => a.assignmentName, new { htmlAttributes = new { @class = "form-control" } })</div>
-            </div>
-        </div>
-        <div class="row  mt-3">
-            <div class="col-lg-4 ">
-                @Html.LabelFor(a => a.markPercentage)
-            </div>
-            <div class="col-lg-8 ">
-                <div class="row">
-                    @Html.EditorFor(a => a.markPercentage, new { htmlAttributes = new { @min = 1, @max = 100, @class = "form-control" } })
+
+    <div class="container mb-3 mt-3 bg-light border-top border-bottom-0 border-4 rounded-3">
+        <h1 class="border-bottom border-5 p-3 mb-4">Add Individual Assignment</h1>
+        @using (Html.BeginForm("addAssignment", "THome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+        {<div class="row mt-3">
+                <div class="col-lg-4">
+                    @Html.LabelFor(a => a.assignmentName, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                <div class="col-lg-8">
+                    <div class="row"> @Html.EditorFor(a => a.assignmentName, new { htmlAttributes = new { @class = "form-control" } })</div>
+                    <div class="row">@Html.ValidationMessageFor(a => a.assignmentName, null, new { @class = "text-danger" })</div>
                 </div>
             </div>
-        </div>
-
-
-        <div class="row mt-3">
-            <div class="col-lg-4 ">
-                @Html.LabelFor(a => a.sectionID)
+            <div class="row  mt-3">
+                <div class="col-lg-4 ">
+                    @Html.LabelFor(a => a.markPercentage)
+                </div>
+                <div class="col-lg-8 ">
+                    <div class="row">
+                        @Html.EditorFor(a => a.markPercentage, new { htmlAttributes = new { @min = 1, @max = 100, @class = "form-control" } })
+                        <div class="row">@Html.ValidationMessageFor(a => a.markPercentage, null, new { @class = "text-danger" })</div>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-8">
-                <div class="row">
-                    <select id="sectionName" name="sectionName" readonly class="form-control">
-                        @foreach (var i in Model.sectionList)
-                        {
-                            if (i == ViewBag.selectedSection)
+
+
+            <div class="row mt-3">
+                <div class="col-lg-4 ">
+                    @Html.LabelFor(a => a.sectionID)
+                </div>
+                <div class="col-lg-8">
+                    <div class="row">
+                        <select id="sectionName" name="sectionName" readonly class="form-control" required>
+                            @foreach (var i in Model.sectionList)
                             {
-                                <option value=@i selected>@i</option>
+                                if (i == ViewBag.selectedSection)
+                                {
+                                    <option value=@i selected>@i</option>
+                                }
+                                else
+                                {
+                                    <option value=@i>@i</option>
+                                }
                             }
-                            else
-                            {
-                                <option value=@i>@i</option>
-                            }
-                        }
-                    </select>
+                        </select>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-lg-4 ">
-                @Html.LabelFor(a => a.submissionDate)
-            </div>
-            <div class="col-lg-8">
-                <div class="row"> @Html.EditorFor(a => a.submissionDate, new { htmlAttributes = new { @class = "datepicker form-control" } })</div>
-            </div>
+            <div class="row mt-3">
+                <div class="col-lg-4 ">
+                    @Html.LabelFor(a => a.submissionDate)
+                </div>
+                <div class="col-lg-8">
+                    <div class="row"> @Html.EditorFor(a => a.submissionDate, new { htmlAttributes = new { @class = "datepicker form-control" } })</div>
+                    <div class="row">@Html.ValidationMessageFor(a => a.submissionDate, null, new { @class = "text-danger" })</div>
+                </div>
 
-        </div>
-        <div class="row mt-3">
-            <div class="col-lg-4 ">
-                @Html.LabelFor(a => a.assignmentDocument)
             </div>
-            <div class="col-lg-8">
-                <div class="row">
-                    <input type="file" name="file" class="form-control" />
+            <div class="row mt-3">
+                <div class="col-lg-4 ">
+                    @Html.LabelFor(a => a.assignmentDocument)
+                </div>
+                <div class="col-lg-8">
+                    <div class="row">
+                        <input type="file" name="file" class="form-control" required />
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row mt-5">
-            <div class="col-12"> <div class="row py-2"><input type="submit" name="add" value="ADD" class="btn btn-primary" /></div></div>
-        </div>
-        <input type="text" name="fileName" id="filName" style="display:none" />
+            <div class="row mt-5">
+                <div class="col-12"> <div class="row py-2"><input type="submit" name="add" value="ADD" class="btn btn-primary" /></div></div>
+            </div>
+            <input type="text" name="fileName" id="filName" style="display:none" />
 
 
-    }
-    @if (ViewBag.successfulMessage != " " && ViewBag.successfulMessage != null)
-    {
-        <div class="alert alert-success">
-            @ViewBag.successfulMessage
-        </div>
-    }
-    @if (ViewBag.failedMessage != " " && ViewBag.failedMessage != null)
-    {
-        <div class="alert alert-danger">
+        }
+        @if (ViewBag.successfulMessage != " " && ViewBag.successfulMessage != null)
+        {
+            <div class="alert alert-success">
+                @ViewBag.successfulMessage
+            </div>
+        }
+        @if (ViewBag.failedMessage != " " && ViewBag.failedMessage != null)
+        {
+            <div class="alert alert-danger">
 
-            @ViewBag.failedMessage
-        </div>
-    }
-    @if (ViewBag.doesntFulfillMessage != " " && ViewBag.doesntFulfillMessage != null)
-    {
-        <div class="alert alert-danger">
+                @ViewBag.failedMessage
+            </div>
+        }
+        @if (ViewBag.doesntFulfillMessage != " " && ViewBag.doesntFulfillMessage != null)
+        {
+            <div class="alert alert-danger">
 
-            @ViewBag.doesntFulfillMessage
-        </div>
-    }
-    @if (ViewBag.cannothaveSections != " " && ViewBag.cannothaveSections != null)
-    {
-        <div class="alert alert-danger">
+                @ViewBag.doesntFulfillMessage
+            </div>
+        }
+        @if (ViewBag.cannothaveSections != " " && ViewBag.cannothaveSections != null)
+        {
+            <div class="alert alert-danger">
 
-            @ViewBag.cannothaveSections
-        </div>
-    }
+                @ViewBag.cannothaveSections
+            </div>
+        }
+        @if (ViewBag.assignmentExists != " " && ViewBag.assignmentExists != null)
+        {
+            <div class="alert alert-danger">
 
- 
-</div>
+                @ViewBag.assignmentExists
+            </div>
+        }
+        @if (ViewBag.tudayerror != " " && ViewBag.tudayerror != null)
+        {
+            <div class="alert alert-danger">
+
+                @ViewBag.tudayerror
+            </div>
+
+        }
+        @if (ViewBag.sectionnull != " " && ViewBag.sectionnull != null)
+        {
+            <div class="alert alert-danger">
+
+                @ViewBag.sectionnull
+            </div>
+
+        }
+        @if (ViewBag.incorrectFIleType != " " && ViewBag.incorrectFIleType != null)
+        {
+            <div class="alert alert-danger">
+
+                @ViewBag.incorrectFIleType
+            </div>
+
+        }
+
+
+
+
+
+
+    </div>

@@ -880,6 +880,12 @@
     <Content Include="Areas\Teacher\Views\THome\UpdateResultManagement.cshtml" />
     <Content Include="Areas\Parent\Views\PHome\ViewResult.cshtml" />
     <Content Include="Areas\Parent\Views\PHome\GenerateGeneralReport.cshtml" />
+    <Content Include="Areas\Academic_Director\Views\ADHome\announcementManagement.cshtml" />
+    <Content Include="Areas\Academic_Director\Views\ADHome\addAnnouncement.cshtml" />
+    <Content Include="Areas\Academic_Director\Views\ADHome\addStudentAnnouncement.cshtml" />
+    <Content Include="Areas\Academic_Director\Views\ADHome\updateAnnouncement.cshtml" />
+    <Content Include="Areas\Parent\Views\PHome\viewAnnouncementDetails.cshtml" />
+    <Content Include="Areas\Academic_Director\Views\ADHome\addFullAnnouncement.cshtml" />
     <Content Include="Areas\Teacher\Views\THome\ResultUpdate.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
@@ -1001,16 +1007,14 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
-    <Compile Include="Migrations\202202151018403_allinone.cs" />
-    <Compile Include="Migrations\202202151018403_allinone.designer.cs">
-      <DependentUpon>202202151018403_allinone.cs</DependentUpon>
-    </Compile>
+    
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AbsenceRecord.cs" />
     <Compile Include="Models\AcademicYear.cs" />
     <Compile Include="Models\Announcement.cs" />
     <Compile Include="Models\Assignment.cs" />
     <Compile Include="Models\Evidence.cs" />
+    <Compile Include="Models\gradeAnnouncement.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\GroupAssignment.cs" />
     <Compile Include="Models\GroupStructure.cs" />
@@ -1020,7 +1024,9 @@
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\Schedule.cs" />
     <Compile Include="Models\Section.cs" />
+    <Compile Include="Models\sectionAnnouncement.cs" />
     <Compile Include="Models\Student.cs" />
+    <Compile Include="Models\studentAnnouncement.cs" />
     <Compile Include="Models\StudentGroupList.cs" />
     <Compile Include="Models\Suspension.cs" />
     <Compile Include="Models\Teacher.cs" />
@@ -1029,12 +1035,17 @@
     <Compile Include="viewModels\AbsenceRecordViewMoel.cs" />
     <Compile Include="viewModels\AcademicYearViewModel.cs" />
     <Compile Include="viewModels\AddGradeModal.cs" />
+    <Compile Include="viewModels\addGroupAssignmentViewModel.cs" />
+    <Compile Include="viewModels\addIndividualAssignmentViewModel.cs" />
     <Compile Include="viewModels\AddScheduleModal.cs" />
     <Compile Include="viewModels\announcementViewModel.cs" />
+    <Compile Include="viewModels\classifyGroupViewModel.cs" />
     <Compile Include="viewModels\DeleteTeacherModal.cs" />
     <Compile Include="viewModels\assignmentViewModel.cs" />
     <Compile Include="viewModels\EvidenceApprovalViewModel.cs" />
     <Compile Include="viewModels\ForgotPasswordViewModel.cs" />
+    <Compile Include="viewModels\fullAnnouncementViewModel.cs" />
+    <Compile Include="viewModels\gradeViewModel.cs" />
     <Compile Include="viewModels\groupStructureViewModel.cs" />
     <Compile Include="viewModels\groupViewModel.cs" />
     <Compile Include="viewModels\LateComerViewModel.cs" />
@@ -1046,6 +1057,7 @@
     <Compile Include="viewModels\ProfileEditPassword.cs" />
     <Compile Include="viewModels\ProfileEditUserName.cs" />
     <Compile Include="viewModels\ProfileViewModel.cs" />
+    <Compile Include="viewModels\registerAnnouncementViewModel.cs" />
     <Compile Include="viewModels\RegisterTeacherModal.cs" />
     <Compile Include="viewModels\RegisterTeacherViewModel.cs" />
     <Compile Include="viewModels\RegisterViewModel.cs" />
@@ -1055,6 +1067,8 @@
     <Compile Include="viewModels\ScheduleViewModel.cs" />
     <Compile Include="viewModels\SectionViewModel.cs" />
     <Compile Include="viewModels\StudentViewModel.cs" />
+    <Compile Include="viewModels\updateAnnouncementViewModel.cs" />
+    <Compile Include="viewModels\updateAssignmentViewModel.cs" />
     <Compile Include="viewModels\UpdateGradeModal.cs" />
     <Compile Include="viewModels\UpdateResultViewModel.cs" />
     <Compile Include="viewModels\UpdateTeacherModal.cs" />
@@ -1124,11 +1138,7 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\202202151018403_allinone.resx">
-      <DependentUpon>202202151018403_allinone.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
+  
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
