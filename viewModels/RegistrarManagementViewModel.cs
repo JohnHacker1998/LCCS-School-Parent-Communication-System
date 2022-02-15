@@ -11,7 +11,7 @@ namespace LCCS_School_Parent_Communication_System.viewModels
     {
         [Required(ErrorMessage = "Please enter full name")]
         [Display(Name = "Full Name")]
-        [RegularExpression(@"([A-Z]{1}[a-z]{2,} ){2}([A-Z]{1}[a-z]{2,})", ErrorMessage = "Fullname isnot valid.")]
+        [RegularExpression(@"^([a-z]\/|[A-Z]\/)?([a-z]|[A-Z]){2,}\s([a-z]\/|[A-Z]\/)?([a-z]|[A-Z]){2,}\s([a-z]\/|[A-Z]\/)?([a-z]|[A-Z]){2,}$", ErrorMessage = "Incorrect Full Name Format")]
         public string fullName { get; set; }
         [Required(ErrorMessage = "Please enter Email.")]
         [Display(Name = "Email")]

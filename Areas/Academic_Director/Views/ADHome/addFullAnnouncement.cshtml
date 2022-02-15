@@ -23,9 +23,8 @@
 
 
 
-<h2>addFullAnnouncement</h2>
-
-<div class="container">
+<div class="container bg-light border-top border-bottom border-4 rounded-3 mt-5">
+    <h1 class="border-bottom border-5 p-3 mb-4">Add Full Announcement</h1>
     @using (Html.BeginForm("addFullAnnouncement", "ADHome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
     {
 
@@ -85,6 +84,15 @@
             @ViewBag.ErrorMessage
         </div>
     }
+    @if (ViewBag.incorrectFileFormat != " " && ViewBag.incorrectFileFormat != null)
+    {
+        <div class="alert alert-danger">
+
+            @ViewBag.incorrectFileFormat
+        </div>
+    }
+
+
     @*
         @if (ViewBag.successfulMessage != " " && ViewBag.successfulMessage != null)
         {

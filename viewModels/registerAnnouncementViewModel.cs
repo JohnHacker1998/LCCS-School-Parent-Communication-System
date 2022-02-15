@@ -22,6 +22,7 @@ namespace LCCS_School_Parent_Communication_System.viewModels
         [Required(ErrorMessage = "End date is required.")]
         [Display(Name = "End Date")]
         public string endDate { get; set; }
+        [Display(Name ="Grade")]
         public int grade { get; set; }
 
       [Display(Name ="Section List")]

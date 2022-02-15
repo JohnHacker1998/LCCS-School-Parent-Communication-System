@@ -81,7 +81,7 @@
         <div class="row mt-5">
             <div class="col-12"> <div class="row py-2"><input type="submit" name="add" value="ADD" class="btn btn-primary" id="sulu" /></div></div>
         </div>
-       
+
         <input type="text" name="fileName" id="filName" style="display:none" />
 
 
@@ -93,20 +93,23 @@
             @ViewBag.existsMessage
         </div>
     }
+
+    @if (ViewBag.incorrectFileFormat != " " && ViewBag.incorrectFileFormat != null)
+    {
+        <div class="alert alert-danger">
+
+            @ViewBag.incorrectFileFormat
+        </div>
+    }
     @* @if (ViewBag.successfulMessage != " " && ViewBag.successfulMessage != null)
         {
             <div class="alert alert-success">
                 @ViewBag.successfulMessage
             </div>
         }
+    *@
 
-        @if (ViewBag.doesntFulfillMessage != " " && ViewBag.doesntFulfillMessage != null)
-        {
-            <div class="alert alert-danger">
-
-                @ViewBag.doesntFulfillMessage
-            </div>
-        }*@
+    
 </div>
 <script>
     $(document).ready(function () {

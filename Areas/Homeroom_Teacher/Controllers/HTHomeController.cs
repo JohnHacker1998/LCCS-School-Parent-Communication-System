@@ -46,7 +46,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Homeroom_Teacher.Control
                     abs = db.AbsenceRecord.Where(ax => ax.recordDate == ks && ax.studentId == k.studentId).FirstOrDefault();
                     if (abs == null)
                     {
-                        av.studentList.Add(k);
+                        av.studentList.Add(k);  
                     }
                 }
             }
@@ -95,13 +95,13 @@ namespace LCCS_School_Parent_Communication_System.Areas.Homeroom_Teacher.Control
             DateTime recordDate1 = DateTime.Now.Date;
             ViewBag.successfulMessage = " ";
             ViewBag.messageStatus = " ";
-           
-            
-            if (submit!=null)
-            {
-               
 
-                if (selectedStudents != null)
+
+            if (submit != null)
+            {
+
+
+                if (selectedStudents != null && selectedStudents !="*")
                     {
                     String firstSeries = selectedStudents.Substring(1, selectedStudents.Length - 2);
                                  
@@ -152,8 +152,10 @@ namespace LCCS_School_Parent_Communication_System.Areas.Homeroom_Teacher.Control
                 int gsID1 = int.Parse(gsId);
                 AbsenceRecord abs = new AbsenceRecord();
                 abs = db.AbsenceRecord.Where(ax=>ax.recordId==gsID1).FirstOrDefault();
+                if(!(Object.ReferenceEquals(abs, null))) { 
                 db.AbsenceRecord.Remove(abs);
                 db.SaveChanges();
+                }
             }
             arvm.studentList = new List<Student>();
            

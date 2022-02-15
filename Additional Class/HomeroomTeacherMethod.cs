@@ -27,12 +27,12 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
                 {
                     foreach (var k in studentLS)
                     {
-                        /*if (DateTime.Today.DayOfWeek != DayOfWeek.Saturday && DateTime.Today.DayOfWeek != DayOfWeek.Sunday) { 
+                        if (DateTime.Today.DayOfWeek != DayOfWeek.Saturday && DateTime.Today.DayOfWeek != DayOfWeek.Sunday) {
 
-                        
-                        }*/
-                        //items.Add(new SelectListItem { Text = k.fullName, Value = k.studentId.ToString() });
-                        tempStud.Add(k);
+                            //items.Add(new SelectListItem { Text = k.fullName, Value = k.studentId.ToString() });
+                            tempStud.Add(k);
+                        }
+                    
                     }
                     return tempStud;
                 }

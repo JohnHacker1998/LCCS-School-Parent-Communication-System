@@ -72,34 +72,7 @@
            .side{
                display:inline-block
            }
-            .fc-highlight {
-                background: red !important;
-                color: white;
-            }
-
-            .fc-row .fc-content-skeleton td, .fc-row .fc-helper-skeleton td {
-                border-color: inherit !important;
-            }
-
-            .dayWithEvent {
-                background: red;
-                cursor: pointer;
-                color: white;
-            }
-
-            .change-bg {
-                background-color: red !important;
-            }
-
-            #calendar .fc-content {
-                background-color: red;
-                font-size: 80%;
-            }
-
-            #calendar .fc-event {
-                border-color: red;
-                background-color: red
-            }
+          
 
         #jj:hover {
             background-color: lightgray;
@@ -145,6 +118,9 @@
             background-color: red;
             border-radius: 100px;
         }
+        #greame{
+            margin-left:-1.5em;
+        }
     </style>
 
 </head>
@@ -165,7 +141,7 @@
 
             <li class="nav-item dropdown pe-4">
                 <a id="navbarDropdown1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> <i class="fa fa-bell" style="color:white"></i><span class="badge" id="arxr"></span></a>
-                <ul class="dropdown-menu dropdown-menu-end ak" aria-labelledby="navbarDropdown1" style="width:500px">
+                <ul class="dropdown-menu dropdown-menu-end ak" aria-labelledby="navbarDropdown1" style="width:400px">
                     @{
                         LCCS_School_Parent_Communication_System.Identity.ApplicationDbContext db = new LCCS_School_Parent_Communication_System.Identity.ApplicationDbContext();
                         List<LCCS_School_Parent_Communication_System.Models.Announcement> gx = new List<LCCS_School_Parent_Communication_System.Models.Announcement>();
@@ -223,7 +199,7 @@
                         {
                             foreach (var k in gAll)
                             {
-                                
+
                                 if (DateTime.Compare(DateTime.Now.Date, k.endDate.Date) <= 0)
                                 {
                                     gx.Add(k);
@@ -231,18 +207,35 @@
                             }
                         }
                         var ikea = gx.Where(ax => ax.viewedStatus == 0).ToList();
+                        if (gx.Count()==0)
+                        {
+                            <li>
 
-                        if (gx != null)
+
+                                <button class="dropdown-item container-fluid" id="jj" disabled>
+                                    <div class="">
+
+                                        <div class="row" >
+                                            <h3>No Announcements Yet</h3>
+
+
+
+                                        </div>
+                                    </div>
+                                </button>
+                            </li>
+                        }
+                        else if (gx != null)
                         {
                             int x = 1;
                             <li>
-                                                    <script>
+                                <script>
                                     $(document).ready(function () {
-                                        if (@ikea.Count() > 0) { 
+                                        if (@ikea.Count() > 0) {
                                             $("#arxr").text(@ikea.Count());
                                         }
                             });
-                                                    </script>
+                                </script>
                             </li>
 
                             foreach (var k in gx)
@@ -257,24 +250,18 @@
                                     {
                                         if (k.updateStatus == 0)
                                         {
-                                            
+
                                             <li>
 
-                                                @*  <button class="dropdown-item " href="#" id="jj">
 
-                                        <div class="side" style="margin-left:-0.5em; background-color:darkblue;color:white">
-                                            <h3> AD</h3>
-                                        </div>
-                                        <div class="side ps-3" id="side2"</div>
-                                        <div class="side" id="side3"></div>
-                                    </button>*@
                                                 <button class="dropdown-item container-fluid" id="jj">
                                                     <div class="">
-                                                        <div class="row border border-primary border-5 border-end-0 border-bottom-0 border-top-0">
-                                                            <div class="col-2  mt-3">
-                                                                <h1>AD</h1>
+
+                                                        <div class="row" id="xrd1">
+                                                            <div class="col-1">
+                                                                <h1></h1>
                                                             </div>
-                                                            <div class="col-8">
+                                                            <div class="col-9" id="greame">
                                                                 <div class="row"><h4>@k.announcementTitle</h4></div>
                                                                 <div class="row">
                                                                     <div class="col-8 mt-3 ">
@@ -285,17 +272,23 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            @if (k.viewedStatus == 0)
-                                                            {<div class="col-1 mt-4 ms-5" id="cir" >
 
-                                                                </div>
-                                                            }
-                                                            else if (k.viewedStatus == 1)
-                                                            {
-                                                                <div class="col-1 mt-4 ms-5" id="cir" style="display:none">
 
-                                                                </div>
+                                                            <script>
+
+                                                            $(document).ready(function () {
+                                                                $("#navbarDropdown1").click(function () {
+                                                                 if (@k.viewedStatus == 0) {
+                                                                    $('#xrd1').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
                                                                 }
+                                                                else {
+                                                                    $('#xrd1').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                }
+                                                                });
+
+                                                            });
+
+                                                            </script>
 
                                                         </div>
                                                     </div>
@@ -309,11 +302,11 @@
 
                                                 <button class="dropdown-item container-fluid" id="jj">
                                                     <div class="">
-                                                        <div class="row border border-primary border-5 border-end-0 border-bottom-0 border-top-0">
-                                                            <div class="col-2  mt-3">
-                                                                <h1>AD</h1>
+                                                        <div class="row" id="xrd1">
+                                                            <div class="col-1  mt-3 ">
+                                                                <h1></h1>
                                                             </div>
-                                                            <div class="col-8">
+                                                            <div class="col-9" id="greame">
                                                                 <div class="row"><h4>@k.announcementTitle</h4></div>
                                                                 <div class="row">
                                                                     <div class="col-8 mt-3 ">
@@ -324,17 +317,22 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            @if (k.viewedStatus == 0)
-                                                            {<div class="col-1 mt-4 ms-5" id="cir">
 
-                                                                </div>
-                                                            }
-                                                            else if (k.viewedStatus == 1)
-                                                            {
-                                                                <div class="col-1 mt-4 ms-5" id="cir" style="display:none">
+                                                            <script>
 
-                                                                </div>
-                                                            }
+                                                            $(document).ready(function () {
+                                                                $("#navbarDropdown1").click(function () {
+                                                                 if (@k.viewedStatus == 0) {
+                                                                    $('#xrd1').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                }
+                                                                else {
+                                                                    $('#xrd1').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                }
+                                                                });
+
+                                                            });
+
+                                                            </script>
                                                         </div>
                                                     </div>
                                                 </button>
@@ -356,11 +354,11 @@
 
                                                 <button class="dropdown-item container-fluid" id="jj">
                                                     <div class="">
-                                                        <div class="row border border-primary border-5 border-end-0 border-bottom-0 border-top-0">
-                                                            <div class="col-2  mt-3">
-                                                                <h1>AD</h1>
+                                                        <div class="row" id="xrd1">
+                                                            <div class="col-1  mt-3 ">
+                                                                <h1></h1>
                                                             </div>
-                                                            <div class="col-8">
+                                                            <div class="col-9" id="greame">
                                                                 <div class="row"><h4>@k.announcementTitle</h4></div>
                                                                 <div class="row">
                                                                     <div class="col-8 mt-3 ">
@@ -371,21 +369,28 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            @if (k.viewedStatus == 0)
-                                                            {<div class="col-1 mt-4 ms-5" id="cir">
 
-                                                                </div>
-                                                            }
-                                                            else if (k.viewedStatus == 1)
-                                                            {
-                                                                <div class="col-1 mt-4 ms-5" id="cir" style="display:none">
 
-                                                                </div>
-                                                            }
                                                         </div>
                                                     </div>
                                                 </button>
+                                                <script>
+
+                                                            $(document).ready(function () {
+                                                                $("#navbarDropdown1").click(function () {
+                                                                 if (@k.viewedStatus == 0) {
+                                                                    $('#xrd1').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                }
+                                                                else {
+                                                                    $('#xrd1').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                }
+                                                                });
+
+                                                            });
+
+                                                </script>
                                             </li>
+
 
                                         }
                                         else
@@ -394,11 +399,11 @@
 
                                                 <button class="dropdown-item container-fluid" id="jj">
                                                     <div class="">
-                                                        <div class="row border border-primary border-5 border-end-0 border-bottom-0 border-top-0">
-                                                            <div class="col-2  mt-3">
-                                                                <h1>AD</h1>
+                                                        <div class="row " id="xrd1">
+                                                            <div class="col-1  mt-3">
+                                                                <h1></h1>
                                                             </div>
-                                                            <div class="col-8">
+                                                            <div class="col-9" id="greame">
                                                                 <div class="row"><h4>@k.announcementTitle</h4></div>
                                                                 <div class="row">
                                                                     <div class="col-8 mt-3 ">
@@ -409,17 +414,27 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            @if (k.viewedStatus == 0)
-                                                            {<div class="col-1 mt-4 ms-5" id="cir">
 
-                                                                </div>
-                                                            }
-                                                            else if (k.viewedStatus == 1)
-                                                            {
-                                                                <div class="col-1 mt-4 ms-5" id="cir" style="display:none">
 
-                                                                </div>
-                                                            }
+
+
+                                                            <script>
+
+                                                            $(document).ready(function () {
+                                                                $("#navbarDropdown1").click(function () {
+                                                                 if (@k.viewedStatus == 0) {
+                                                                    $('#xrd1').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                }
+                                                                else {
+                                                                    $('#xrd1').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                }
+                                                                });
+
+                                                            });
+
+                                                            </script>
+
+
                                                         </div>
                                                     </div>
                                                 </button>
@@ -431,6 +446,8 @@
                                 x++;
                             }
                         }
+
+
 
 
                     }

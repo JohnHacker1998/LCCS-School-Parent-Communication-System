@@ -289,8 +289,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             if (ModelState.IsValid)
             {
                 //checking if register button is clicked
-              
-                    if (c.checkUserExistence(rmv.email, rmv.fullName))
+              rmv.fullName= System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(rmv.fullName.ToLower());
+                if (c.checkUserExistence(rmv.email, rmv.fullName))
                     {
                         rv.username = c.generateUserName();
                         rv.password = c.generatePassword();
@@ -308,8 +308,9 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 
 
             }
-          
-            return PartialView("registerRegistrar");
+            rmvm= ad.listRegistrar();
+
+            return PartialView("registerRegistrar",rmvm);
         }
         public ActionResult manageRegistrar()
 
@@ -328,6 +329,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             RegisterViewModel rv = new RegisterViewModel();
             Collection c = new Collection();
             RegistrarManagementViewModel rmvm = new RegistrarManagementViewModel();
+            ApplicationDbContext db = new ApplicationDbContext();
             AcademicDirector ad = new AcademicDirector();
             ViewBag.Message = " ";
             //checking the validity of the inputs
@@ -355,10 +357,16 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             //checking if delete button is clicked
             if (delete != null)
             {
+                if (theID != null) {
+                    ApplicationUser us = new ApplicationUser();
+                    us = db.Users.Where(ax => ax.Id == theID).FirstOrDefault();
+                    if (us != null) { 
                 string status = await c.DeleteUser(theID);
+                    }
+                }
             }
             //refreshing the list of users with registrar role.
-            rmvm = ad.listRegistrar();
+            rmvm= ad.listRegistrar();
 
             return View(rmvm);
         }
@@ -519,6 +527,16 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                     ay1 = db.AcademicYear.Where(a => a.academicYearName == ay.academicYearName).FirstOrDefault();
                     if (ay1 != null)
                     {
+                        ay1.durationStart = ay.durationStart;
+                        ay1.durationEnd = ay.durationEnd;
+                        ay1.quarterOneStart = ay.quarterOneStart;
+                        ay1.quarterOneEnd = ay.quarterOneEnd;
+                        ay1.quarterTwoStart = ay.quarterTwoStart;
+                        ay1.quarterTwoEnd = ay.quarterTwoEnd;
+                        ay1.quarterThreeStart = ay.quarterThreeStart;
+                        ay1.quarterThreeEnd = ay.quarterThreeEnd;
+                        ay1.quarterFourStart = ay.quarterFourStart;
+                        ay1.quarterFourEnd = ay.quarterFourEnd;
 
                         db.SaveChanges();
                         ViewBag.SuccessMessage = "Academic Year updated successfully";
@@ -1947,139 +1965,147 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             announcementViewModel avm2 = new announcementViewModel();
             avm2.gradeList = new List<gradeViewModel>();
             avm2.announcementList = new List<Announcement>();
+            ViewBag.incorrectFileFormat = " ";
             if (add != null)
             {
-                if (ModelState.IsValid) { 
-                if (selectedSections != null && selectedSections != "" && selectedSections != "*")
+                if (ModelState.IsValid)
                 {
-                    String firstSeries = selectedSections.Substring(1, selectedSections.Length - 2);
-
-                    List<string> memList = new List<string>();
-                    memList = firstSeries.Split('-').ToList();
-                    if (memList.Count == db.Section.Where(ax => ax.sectionName.StartsWith(grades) && ax.academicYearId == avm.academicYear).Count())
+                    if ((file != null && file.ContentType == "application/pdf")) { 
+                    if (selectedSections != null && selectedSections != "" && selectedSections != "*")
                     {
+                        String firstSeries = selectedSections.Substring(1, selectedSections.Length - 2);
 
-                        ans.announcementTitle = avm.announcementTitle;
-                        ans.announcementType = "grade";
-                        ans.announcementContent = avm.announcementContent;
-                        ans.endDate = Convert.ToDateTime(avm.endDate).Date;
-                        ans.postDate = DateTime.Now.Date;
-                        if (file != null)
+                        List<string> memList = new List<string>();
+                        memList = firstSeries.Split('-').ToList();
+                        if (memList.Count == db.Section.Where(ax => ax.sectionName.StartsWith(grades) && ax.academicYearId == avm.academicYear).Count())
                         {
-                            int length = file.ContentLength;
-                            byte[] upload = new byte[length];
-                            file.InputStream.Read(upload, 0, length);
-                            ans.announcementDocument = upload;
-                            ans.filName = fileName;
-                        }
-                        var ayr = db.Announcement.Where(ax => ax.announcementType == "grade" && ax.announcementContent == ans.announcementContent && ax.announcementTitle == ans.announcementTitle && ax.endDate == ans.endDate).FirstOrDefault();
-                        if (ayr == null)
-                        {
-                            db.Announcement.Add(ans);
-                            db.SaveChanges();
 
-                            var axr = db.Announcement.Where(ax => ax.announcementType == "grade" && ax.announcementContent == ans.announcementContent && ax.announcementTitle == ans.announcementTitle && ax.endDate == ans.endDate).FirstOrDefault();
-                            gans.announcementId = axr.announcementID;
-                            gans.grade = avm.grade;
-                            db.gradeAnnouncements.Add(gans);
-                            db.SaveChanges();
-                        }
-                        else
-                        {
-                            ViewBag.existsMessage = "Announcement Exists";
-                            goto x;
-                        }
-
-
-                    }
-                    else
-                    {
-                        ans.announcementTitle = avm.announcementTitle;
-                        ans.announcementType = "section";
-                        ans.announcementContent = avm.announcementContent;
-                        ans.endDate = Convert.ToDateTime(avm.endDate).Date;
-                        ans.postDate = DateTime.Now.Date;
-                        if (file != null)
-                        {
-                            int length = file.ContentLength;
-                            byte[] upload = new byte[length];
-                            file.InputStream.Read(upload, 0, length);
-                            ans.announcementDocument = upload;
-                            ans.filName = fileName;
-                        }
-                        var ayr = db.Announcement.Where(ax => ax.announcementType == "section" && ax.announcementContent == ans.announcementContent && ax.announcementTitle == ans.announcementTitle && ax.endDate == ans.endDate).FirstOrDefault();
-                        if (ayr == null)
-                        {
-                            db.Announcement.Add(ans);
-                            db.SaveChanges();
-                            var axr = db.Announcement.Where(ax => ax.announcementType == "section" && ax.announcementContent == ans.announcementContent && ax.announcementTitle == ans.announcementTitle && ax.endDate == ans.endDate).FirstOrDefault();
-                            foreach (var k in memList)
+                            ans.announcementTitle = avm.announcementTitle;
+                            ans.announcementType = "grade";
+                            ans.announcementContent = avm.announcementContent;
+                            ans.endDate = Convert.ToDateTime(avm.endDate).Date;
+                            ans.postDate = DateTime.Now.Date;
+                            if (file != null)
                             {
-                                sectionAnnouncement sans = new sectionAnnouncement();
-                                sans.announcementId = axr.announcementID;
-                                var theSec = db.Section.Where(ax => ax.sectionName == k && ax.academicYearId == avm.academicYear).FirstOrDefault();
-                                sans.sectionId = theSec.sectionId;
-                                db.sectionAnnouncement.Add(sans);
+                                int length = file.ContentLength;
+                                byte[] upload = new byte[length];
+                                file.InputStream.Read(upload, 0, length);
+                                ans.announcementDocument = upload;
+                                ans.filName = fileName;
+                            }
+                            var ayr = db.Announcement.Where(ax => ax.announcementType == "grade" && ax.announcementContent == ans.announcementContent && ax.announcementTitle == ans.announcementTitle && ax.endDate == ans.endDate).FirstOrDefault();
+                            if (ayr == null)
+                            {
+                                db.Announcement.Add(ans);
+                                db.SaveChanges();
+
+                                var axr = db.Announcement.Where(ax => ax.announcementType == "grade" && ax.announcementContent == ans.announcementContent && ax.announcementTitle == ans.announcementTitle && ax.endDate == ans.endDate).FirstOrDefault();
+                                gans.announcementId = axr.announcementID;
+                                gans.grade = avm.grade;
+                                db.gradeAnnouncements.Add(gans);
                                 db.SaveChanges();
                             }
+                            else
+                            {
+                                ViewBag.existsMessage = "Announcement Exists";
+                                goto x;
+                            }
+
+
                         }
                         else
                         {
-                            ViewBag.existsMessage = "Announcement Exists";
-                            goto x;
-                        }
-
-                    }
-                    HomeroomTeacherMethod htm = new HomeroomTeacherMethod();
-                    List<Section> secList = new List<Section>();
-                    List<Section> tempSecList = new List<Section>();
-                    secList = db.Section.ToList();
-                    if (secList != null)
-                    {
-                        foreach (var k in secList)
-                        {
-                            if (htm.isInAcademicYear(k.academicYearId))
+                            ans.announcementTitle = avm.announcementTitle;
+                            ans.announcementType = "section";
+                            ans.announcementContent = avm.announcementContent;
+                            ans.endDate = Convert.ToDateTime(avm.endDate).Date;
+                            ans.postDate = DateTime.Now.Date;
+                            if (file != null)
                             {
-                                tempSecList.Add(k);
+                                int length = file.ContentLength;
+                                byte[] upload = new byte[length];
+                                file.InputStream.Read(upload, 0, length);
+                                ans.announcementDocument = upload;
+                                ans.filName = fileName;
                             }
-                        }
-                        if (tempSecList != null)
-                        {
-                            foreach (var k in tempSecList)
+                            var ayr = db.Announcement.Where(ax => ax.announcementType == "section" && ax.announcementContent == ans.announcementContent && ax.announcementTitle == ans.announcementTitle && ax.endDate == ans.endDate).FirstOrDefault();
+                            if (ayr == null)
                             {
-                                int xr = int.Parse(k.sectionName.Substring(0, k.sectionName.Length - 1));
-                                string xr1 = xr.ToString();
-                                var gr = avm.gradeList.Where(ax => ax.grade == xr).FirstOrDefault();
-                                if (gr == null)
+                                db.Announcement.Add(ans);
+                                db.SaveChanges();
+                                var axr = db.Announcement.Where(ax => ax.announcementType == "section" && ax.announcementContent == ans.announcementContent && ax.announcementTitle == ans.announcementTitle && ax.endDate == ans.endDate).FirstOrDefault();
+                                foreach (var k in memList)
                                 {
-                                    gradeViewModel gvm = new gradeViewModel();
-                                    gvm.grade = xr;
-                                    List<Student> stdList = new List<Student>();
-                                    stdList = db.Student.Where(ax => ax.academicYearId == k.academicYearId && ax.sectionName == k.sectionName).ToList();
-                                    gvm.numberOfStudents = stdList.Count();
-                                    gvm.numberoFSections = tempSecList.Where(ax => ax.sectionName.StartsWith(xr1)).Count();
-                                    gvm.academicYear = k.academicYearId;
-                                    avm2.gradeList.Add(gvm);
+                                    sectionAnnouncement sans = new sectionAnnouncement();
+                                    sans.announcementId = axr.announcementID;
+                                    var theSec = db.Section.Where(ax => ax.sectionName == k && ax.academicYearId == avm.academicYear).FirstOrDefault();
+                                    sans.sectionId = theSec.sectionId;
+                                    db.sectionAnnouncement.Add(sans);
+                                    db.SaveChanges();
+                                }
+                            }
+                            else
+                            {
+                                ViewBag.existsMessage = "Announcement Exists";
+                                goto x;
+                            }
+
+                        }
+                        HomeroomTeacherMethod htm = new HomeroomTeacherMethod();
+                        List<Section> secList = new List<Section>();
+                        List<Section> tempSecList = new List<Section>();
+                        secList = db.Section.ToList();
+                        if (secList != null)
+                        {
+                            foreach (var k in secList)
+                            {
+                                if (htm.isInAcademicYear(k.academicYearId))
+                                {
+                                    tempSecList.Add(k);
+                                }
+                            }
+                            if (tempSecList != null)
+                            {
+                                foreach (var k in tempSecList)
+                                {
+                                    int xr = int.Parse(k.sectionName.Substring(0, k.sectionName.Length - 1));
+                                    string xr1 = xr.ToString();
+                                    var gr = avm2.gradeList.Where(ax => ax.grade == xr).FirstOrDefault();
+                                    if (gr == null)
+                                    {
+                                        gradeViewModel gvm = new gradeViewModel();
+                                        gvm.grade = xr;
+                                        List<Student> stdList = new List<Student>();
+                                        stdList = db.Student.Where(ax => ax.academicYearId == k.academicYearId && ax.sectionName.StartsWith(xr1)).ToList();
+                                        gvm.numberOfStudents = stdList.Count();
+                                        gvm.numberoFSections = tempSecList.Where(ax => ax.sectionName.StartsWith(xr1)).Count();
+                                        gvm.academicYear = k.academicYearId;
+                                        avm2.gradeList.Add(gvm);
+                                    }
                                 }
                             }
                         }
-                    }
-                    List<Announcement> annList = new List<Announcement>();
-                    annList = db.Announcement.ToList();
-                    if (annList != null)
-                    {
-                        foreach (var k in annList)
+                        List<Announcement> annList = new List<Announcement>();
+                        annList = db.Announcement.ToList();
+                        if (annList != null)
                         {
-                            if (DateTime.Compare(DateTime.Now.Date, k.endDate.Date) <= 0)
+                            foreach (var k in annList)
                             {
-                                avm2.announcementList.Add(k);
+                                if (DateTime.Compare(DateTime.Now.Date, k.endDate.Date) <= 0)
+                                {
+                                    avm2.announcementList.Add(k);
+                                }
                             }
                         }
+                        return View("announcementManagement", avm2);
+
+
                     }
-                    return View("announcementManagement", avm2);
-
-
                 }
+                    else
+                    {
+                        ViewBag.incorrectFileFormat = "Invalid file format. Please upload pdf file";
+                    }
             }
             }
             x:
@@ -2114,87 +2140,96 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             avm2.gradeList= new List<gradeViewModel>();
             avm2.announcementList = new List<Announcement>();
             ViewBag.existsMessage = "";
+            ViewBag.incorrectFileFormat=" ";
             if (add != null)
             {
-                if (ModelState.IsValid) { 
-                ans.announcementTitle = avm.announcementTitle;
-                ans.announcementType = "student";
-                ans.announcementContent = avm.announcementContent;
-                ans.postDate = DateTime.Now.Date;
-                ans.endDate = Convert.ToDateTime(avm.endDate).Date;
-                if (file != null)
+                if (ModelState.IsValid)
                 {
-                    int length = file.ContentLength;
-                    byte[] upload = new byte[length];
-                    file.InputStream.Read(upload, 0, length);
-                    ans.announcementDocument = upload;
-                    ans.filName = fileName;
-
-                }
-                var ayr = db.Announcement.Where(ax => ax.announcementType == "student" && ax.announcementContent == ans.announcementContent && ax.announcementTitle == ans.announcementTitle && ax.endDate == ans.endDate).FirstOrDefault();
-                if (ayr == null)
-                {
-                    db.Announcement.Add(ans);
-                    db.SaveChanges();
-                    var axr = db.Announcement.Where(ax => ax.announcementType == "student" && ax.announcementContent == ans.announcementContent && ax.announcementTitle == ans.announcementTitle && ax.endDate == ans.endDate).FirstOrDefault();
-                    sA.announcementId = axr.announcementID;
-                    sA.studentId = avm.studentId;
-                    db.studentAnnouncement.Add(sA);
-                    db.SaveChanges();
-
-                    HomeroomTeacherMethod htm = new HomeroomTeacherMethod();
-                    List<Section> secList = new List<Section>();
-                    List<Section> tempSecList = new List<Section>();
-                    secList = db.Section.ToList();
-                    if (secList != null)
+                    if ((file != null && file.ContentType == "application/pdf"))
+                    { 
+                    ans.announcementTitle = avm.announcementTitle;
+                    ans.announcementType = "student";
+                    ans.announcementContent = avm.announcementContent;
+                    ans.postDate = DateTime.Now.Date;
+                    ans.endDate = Convert.ToDateTime(avm.endDate).Date;
+                    if (file != null)
                     {
-                        foreach (var k in secList)
+                        int length = file.ContentLength;
+                        byte[] upload = new byte[length];
+                        file.InputStream.Read(upload, 0, length);
+                        ans.announcementDocument = upload;
+                        ans.filName = fileName;
+
+                    }
+                    var ayr = db.Announcement.Where(ax => ax.announcementType == "student" && ax.announcementContent == ans.announcementContent && ax.announcementTitle == ans.announcementTitle && ax.endDate == ans.endDate).FirstOrDefault();
+                    if (ayr == null)
+                    {
+                        db.Announcement.Add(ans);
+                        db.SaveChanges();
+                        var axr = db.Announcement.Where(ax => ax.announcementType == "student" && ax.announcementContent == ans.announcementContent && ax.announcementTitle == ans.announcementTitle && ax.endDate == ans.endDate).FirstOrDefault();
+                        sA.announcementId = axr.announcementID;
+                        sA.studentId = avm.studentId;
+                        db.studentAnnouncement.Add(sA);
+                        db.SaveChanges();
+
+                        HomeroomTeacherMethod htm = new HomeroomTeacherMethod();
+                        List<Section> secList = new List<Section>();
+                        List<Section> tempSecList = new List<Section>();
+                        secList = db.Section.ToList();
+                        if (secList != null)
                         {
-                            if (htm.isInAcademicYear(k.academicYearId))
+                            foreach (var k in secList)
                             {
-                                tempSecList.Add(k);
-                            }
-                        }
-                        if (tempSecList != null)
-                        {
-                            foreach (var k in tempSecList)
-                            {
-                                int xr = int.Parse(k.sectionName.Substring(0, k.sectionName.Length - 1));
-                                string xr1 = xr.ToString();
-                                var gr = avm.gradeList.Where(ax => ax.grade == xr).FirstOrDefault();
-                                if (gr == null)
+                                if (htm.isInAcademicYear(k.academicYearId))
                                 {
-                                    gradeViewModel gvm = new gradeViewModel();
-                                    gvm.grade = xr;
-                                    List<Student> stdList = new List<Student>();
-                                    stdList = db.Student.Where(ax => ax.academicYearId == k.academicYearId && ax.sectionName == k.sectionName).ToList();
-                                    gvm.numberOfStudents = stdList.Count();
-                                    gvm.numberoFSections = tempSecList.Where(ax => ax.sectionName.StartsWith(xr1)).Count();
-                                    gvm.academicYear = k.academicYearId;
-                                    avm2.gradeList.Add(gvm);
+                                    tempSecList.Add(k);
+                                }
+                            }
+                            if (tempSecList != null)
+                            {
+                                foreach (var k in tempSecList)
+                                {
+                                    int xr = int.Parse(k.sectionName.Substring(0, k.sectionName.Length - 1));
+                                    string xr1 = xr.ToString();
+                                    var gr = avm2.gradeList.Where(ax => ax.grade == xr).FirstOrDefault();
+                                    if (gr == null)
+                                    {
+                                        gradeViewModel gvm = new gradeViewModel();
+                                        gvm.grade = xr;
+                                        List<Student> stdList = new List<Student>();
+                                        stdList = db.Student.Where(ax => ax.academicYearId == k.academicYearId && ax.sectionName.StartsWith(xr1)).ToList();
+                                        gvm.numberOfStudents = stdList.Count();
+                                        gvm.numberoFSections = tempSecList.Where(ax => ax.sectionName.StartsWith(xr1)).Count();
+                                        gvm.academicYear = k.academicYearId;
+                                        avm2.gradeList.Add(gvm);
+                                    }
                                 }
                             }
                         }
-                    }
-                    List<Announcement> annList = new List<Announcement>();
-                    annList = db.Announcement.ToList();
-                    if (annList != null)
-                    {
-                        foreach (var k in annList)
+                        List<Announcement> annList = new List<Announcement>();
+                        annList = db.Announcement.ToList();
+                        if (annList != null)
                         {
-                            if (DateTime.Compare(DateTime.Now.Date, k.endDate.Date) <= 0)
+                            foreach (var k in annList)
                             {
-                                avm2.announcementList.Add(k);
+                                if (DateTime.Compare(DateTime.Now.Date, k.endDate.Date) <= 0)
+                                {
+                                    avm2.announcementList.Add(k);
+                                }
                             }
                         }
+                        return View("announcementManagement", avm2);
                     }
-                    return View("announcementManagement", avm2);
+                    else
+                    {
+                        ViewBag.existsMessage = "Announcement Exists";
+                        goto x;
+                    }
                 }
-                else
-                {
-                    ViewBag.existsMessage = "Announcement Exists";
-                    goto x;
-                }
+                    else
+                    {
+                        ViewBag.incorrectFileFormat = "Invalid file format. Please upload pdf file";
+                    }
             }
             }
             x:         
@@ -2228,26 +2263,30 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             avm2.gradeList = new List<gradeViewModel>();
             avm2.announcementList = new List<Announcement>();
             ViewBag.errorMessage = " ";
+            ViewBag.incorrectFileFormat = " ";
             an = db.Announcement.Where(ax => ax.announcementID == avm.announcementID).FirstOrDefault();
             if (update != null)
             {
-                if (ModelState.IsValid) { 
-                an.announcementContent = avm.announcementContent;
-                an.endDate = Convert.ToDateTime(avm.endDate).Date;
-                an.postDate = DateTime.Now.Date;
-                if (file != null)
+                if (ModelState.IsValid)
                 {
-                    int length = file.ContentLength;
-                    byte[] upload = new byte[length];
-                    file.InputStream.Read(upload, 0, length);
-                    an.announcementDocument = upload;
-
-                }
-                an.updateStatus = 1;
-                an.viewedStatus = 0;
-                    var ayr = db.Announcement.Where(ax => ax.announcementType == an.announcementType && ax.announcementContent == an.announcementContent && ax.announcementTitle == an.announcementTitle && ax.endDate == an.endDate).FirstOrDefault();
-                    if (ayr == null)
+                    if ((file != null && file.ContentType == "application/pdf") || file == null)
+                    { 
+                    an.announcementContent = avm.announcementContent;
+                    an.endDate = Convert.ToDateTime(avm.endDate).Date;
+                    an.postDate = DateTime.Now.Date;
+                    if (file != null)
                     {
+                        int length = file.ContentLength;
+                        byte[] upload = new byte[length];
+                        file.InputStream.Read(upload, 0, length);
+                        an.announcementDocument = upload;
+
+                    }
+                    an.updateStatus = 1;
+                    an.viewedStatus = 0;
+                   /* var ayr = db.Announcement.Where(ax => ax.announcementType == an.announcementType && ax.announcementContent == an.announcementContent && ax.announcementTitle == an.announcementTitle && ax.endDate == an.endDate).FirstOrDefault();
+                    if (ayr == null)
+                    {*/
                         db.SaveChanges();
                         HomeroomTeacherMethod htm = new HomeroomTeacherMethod();
                         List<Section> secList = new List<Section>();
@@ -2268,13 +2307,13 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                                 {
                                     int xr = int.Parse(k.sectionName.Substring(0, k.sectionName.Length - 1));
                                     string xr1 = xr.ToString();
-                                    var gr = avm.gradeList.Where(ax => ax.grade == xr).FirstOrDefault();
+                                    var gr = avm2.gradeList.Where(ax => ax.grade == xr).FirstOrDefault();
                                     if (gr == null)
                                     {
                                         gradeViewModel gvm = new gradeViewModel();
                                         gvm.grade = xr;
                                         List<Student> stdList = new List<Student>();
-                                        stdList = db.Student.Where(ax => ax.academicYearId == k.academicYearId && ax.sectionName == k.sectionName).ToList();
+                                        stdList = db.Student.Where(ax => ax.academicYearId == k.academicYearId && ax.sectionName.StartsWith(xr1)).ToList();
                                         gvm.numberOfStudents = stdList.Count();
                                         gvm.numberoFSections = tempSecList.Where(ax => ax.sectionName.StartsWith(xr1)).Count();
                                         gvm.academicYear = k.academicYearId;
@@ -2296,15 +2335,15 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                             }
                         }
                         return View("announcementManagement", avm2);
-                    }
+                  //  }
+                   
+
+
+                }
                     else
                     {
-                        ViewBag.errorMessage = "Record already exists";
-                        goto xo;
+                        ViewBag.incorrectFileFormat = "Invalid file format. Please upload pdf file";
                     }
-                    
-
-         
 
             }
         }
@@ -2344,7 +2383,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                             gradeViewModel gvm = new gradeViewModel();
                             gvm.grade = xr;
                             List<Student> stdList = new List<Student>();
-                            stdList = db.Student.Where(ax => ax.academicYearId == k.academicYearId && ax.sectionName == k.sectionName).ToList();
+                            stdList = db.Student.Where(ax => ax.academicYearId == k.academicYearId && ax.sectionName.StartsWith(xr1)).ToList();
                             gvm.numberOfStudents = stdList.Count();
                             gvm.numberoFSections = tempSecList.Where(ax => ax.sectionName.StartsWith(xr1)).Count();
                             gvm.academicYear = k.academicYearId;
@@ -2385,6 +2424,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             ann = db.Announcement.Where(ax => ax.announcementID == annId1).FirstOrDefault();
             if (delete != null)
             {
+                if (!(Object.ReferenceEquals(ann,null))) { 
                 if (ann.announcementType == "student")
                 {
                     stda = db.studentAnnouncement.Where(ax => ax.announcementId == ann.announcementID).FirstOrDefault();
@@ -2397,7 +2437,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                 else if (ann.announcementType == "section")
                 {
                     sa = db.sectionAnnouncement.Where(ax => ax.announcementId == ann.announcementID).ToList();
-                    foreach(var k in sa)
+                    foreach (var k in sa)
                     {
                         db.sectionAnnouncement.Remove(k);
                         db.SaveChanges();
@@ -2424,6 +2464,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                     ViewBag.SuccessfulMessage = "Announcement deleted Successfully";
                 }
             }
+            }
             HomeroomTeacherMethod htm = new HomeroomTeacherMethod();
             List<Section> secList = new List<Section>();
             List<Section> tempSecList = new List<Section>();
@@ -2449,7 +2490,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                             gradeViewModel gvm = new gradeViewModel();
                             gvm.grade = xr;
                             List<Student> stdList = new List<Student>();
-                            stdList = db.Student.Where(ax => ax.academicYearId == k.academicYearId && ax.sectionName == k.sectionName).ToList();
+                            stdList = db.Student.Where(ax => ax.academicYearId == k.academicYearId && ax.sectionName.StartsWith(xr1)).ToList();
                             gvm.numberOfStudents = stdList.Count();
                             gvm.numberoFSections = tempSecList.Where(ax => ax.sectionName.StartsWith(xr1)).Count();
                             gvm.academicYear = k.academicYearId;
@@ -2491,86 +2532,94 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             fvm.announcementList = new List<Announcement>();
             Announcement ann = new Announcement();
             ViewBag.ErrorMessage = " ";
+            ViewBag.incorrectFileFormat = " ";
             announcementViewModel avm2 = new announcementViewModel();
             avm2.gradeList = new List<gradeViewModel>();
             avm2.announcementList = new List<Announcement>();
             if (add != null)
             {
-                if (ModelState.IsValid) { 
-                ann.announcementTitle = fvm.announcementTitle;
-                ann.announcementType = "all";
-                ann.postDate = DateTime.Now.Date;
-                ann.endDate = Convert.ToDateTime(fvm.endDate).Date;
-                ann.announcementContent = fvm.announcementContent;
-                if (file != null)
+                if (ModelState.IsValid)
                 {
-                    int length = file.ContentLength;
-                    byte[] upload = new byte[length];
-                    file.InputStream.Read(upload, 0, length);
-                    ann.announcementDocument = upload;
-                    ann.filName = fileName;
-                }
-                var ayr = db.Announcement.Where(ax => ax.announcementType == "all" && ax.announcementContent == ann.announcementContent && ax.announcementTitle == ann.announcementTitle && ax.endDate == ann.endDate).FirstOrDefault();
-                if (ayr == null)
-                {
-                    db.Announcement.Add(ann);
-                    db.SaveChanges();
-
-                    HomeroomTeacherMethod htm = new HomeroomTeacherMethod();
-                    List<Section> secList = new List<Section>();
-                    List<Section> tempSecList = new List<Section>();
-                    secList = db.Section.ToList();
-                    if (secList != null)
+                    if ((file != null && file.ContentType == "application/pdf")) { 
+                    ann.announcementTitle = fvm.announcementTitle;
+                    ann.announcementType = "all";
+                    ann.postDate = DateTime.Now.Date;
+                    ann.endDate = Convert.ToDateTime(fvm.endDate).Date;
+                    ann.announcementContent = fvm.announcementContent;
+                    if (file != null)
                     {
-                        foreach (var k in secList)
+                        int length = file.ContentLength;
+                        byte[] upload = new byte[length];
+                        file.InputStream.Read(upload, 0, length);
+                        ann.announcementDocument = upload;
+                        ann.filName = fileName;
+                    }
+                    var ayr = db.Announcement.Where(ax => ax.announcementType == "all" && ax.announcementContent == ann.announcementContent && ax.announcementTitle == ann.announcementTitle && ax.endDate == ann.endDate).FirstOrDefault();
+                    if (ayr == null)
+                    {
+                        db.Announcement.Add(ann);
+                        db.SaveChanges();
+
+                        HomeroomTeacherMethod htm = new HomeroomTeacherMethod();
+                        List<Section> secList = new List<Section>();
+                        List<Section> tempSecList = new List<Section>();
+                        secList = db.Section.ToList();
+                        if (secList != null)
                         {
-                            if (htm.isInAcademicYear(k.academicYearId))
+                            foreach (var k in secList)
                             {
-                                tempSecList.Add(k);
-                            }
-                        }
-                        if (tempSecList != null)
-                        {
-                            foreach (var k in tempSecList)
-                            {
-                                int xr = int.Parse(k.sectionName.Substring(0, k.sectionName.Length - 1));
-                                string xr1 = xr.ToString();
-                                var gr = fvm.gradeList.Where(ax => ax.grade == xr).FirstOrDefault();
-                                if (gr == null)
+                                if (htm.isInAcademicYear(k.academicYearId))
                                 {
-                                    gradeViewModel gvm = new gradeViewModel();
-                                    gvm.grade = xr;
-                                    List<Student> stdList = new List<Student>();
-                                    stdList = db.Student.Where(ax => ax.academicYearId == k.academicYearId && ax.sectionName == k.sectionName).ToList();
-                                    gvm.numberOfStudents = stdList.Count();
-                                    gvm.numberoFSections = tempSecList.Where(ax => ax.sectionName.StartsWith(xr1)).Count();
-                                    gvm.academicYear = k.academicYearId;
-                                    avm2.gradeList.Add(gvm);
+                                    tempSecList.Add(k);
+                                }
+                            }
+                            if (tempSecList != null)
+                            {
+                                foreach (var k in tempSecList)
+                                {
+                                    int xr = int.Parse(k.sectionName.Substring(0, k.sectionName.Length - 1));
+                                    string xr1 = xr.ToString();
+                                    var gr = avm2.gradeList.Where(ax => ax.grade == xr).FirstOrDefault();
+                                    if (gr == null)
+                                    {
+                                        gradeViewModel gvm = new gradeViewModel();
+                                        gvm.grade = xr;
+                                        List<Student> stdList = new List<Student>();
+                                        stdList = db.Student.Where(ax => ax.academicYearId == k.academicYearId && ax.sectionName.StartsWith(xr1)).ToList();
+                                        gvm.numberOfStudents = stdList.Count();
+                                        gvm.numberoFSections = tempSecList.Where(ax => ax.sectionName.StartsWith(xr1)).Count();
+                                        gvm.academicYear = k.academicYearId;
+                                        avm2.gradeList.Add(gvm);
+                                    }
                                 }
                             }
                         }
-                    }
-                    List<Announcement> annList = new List<Announcement>();
-                    annList = db.Announcement.ToList();
-                    if (annList != null)
-                    {
-                        foreach (var k in annList)
+                        List<Announcement> annList = new List<Announcement>();
+                        annList = db.Announcement.ToList();
+                        if (annList != null)
                         {
-                            if (DateTime.Compare(DateTime.Now.Date, k.endDate.Date) <= 0)
+                            foreach (var k in annList)
                             {
-                                avm2.announcementList.Add(k);
+                                if (DateTime.Compare(DateTime.Now.Date, k.endDate.Date) <= 0)
+                                {
+                                    avm2.announcementList.Add(k);
+                                }
                             }
                         }
+                        return View("announcementManagement", avm2);
                     }
-                    return View("announcementManagement", avm2);
+                    else
+                    {
+                        ViewBag.ErrorMessage = "Announcement already exists.";
+                        goto xr;
+                    }
+
+
                 }
-                else
-                {
-                    ViewBag.ErrorMessage = "Announcement already exists.";
-                    goto xr;
-                }
-               
-                                
+                    else
+                    {
+                        ViewBag.incorrectFileFormat = "Invalid file format. Please upload pdf file";
+                    }
             }
             }
         xr:

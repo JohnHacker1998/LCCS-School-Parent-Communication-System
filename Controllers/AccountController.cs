@@ -67,11 +67,11 @@ namespace LCCS_School_Parent_Communication_System.Controllers
                     }
                     else if (userManager.IsInRole(user.Id, "Registrar"))
                     {
-                        return RedirectToAction("parentManagement", "RHome", new { area = "Registrar" });
+                        return RedirectToAction("studentManagement", "RHome", new { area = "Registrar" });
                     }
                     else if (userManager.IsInRole(user.Id, "Teacher"))
                     {
-                        return RedirectToAction("assignmentManagement", "THome", new { area = "Teacher" });
+                        return RedirectToAction("manageGroup", "THome", new { area = "Teacher" });
                     }
                     else
                     {

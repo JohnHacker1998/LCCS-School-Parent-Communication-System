@@ -3,7 +3,6 @@
     ViewBag.Title = "updateAssignment";
 }
 
-<h2>updateAssignment</h2>
 
 <style>
     .container {
@@ -28,7 +27,9 @@
 
 </script>
 
-<div class="container">
+   
+<div class="container mb-3 mt-3 bg-light border-top border-bottom-0 border-4 rounded-3 ">
+    <h1 class="border-bottom border-5 p-3 mb-4">Update Assignment</h1>
     @using (Html.BeginForm("updateAssignment", "THome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
     {
         @Html.HiddenFor(a => a.assignmentID)
@@ -104,7 +105,13 @@
             @ViewBag.AlreadyExists
         </div>
     }
+    @if (ViewBag.incorrectFIleType != " " && ViewBag.incorrectFIleType != null)
+    {
+        <div class="alert alert-danger">
 
+            @ViewBag.incorrectFIleType
+        </div>
+    }
 
 
 </div>

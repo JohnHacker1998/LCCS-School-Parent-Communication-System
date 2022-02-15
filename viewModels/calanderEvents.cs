@@ -16,5 +16,7 @@ namespace LCCS_School_Parent_Communication_System.viewModels
         public String end { get; set; }
 
         public bool allDay { get; set; }
+
+        public string backgroundColor { get; set; }
     }
 }

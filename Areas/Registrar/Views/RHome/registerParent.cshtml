@@ -6,66 +6,72 @@
         <div class="modal-content">
             <div class="modal-header bg-red">
                 <h4 class="modal-title text-white" id="title">Register Parent</h4>
-                <button type="button" class="close btn bg-red" data-dismiss="modal">
+                <button type="button" id="exit" class="close btn bg-red" data-dismiss="modal">
                     <span aria-hidden="true" class="text-white">&times;</span>
                 </button>
             </div>
            
-        <div class="modal-body">
-            @if (ViewBag.addedSuccessfully != " " && ViewBag.addedSuccessfully != null)
-            {
-                <div class="alert alert-success">
-                    @ViewBag.addedSuccessfully
-                </div>
-            }
-            @if (ViewBag.Message != " " && ViewBag.Message != null)
-            {
-                <div class="alert alert-danger">
-                    <script type="text/javascript">
-                        function test() { $.growl({ title: "Growl", message: "The kitten is awake!" }); }
+            <div class="modal-body">
+                @if (ViewBag.addedSuccessfully != " " && ViewBag.addedSuccessfully != null)
+                {
+                    <div class="alert alert-success" id="hide">
+                        @ViewBag.addedSuccessfully
+                    </div>
+                }
+                @if (ViewBag.Message != " " && ViewBag.Message != null)
+                {
+                    <div class="alert alert-danger" id="hide">
+                        <script type="text/javascript">
+                            function test() { $.growl({ title: "Growl", message: "The kitten is awake!" }); }
 
-                        test();</script>
-                    @ViewBag.Message
-                </div>
-            }
-            @if (ViewBag.existenceMessage != " " && ViewBag.existenceMessage != null)
-            {
-                <div class="alert alert-danger">
-                    <script type="text/javascript">
-                        function test() { $.growl({ title: "Growl", message: "The kitten is awake!" }); }
+                            test();</script>
+                        @ViewBag.Message
+                    </div>
+                }
+                @if (ViewBag.existenceMessage != " " && ViewBag.existenceMessage != null)
+                {
+                    <div class="alert alert-danger" id="hide">
+                        <script type="text/javascript">
+                            function test() { $.growl({ title: "Growl", message: "The kitten is awake!" }); }
 
-                        test();</script>
-                    @ViewBag.existenceMessage
-                </div>
-            }
-            <form action="registerParent" id="error" autocomplete="off">
+                            test();</script>
+                        @ViewBag.existenceMessage
+                    </div>
+                }
 
-                <div class="form-group" style="display:none">
-                    @Html.LabelFor(a => a.studentId, new { @class = "form-label mt-2" })
-                    <div class="container row">@Html.TextBoxFor(a => a.studentId, new { @readonly = true, htmlAttributes = new { } })</div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(a => a.studentFullName, new { @class = "form-label mt-2" })
-                    <div class="container row">@Html.TextBoxFor(a => a.studentFullName, new { @readonly = true, htmlAttributes = new { } })</div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(a => a.fullName, new { @class = "form-label mt-2" })
-                    <div class="container row">@Html.EditorFor(a => a.fullName, new { htmlAttributes = new { @class = "form-control" } })</div>
-                    <div class="container row">@Html.ValidationMessageFor(a => a.fullName, "", new { @class = "text-danger" })</div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(a => a.email, new { @class = "form-label mt-2" })
-                    <div class="container row">@Html.EditorFor(a => a.email, new { htmlAttributes = new { @class = "form-control" } })</div>
-                    <div class="container row">@Html.ValidationMessageFor(a => a.email, "", new { @class = "text-danger" })</div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(a => a.phoneNumber, new { @class = "form-label mt-2" })
-                    <div class="container row">@Html.EditorFor(a => a.phoneNumber, new { htmlAttributes = new { @class = "form-control" } })</div>
-                    <div class="container row">@Html.ValidationMessageFor(a => a.phoneNumber, "", new { @class = "text-danger" })</div>
-                </div>
+                <div class="d-flex justify-content-center ">
+                    <div id="holder" class="d-none text-danger" role="status">
 
-            </form>
-        </div>
+                    </div>
+                </div>
+                <form action="registerParent" id="error" autocomplete="off">
+
+                    <div class="form-group" style="display:none">
+                        @Html.LabelFor(a => a.studentId, new { @class = "form-label mt-2" })
+                        <div class="container row">@Html.TextBoxFor(a => a.studentId, new { @readonly = true, htmlAttributes = new { } })</div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.studentFullName, new { @class = "form-label mt-2" })
+                        <div class="container row">@Html.TextBoxFor(a => a.studentFullName, new { @readonly = true, htmlAttributes = new { } })</div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.fullName, new { @class = "form-label mt-2" })
+                        <div class="container row">@Html.EditorFor(a => a.fullName, new { htmlAttributes = new { @class = "form-control" } })</div>
+                        <div class="container row">@Html.ValidationMessageFor(a => a.fullName, "", new { @class = "text-danger" })</div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.email, new { @class = "form-label mt-2" })
+                        <div class="container row">@Html.EditorFor(a => a.email, new { htmlAttributes = new { @class = "form-control" } })</div>
+                        <div class="container row">@Html.ValidationMessageFor(a => a.email, "", new { @class = "text-danger" })</div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(a => a.phoneNumber, new { @class = "form-label mt-2" })
+                        <div class="container row">@Html.EditorFor(a => a.phoneNumber, new { htmlAttributes = new { @class = "form-control" } })</div>
+                        <div class="container row">@Html.ValidationMessageFor(a => a.phoneNumber, "", new { @class = "text-danger" })</div>
+                    </div>
+
+                </form>
+            </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="save" data-save="modal">Register</button>
@@ -82,5 +88,41 @@
         margin-left: 0 !important;
     }
 </style>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var view = $('#myModal');
+        const element = document.getElementById("holder");
+        const hidden = document.getElementById('hide');
+        const save = document.getElementById('save');
+        const exit = document.getElementById('exit');
+        view.on('click', '[data-save="modal"]', function (event) {
+
+            $.validator.unobtrusive.parse("#error");
+            ValidationForm();
+            if (ValidationForm()) {
+                if (element != null) {
+                    element.classList.remove("d-none");
+                    element.classList.add("spinner-border");
+                    save.classList.add("disabled");
+                    exit.classList.add("disabled");
+                }
+                if (hidden != null) {
+                    hidden.classList.add("d-none");
+                }
+            }
+        });
+
+        function ValidationForm() {
+            if (!$("#error").valid()) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+    });
+
+</script>
 
 

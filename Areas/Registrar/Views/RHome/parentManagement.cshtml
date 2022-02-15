@@ -3,12 +3,7 @@
     ViewBag.Title = "parentManagement";
 }
 <div class="modal" id="myModal" role="dialog" data-backdrop="static" tabindex="-1"></div>
-<script>
-    $(document).ready(function () {
-        $('#tblStudentList').DataTable();
-        $('#tblParentList').DataTable();
-    });
-</script>
+
 
 @*@using (Html.BeginForm("parentManagement", "RHome", FormMethod.Post))
     {
@@ -177,3 +172,9 @@
     </div>
 
 
+<script>
+    $(document).ready(function () {
+        $('#tblStudentList').DataTable();
+        $('#tblParentList').DataTable();
+    });
+</script>

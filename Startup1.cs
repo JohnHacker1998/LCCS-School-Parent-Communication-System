@@ -54,11 +54,14 @@ namespace LCCS_School_Parent_Communication_System
                 var user = new ApplicationUser();
                 user.UserName = "director";
                 user.fullName = "Abebe kebede Ayele";
+                user.Email= "lideta.catholic.cathedral@gmail.com";
                 string userPassword = "director123";
+               
                 var chkUser = userManager.Create(user, userPassword);
                 if (chkUser.Succeeded)
                 {
                     userManager.AddToRole(user.Id, "AcademicDirector");
+                    
                 }
             }
 

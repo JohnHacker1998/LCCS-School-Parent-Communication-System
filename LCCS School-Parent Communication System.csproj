@@ -1007,11 +1007,10 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
-    <Compile Include="Migrations\202202101000431_allinOne.cs" />
-    <Compile Include="Migrations\202202101000431_allinOne.designer.cs">
-      <DependentUpon>202202101000431_allinOne.cs</DependentUpon>
+    <Compile Include="Migrations\202202130911597_allin.cs" />
+    <Compile Include="Migrations\202202130911597_allin.designer.cs">
+      <DependentUpon>202202130911597_allin.cs</DependentUpon>
     </Compile>
-    
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AbsenceRecord.cs" />
     <Compile Include="Models\AcademicYear.cs" />
@@ -1127,7 +1126,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
- 
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Academic_Director\Data\" />
     <Folder Include="Areas\Homeroom_Teacher\Data\" />
@@ -1142,6 +1140,11 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202202130911597_allin.resx">
+      <DependentUpon>202202130911597_allin.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
