@@ -34,7 +34,7 @@
 
 
                 <form action="ResultUpdate" id="error" autocomplete="off">
-
+                    @Html.AntiForgeryToken()
                     @Html.HiddenFor(h => h.resultId)
 
                     <div class="form-group">

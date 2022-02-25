@@ -113,6 +113,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         }
         [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult addAssignment(addIndividualAssignmentViewModel avm, HttpPostedFileBase file, string assignmentType, string sectionName, string fileName)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -261,6 +262,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         }
         [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult addGroupAssignment(string selectedStudents,addGroupAssignmentViewModel avm, string add, HttpPostedFileBase file,string fileName)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -400,6 +402,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         }
         [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult updateAssignment(string fileName, updateAssignmentViewModel avm, HttpPostedFileBase file)
         {
             string teacherID = User.Identity.GetUserId();
@@ -517,6 +520,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult assignmentManagement(assignmentViewModel avm, string add, HttpPostedFileBase file, string assignmentType, string sectionName, string select, string delete, string assId, string update, string btnSubmitGrouping, string txtValue)
         {
             ViewBag.selectedType = " ";
@@ -650,6 +654,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         }
         [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult manageGroup(string grId, string delete)
         {
             string teacherId = User.Identity.GetUserId();
@@ -728,6 +733,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         }
         [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult addGroupStructure(groupStructureViewModel gvm, string selectSections)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -855,6 +861,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         }
         [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult classifyGroup(string grID,string skr,classifyGroupViewModel gvm, string txtValue,string add,string delete, string btnSubmitGrouping)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -1306,6 +1313,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult AddGrade(AddGradeModal addGradeModal,string dates)
         {
 
@@ -1576,6 +1584,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ResultUpdate(UpdateGradeModal updateGradeModal)
         {
             //object declaration

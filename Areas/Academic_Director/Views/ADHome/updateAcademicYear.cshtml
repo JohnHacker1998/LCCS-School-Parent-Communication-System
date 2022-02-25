@@ -48,7 +48,7 @@
                 </div>
 
                 <form action="updateAcademicYear" id="error" autocomplete="off">
-
+                    @Html.AntiForgeryToken()
                     <div class="form-group">
                         @Html.LabelFor(a => a.yearStart, new { @class = "form-label mt-2" })
                         <div class="container row"> @Html.EditorFor(a => a.yearStart, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>

@@ -9,7 +9,7 @@
             {
                 using (Html.BeginForm("EvidenceApproval", "ULHome", FormMethod.Post))
                 {
-
+                    @Html.AntiForgeryToken()
                     @Html.HiddenFor(h => h.Id)
                     @Html.ListBoxFor(l => l.days, new SelectList(Model.days), new { @id = "days", @class = "w-50 selectpicker", @data_live_search = "true", @data_actions_box = "true" })
 

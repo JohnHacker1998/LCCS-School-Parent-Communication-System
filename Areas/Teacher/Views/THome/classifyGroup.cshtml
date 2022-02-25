@@ -21,109 +21,110 @@
 </script>
 
    
-    <div class="container bg-light border-top border-bottom-0 border-4 rounded-3 ">
-        <h1 class="border-bottom border-5 p-3 mb-4">Classify Group</h1>
-        @if (ViewBag.successMessage != " " && ViewBag.successMessage != null)
-        {
-            <div class="alert alert-success">
-                @ViewBag.successMessage
-            </div>
-        }
-        @if (ViewBag.ErrorExists != " " && ViewBag.ErrorExists != null)
-        {
-            <div class="alert alert-danger">
-
-                @ViewBag.ErrorExists
-            </div>
-        }
-        @if (ViewBag.ErrorMembers != " " && ViewBag.ErrorMembers != null)
-        {
-            <div class="alert alert-danger">
-
-                @ViewBag.ErrorMembers
-            </div>
-        }
-        @if (ViewBag.ErrorExists2 != " " && ViewBag.ErrorExists2 != null)
-        {
-            <div class="alert alert-danger">
-
-                @ViewBag.ErrorExists2
-            </div>
-        }
-        <div class="bg-danger invDan" style="display:none">
-            Please select within the range of values.
+<div class="container bg-light border-top border-bottom-0 border-4 rounded-3 ">
+    <h1 class="border-bottom border-5 p-3 mb-4">Classify Group</h1>
+    @if (ViewBag.successMessage != " " && ViewBag.successMessage != null)
+    {
+        <div class="alert alert-success">
+            @ViewBag.successMessage
         </div>
-        @using (Html.BeginForm("classifyGroup", "THome", FormMethod.Post))
-        {
-            @Html.HiddenFor(a => a.groupStructureID);
+    }
+    @if (ViewBag.ErrorExists != " " && ViewBag.ErrorExists != null)
+    {
+        <div class="alert alert-danger">
 
-            <div class="row mt-3">
-                <div class="col-lg-4">
-                    @Html.LabelFor(a => a.minMembers, new { htmlAttributes = new { @class = "form-control" } })
-                </div>
-                <div class="col-lg-8">
-                    <div class="row">@Html.EditorFor(a => a.minMembers, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
-                </div>
-            </div>
+            @ViewBag.ErrorExists
+        </div>
+    }
+    @if (ViewBag.ErrorMembers != " " && ViewBag.ErrorMembers != null)
+    {
+        <div class="alert alert-danger">
 
-            <div class="row mt-3">
-                <div class="col-lg-4">
-                    @Html.LabelFor(a => a.maxMembers, new { htmlAttributes = new { @class = "form-control" } })
-                </div>
-                <div class="col-lg-8">
-                    <div class="row">@Html.EditorFor(a => a.maxMembers, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
-                </div>
-            </div>
+            @ViewBag.ErrorMembers
+        </div>
+    }
+    @if (ViewBag.ErrorExists2 != " " && ViewBag.ErrorExists2 != null)
+    {
+        <div class="alert alert-danger">
 
-            <div class="row mt-3">
-                <div class="col-lg-4">
-                    @Html.LabelFor(a => a.studentList, new { htmlAttributes = new { @class = "form-control" } })
-                </div>
-                <div class="col-lg-8">
-                    <div class="row">
-                        <select multiple id="cg" class="selectpicker form-control" data-live-search="true">
-                            @foreach (var k in Model.studentList)
-                            {
-                                <option value=@k.studentId>@k.fullName</option>
-
-                            }
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-lg-4">
-                    @Html.LabelFor(a => a.groupName, new { htmlAttributes = new { @class = "form-control" } })
-                </div>
-                <div class="col-lg-8">
-                    <div class="row">@Html.EditorFor(a => a.groupName, new { htmlAttributes = new { @class = "form-control" } })</div>
-                    <div class="row">@Html.ValidationMessageFor(a => a.groupName, null, new { @class = "text-danger" })</div>
-
-                </div>
-            </div>
-
-            <div class="row mt-5">
-                <div class="col-12"> <div class="row py-2"><input type="submit" name="add" value="Submit" id="sulu" class="btn btn-primary"></div></div>
-            </div>
-
-
-            <input type="text" id="txtValue" name="txtValue" style="display:none" />
-            if (ViewBag.enableMultiGroup == true)
-            {
-                <div class="row mt-2">
-                    <div class="col-12">
-                        <div class="row py-2">
-                            <input type="submit" name="btnSubmitGrouping" value="Submit Grouping" class="btn btn-primary" id="btnSubmitGrouping1" />
-                        </div>
-                    </div>
-                </div>
-            }
-            else
-            {
-                <input type="submit" name="btnSubmitGrouping" value="Submit Grouping" class="btn btn-primary" id="btnSubmitGrouping1" style="display:none" />
-            }
-        }
+            @ViewBag.ErrorExists2
+        </div>
+    }
+    <div class="bg-danger invDan" style="display:none">
+        Please select within the range of values.
     </div>
+    @using (Html.BeginForm("classifyGroup", "THome", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(a => a.groupStructureID);
+
+        <div class="row mt-3">
+            <div class="col-lg-4">
+                @Html.LabelFor(a => a.minMembers, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-lg-8">
+                <div class="row">@Html.EditorFor(a => a.minMembers, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-lg-4">
+                @Html.LabelFor(a => a.maxMembers, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-lg-8">
+                <div class="row">@Html.EditorFor(a => a.maxMembers, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-lg-4">
+                @Html.LabelFor(a => a.studentList, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-lg-8">
+                <div class="row">
+                    <select multiple id="cg" class="selectpicker form-control" data-live-search="true">
+                        @foreach (var k in Model.studentList)
+                        {
+                            <option value=@k.studentId>@k.fullName</option>
+
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-lg-4">
+                @Html.LabelFor(a => a.groupName, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-lg-8">
+                <div class="row">@Html.EditorFor(a => a.groupName, new { htmlAttributes = new { @class = "form-control" } })</div>
+                <div class="row">@Html.ValidationMessageFor(a => a.groupName, null, new { @class = "text-danger" })</div>
+
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12"> <div class="row py-2"><input type="submit" name="add" value="Submit" id="sulu" class="btn btn-primary"></div></div>
+        </div>
+
+
+        <input type="text" id="txtValue" name="txtValue" style="display:none" />
+        if (ViewBag.enableMultiGroup == true)
+        {
+            <div class="row mt-2">
+                <div class="col-12">
+                    <div class="row py-2">
+                        <input type="submit" name="btnSubmitGrouping" value="Submit Grouping" class="btn btn-primary" id="btnSubmitGrouping1" />
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <input type="submit" name="btnSubmitGrouping" value="Submit Grouping" class="btn btn-primary" id="btnSubmitGrouping1" style="display:none" />
+        }
+    }
+</div>
 
 
 
@@ -175,6 +176,7 @@
                         <td>
                             @using (Html.BeginForm("classifyGroup", "THome", new { grID = k.groupId.ToString(), skr = k.groupName }, FormMethod.Post))
                             {
+                                @Html.AntiForgeryToken()
                                 @Html.HiddenFor(a => a.groupStructureID);
                                 <input type="submit" name="delete" value="Delete" class="btn btn-danger" />
 

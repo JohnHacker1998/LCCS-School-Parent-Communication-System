@@ -44,6 +44,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult AddLateComer(LateComerViewModel lateComerViewModel)
         {
 
@@ -245,6 +246,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult SendWarning(WarningViewModel warningViewModel)
         {
             //object declaration
@@ -357,6 +359,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Unit_Leader.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult EvidenceApproval(EvidenceApprovalViewModel evidenceApprovalViewModel,string[] days)
         {
             //object declaration

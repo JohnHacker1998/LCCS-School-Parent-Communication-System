@@ -74,6 +74,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Homeroom_Teacher.Control
             return View(av);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult addAttendance(AbsenceRecordViewMoel arvm, string submit, string delete,string selectedStudents,string gsId)
         {
             HomeroomTeacherMethod htm = new HomeroomTeacherMethod();

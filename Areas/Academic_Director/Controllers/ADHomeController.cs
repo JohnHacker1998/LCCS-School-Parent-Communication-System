@@ -35,6 +35,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         }
         
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Register(RegisterTeacherModal registerTeacher)
         {
             
@@ -167,6 +168,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult EditTeacher(UpdateTeacherModal updateTeacher)
         {
             //object declaration
@@ -232,6 +234,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteTeacher(DeleteTeacherModal deleteTeacher)
         {
             AcademicDirector academicDirector = new AcademicDirector();
@@ -277,6 +280,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             return PartialView("registerRegistrar");
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult registerRegistrar(RegistrarManagementViewModel rmv)
         {
             RegisterViewModel rv = new RegisterViewModel();
@@ -325,6 +329,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         }
     
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> manageRegistrar(RegistrarManagementViewModel rmv,string register,string delete,string theID){
             RegisterViewModel rv = new RegisterViewModel();
             Collection c = new Collection();
@@ -376,7 +381,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         }
 
         [HttpPost]
-         public ActionResult registerAcademicYear(AcademicYearViewModel ayvm)
+        [ValidateAntiForgeryToken]
+        public ActionResult registerAcademicYear(AcademicYearViewModel ayvm)
         {
             ViewBag.addedSuccessfully = " ";
             ViewBag.Message = " ";
@@ -501,6 +507,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             return PartialView(academicYearViewModel);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult updateAcademicYear(AcademicYearViewModel ayvm)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -566,6 +573,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             return View(academicYearViewModel);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult manageAcademicYear(AcademicYearViewModel ayvm, string add,string update,string select,string acadYN)
         {
             AcademicYear ay = new AcademicYear();
@@ -762,6 +770,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             return View(rvm);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult unitLeaderManagement(RegisterTeacherViewModel rvm,string selectToAssign,string assign,string delete,string teacherID)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -922,6 +931,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult AddSection(SectionViewModel sectionViewModel, string letter, string teachers, string academicYears)
         {
             //object declaration
@@ -1059,6 +1069,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult EditSection(SectionViewModel sectionViewModel,string teachers)
         {
             //object declaration
@@ -1152,6 +1163,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult DeleteSection(SectionViewModel sectionViewModel)
         {
             //object declaration
@@ -1264,6 +1276,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult AddSchedule(AddScheduleModal addScheduleModal,string scheduleFor)
         {
             //object declaration
@@ -1649,6 +1662,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult EditSchedule(AddScheduleModal addScheduleModal, string scheduleFor)
         {
 
@@ -1985,6 +1999,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             return View(rvm);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult addAnnouncement(string selectedSections,string fileName, HttpPostedFileBase file,registerAnnouncementViewModel avm,string add)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -2163,6 +2178,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             return View(avm);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult addStudentAnnouncement(string fileName, HttpPostedFileBase file, registerAnnouncementViewModel avm, string add)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -2287,6 +2303,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             return View(avm);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult updateAnnouncement(string selectedStudents, string fileName, string update, HttpPostedFileBase file, updateAnnouncementViewModel avm)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -2443,6 +2460,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         }
 
         [HttpPost ]
+        [ValidateAntiForgeryToken]
         public ActionResult announcementManagement(string annId,string delete)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -2559,6 +2577,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             return View(fvm);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult addFullAnnouncement(string fileName, HttpPostedFileBase file, fullAnnouncementViewModel fvm,string add)
         {
             ApplicationDbContext db = new ApplicationDbContext();

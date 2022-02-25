@@ -45,18 +45,18 @@
 
 
                 <form action="AddSchedule" id="error" autocomplete="off">
-
+                    @Html.AntiForgeryToken()
                     <div class="form-group">
                         @*<div class="container row">*@
 
                         @Html.LabelFor(a => a.scheduleDate, new { @class = "form-label mt-2" })
-                        <div class="container row"> @Html.TextBoxFor(e => e.scheduleDate, new {@class = "datepicker form-control",@id="inputs"})</div>
-                        <div class="container row">@Html.ValidationMessageFor(v => v.scheduleDate, null, new { @class = "text-danger", @id="message"})</div>
+                        <div class="container row"> @Html.TextBoxFor(e => e.scheduleDate, new { @class = "datepicker form-control", @id = "inputs" })</div>
+                        <div class="container row">@Html.ValidationMessageFor(v => v.scheduleDate, null, new { @class = "text-danger", @id = "message" })</div>
 
                         @*</div>*@
                     </div>
                     <div class="form-group">
-                        
+
 
                         <div class="col-12">
                             @Html.LabelFor(l => l.scheduleFor, new { @class = "form-label mt-2" })
@@ -82,13 +82,13 @@
                             <div class="col-1"></div>
                             <div class="col-5">
                                 @Html.LabelFor(l => l.percentage, new { @class = "form-label mt-2" })
-                                <div class="container row">@Html.EditorFor(e => e.percentage,new { htmlAttributes = new { @min = 5, @max = 100, @step = 5 } })</div>
+                                <div class="container row">@Html.EditorFor(e => e.percentage, new { htmlAttributes = new { @min = 5, @max = 100, @step = 5 } })</div>
                                 <div class="container row">@Html.ValidationMessageFor(v => v.percentage, null, new { @class = "text-danger" })</div>
                             </div>
                         </div>
                     </div>
 
-                    
+
                 </form>
             </div>
 

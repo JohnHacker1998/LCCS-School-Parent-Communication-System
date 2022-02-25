@@ -45,7 +45,7 @@
 
 
                 <form action="EditSchedule" id="error" autocomplete="off">
-
+                    @Html.AntiForgeryToken()
                     @Html.HiddenFor(h => h.scheduleId)
                     @Html.HiddenFor(h => h.grade)
 

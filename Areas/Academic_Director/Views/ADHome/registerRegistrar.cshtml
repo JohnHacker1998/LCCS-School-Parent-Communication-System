@@ -35,7 +35,7 @@
                 </div>
 
                 <form action="registerRegistrar" id="error" autocomplete="off">
-
+                    @Html.AntiForgeryToken()
                     <div class="form-group">
                         @Html.LabelFor(a => a.fullName, new { @class = "form-label mt-2" })
                         <div class="container row">@Html.EditorFor(a => a.fullName, new { htmlAttributes = new { @class = "form-control" } })</div>

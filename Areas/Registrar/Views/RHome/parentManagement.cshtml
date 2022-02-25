@@ -160,6 +160,7 @@
                             @* <button type="button" class="btn btn-primary" data-toggle="updateModal" data-target="#parentViewModel" data-url="@Url.Action("updateParent")" data-pid="@k.parentId">Edit</button>*@
                             @using (Html.BeginForm("parentManagement", "RHome", new { pid = k.parentId }, FormMethod.Post))
                             {
+                                @Html.AntiForgeryToken()
                                 <input type="submit" name="delete" value="Delete" class="btn btn-danger " />
                             }
 

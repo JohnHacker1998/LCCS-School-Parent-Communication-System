@@ -32,7 +32,7 @@
                 </div>
 
                 <form action="RegisterStudent" id="error" autocomplete="off">
-
+                    @Html.AntiForgeryToken()
                     <div class="form-group">
                         @Html.LabelFor(l => l.fullName, new { @class = "form-label mt-2" })
                         <div class="container row">@Html.EditorFor(e => e.fullName, new { @class = "form-control" })</div>

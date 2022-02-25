@@ -79,7 +79,7 @@
                             <div class="side">
                                 @using (Html.BeginForm("manageGroup", "THome", new { grId = k.groupStructureId.ToString() }, FormMethod.Post))
                                 {
-
+                                    @Html.AntiForgeryToken()
                                     <input type="submit" name="delete" value="Delete" class="btn btn-danger" />
 
                                 }

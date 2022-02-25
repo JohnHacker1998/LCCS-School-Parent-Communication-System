@@ -32,6 +32,7 @@
                 </div>
 
                 <form action="EditSection" id="error" autocomplete="off">
+                    @Html.AntiForgeryToken()
                     @Html.HiddenFor(h => h.ID);
                     <div class="form-group">
                         <select id="teachers" name="teachers" class="form-control">
