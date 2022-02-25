@@ -39,7 +39,6 @@
                             <th>
                                 @using (Html.BeginForm("addFullAnnouncement", "ADHome", FormMethod.Get))
                                 {
-
                                     <input type="submit" name="add" value="Add Full Announcement" class="btn btn-primary" />
 
                                 }
@@ -129,7 +128,7 @@
                                     <div class="side">
                                         @using (Html.BeginForm("announcementManagement", "ADHome", new { annId = k.announcementID.ToString() }, FormMethod.Post))
                                         {
-
+                                            @Html.AntiForgeryToken()
                                             <input type="submit" name="delete" value="Delete" class="btn btn-danger" />
 
                                         }

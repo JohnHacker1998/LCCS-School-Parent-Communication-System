@@ -5,8 +5,9 @@
 
 
 
-@using (Html.BeginForm("EvidenceManagement", "PHome", FormMethod.Post, new { @enctype = "multipart/form-data",@id="form" }))
+@using (Html.BeginForm("EvidenceManagement", "PHome", FormMethod.Post, new { @enctype = "multipart/form-data", @id = "form" }))
 {
+    @Html.AntiForgeryToken()
     <div class="container text-center vh-100">
         <div class="form-group m-auto col-7">
             <input type="file" name="file" id="doc" class="form-control" required />
@@ -20,7 +21,7 @@
             Upload
         </button>
 
-        
+
         <div class="m-auto col-7 mt-3">
             @if (ViewBag.error != null)
             {
@@ -36,12 +37,12 @@
                 </div>
             }
             <div class="alert alert-success d-none" role="alert" id="alert">
-                
+
             </div>
         </div>
     </div>
 
-    
+
 }
 
 
@@ -54,23 +55,23 @@
         var form = document.getElementById("form");
 
         $.validator.unobtrusive.parse("#form");
-           ValidationForm();
-        
-        
+        ValidationForm();
+
+
         $('#holder').click(function () {
             if (form["file"].value != "") {
                 spin.classList.add("spinner-border");
                 message.classList.add("d-none");
-                
+
             }
             else {
                 message.classList.add("d-none");
                 doc.classList.remove("d-none");
-                
+
             }
-           
+
         });
-        
+
 
         function ValidationForm() {
             if ($("#form").valid()) {
@@ -79,7 +80,7 @@
             else {
 
                 return false;
-               
+
             }
         }
     });

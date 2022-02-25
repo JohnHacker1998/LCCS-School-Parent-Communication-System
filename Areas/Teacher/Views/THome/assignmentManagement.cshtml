@@ -116,7 +116,7 @@
                                 @using (Html.BeginForm("assignmentManagement", "THome", new { assId = k.assignmentId.ToString() }, FormMethod.Post))
                                 {
 
-
+                                    @Html.AntiForgeryToken()
                                     <input type="submit" name="delete" value="Delete" class="btn btn-danger" />
 
 

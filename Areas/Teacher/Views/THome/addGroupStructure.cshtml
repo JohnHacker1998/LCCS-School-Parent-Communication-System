@@ -10,87 +10,88 @@
 </style>
 
 
-    <div class="container mb-3 mt-3 bg-light border-top border-bottom-0 border-4 rounded-3">
-        <h1 class="border-bottom border-5 p-3 mb-4">Add Group Structure</h1>
-        @using (Html.BeginForm("addGroupStructure", "THome", FormMethod.Post))
-        {
-            <div class="row mt-3">
-                <div class="col-lg-4">
-                    @Html.LabelFor(a => a.academicQuarter, new { htmlAttributes = new { @class = "form-control" } })
-                </div>
-                <div class="col-lg-8">
-                    <div class="row"> @Html.EditorFor(a => a.academicQuarter, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
+<div class="container mb-3 mt-3 bg-light border-top border-bottom-0 border-4 rounded-3">
+    <h1 class="border-bottom border-5 p-3 mb-4">Add Group Structure</h1>
+    @using (Html.BeginForm("addGroupStructure", "THome", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="row mt-3">
+            <div class="col-lg-4">
+                @Html.LabelFor(a => a.academicQuarter, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-lg-8">
+                <div class="row"> @Html.EditorFor(a => a.academicQuarter, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-lg-4">
+                @Html.LabelFor(a => a.sectionList, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="col-lg-8">
+                <div class="row">
+                    <select class="form-control" name="selectSections" required>
+                        @foreach (var k in Model.sectionList)
+                        {
+                            <option id=@k>@k</option>
+                        }
+                    </select>
                 </div>
             </div>
-            <div class="row mt-3">
-                <div class="col-lg-4">
-                    @Html.LabelFor(a => a.sectionList, new { htmlAttributes = new { @class = "form-control" } })
-                </div>
-                <div class="col-lg-8">
-                    <div class="row">
-                        <select class="form-control" name="selectSections" required>
-                            @foreach (var k in Model.sectionList)
-                            {
-                                <option id=@k>@k</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-            </div>
+        </div>
 
-            <div class="row mt-3">
-                <div class="col-lg-4">
-                    @Html.LabelFor(a => a.groupStructureName, new { htmlAttributes = new { @class = "form-control" } })
-                </div>
-                <div class="col-lg-8">
-                    <div class="row"> @Html.EditorFor(a => a.groupStructureName, new { htmlAttributes = new { @class = "form-control" } })</div>
-                    <div class="row">@Html.ValidationMessageFor(a => a.groupStructureName, null, new { @class = "text-danger" })</div>
-                </div>
+        <div class="row mt-3">
+            <div class="col-lg-4">
+                @Html.LabelFor(a => a.groupStructureName, new { htmlAttributes = new { @class = "form-control" } })
             </div>
+            <div class="col-lg-8">
+                <div class="row"> @Html.EditorFor(a => a.groupStructureName, new { htmlAttributes = new { @class = "form-control" } })</div>
+                <div class="row">@Html.ValidationMessageFor(a => a.groupStructureName, null, new { @class = "text-danger" })</div>
+            </div>
+        </div>
 
-            <div class="row mt-3">
-                <div class="col-lg-4">
-                    @Html.LabelFor(a => a.minNumberOfMembers, new { htmlAttributes = new { @class = "form-control" } })
-                </div>
-                <div class="col-lg-8">
-                    <div class="row">
-                        @Html.EditorFor(a => a.minNumberOfMembers, new { htmlAttributes = new { @min = 2, @class = "form-control" } })
-                        <div class="row">@Html.ValidationMessageFor(a => a.minNumberOfMembers, null, new { @class = "text-danger" })</div>
-                    </div>
-                </div>
+        <div class="row mt-3">
+            <div class="col-lg-4">
+                @Html.LabelFor(a => a.minNumberOfMembers, new { htmlAttributes = new { @class = "form-control" } })
             </div>
-            <div class="row mt-3">
-                <div class="col-lg-4">
-                    @Html.LabelFor(a => a.maxNumberOfMembers, new { htmlAttributes = new { @class = "form-control" } })
-                </div>
-                <div class="col-lg-8">
-                    <div class="row">
-                        @Html.EditorFor(a => a.maxNumberOfMembers, new { htmlAttributes = new { @min = 2, @class = "form-control" } })
-                        <div class="row">@Html.ValidationMessageFor(a => a.maxNumberOfMembers, null, new { @class = "text-danger" })</div>
-                    </div>
+            <div class="col-lg-8">
+                <div class="row">
+                    @Html.EditorFor(a => a.minNumberOfMembers, new { htmlAttributes = new { @min = 2, @class = "form-control" } })
+                    <div class="row">@Html.ValidationMessageFor(a => a.minNumberOfMembers, null, new { @class = "text-danger" })</div>
                 </div>
             </div>
-
-            <div class="row mt-5">
-                <div class="col-12"> <div class="row py-2"> <input type="submit" name="add" value="ADD" class="btn btn-primary" /></div></div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-lg-4">
+                @Html.LabelFor(a => a.maxNumberOfMembers, new { htmlAttributes = new { @class = "form-control" } })
             </div>
-        }
-
-        @if (ViewBag.existsMessage != " " && ViewBag.existsMessage != null)
-        {
-            <div class="alert alert-danger">
-
-                @ViewBag.existsMessage
+            <div class="col-lg-8">
+                <div class="row">
+                    @Html.EditorFor(a => a.maxNumberOfMembers, new { htmlAttributes = new { @min = 2, @class = "form-control" } })
+                    <div class="row">@Html.ValidationMessageFor(a => a.maxNumberOfMembers, null, new { @class = "text-danger" })</div>
+                </div>
             </div>
-        }
-        @if (ViewBag.maximumMembers != " " && ViewBag.maximumMembers != null)
-        {
-            <div class="alert alert-danger">
+        </div>
 
-                @ViewBag.maximumMembers
-            </div>
-        }
-    </div>
+        <div class="row mt-5">
+            <div class="col-12"> <div class="row py-2"> <input type="submit" name="add" value="ADD" class="btn btn-primary" /></div></div>
+        </div>
+    }
+
+    @if (ViewBag.existsMessage != " " && ViewBag.existsMessage != null)
+    {
+        <div class="alert alert-danger">
+
+            @ViewBag.existsMessage
+        </div>
+    }
+    @if (ViewBag.maximumMembers != " " && ViewBag.maximumMembers != null)
+    {
+        <div class="alert alert-danger">
+
+            @ViewBag.maximumMembers
+        </div>
+    }
+</div>
 
 
 

@@ -34,6 +34,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
             return PartialView(pv);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult registerParent(parentViewModel pv)
         {
             ViewBag.addedSuccessfully = " ";
@@ -112,6 +113,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
             return View(parent);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> parentManagement(string add, string delete, string select, string search, parentViewModel pv, string id, string pid)
         {
 
@@ -270,6 +272,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult RegisterStudent(StudentViewModel studentViewModel,string sectionName)
         {
             //object declaration
@@ -361,6 +364,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult EditStudent(StudentViewModel studentViewModel,string sectionName)
         {
 
@@ -453,6 +457,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Registrar.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult DeleteStudent(StudentViewModel studentViewModel)
         {
 

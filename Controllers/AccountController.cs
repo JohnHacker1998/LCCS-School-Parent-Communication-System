@@ -124,6 +124,7 @@ namespace LCCS_School_Parent_Communication_System.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult EditFullName(ProfileEditFullName profileEditFullName)
         {
             //context object
@@ -181,6 +182,7 @@ namespace LCCS_School_Parent_Communication_System.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult EditUserName(ProfileEditUserName profileEditUserName)
         {
             //context object
@@ -220,6 +222,7 @@ namespace LCCS_School_Parent_Communication_System.Controllers
             return PartialView("EditPassword");
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult EditPassword(ProfileEditPassword profileEditPassword)
         {
             //basic objects
@@ -255,6 +258,7 @@ namespace LCCS_School_Parent_Communication_System.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel forgotPasswordViewModel)
         {
             var appDbContext = new ApplicationDbContext();
@@ -314,6 +318,7 @@ namespace LCCS_School_Parent_Communication_System.Controllers
         //
         // POST: /Account/ResetPassword
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel resetPasswordViewModel)
         {
             ApplicationDbContext context = new ApplicationDbContext();

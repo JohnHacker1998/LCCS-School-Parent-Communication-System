@@ -44,7 +44,7 @@
                 </div>
 
                 <form action="DeleteTeacher" id="error">
-
+                    @Html.AntiForgeryToken()
                     @Html.HiddenFor(h => h.Id)
                 </form>
             </div>

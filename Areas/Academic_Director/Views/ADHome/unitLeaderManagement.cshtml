@@ -30,6 +30,7 @@
                         <td>
                             @using (Html.BeginForm("unitLeaderManagement", "ADHome", new { teacherID = @k.teacherId }, FormMethod.Post))
                             {
+                                @Html.AntiForgeryToken()
                                 <input type="submit" value="Assign" name="assign" class="btn btn-primary bg-green" />
                             }
                         </td>
@@ -65,6 +66,7 @@
                         <td>
                             @using (Html.BeginForm("unitLeaderManagement", "ADHome", new { teacherID = @k.teacherId }, FormMethod.Post))
                             {
+                                @Html.AntiForgeryToken()
                                 <input type="submit" value="Delete" name="delete" class="btn btn-danger" />
                             }
                         </td>

@@ -126,6 +126,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
             return View();
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult EvidenceManagement(HttpPostedFileBase file)
         {
             //object declaration
@@ -362,6 +363,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
             return View(ass);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult viewAssignmentDetails(string idk)
         {
             ApplicationDbContext db = new ApplicationDbContext();

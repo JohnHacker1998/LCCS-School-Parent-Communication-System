@@ -36,14 +36,15 @@
                 </div>
 
                 <form action="EditUserName" id="error" autocomplete="off">
+                    @Html.AntiForgeryToken()
                     <div class="form-group">
                         @Html.LabelFor(l => l.userName, new { @class = "form-label mt-2" })
                         <div class="container row">@Html.EditorFor(e => e.userName, new { @class = "form-control" })</div>
                         <div class="container row">@Html.ValidationMessageFor(v => v.userName, null, new { @class = "text-danger" })</div>
 
                         @*@Html.LabelFor(l => l.userName)
-                @Html.EditorFor(e => e.userName, new { @class = "form-control" })
-                @Html.ValidationMessageFor(v => v.userName)*@
+            @Html.EditorFor(e => e.userName, new { @class = "form-control" })
+            @Html.ValidationMessageFor(v => v.userName)*@
                     </div>
                 </form>
             </div>

@@ -3,109 +3,110 @@
     ViewBag.Title = "addAttendance";
 }
 @*<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>*@
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>*@
 
-    <script>
+<script>
         $(document).ready(function () {
             $('#tblAbsenceRecord').DataTable();
         });
-    </script>
+</script>
 <style>
-    h1{
-        margin-left:40%
+    h1 {
+        margin-left: 40%
     }
 </style>
-    <h1>@DateTime.Now.ToShortDateString()</h1>
-    @using (Html.BeginForm("addAttendance", "HTHome", FormMethod.Post))
-    {
-        <div class="container  mt-3">
-            <div class="row ">
+<h1>@DateTime.Now.ToShortDateString()</h1>
+@using (Html.BeginForm("addAttendance", "HTHome", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="container  mt-3">
+        <div class="row ">
 
-                <div class="col-8">
-                    <select id="groupsList1" name="groupsList" class="form-control selectpicker" multiple data-live-search="true">
-                        @foreach (var i in Model.studentList)
-                        {
+            <div class="col-8">
+                <select id="groupsList1" name="groupsList" class="form-control selectpicker" multiple data-live-search="true">
+                    @foreach (var i in Model.studentList)
+                    {
 
-                            <option value=@i.studentId>@i.fullName</option>
+                        <option value=@i.studentId>@i.fullName</option>
 
-                        }
-                    </select>
+                    }
+                </select>
 
-                    <input type="text" name="selectedStudents" id="txtSelectedGroups" style="display:none" />
-                </div>
-                <div class="col-4">
-                    <div class="row">
-                        <input type="submit" name="submit" value="Submit" class="btn btn-primary w-75" id="sulu" />
-                    </div>
-                </div>
-                </div>
-
+                <input type="text" name="selectedStudents" id="txtSelectedGroups" style="display:none" />
             </div>
-     
-
-    }
-    
-
-
-    <div class="container mb-3 mt-3">
-        <div class="row">
-            <div class="col-12">
+            <div class="col-4">
                 <div class="row">
-                    <table class="table table-striped table-bordered" id="tblAbsenceRecord">
-                        <thead>
-                            <tr>
-                                
-                                <th>Academic Period</th>
-                                <th>Record Date</th>
-                                <th>Student Name</th>
-                                <th>Total Number of Absences</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var k in Model.absenceList)
-                            {
-                                <tr>
-                                   
-                                    <td>@k.academicPeriod</td>
-                                    <td>@k.recordDate.ToShortDateString()</td>
-                                    <td>@k.student.fullName</td>
-                                    <td>@k.count</td>
-                                    <td>
-                                        @using (Html.BeginForm("addAttendance", "HTHome", new { gsId = k.recordId.ToString() }, FormMethod.Post))
-                                        {
-
-                                            <input type="submit" name="delete" value="Delete" class="btn btn-danger" />
-
-                                        }
-
-                                    </td>
-
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                    <input type="submit" name="submit" value="Submit" class="btn btn-primary w-75" id="sulu" />
                 </div>
             </div>
         </div>
-        @if (ViewBag.successfulMessage != " " && ViewBag.successfulMessage != null)
-        {
-            <div class="alert alert-success">
-                @ViewBag.successfulMessage
-            </div>
-        }
-        @if (ViewBag.MessageStatus != " " && ViewBag.MessageStatus != null)
-        {
-            <div class="alert alert-danger">
-                @ViewBag.MessageStatus
-            </div>
-        }
+
     </div>
 
 
+}
 
-    <script>
+
+
+<div class="container mb-3 mt-3">
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <table class="table table-striped table-bordered" id="tblAbsenceRecord">
+                    <thead>
+                        <tr>
+
+                            <th>Academic Period</th>
+                            <th>Record Date</th>
+                            <th>Student Name</th>
+                            <th>Total Number of Absences</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var k in Model.absenceList)
+                        {
+                            <tr>
+
+                                <td>@k.academicPeriod</td>
+                                <td>@k.recordDate.ToShortDateString()</td>
+                                <td>@k.student.fullName</td>
+                                <td>@k.count</td>
+                                <td>
+                                    @using (Html.BeginForm("addAttendance", "HTHome", new { gsId = k.recordId.ToString() }, FormMethod.Post))
+                                    {
+
+                                        <input type="submit" name="delete" value="Delete" class="btn btn-danger" />
+
+                                    }
+
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    @if (ViewBag.successfulMessage != " " && ViewBag.successfulMessage != null)
+    {
+        <div class="alert alert-success">
+            @ViewBag.successfulMessage
+        </div>
+    }
+    @if (ViewBag.MessageStatus != " " && ViewBag.MessageStatus != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.MessageStatus
+        </div>
+    }
+</div>
+
+
+
+<script>
         $(document).ready(function () {
 
             $('#sulu').click(function () {
@@ -127,4 +128,4 @@
 
 
 
-    </script>
+</script>

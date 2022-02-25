@@ -44,7 +44,7 @@
                 </div>
 
                 <form action="SendWarning" id="error">
-
+                    @Html.AntiForgeryToken()
                     @Html.HiddenFor(h => h.ID)
                 </form>
             </div>
