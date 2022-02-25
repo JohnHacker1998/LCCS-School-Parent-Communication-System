@@ -474,16 +474,24 @@
                     <div class="nav">
 
                         <a class="nav-link" href="@Url.Action("viewAttendance", "PHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            View Attendance
+                            <div class="sb-nav-link-icon pe-4">
+                                <i class="fas fa-calendar "></i>
+                            </div>
+                            Attendance and Schedule
                         </a>
                         <a class="nav-link" href="@Url.Action("EvidenceManagement", "PHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Evidence Management
+                            <div class="sb-nav-link-icon pe-4">
+                                <i class="fas fa-file-upload"></i>
+
+
+                            </div>
+                            Evidence
                         </a>
                         <a class="nav-link" href="@Url.Action("WarningList", "PHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Warning List
+                            <div class="sb-nav-link-icon pe-4">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            Warning 
                             @{
                                 LCCS_School_Parent_Communication_System.Identity.ApplicationDbContext context = new LCCS_School_Parent_Communication_System.Identity.ApplicationDbContext();
                                 var user = context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
@@ -498,18 +506,27 @@
                             }
                         </a>
                         <a class="nav-link" href="@Url.Action("viewAssignment","PHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            View Assignment
+                            <div class="sb-nav-link-icon pe-4">
+                                <i class="fas fa-tasks"></i>
+                                </i>
+                            </div>
+                            Assignment
                         </a>
 
                         <a class="nav-link" href="@Url.Action("ViewResult","PHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            View Result
+                            <div class="sb-nav-link-icon pe-4">
+                                <i class="fas fa-star  text-white"></i>
+                                </i>
+                            </div>
+                            Result
                         </a>
 
                         <a class="nav-link" href="@Url.Action("GenerateGeneralReport","PHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            General Report
+                            <div class="sb-nav-link-icon pe-4">
+                                <i class="fas fa-table"></i>
+                                </i>
+                            </div>
+                           Report
                         </a>
 
                     </div>

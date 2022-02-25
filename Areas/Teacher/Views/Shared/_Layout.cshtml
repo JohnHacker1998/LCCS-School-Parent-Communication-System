@@ -106,20 +106,100 @@
             <nav class="sb-sidenav accordion sb-sidenav-red" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
+                        @{
 
-                        <a class="nav-link" href="@Url.Action("manageGroup","THome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Group Management
-                        </a>
-                        <a class="nav-link" href="@Url.Action("assignmentManagement","THome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Assignment Management
-                        </a>
+                            if (this.User.IsInRole("Teacher"))
+                            {
+                                <a class="nav-link" href="@Url.Action("manageGroup","THome")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                    Group Management
+                                </a>
+                                <a class="nav-link" href="@Url.Action("assignmentManagement","THome")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                    Assignment Management
+                                </a>
 
-                        <a class="nav-link" href="@Url.Action("GradeManagement","THome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Grade Management
-                        </a>
+                                <a class="nav-link" href="@Url.Action("GradeManagement","THome")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                    Grade Management
+                                </a>
+                            }
+                            else if (this.User.IsInRole("HomeRoom"))
+                            {
+                                <a class="nav-link" href="@Url.Action("addAttendance","THome")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                    Attendance Management
+                                </a>
+                                <a class="nav-link" href="@Url.Action("manageGroup","THome")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                    Group Management
+                                </a>
+                                <a class="nav-link" href="@Url.Action("assignmentManagement","THome")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                    Assignment Management
+                                </a>
+
+                                <a class="nav-link" href="@Url.Action("GradeManagement","THome")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                    Grade Management
+                                </a>
+                            }
+                            else if (this.User.IsInRole("UnitLeader"))
+                            {
+
+                                <a class="nav-link" href="@Url.Action("LateComerManagement","THome")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                    LateComer Management
+                                </a>
+                                <a class="nav-link" href="@Url.Action("StudentEvidence","THome")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                    Student Evidence
+                                    @{
+                                        LCCS_School_Parent_Communication_System.Identity.ApplicationDbContext context = new LCCS_School_Parent_Communication_System.Identity.ApplicationDbContext();
+                                        var user = context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+
+                                        var currentDate = DateTime.Now.Date;
+                                        var teacher = context.Teacher.Where(t => t.teacherId == user.Id).FirstOrDefault();
+
+                                        var evidence = context.Evidence.Where(e => e.parent.student.sectionName.StartsWith(teacher.grade.ToString()) && e.approvalStatus == "Provided" && e.dateUpload == currentDate).ToList();
+                                        if (evidence.Count != 0)
+                                        {
+                                            <span class="position-absolute end-0 translate-middle badge rounded-pill bg-danger">@evidence.Count</span>
+                                        }
+                                    }
+                                </a>
+                                <a class="nav-link" href="@Url.Action("WarningManagement","THome")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                    Warning Management
+                                </a>
+                                <a class="nav-link" href="@Url.Action("manageGroup","THome")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                    Group Management
+                                </a>
+                                <a class="nav-link" href="@Url.Action("assignmentManagement","THome")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                    Assignment Management
+                                </a>
+
+                                <a class="nav-link" href="@Url.Action("GradeManagement","THome")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                    Grade Management
+                                </a>
+                            }
+                        }
+                        @*   <a class="nav-link" href="@Url.Action("manageGroup","THome")">
+            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+            Group Management
+        </a>
+        <a class="nav-link" href="@Url.Action("assignmentManagement","THome")">
+            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+            Assignment Management
+        </a>
+
+        <a class="nav-link" href="@Url.Action("GradeManagement","THome")">
+            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+            Grade Management
+        </a>*@
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">

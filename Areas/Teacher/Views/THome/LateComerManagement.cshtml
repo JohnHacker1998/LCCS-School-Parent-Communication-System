@@ -1,0 +1,108 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.LateComerViewModel
+@{
+    Layout = " ~/Areas/Teacher/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+
+    
+
+    <div class="container bg-light border-top border-bottom border-4 rounded-3">
+        <h1 class="border-bottom border-5 p-3 mb-4">Students</h1>
+        <table class="table table-striped table-bordered" id="myTable">
+            <thead>
+                <tr>
+                    <th scope="col">Student Name</th>
+                    <th scope="col">Grade</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var list in Model.students)
+                {
+                    <tr>
+                        <td>@list.fullName</td>
+                        <td>@list.sectionName</td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-light" data-toggle="modalsession" data-target="#updateSectionModal" data-url="@Url.Action("AddLateComer")" data-id="@list.studentId"><i class="far fa-clock fa-lg "></i></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+
+            </tfoot>
+        </table>
+    </div>
+
+<div class="modal" id="myModal" role="dialog" data-backdrop="static" tabindex="-1" ></div>
+
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var view = $('#myModal');
+        //$('[data-toggle="modal"]').click(function () {
+        //    var url = $(this).data('url');
+        //    $.get(url).done(function (data) {
+        //        view.html(data);
+        //        view.modal({ backdrop: 'static', keyboard: false })
+        //        view.modal('show');
+        //    });
+        //});
+
+        $('[data-toggle="modalsession"]').click(function () {
+            var url = $(this).data('url')+'?id='+$(this).data('id');
+            $.get(url).done(function (data) {
+                view.html(data);
+                view.modal({ backdrop: 'static', keyboard: false })
+                view.modal('show');
+            });
+        });
+
+        view.on('click', '[data-save="modal"]', function (event) {
+
+            var form = $(this).parents('.modal').find('form');
+            var actionUrl = form.attr('action');
+            var sendData = form.serialize();
+            $.validator.unobtrusive.parse("#error");
+            ValidationForm();
+            if (ValidationForm()) {
+                $.post(actionUrl, sendData).done(function (data) {
+                    //view.modal('hide');
+                    view.html(data);
+                    view.modal({ backdrop: 'static', keyboard: false })
+                    view.modal('show');
+                });
+            }
+
+        });
+
+        view.on('click', '[data-dismiss="modal"]', function (event) {
+            view.modal('hide');
+        });
+
+        view.on('hide.bs.modal', function () {
+            location.reload();
+        });
+        function ValidationForm() {
+            if (!$("#error").valid()) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+    });
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+</script>

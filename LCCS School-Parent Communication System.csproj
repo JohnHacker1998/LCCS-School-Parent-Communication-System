@@ -576,7 +576,7 @@
     <Content Include="Areas\Homeroom_Teacher\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Homeroom_Teacher\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Homeroom_Teacher\Views\HTHome\Index.cshtml" />
-    <Content Include="Areas\Homeroom_Teacher\Views\HTHome\addAttendance.cshtml" />
+    <Content Include="Areas\Teacher\Views\THome\addAttendance.cshtml" />
     <Content Include="Areas\Parent\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Parent\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Parent\Views\PHome\Index.cshtml" />
@@ -887,6 +887,13 @@
     <Content Include="Areas\Parent\Views\PHome\viewAnnouncementDetails.cshtml" />
     <Content Include="Areas\Academic_Director\Views\ADHome\addFullAnnouncement.cshtml" />
     <Content Include="Areas\Teacher\Views\THome\ResultUpdate.cshtml" />
+    <Content Include="Areas\Teacher\Views\THome\AddLateComer.cshtml" />
+    <Content Include="Areas\Teacher\Views\THome\EvidenceApproval.cshtml" />
+    <Content Include="Areas\Teacher\Views\THome\LateComerManagement.cshtml" />
+    <Content Include="Areas\Teacher\Views\THome\SendWarning.cshtml" />
+    <Content Include="Areas\Teacher\Views\THome\StudentEvidence.cshtml" />
+    <Content Include="Areas\Teacher\Views\THome\success.cshtml" />
+    <Content Include="Areas\Teacher\Views\THome\WarningManagement.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -1007,7 +1014,10 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
-    
+    <Compile Include="Migrations\202202180658486_all1.cs" />
+    <Compile Include="Migrations\202202180658486_all1.designer.cs">
+      <DependentUpon>202202180658486_all1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AbsenceRecord.cs" />
     <Compile Include="Models\AcademicYear.cs" />
@@ -1138,7 +1148,11 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
-  
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202202180658486_all1.resx">
+      <DependentUpon>202202180658486_all1.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

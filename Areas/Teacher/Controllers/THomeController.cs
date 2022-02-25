@@ -20,11 +20,13 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         {
             return View();
         }
+        [Authorize(Roles ="Teacher,HomeRoom,UnitLeader")]
         
         public ActionResult addAssignment()
         {
-            
-       string currentID = User.Identity.GetUserId();
+            //declaration
+            //getting the current teacher  ID
+            string currentID = User.Identity.GetUserId();
             Models.Teacher t = new Models.Teacher();
             HomeroomTeacherMethod ht = new HomeroomTeacherMethod();
             AcademicYear temp = new AcademicYear();
@@ -36,14 +38,14 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             List<Section> s = new List<Section>();
             avm.listAssignment = new List<Assignment>();
             avm.listAssignment = db.Assignment.ToList();
-
-
             
             avm.sectionList = new List<string>();
             t = db.Teacher.Where(a => a.teacherId == currentID).FirstOrDefault();
             string teacherGrade = t.grade.ToString();
+            //getting all the sections with the teacher grade
             s = db.Section.Where(a => a.sectionName.StartsWith(teacherGrade)).ToList();
             string currentAcademicYearName = "";
+            //finding out the current academic year
             foreach (var k in s)
             {
                 if (ht.isInAcademicYear(k.academicYearId))
@@ -54,6 +56,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             }
             temp = db.AcademicYear.Where(a => a.academicYearName == currentAcademicYearName).FirstOrDefault();
             string quarter = ht.whichQuarter(currentAcademicYearName);
+            //checking the current days appearance on the quarters time span
+            //adding the active sections of the teacher existing on the current academic year
            if (quarter == "Q1" || quarter == "Q2" || quarter == "Q3" || quarter == "Q4") {
                 var currentSections = db.Section.Where(a => a.academicYearId == currentAcademicYearName && a.sectionName.StartsWith(teacherGrade)).ToList();
                 foreach (var k in currentSections)
@@ -67,15 +71,17 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             }
             else
             {
+                //error message for the view
                 ViewBag.cannothaveSections="This date doesn't exist in the current Academic Year";
             }
             
 
             return View(avm);
         }
-       
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         public bool fulfillsPercentage(string yearlyQuarter, int sectionID, string teacherID, int percentage)
         {
+            //declaring variables and objects
             ApplicationDbContext db = new ApplicationDbContext();
             List <Assignment> listAssignment= new List<Assignment>();
             var theTeacher = db.Teacher.Where(ax => ax.teacherId == teacherID).FirstOrDefault();
@@ -83,12 +89,14 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             List<Schedule> sch = new List<Schedule>();
             sch = db.Schedule.Where(ax => ax.academicYear == yearlyQuarter && ax.grade == theTeacher.grade && ax.subject == theTeacher.subject).ToList();
             int sum = 0;
+            //adding the mark percentage of the assignments existing on the academic quarter of the teacher 
             if (listAssignment != null) { 
             foreach(var k in listAssignment)
             {
                     sum += k.markPercentage;
             }
             }
+            //adding up the scheduled assignments mark percentage
             if (sch != null)
             {
                 foreach(var k in sch)
@@ -96,13 +104,14 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                     sum += k.percentage;
                 }
             }
+            //if the sum is greater 100, returning false but if it is less returning true
             if (sum + percentage <= 100)
             {
                 return true;
             }
             return false;
         }
-
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpPost]
         public ActionResult addAssignment(addIndividualAssignmentViewModel avm, HttpPostedFileBase file, string assignmentType, string sectionName, string fileName)
         {
@@ -234,6 +243,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             return View(avm);
 
         }
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpGet]
         public ActionResult addGroupAssignment(string gsId,string txtAdd)
         {
@@ -249,6 +259,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
             return View(avm);
         }
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpPost]
         public ActionResult addGroupAssignment(string selectedStudents,addGroupAssignmentViewModel avm, string add, HttpPostedFileBase file,string fileName)
         {
@@ -369,6 +380,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
             return View(avm);
         }
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpGet]
         public ActionResult updateAssignment(string assId, string txtAssignmentID)
         {
@@ -386,6 +398,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             
             return View(avm);
         }
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpPost]
         public ActionResult updateAssignment(string fileName, updateAssignmentViewModel avm, HttpPostedFileBase file)
         {
@@ -459,6 +472,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
             return View(avm);
         }
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         public ActionResult assignmentManagement()
         {
            
@@ -500,6 +514,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
                 return View(avm);
         }
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
 
         [HttpPost]
         public ActionResult assignmentManagement(assignmentViewModel avm, string add, HttpPostedFileBase file, string assignmentType, string sectionName, string select, string delete, string assId, string update, string btnSubmitGrouping, string txtValue)
@@ -591,6 +606,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
             return View(avm);
         }
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
 
         public ActionResult manageGroup()
         {
@@ -628,10 +644,11 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             }
             if (quarter == "Q1" || quarter == "Q2" || quarter == "Q3" || quarter == "Q4") {
                 string acQuarter = currentAcademicYearName + "-" + quarter;
-                gsvm.groupList = db.GroupStructure.Where(ax => ax.academicQuarter == acQuarter && ax.section.sectionName.StartsWith(teacherGrade)).ToList();
+                gsvm.groupList = db.GroupStructure.Where(ax => ax.academicQuarter == acQuarter && ax.section.sectionName.StartsWith(teacherGrade) &&  ax.teacherId==currentID).ToList();
             }
             return View(gsvm);
         }
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpPost]
         public ActionResult manageGroup(string grId, string delete)
         {
@@ -671,7 +688,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             }
             return View(gsvm);
         }
-
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         public ActionResult addGroupStructure()
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -709,6 +726,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
             return View(gsvm);
         }
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpPost]
         public ActionResult addGroupStructure(groupStructureViewModel gvm, string selectSections)
         {
@@ -777,6 +795,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             }
             return View(gvm);
         }
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpGet]
         public ActionResult classifyGroup(string grIdOne,string txtImportant)
         {
@@ -834,6 +853,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             gvm.groupStructureID = gs.groupStructureId;
             return View(gvm);
         }
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpPost]
         public ActionResult classifyGroup(string grID,string skr,classifyGroupViewModel gvm, string txtValue,string add,string delete, string btnSubmitGrouping)
         {
@@ -985,7 +1005,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             gvm.groupStructureID = gs.groupStructureId;
             return View(gvm);
         }
-
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpGet]
         public ActionResult viewGroup(string grIdOne, string txtImportant)
         {
@@ -1019,7 +1039,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
             return View(gvm);
         }
-
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         public ActionResult GradeManagement()
         {
             //object declaration
@@ -1180,6 +1200,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
             return View(studentViewModel);
         }
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
 
         public ActionResult AddGrade(string id)
         {
@@ -1282,6 +1303,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
             return PartialView("AddGrade",addGradeModal);
         }
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
 
         [HttpPost]
         public ActionResult AddGrade(AddGradeModal addGradeModal,string dates)
@@ -1484,6 +1506,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
             return PartialView("AddGrade", addGradeModal);
         }
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
 
         public ActionResult UpdateResultManagement(string id)
         {
@@ -1531,6 +1554,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
             return View(updateResultViewModel);
         }
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
 
         public ActionResult ResultUpdate(string id)
         {
@@ -1549,6 +1573,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
             return PartialView("ResultUpdate", updateGradeModal);
         }
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
 
         [HttpPost]
         public ActionResult ResultUpdate(UpdateGradeModal updateGradeModal)
@@ -1580,6 +1605,719 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
             return PartialView("ResultUpdate", updateGradeModal);
 
+        }
+
+        [Authorize(Roles = "HomeRoom")]
+        public ActionResult addAttendance()
+        {
+            HomeroomTeacherMethod htm = new HomeroomTeacherMethod();
+            ApplicationDbContext db = new ApplicationDbContext();
+            AbsenceRecordViewMoel av = new AbsenceRecordViewMoel();
+            AcademicYear ay = new AcademicYear();
+
+            av.absenceList = new List<AbsenceRecord>();
+            ViewBag.messageSuccessStatus = " ";
+            //finding the logged on teacher ID
+            string currentUserId = User.Identity.GetUserId();
+            av.studentList = new List<Student>();
+            //finding the student list of where the teacher is homeroom for
+            var tempStdList = htm.getList(currentUserId);
+            //counting number of students in the retrieved list
+            if (tempStdList != null)
+            {
+                DateTime ks = DateTime.Now.Date;
+                foreach (var k in tempStdList)
+                {
+                    AbsenceRecord abs = new AbsenceRecord();
+                    abs = db.AbsenceRecord.Where(ax => ax.recordDate == ks && ax.studentId == k.studentId).FirstOrDefault();
+                    if (abs == null)
+                    {
+                        av.studentList.Add(k);
+                    }
+                }
+            }
+            int a = av.studentList.Count();
+            //creating an array with the size of the list of the students list to hold the selection on listbox
+            DateTime recordDate1 = DateTime.Now.Date;
+            Section s = new Section();
+
+            //finding the section where the teacher is homeroom
+            s = db.Section.Where(x => x.teacherId == currentUserId).FirstOrDefault();
+
+            int i = 0;
+            ay = db.AcademicYear.Where(r => r.academicYearName == s.academicYearId).FirstOrDefault();
+            string status = htm.whichQuarter(s.academicYearId);
+
+            List<AbsenceRecord> tempRecord1 = new List<AbsenceRecord>();
+
+            ViewBag.Message = false;
+            string academicRecord1 = s.academicYearId + "-" + status;
+
+            //recording the current date as a short date string
+            DateTime d = DateTime.Now.Date;
+            av.absenceList = db.AbsenceRecord.Where(c => c.recordDate == d && c.recordDate == recordDate1 && c.academicPeriod == academicRecord1 && c.student.sectionName == s.sectionName).ToList();
+
+            return View(av);
+        }
+        [Authorize(Roles = "HomeRoom")]
+        [HttpPost]
+        public ActionResult addAttendance(AbsenceRecordViewMoel arvm, string submit, string delete, string selectedStudents, string gsId)
+        {
+            HomeroomTeacherMethod htm = new HomeroomTeacherMethod();
+            AbsenceRecord ar = new AbsenceRecord();
+            ApplicationDbContext db = new ApplicationDbContext();
+            Suspension suspension = new Suspension();
+            arvm.absenceList = new List<AbsenceRecord>();
+            string currentUserId = User.Identity.GetUserId();
+            AcademicYear ay = new AcademicYear();
+            arvm.studentList = htm.getList(currentUserId);
+            Section s = new Section();
+            s = db.Section.Where(x => x.teacherId == currentUserId).FirstOrDefault();
+            ay = db.AcademicYear.Where(r => r.academicYearName == s.academicYearId).FirstOrDefault();
+            string status = htm.whichQuarter(s.academicYearId);
+            List<AbsenceRecord> tempRecord = new List<AbsenceRecord>();
+            List<AbsenceRecord> tempRecord1 = new List<AbsenceRecord>();
+            ViewBag.Message = false;
+            string academicRecord1 = s.academicYearId + "-" + status;
+            DateTime recordDate1 = DateTime.Now.Date;
+            ViewBag.successfulMessage = " ";
+            ViewBag.messageStatus = " ";
+
+
+            if (submit != null)
+            {
+
+
+                if (selectedStudents != null && selectedStudents != "*")
+                {
+                    String firstSeries = selectedStudents.Substring(1, selectedStudents.Length - 2);
+
+                    List<string> memList = new List<string>();
+                    memList = firstSeries.Split('-').ToList();
+
+
+                    foreach (var k in memList)
+                    {
+
+                        if (status == "Q1" || status == "Q2" || status == "Q3" || status == "Q4")
+                        {
+                            Student std = new Student();
+                            std = db.Student.Where(ax => ax.fullName == k).FirstOrDefault();
+                            ar.academicPeriod = s.academicYearId + "-" + status;
+                            ar.recordDate = DateTime.Now.Date;
+                            ar.studentId = std.studentId;
+
+                            int count = htm.manageCount(ar.academicPeriod, std.studentId);
+                            ar.count = count + 1;
+                            db.AbsenceRecord.Add(ar);
+                            db.SaveChanges();
+                            ViewBag.successfulMessage = "Absence Record Added Successfully";
+
+
+                        }
+                        else
+                        {
+                            if (status == "no")
+                            {
+                                ViewBag.messageSuccessStatus = "Today doesn't exist in the academic year";
+                            }
+                            else if (status == "gap")
+                            {
+                                ViewBag.messageStatus = "Today is a gap";
+                            }
+                        }
+                    }
+                }
+
+            }
+
+
+
+            else if (delete != null)
+            {
+
+                int gsID1 = int.Parse(gsId);
+                AbsenceRecord abs = new AbsenceRecord();
+                abs = db.AbsenceRecord.Where(ax => ax.recordId == gsID1).FirstOrDefault();
+                if (!(Object.ReferenceEquals(abs, null)))
+                {
+                    db.AbsenceRecord.Remove(abs);
+                    db.SaveChanges();
+                }
+            }
+            arvm.studentList = new List<Student>();
+
+            var tempStdList = htm.getList(currentUserId);
+            //counting number of students in the retrieved list
+            if (tempStdList != null)
+            {
+                DateTime ks = DateTime.Now.Date;
+                foreach (var k in tempStdList)
+                {
+                    AbsenceRecord abs = new AbsenceRecord();
+                    abs = db.AbsenceRecord.Where(ax => ax.recordDate == ks && ax.studentId == k.studentId).FirstOrDefault();
+                    if (abs == null)
+                    {
+                        arvm.studentList.Add(k);
+                    }
+                }
+            }
+
+
+            arvm.absenceList = new List<AbsenceRecord>();
+            //recording the current date as a short date string
+            DateTime d = DateTime.Now.Date;
+            arvm.absenceList = db.AbsenceRecord.Where(c => c.recordDate == d && c.recordDate == recordDate1 && c.academicPeriod == academicRecord1 && c.student.sectionName == s.sectionName).ToList();
+            return View(arvm);
+
+
+        }
+        [Authorize(Roles = "UnitLeader")]
+        public ActionResult AddLateComer(string id)
+        {
+
+            LateComerViewModel lateComerViewModel = new LateComerViewModel();
+
+            //check if current day is not weekend
+            if (!(DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday))
+            {
+                //show conformation message
+                lateComerViewModel.ID = Int32.Parse(id);
+                ViewBag.message = "Are You Sure Do You Want To Declare the student As a Late Comer?";
+            }
+            else
+            {
+                //error message weekend
+                ViewBag.error = "You are Not Allowed To Access on the Weekend";
+            }
+
+            return PartialView("AddLateComer", lateComerViewModel);
+        }
+        [Authorize(Roles = "UnitLeader")]
+        [HttpPost]
+        public ActionResult AddLateComer(LateComerViewModel lateComerViewModel)
+        {
+
+            //basic objects
+            ApplicationDbContext context = new ApplicationDbContext();
+            Suspension suspension = new Suspension();
+            Collection collection = new Collection();
+            LateComer lateComer = new LateComer();
+
+
+            int count = 0;
+            //get unitleader info
+            string tId = User.Identity.GetUserId().ToString();
+            var teacher = context.Teacher.Where(t => t.teacherId == tId).FirstOrDefault();
+
+            //get how mach time the student is late and increment it by 1
+            var lateRecord = context.LateComer.Where(l => l.studentId == lateComerViewModel.ID).ToList();
+            if (lateRecord.Count != 0)
+            {
+                //get the late days count
+                foreach (var getCount in lateRecord)
+                {
+                    if (count < getCount.dayCount)
+                    {
+                        count = getCount.dayCount;
+                    }
+                }
+            }
+
+            //check today is bounded in a quarter
+            if (collection.currentQuarter(lateComerViewModel.ID) == " ")
+            {
+                //error message
+                ViewBag.posterror = "Time is not Bounded in a Quarter";
+            }
+            else
+            {
+                //check if latecomer record exist for today
+                DateTime currentDate = DateTime.Now.Date;
+                var duplicate = context.LateComer.Where(l => l.lateDate == currentDate && l.studentId == lateComerViewModel.ID).FirstOrDefault();
+                if (duplicate == null)
+                {
+                    //populate latecomer object
+                    lateComer.academicPeriod = collection.currentQuarter(lateComerViewModel.ID);
+                    lateComer.dayCount = count + 1;
+                    lateComer.lateDate = DateTime.Now.Date;
+                    lateComer.studentId = lateComerViewModel.ID;
+
+                    //save latecomer record
+                    context.LateComer.Add(lateComer);
+                    int result = context.SaveChanges();
+
+                    if (result > 0)
+                    {
+                        //send warning message if the counter reaches 3
+                        if (lateComer.dayCount == 3 || lateComer.dayCount == 7 || lateComer.dayCount == 11)
+                        {
+                            //warning object
+                            Warning warning = new Warning();
+
+                            //populate warning object
+                            warning.studentId = lateComerViewModel.ID;
+                            warning.WarningReadStatus = "No";
+                            warning.grade = teacher.grade;
+                            warning.warningType = "LateComer";
+                            warning.academicYear = collection.currentQuarter(lateComerViewModel.ID);
+                            warning.warningDate = DateTime.Now.Date;
+
+                            //save warning
+                            context.Warning.Add(warning);
+                            context.SaveChanges();
+                        }
+                        else if (lateComer.dayCount == 4 || lateComer.dayCount == 8 || lateComer.dayCount == 12)
+                        {
+                            //suspend student for two days
+                            suspension.studentId = lateComerViewModel.ID;
+                            suspension.startDate = DateTime.Now;
+                            do
+                            {
+                                suspension.startDate = suspension.startDate.AddDays(1);
+                            }
+                            while (suspension.startDate.DayOfWeek == DayOfWeek.Saturday || suspension.startDate.DayOfWeek == DayOfWeek.Sunday);
+
+                            suspension.endDate = suspension.startDate;
+                            do
+                            {
+                                suspension.endDate = suspension.endDate.AddDays(1);
+                            }
+                            while (suspension.endDate.DayOfWeek == DayOfWeek.Saturday || suspension.endDate.DayOfWeek == DayOfWeek.Sunday);
+
+                            //save suspension record
+                            context.Suspension.Add(suspension);
+                            context.SaveChanges();
+                        }
+
+                        //success message
+                        ViewBag.complete = "Latecomer Recorded Successfully";
+                    }
+                    else
+                    {
+                        //error message
+                        ViewBag.error = "Failed to Record Latecomer";
+                    }
+                }
+                else
+                {
+                    //error message duplicate
+                    ViewBag.error = "Student has Already been Labeled as a Latecomer.";
+                }
+            }
+
+
+            return PartialView("AddLateComer");
+        }
+
+        [Authorize(Roles = "UnitLeader")]
+        public ActionResult LateComerManagement()
+        {
+
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            Suspension suspension = new Suspension();
+            LateComerViewModel lateComerViewModel = new LateComerViewModel();
+            lateComerViewModel.students = new List<Student>();
+            LateComer lateComer = new LateComer();
+            Collection collection = new Collection();
+
+            if (!(DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday))
+            {
+
+                //get unitleader info
+                string tId = User.Identity.GetUserId().ToString();
+                var teacher = context.Teacher.Where(t => t.teacherId == tId).FirstOrDefault();
+
+                //get all academic years
+                var academicYears = context.AcademicYear.ToList();
+                foreach (var getActive in academicYears)
+                {
+                    //get start and end dates to check if today is in the middle
+                    if (!(DateTime.Compare(DateTime.Now, getActive.durationStart) < 0 || DateTime.Compare(DateTime.Now, getActive.durationEnd) > 0))
+                    {
+                        //search student by grade in active academic years
+                        lateComerViewModel.students = context.Student.Where(s => s.academicYearId == getActive.academicYearName && s.sectionName.StartsWith(teacher.grade.ToString())).ToList();
+                    }
+                }
+
+                if (lateComerViewModel.students.Count != 0)
+                {
+                    //check if student is suspended or not
+                    foreach (var checkStudent in lateComerViewModel.students)
+                    {
+                        var studentSuspended = context.Suspension.Where(s => s.studentId == checkStudent.studentId).FirstOrDefault();
+                        if (studentSuspended != null)
+                        {
+                            //check if the suspention time elapsed
+                            if (DateTime.Compare(studentSuspended.endDate, DateTime.Now) < 0)
+                            {
+                                //remove student from suspention table
+                                context.Suspension.Remove(studentSuspended);
+                                context.SaveChanges();
+                            }
+                            else
+                            {
+                                //remove student from search list
+                                lateComerViewModel.students.Remove(checkStudent);
+                            }
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                //error message weekend
+                ViewBag.message = "You are Not Allowed To Access on the Weekend";
+            }
+
+            return View(lateComerViewModel);
+        }
+
+        [Authorize(Roles = "UnitLeader")]
+        public ActionResult SendWarning(string id)
+        {
+            WarningViewModel warningViewModel = new WarningViewModel();
+
+            //check current day is not weekend
+            if (!(DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday))
+            {
+                //conformation message
+                warningViewModel.ID = Int32.Parse(id);
+                ViewBag.message = "Are You Sure Do You Want To Send Warning Message For Selected Student?";
+            }
+            else
+            {
+                //error message weekend
+                ViewBag.error = "You are Not Allowed To Access on the Weekend";
+            }
+
+            return PartialView("SendWarning", warningViewModel);
+        }
+        [Authorize(Roles = "UnitLeader")]
+
+        [HttpPost]
+        public ActionResult SendWarning(WarningViewModel warningViewModel)
+        {
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            Warning warningobj = new Warning();
+            Collection collection = new Collection();
+
+            string quarter = collection.currentQuarter(warningViewModel.ID);
+
+            //get teacher grade from login info
+            string tId = User.Identity.GetUserId().ToString();
+            var teacher = context.Teacher.Where(t => t.teacherId == tId).FirstOrDefault();
+
+            //populate warning object
+            warningobj.academicYear = quarter;
+            warningobj.warningDate = DateTime.Now.Date;
+            warningobj.WarningReadStatus = "No";
+            warningobj.warningType = "Atendance";
+            warningobj.studentId = warningViewModel.ID;
+            warningobj.grade = teacher.grade;
+
+            context.Warning.Add(warningobj);
+            int result = context.SaveChanges();
+            if (result > 0)
+            {
+                //warning send message
+                ViewBag.complete = "Warning Send Successfully";
+            }
+            else
+            {
+                //fail message
+                ViewBag.posterror = "Failed to Send Warning!!";
+            }
+
+            return PartialView("SendWarning", warningViewModel);
+        }
+        [Authorize(Roles = "UnitLeader")]
+        public ActionResult WarningManagement()
+        {
+            //object declaration
+            WarningViewModel warningViewModel = new WarningViewModel();
+            warningViewModel.eligible = new List<Student>();
+            warningViewModel.nonViewed = new List<Warning>();
+
+            //check current day is not weekend
+            if (!(DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday))
+            {
+                //populate eligible and nonViewed objects
+                warningViewModel = nonViewedWarnings();
+                warningViewModel.eligible = eligibleStudents();
+
+            }
+            else
+            {
+                //error message weekend
+                ViewBag.message = "You are Not Allowed To Access on the Weekend";
+            }
+            return View(warningViewModel);
+        }
+        [Authorize(Roles = "UnitLeader")]
+        public ActionResult EvidenceApproval(int id)
+        {
+            //object declartion
+            ApplicationDbContext context = new ApplicationDbContext();
+            var evidenceApprovalViewModel = new EvidenceApprovalViewModel();
+            evidenceApprovalViewModel.days = new List<string>();
+
+            ViewBag.view = true;
+
+            //search evidence record
+            var evidence = context.Evidence.Find(id);
+
+            DateTime yesterday = DateTime.Now.Date;
+
+            //var yesterday = DateTime.Now.Subtract(TimeSpan.FromDays(1));
+
+            do
+            {
+                yesterday = yesterday.Subtract(TimeSpan.FromDays(1));
+            }
+            while (yesterday.DayOfWeek == DayOfWeek.Saturday || yesterday.DayOfWeek == DayOfWeek.Sunday);
+
+            //get all absence days for the specified evidence
+            do
+            {
+
+                var daysRecord = context.AbsenceRecord.Where(a => a.studentId == evidence.parent.student.studentId && a.recordDate == yesterday.Date).FirstOrDefault();
+                if (daysRecord != null)
+                {
+                    evidenceApprovalViewModel.days.Add(daysRecord.recordDate.Date.ToShortDateString());
+
+                    do
+                    {
+                        yesterday = yesterday.Subtract(TimeSpan.FromDays(1));
+                    }
+                    while (yesterday.DayOfWeek == DayOfWeek.Saturday || yesterday.DayOfWeek == DayOfWeek.Sunday);
+                }
+                else
+                {
+                    break;
+                }
+
+            }
+            while (true);
+
+            evidenceApprovalViewModel.Id = id;
+            evidenceApprovalViewModel.document = evidence.evidenceDocument;
+
+            return View(evidenceApprovalViewModel);
+        }
+        [Authorize(Roles = "UnitLeader")]
+        [HttpPost]
+        public ActionResult EvidenceApproval(EvidenceApprovalViewModel evidenceApprovalViewModel, string[] days)
+        {
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            HomeroomTeacherMethod homeroomTeacherMethod = new HomeroomTeacherMethod();
+
+            ViewBag.view = false;
+
+            var evidence = context.Evidence.Find(evidenceApprovalViewModel.Id);
+            evidence.approvalStatus = "Seen";
+
+            context.SaveChanges();
+
+            if (days != null)
+            {
+                for (int i = 0; i < days.Length; i++)
+                {
+                    DateTime date = DateTime.Parse(days[i]);
+                    var absenceRecord = context.AbsenceRecord.Where(a => a.recordDate == date.Date && a.studentId == evidence.parent.student.studentId).FirstOrDefault();
+                    absenceRecord.evidenceFlag = "AcceptableReason";
+                    context.SaveChanges();
+                }
+
+                string quarter = homeroomTeacherMethod.whichQuarter(evidence.parent.student.academicYearId);
+                var record = context.AbsenceRecord.Where(a => a.academicPeriod == evidence.parent.student.academicYearId + "-" + quarter && a.studentId == evidence.parent.studentId).ToList();
+
+                record[record.Count - 1].count = record[record.Count - 1].count - days.Length;
+                context.SaveChanges();
+            }
+
+            ViewBag.complete = "Task Completed Successfully";
+
+            return View(evidenceApprovalViewModel);
+        }
+        [Authorize(Roles = "UnitLeader")]
+        public ActionResult StudentEvidence()
+        {
+            //object declaration
+            ApplicationDbContext context = new ApplicationDbContext();
+            List<Student> students = new List<Student>();
+            List<Evidence> evidence = new List<Evidence>();
+
+            var currentDate = DateTime.Now.Date;
+
+            //get teacher grade from login info
+            string tId = User.Identity.GetUserId().ToString();
+            var teacher = context.Teacher.Where(t => t.teacherId == tId).FirstOrDefault();
+
+            //check current date is not weekend
+            if (!(DateTime.Now.DayOfWeek == DayOfWeek.Sunday || DateTime.Now.DayOfWeek == DayOfWeek.Saturday))
+            {
+                //get evidence that parents send today
+                evidence = context.Evidence.Where(e => e.parent.student.sectionName.StartsWith(teacher.grade.ToString()) && e.approvalStatus == "Provided" && e.dateUpload == currentDate).ToList();
+            }
+            else
+            {
+                //error message weekend
+                ViewBag.message = "You are Not Allowed To Access on the Weekend";
+            }
+
+
+            return View(evidence);
+        }
+
+        [Authorize(Roles = "UnitLeader")]
+        public ActionResult success()
+        {
+
+            return PartialView("success");
+        }
+        [Authorize(Roles = "UnitLeader")]
+
+        public List<Student> eligibleStudents()
+        {
+            //basic objects
+            ApplicationDbContext context = new ApplicationDbContext();
+            Warning warning = new Warning();
+            WarningViewModel warningViewModel = new WarningViewModel();
+            HomeroomTeacherMethod homeroomTeacherMethod = new HomeroomTeacherMethod();
+            warningViewModel.eligible = new List<Student>();
+
+            //get teacher info
+            string tId = User.Identity.GetUserId().ToString();
+            var teacher = context.Teacher.Where(t => t.teacherId == tId).FirstOrDefault();
+
+            //get all academic years
+            var academicYears = context.AcademicYear.ToList();
+            if (academicYears.Count > 0)
+            {
+                foreach (var getActive in academicYears)
+                {
+                    //get start and end dates to check if today is in the middle
+                    if (!(DateTime.Compare(DateTime.Now, getActive.durationStart) < 0 || DateTime.Compare(DateTime.Now, getActive.durationEnd) > 0))
+                    {
+                        string quarter = homeroomTeacherMethod.whichQuarter(getActive.academicYearName);
+
+                        //get students with three or more but less than 5 absence records in active academic years and under the unitleader management 
+                        var students = context.AbsenceRecord.Where(a => a.academicPeriod == getActive.academicYearName + "-" + quarter && a.count >= 3 && a.count < 5 && a.student.sectionName.StartsWith(teacher.grade.ToString())).ToList();
+
+                        if (students.Count != 0)
+                        {
+                            foreach (var getStudents in students)
+                            {
+                                //check prevoius day attendance to be sure about no evidence is provided
+                                DateTime yesterday = DateTime.Now;
+                                do
+                                {
+                                    yesterday = yesterday.Subtract(TimeSpan.FromDays(1));
+                                }
+                                while (yesterday.DayOfWeek == DayOfWeek.Sunday || yesterday.DayOfWeek == DayOfWeek.Saturday);
+                                //string previousDate = yesterday.ToShortDateString();
+                                var previousDay = context.AbsenceRecord.Where(a => a.recordDate == yesterday.Date && a.studentId == getStudents.studentId).FirstOrDefault();
+
+                                if (previousDay == null)
+                                {
+                                    //check warning message is already their
+                                    var inWarning = context.Warning.Where(w => w.academicYear == getActive.academicYearName + "-" + quarter && w.studentId == getStudents.studentId).FirstOrDefault();
+                                    if (inWarning == null)
+                                    {
+                                        //populate the student as eligible for warning
+                                        var studentEligible = context.Student.Where(s => s.studentId == getStudents.studentId).FirstOrDefault();
+                                        warningViewModel.eligible.Add(studentEligible);
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+            return warningViewModel.eligible;
+
+        }
+        [Authorize(Roles = "UnitLeader")]
+        public WarningViewModel nonViewedWarnings()
+        {
+            //basic objects
+            ApplicationDbContext context = new ApplicationDbContext();
+            Warning warning = new Warning();
+            WarningViewModel warningViewModel = new WarningViewModel();
+            HomeroomTeacherMethod homeroomTeacherMethod = new HomeroomTeacherMethod();
+            warningViewModel.nonViewed = new List<Warning>();
+            warningViewModel.parentName = new List<string>();
+            warningViewModel.parentPhone = new List<string>();
+
+            //get teacher info
+            string tId = User.Identity.GetUserId().ToString();
+            var teacher = context.Teacher.Where(t => t.teacherId == tId).FirstOrDefault();
+
+            //get all academic years
+            var academicYears = context.AcademicYear.ToList();
+
+            if (academicYears.Count > 0)
+            {
+                foreach (var getActive in academicYears)
+                {
+                    //get start and end dates to check if today is in the middle
+                    if (!(DateTime.Compare(DateTime.Now, getActive.durationStart) < 0 || DateTime.Compare(DateTime.Now, getActive.durationEnd) > 0))
+                    {
+                        //get current quarter and students who register for that academic year who are managed by this unitleader
+                        string quarter = homeroomTeacherMethod.whichQuarter(getActive.academicYearName);
+                        var studentInGrade = context.Student.Where(s => s.sectionName.StartsWith(teacher.grade.ToString()) && s.academicYearId == getActive.academicYearName).ToList();
+
+                        if (studentInGrade.Count != 0)
+                        {
+                            foreach (var getStudent in studentInGrade)
+                            {
+                                //get warnings that are not viewed by parents
+                                var warnings = context.Warning.Where(w => w.WarningReadStatus == "No" && w.studentId == getStudent.studentId && w.academicYear == getActive.academicYearName + "-" + quarter).ToList();
+
+                                if (warnings.Count != 0)
+                                {
+                                    //populate the nonviewed warnings to the viewmodel object
+
+                                    foreach (var getWarnings in warnings)
+                                    {
+                                        warningViewModel.nonViewed.Add(getWarnings);
+
+                                        //parent information
+                                        var parent = context.Parent.Where(p => p.studentId == getStudent.studentId).ToList();
+
+                                        if (parent.Count != 0)
+                                        {
+                                            if (parent.Count == 1)
+                                            {
+                                                warningViewModel.parentName.Add(parent[0].user.fullName);
+                                                warningViewModel.parentPhone.Add(parent[0].user.PhoneNumber);
+                                            }
+                                            else if (parent.Count == 2)
+                                            {
+                                                warningViewModel.parentName.Add(parent[0].user.fullName + "/" + parent[1].user.fullName);
+                                                warningViewModel.parentPhone.Add(parent[0].user.PhoneNumber + "/" + parent[1].user.PhoneNumber);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            warningViewModel.parentName.Add("Parent Not-Assigned");
+                                            warningViewModel.parentPhone.Add("Parent Not-Assigned");
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return warningViewModel;
         }
 
 

@@ -55,11 +55,11 @@ namespace LCCS_School_Parent_Communication_System.Controllers
                     }
                     else if (userManager.IsInRole(user.Id, "UnitLeader"))
                     {
-                        return RedirectToAction("LateComerManagement", "ULHome", new { area = "Unit_Leader" });
+                        return RedirectToAction("LateComerManagement", "THome", new { area = "Teacher" });
                     }
                     else if (userManager.IsInRole(user.Id, "HomeRoom"))
                     {
-                        return RedirectToAction("addAttendance", "HTHome", new { area = "Homeroom_Teacher" });
+                        return RedirectToAction("addAttendance", "THome", new { area = "Teacher" });
                     }
                     else if (userManager.IsInRole(user.Id, "Parent"))
                     {

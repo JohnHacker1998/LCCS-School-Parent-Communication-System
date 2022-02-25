@@ -1,0 +1,103 @@
+﻿@model LCCS_School_Parent_Communication_System.viewModels.EvidenceApprovalViewModel
+@{
+
+}    
+
+    <div class="container vh-100">
+        <div class="col-12 w-100 text-center">
+            @if (ViewBag.view)
+            {
+                using (Html.BeginForm("EvidenceApproval", "THome", FormMethod.Post))
+                {
+
+                    @Html.HiddenFor(h => h.Id)
+                    @Html.ListBoxFor(l => l.days, new SelectList(Model.days), new { @id = "days", @class = "w-50 selectpicker", @data_live_search = "true", @data_actions_box = "true" })
+
+                    <span>
+                        @*<input type="submit"  value="Approve" class="btn btn-primary"  />*@
+                        <button id="holder" type="submit" name="approve" class="btn btn-primary col-2">
+                            <span id="spin" class=" spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Approve
+                        </button>
+                    </span>
+                }
+            }
+        </div>
+        <div class="col-12 w-75 h-100 mt-4 m-auto">
+            @if (ViewBag.view)
+            {
+                var base1 = Convert.ToBase64String(Model.document);
+                var src = string.Format("data:application/pdf;base64,{0}", base1);
+                <iframe src="@src" class="w-100 h-100"></iframe>
+                //height="800" style="width=" 100%"
+            }
+        </div>
+
+
+
+        @if (ViewBag.complete != null)
+        {
+            <script type="text/javascript">
+
+                $(document).ready(function () {
+                    var view = $('#myModal');
+
+                    var url = "/Unit_Leader/THome/success";
+                    $.get(url).done(function (data) {
+                        view.html(data);
+                        view.modal({ backdrop: 'static', keyboard: false })
+                        view.modal('show');
+                    });
+
+                    view.on('click', '[data-save="modal"]', function (event) {
+
+                        window.location.href = "/Unit_Leader/THome/StudentEvidence";
+                    });
+
+                });
+            </script>
+        }
+
+        <div class="modal" id="myModal" role="dialog" data-backdrop="static" tabindex="-1" data-url="@Url.Action("Register")"></div>
+    </div>
+
+
+<style>
+
+    .bs-select-all{
+        width:48% !important;
+       background-color:#0d6efd !important;
+       color:white !important;
+       border-radius: 12px !important;
+    }
+    .bs-deselect-all{
+        width:48% !important;
+        background-color:#dc3545 !important;
+        color:white !important;
+        border-radius: 12px !important;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var element = document.getElementById("holder");
+        var spin = document.getElementById("spin");
+        $('#holder').click(function () {
+            spin.classList.add("spinner-border");
+        });
+
+        $('#days').change(function () {
+            if ($('#days :selected').length == 0) {
+                document.getElementById("holder").innerText = "Decline";
+                document.getElementById("holder").style.backgroundColor = 'red';
+            }
+            else {
+                document.getElementById("holder").innerText = "Approve";
+                document.getElementById("holder").style.backgroundColor = '#0d6efd';
+            }
+        });
+        
+    });
+
+
+</script>
