@@ -11438,6 +11438,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
+  width:100%;
   flex-wrap: nowrap;
 }
 .sb-sidenav .sb-sidenav-menu {
@@ -11774,9 +11775,7 @@ body {
     color: white;
 }
 
-.sb-sidenav {
-    padding-right: 3em;
-}
+
 
 .customise {
     margin-top:1em;
@@ -11794,4 +11793,10 @@ body {
 }
 .col-xl-12 {
     margin-left: 50em !important
+}
+.sb-sidenav-menu{
+    width:100%
+}
+.sb-sidenav,sb-sidenav-menu{
+    padding-right:0 !important
 }

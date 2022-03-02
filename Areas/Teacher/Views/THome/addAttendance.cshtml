@@ -6,20 +6,15 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>*@
 
-<script>
-        $(document).ready(function () {
-            $('#tblAbsenceRecord').DataTable();
-        });
-</script>
+
 <style>
     h1 {
         margin-left: 40%
     }
 </style>
 <h1>@DateTime.Now.ToShortDateString()</h1>
-@using (Html.BeginForm("addAttendance", "HTHome", FormMethod.Post))
+@using (Html.BeginForm("addAttendance", "THome", FormMethod.Post))
 {
-    @Html.AntiForgeryToken()
     <div class="container  mt-3">
         <div class="row ">
 
@@ -74,7 +69,7 @@
                                 <td>@k.student.fullName</td>
                                 <td>@k.count</td>
                                 <td>
-                                    @using (Html.BeginForm("addAttendance", "HTHome", new { gsId = k.recordId.ToString() }, FormMethod.Post))
+                                    @using (Html.BeginForm("addAttendance", "THome", new { gsId = k.recordId.ToString() }, FormMethod.Post))
                                     {
 
                                         <input type="submit" name="delete" value="Delete" class="btn btn-danger" />
@@ -107,25 +102,30 @@
 
 
 <script>
-        $(document).ready(function () {
+    $(document).ready(function () {
 
-            $('#sulu').click(function () {
-                var count = $("#groupsList1 option:selected").length;
-                console.log(count)
+        $('#sulu').click(function () {
+            var count = $("#groupsList1 option:selected").length;
+            console.log(count)
 
-                var values = "*";
-                var selected = $("#groupsList1 option:selected");
-                selected.each(function () {
-                    values += $(this).html() + "-";
+            var values = "*";
+            var selected = $("#groupsList1 option:selected");
+            selected.each(function () {
+                values += $(this).html() + "-";
 
-                });
-                $('#txtSelectedGroups').val(values)
-                console.log(values)
             });
-
+            $('#txtSelectedGroups').val(values)
+            console.log(values)
         });
 
+    });
 
 
 
+
+</script>
+<script>
+    $(document).ready(function () {
+        $('#tblAbsenceRecord').DataTable();
+    });
 </script>

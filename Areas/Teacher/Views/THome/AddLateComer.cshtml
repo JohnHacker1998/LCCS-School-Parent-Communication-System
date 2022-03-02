@@ -1,4 +1,4 @@
-﻿@model LCCS_School_Parent_Communication_System.viewModels.WarningViewModel
+﻿@model LCCS_School_Parent_Communication_System.viewModels.LateComerViewModel
 
 <html>
 <body>
@@ -43,8 +43,8 @@
                     </div>
                 </div>
 
-                <form action="SendWarning" id="error">
-                    @Html.AntiForgeryToken()
+                <form action="AddLateComer" id="error">
+
                     @Html.HiddenFor(h => h.ID)
                 </form>
             </div>
@@ -97,4 +97,3 @@
     });
 
 </script>
-

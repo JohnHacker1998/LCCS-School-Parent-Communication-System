@@ -588,6 +588,28 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
 
             return View(reportViewModel);
         }
+        public ActionResult viewAnnouncementDetails()
+        {
+
+            Announcement ann = new Announcement();
+
+
+
+            return View(ann);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult viewAnnouncementDetails(string annId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            Announcement ann = new Announcement();
+            int idx = int.Parse(annId);
+            ann = db.Announcement.Where(x => x.announcementID==idx).FirstOrDefault();
+            ann.viewedStatus = 1;
+            db.SaveChanges();
+
+            return View(ann);
+        }
 
     }
 }

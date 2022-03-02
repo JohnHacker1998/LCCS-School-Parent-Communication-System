@@ -7,9 +7,9 @@
         <div class="col-12 w-100 text-center">
             @if (ViewBag.view)
             {
-                using (Html.BeginForm("EvidenceApproval", "ULHome", FormMethod.Post))
+                using (Html.BeginForm("EvidenceApproval", "THome", FormMethod.Post))
                 {
-                    @Html.AntiForgeryToken()
+
                     @Html.HiddenFor(h => h.Id)
                     @Html.ListBoxFor(l => l.days, new SelectList(Model.days), new { @id = "days", @class = "w-50 selectpicker", @data_live_search = "true", @data_actions_box = "true" })
 
@@ -42,7 +42,7 @@
                 $(document).ready(function () {
                     var view = $('#myModal');
 
-                    var url = "/Unit_Leader/ULHome/success";
+                    var url = "/Teacher/THome/success";
                     $.get(url).done(function (data) {
                         view.html(data);
                         view.modal({ backdrop: 'static', keyboard: false })
@@ -51,7 +51,7 @@
 
                     view.on('click', '[data-save="modal"]', function (event) {
 
-                        window.location.href = "/Unit_Leader/ULHome/StudentEvidence";
+                        window.location.href = "/Teacher/THome/StudentEvidence";
                     });
 
                 });
