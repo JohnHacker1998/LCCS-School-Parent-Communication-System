@@ -51,7 +51,7 @@ namespace LCCS_School_Parent_Communication_System.Controllers
 
                     if (userManager.IsInRole(user.Id, "AcademicDirector"))
                     {
-                        return RedirectToAction("manageRegistrar", "ADHome", new { area = "Academic_Director" });
+                        return RedirectToAction("manageAcademicYear", "ADHome", new { area = "Academic_Director" });
                     }
                     else if (userManager.IsInRole(user.Id, "UnitLeader"))
                     {

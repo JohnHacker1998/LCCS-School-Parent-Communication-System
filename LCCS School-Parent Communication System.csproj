@@ -512,9 +512,6 @@
     <Content Include="Areas\Academic_Director\css\main.css" />
     <Content Include="Areas\Academic_Director\js\datatables-simple-demo.js" />
     <Content Include="Areas\Academic_Director\js\scripts.js" />
-    <Content Include="Areas\Homeroom_Teacher\css\styles.css" />
-    <Content Include="Areas\Homeroom_Teacher\js\datatables-simple-demo.js" />
-    <Content Include="Areas\Homeroom_Teacher\js\scripts.js" />
     <Content Include="Areas\Parent\css\styles.css" />
     <Content Include="Areas\Parent\js\datatables-simple-demo.js" />
     <Content Include="Areas\Parent\js\scripts.js" />
@@ -524,9 +521,6 @@
     <Content Include="Areas\Teacher\css\styles.css" />
     <Content Include="Areas\Teacher\js\datatables-simple-demo.js" />
     <Content Include="Areas\Teacher\js\scripts.js" />
-    <Content Include="Areas\Unit_Leader\css\styles.css" />
-    <Content Include="Areas\Unit_Leader\js\datatables-simple-demo.js" />
-    <Content Include="Areas\Unit_Leader\js\scripts.js" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -572,10 +566,6 @@
     <Content Include="Areas\Registrar\Views\RHome\Index.cshtml" />
     <Content Include="Areas\Registrar\Views\RHome\parentManagement.cshtml" />
     <Content Include="Areas\Registrar\Views\RHome\StudentManagement.cshtml" />
-    <Content Include="Areas\Unit_Leader\Views\ULHome\Index.cshtml" />
-    <Content Include="Areas\Homeroom_Teacher\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Homeroom_Teacher\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\Homeroom_Teacher\Views\HTHome\Index.cshtml" />
     <Content Include="Areas\Teacher\Views\THome\addAttendance.cshtml" />
     <Content Include="Areas\Parent\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Parent\Views\Shared\_Layout.cshtml" />
@@ -751,13 +741,7 @@
     <Content Include="Content\bootstrap-grid.rtl.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
-    <Content Include="Areas\Unit_Leader\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Unit_Leader\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\Unit_Leader\Views\ULHome\LateComerManagement.cshtml" />
-    <Content Include="Areas\Unit_Leader\Views\ULHome\WarningManagement.cshtml" />
     <Content Include="Areas\Parent\Views\PHome\EvidenceManagement.cshtml" />
-    <Content Include="Areas\Unit_Leader\Views\ULHome\EvidenceApproval.cshtml" />
-    <Content Include="Areas\Unit_Leader\Views\ULHome\StudentEvidence.cshtml" />
     <Content Include="Areas\Parent\Views\PHome\WarningList.cshtml" />
     <Content Include="Areas\Parent\Views\PHome\ViewWarning.cshtml" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -869,9 +853,6 @@
     <Content Include="Areas\Teacher\Views\THome\viewGroup.cshtml" />
     <Content Include="Areas\Teacher\Views\THome\addGroupAssignment.cshtml" />
     <Content Include="Areas\Teacher\Views\THome\updateAssignment.cshtml" />
-    <Content Include="Areas\Unit_Leader\Views\ULHome\AddLateComer.cshtml" />
-    <Content Include="Areas\Unit_Leader\Views\ULHome\SendWarning.cshtml" />
-    <Content Include="Areas\Unit_Leader\Views\ULHome\success.cshtml" />
     <Content Include="Areas\Academic_Director\Views\ADHome\ScheduleManagement.cshtml" />
     <Content Include="Areas\Academic_Director\Views\ADHome\AddSchedule.cshtml" />
     <Content Include="Areas\Academic_Director\Views\ADHome\EditSchedule.cshtml" />
@@ -995,16 +976,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\Academic_Director\Academic_DirectorAreaRegistration.cs" />
     <Compile Include="Areas\Academic_Director\Controllers\ADHomeController.cs" />
-    <Compile Include="Areas\Homeroom_Teacher\Controllers\HTHomeController.cs" />
-    <Compile Include="Areas\Homeroom_Teacher\Homeroom_TeacherAreaRegistration.cs" />
     <Compile Include="Areas\Parent\Controllers\PHomeController.cs" />
     <Compile Include="Areas\Parent\ParentAreaRegistration.cs" />
     <Compile Include="Areas\Registrar\Controllers\RHomeController.cs" />
     <Compile Include="Areas\Registrar\RegistrarAreaRegistration.cs" />
     <Compile Include="Areas\Teacher\Controllers\THomeController.cs" />
     <Compile Include="Areas\Teacher\TeacherAreaRegistration.cs" />
-    <Compile Include="Areas\Unit_Leader\Controllers\ULHomeController.cs" />
-    <Compile Include="Areas\Unit_Leader\Unit_LeaderAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DataProtectorTokenProvider.cs" />
     <Compile Include="Global.asax.cs">
@@ -1014,8 +991,6 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
-  
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AbsenceRecord.cs" />
     <Compile Include="Models\AcademicYear.cs" />
     <Compile Include="Models\Announcement.cs" />
@@ -1085,8 +1060,6 @@
     <Content Include="Views\web.config" />
     <Content Include="Areas\Academic_Director\Views\web.config" />
     <Content Include="Areas\Registrar\Views\web.config" />
-    <Content Include="Areas\Homeroom_Teacher\Views\web.config" />
-    <Content Include="Areas\Unit_Leader\Views\web.config" />
     <Content Include="Areas\Parent\Views\web.config" />
     <Content Include="Areas\Academic_Director\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Academic_Director\Views\Shared\_Layout.cshtml" />
@@ -1132,11 +1105,9 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Academic_Director\Data\" />
-    <Folder Include="Areas\Homeroom_Teacher\Data\" />
     <Folder Include="Areas\Parent\Data\" />
     <Folder Include="Areas\Registrar\Data\" />
     <Folder Include="Areas\Teacher\Data\" />
-    <Folder Include="Areas\Unit_Leader\Data\" />
     <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
@@ -1145,7 +1116,6 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
- 
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

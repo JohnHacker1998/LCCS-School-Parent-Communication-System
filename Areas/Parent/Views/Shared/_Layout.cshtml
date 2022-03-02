@@ -238,18 +238,20 @@
                                 </script>
                             </li>
 
-                            foreach (var k in gx)
-                            {
-
-                                if (x < gx.Count())
-                                {
-                                    using (Html.BeginForm("viewAnnouncementDetails", "PHome", new
-                                    {
-                                        annId = k.announcementID
-                                    }, FormMethod.Post))
-                                    {
-                                        if (k.updateStatus == 0)
+                                        foreach (var k in gx)
                                         {
+
+                                            if (x < gx.Count())
+                                            {
+                                                using (Html.BeginForm("viewAnnouncementDetails", "PHome", new
+                                                {
+                                                    annId = k.announcementID
+                                                }, FormMethod.Post))
+                                                {
+                                                    @Html.AntiForgeryToken()
+            
+                                        if (k.updateStatus == 0)
+                                                    {
 
                                             <li>
 
@@ -278,15 +280,15 @@
 
                                                             $(document).ready(function () {
                                                                 $("#navbarDropdown1").click(function () {
-                                                                 if (@k.viewedStatus == 0) {
+                                        if (@k.viewedStatus == 0) {
                                                                     $('#xrd1').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
-                                                                }
-                                                                else {
+                                        }
+                                        else {
                                                                     $('#xrd1').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
-                                                                }
-                                                                });
+                                        }
+                                    });
 
-                                                            });
+                                });
 
                                                             </script>
 
@@ -322,15 +324,15 @@
 
                                                             $(document).ready(function () {
                                                                 $("#navbarDropdown1").click(function () {
-                                                                 if (@k.viewedStatus == 0) {
+                                    if (@k.viewedStatus == 0) {
                                                                     $('#xrd1').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
-                                                                }
-                                                                else {
+                                    }
+                                    else {
                                                                     $('#xrd1').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
-                                                                }
-                                                                });
+                                    }
+                                });
 
-                                                            });
+                            });
 
                                                             </script>
                                                         </div>
@@ -338,18 +340,19 @@
                                                 </button>
                                             </li>
                                             <li><hr class="dropdown-divider" /></li>
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    using (Html.BeginForm("viewAnnouncementDetails", "PHome", new
-                                    {
-                                        annId = k.announcementID
-                                    }, FormMethod.Post))
-                                    {
-                                        if (k.updateStatus == 0)
-                                        {
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                using (Html.BeginForm("viewAnnouncementDetails", "PHome", new
+                                                {
+                                                    annId = k.announcementID
+                                                }, FormMethod.Post))
+                                                {
+                                                    @Html.AntiForgeryToken()
+                                                    if (k.updateStatus == 0)
+                                                    {
                                             <li>
 
                                                 <button class="dropdown-item container-fluid" id="jj">
@@ -378,15 +381,15 @@
 
                                                             $(document).ready(function () {
                                                                 $("#navbarDropdown1").click(function () {
-                                                                 if (@k.viewedStatus == 0) {
+                                        if (@k.viewedStatus == 0) {
                                                                     $('#xrd1').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
-                                                                }
-                                                                else {
+                                        }
+                                        else {
                                                                     $('#xrd1').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
-                                                                }
-                                                                });
+                                        }
+                                    });
 
-                                                            });
+                                });
 
                                                 </script>
                                             </li>
@@ -394,7 +397,7 @@
 
                                         }
                                         else
-                                        {
+                        {
                                             <li>
 
                                                 <button class="dropdown-item container-fluid" id="jj">
@@ -422,15 +425,15 @@
 
                                                             $(document).ready(function () {
                                                                 $("#navbarDropdown1").click(function () {
-                                                                 if (@k.viewedStatus == 0) {
+                                    if (@k.viewedStatus == 0) {
                                                                     $('#xrd1').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
-                                                                }
-                                                                else {
+                                    }
+                                    else {
                                                                     $('#xrd1').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
-                                                                }
-                                                                });
+                                    }
+                                });
 
-                                                            });
+                            });
 
                                                             </script>
 

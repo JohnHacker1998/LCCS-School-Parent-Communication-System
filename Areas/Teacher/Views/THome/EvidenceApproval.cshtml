@@ -42,7 +42,7 @@
                 $(document).ready(function () {
                     var view = $('#myModal');
 
-                    var url = "/Unit_Leader/THome/success";
+                    var url = "/Teacher/THome/success";
                     $.get(url).done(function (data) {
                         view.html(data);
                         view.modal({ backdrop: 'static', keyboard: false })
@@ -51,7 +51,7 @@
 
                     view.on('click', '[data-save="modal"]', function (event) {
 
-                        window.location.href = "/Unit_Leader/THome/StudentEvidence";
+                        window.location.href = "/Teacher/THome/StudentEvidence";
                     });
 
                 });
