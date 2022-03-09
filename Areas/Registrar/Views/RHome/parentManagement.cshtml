@@ -102,8 +102,10 @@
 </script>
 
 
-<div class="container mt-5 bg-light border-top border-bottom border-4 rounded-3">
-    <h1 class="border-bottom border-5 p-3 mb-4">Students List</h1>
+<div class="container mt-5 bg-white border-top border-bottom border-4 border-white rounded-3">
+    <div class="row title-button">
+        <span class="p-3 title col-md-10">Students</span>
+    </div>
 
     <div class="container mb-3 mt-3">
         <table class="table table-striped table-bordered" id="tblStudentList">
@@ -112,7 +114,7 @@
                     <th scope="col">ID</th>
                     <th scope="col">Full Name</th>
                     <th scope="col">Section</th>
-                    <th scope="col"></th>
+                    <th scope="col">Action</th>
 
                 </tr>
             </thead>
@@ -123,19 +125,20 @@
                         <td>@k.studentId</td>
                         <td>@k.fullName</td>
                         <td>@k.sectionName</td>
-                        <td>
-
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#parentViewModel" data-url="@Url.Action("registerParent")" data-sid="@k.studentId.ToString()">Register Parent </button>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-add rounded-circle border-1 border-primary" data-toggle="modal" data-target="#parentViewModel" data-url="@Url.Action("registerParent")" data-sid="@k.studentId.ToString()"><i class="fa-solid fa-user-plus fa-lg text-primary"></i></button>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
-    </div>
+</div>
 
-<div class="container mt-5 bg-light border-top border-bottom border-4 rounded-3">
-    <h1 class="border-bottom border-5 p-3 mb-4">Parents List</h1>
+<div class="container mt-5 bg-white border-top border-bottom border-4 border-white rounded-3">
+    <div class="row title-button">
+        <span class="p-3 title col-md-10">Parents</span>
+    </div>
 
     <div class="container mb-3 mt-3">
         <table class="table table-striped table-bordered" id="tblParentList">
@@ -145,7 +148,7 @@
                     <th scope="col">Student Name</th>
                     <th scope="col">Email</th>
                     <th scope="col">Phone Number</th>
-                    <th scope="col"></th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -156,12 +159,12 @@
                         <td>@k.student.fullName</td>
                         <td>@k.user.Email</td>
                         <td>@k.user.PhoneNumber</td>
-                        <td>
+                        <td class="text-center">
                             @* <button type="button" class="btn btn-primary" data-toggle="updateModal" data-target="#parentViewModel" data-url="@Url.Action("updateParent")" data-pid="@k.parentId">Edit</button>*@
                             @using (Html.BeginForm("parentManagement", "RHome", new { pid = k.parentId }, FormMethod.Post))
                             {
                                 @Html.AntiForgeryToken()
-                                <input type="submit" name="delete" value="Delete" class="btn btn-danger " />
+                                <button type="submit" value="Delete" name="delete" class="btn btn-delete rounded-circle border-1 border-danger"><i class="fas fa-trash-alt fa-lg text-danger"></i></button>
                             }
 
                         </td>
@@ -170,12 +173,13 @@
             </tbody>
         </table>
     </div>
-    </div>
+</div>
 
 
 <script>
     $(document).ready(function () {
-        $('#tblStudentList').DataTable();
-        $('#tblParentList').DataTable();
+        $('#tblStudentList').DataTable({"scrollX": true});
+        $('#tblParentList').DataTable({"scrollX": true});
+        $('body').find('.dataTables_scrollBody').addClass("scrollbar");
     });
 </script>

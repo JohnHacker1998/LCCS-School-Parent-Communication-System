@@ -71,44 +71,51 @@
 
 <script>
     $(document).ready(function () {
-        $('#myTable').DataTable();
+        $('#myTable').DataTable({"scrollX": true});
+        $('body').find('.dataTables_scrollBody').addClass("scrollbar");
     });
 </script>
-<div class="container mt-5 bg-light border-top border-bottom border-4 rounded-3">
-    <h1 class="border-bottom border-5 p-3 mb-4">Schedules</h1>
-    <table class="table table-striped table-bordered" id="myTable">
-        <thead>
-            <tr>
-                <th scope="col">Schedule Date</th>
-                <th scope="col">Grade</th>
-                <th scope="col">Subject</th>
-                <th scope="col">Schedule For</th>
-                <th scope="col">Percent</th>
-                <th scope="col" class="text-center"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSectionModal" data-url="@Url.Action("AddSchedule")"><i class="fas fa-plus fa-lg"></i></button></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var list in Model.schedule)
-            {
-            <tr>
-                <td>@list.scheduleDate.ToShortDateString()</td>
-                <td>@list.grade</td>
-                <td>@list.subject</td>
-                <td>@list.scheduleFor</td>
-                <td>@list.percentage</td>
-                <td class="text-center">
+<div class="container mt-5 bg-white border-top border-bottom border-4 border-white rounded-3">
+    <div class="row title-button">
+        <span class="p-3 title col-md-10">Schedules</span>
+        <button type="button" class="btn btn-primary align-content-end register pe-4 my-4 mx-2 w-auto" data-toggle="modal" data-target="#addSectionModal" data-url="@Url.Action("AddSchedule")"><i class="fas fa-plus fa-sm text-start px-2"></i>Register</button>
+    </div>
 
-                    <button type="button" class="btn btn-info" data-toggle="modalsession" data-target="#updateSectionModal" data-url="@Url.Action("EditSchedule")" data-id="@list.scheduleId"><i class="fas fa-edit fa-lg text-white"></i></button>
+    <div class="container mb-3 mt-3">
+        <table class="table table-striped table-bordered" id="myTable">
+            <thead>
+                <tr>
+                    <th scope="col">Schedule Date</th>
+                    <th scope="col">Grade</th>
+                    <th scope="col">Subject</th>
+                    <th scope="col">Schedule For</th>
+                    <th scope="col">Percent</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var list in Model.schedule)
+                {
+                    <tr>
+                        <td>@list.scheduleDate.ToShortDateString()</td>
+                        <td>@list.grade</td>
+                        <td>@list.subject</td>
+                        <td>@list.scheduleFor</td>
+                        <td>@list.percentage</td>
+                        <td class="text-center">
 
-                </td>
-            </tr>
-            }
-        </tbody>
-        <tfoot>
+                            <button type="button" class="btn btn-edit rounded-circle border-1 border-dark" data-toggle="modalsession" data-target="#updateSectionModal" data-url="@Url.Action("EditSchedule")" data-id="@list.scheduleId"><i class="fas fa-edit fa-lg"></i></button>
 
-        </tfoot>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
 
-    </table>
+            </tfoot>
+
+        </table>
+    </div>
 </div>
 
 <div class="modal" id="myModal" role="dialog" data-backdrop="static" tabindex="-1" data-url="@Url.Action("Register")"></div>

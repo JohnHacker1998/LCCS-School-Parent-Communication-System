@@ -501,12 +501,11 @@ namespace LCCS_School_Parent_Communication_System.Areas.Parent.Controllers
                         }
                     }
 
-                    percentSum = 0;
-                    resultSum = 0;
-
                     reportViewModel.score.Add(resultSum);
                     reportViewModel.outOf.Add(percentSum);
 
+                    percentSum = 0;
+                    resultSum = 0;
                 }
             }
 

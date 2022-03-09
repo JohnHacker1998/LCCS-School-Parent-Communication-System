@@ -5,9 +5,9 @@
 
 
 <style>
-    .container {
+    /*.container {
         width: 75%;
-    }
+    }*/
 </style>
 
 <script type="text/javascript">
@@ -17,8 +17,8 @@
 
 
         });
-        $('#tblStudentList').DataTable();
-
+        $('#tblStudentList').DataTable({"scrollX": true});
+        $('body').find('.dataTables_scrollBody').addClass("scrollbar");
     });
 
 </script>
@@ -134,45 +134,44 @@
         }*@
 </div>
 
-    <div class="container mb-3 mt-3 bg-light border-top border-bottom border-4 rounded-3 mt-5">
-        <h1 class="border-bottom border-5 p-3 mb-4">Student List</h1>
-        <div class="row">
-            <div class="col-12">
-                <div class="row">
-                    <table class="table table-striped table-bordered" id="tblStudentList">
-                        <thead>
+<div class="container mt-5 bg-white border-top border-bottom border-4 border-white rounded-3">
+    <div class="row title-button">
+        <span class="p-3 title col-md-10">Students</span>
+    </div>
+
+            <div class="container mb-3 mt-3">
+                <table class="table table-striped table-bordered" id="tblStudentList">
+                    <thead>
+                        <tr>
+                            <th>Section</th>
+                            <th>Student Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var k in Model.studentList)
+                        {
                             <tr>
-                              
-                                <th>Section</th>
-                                <th>Student Name</th>
-                                <th>Action</th>
+
+                                <td>@k.sectionName</td>
+                                <td>@k.fullName</td>
+                                <td class="text-center">
+                                    @using (Html.BeginForm("addStudentAnnouncement", "ADHome", new { anId = k.studentId.ToString() }, FormMethod.Get))
+                                    {
+                                        <button type="submit" value="Add Announcement" name="add" class="btn btn-add rounded-circle border-1 border-primary">
+                                            <i class="fas fa-plus fa-sm text-start px-2 text-primary"></i>
+                                        </button>
+                                        <input type="text" name="txtAddAnnouncement" value=@k.studentId style="display:none">
+                                    }
+
+                                </td>
+
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var k in Model.studentList)
-                            {
-                                <tr>
-                                   
-                                    <td>@k.sectionName</td>
-                                    <td>@k.fullName</td>
-                                    <td>
-                                        @using (Html.BeginForm("addStudentAnnouncement", "ADHome", new { anId = k.studentId.ToString() }, FormMethod.Get))
-                                        {
-
-                                            <input type="submit" name="add" value="Add Announcement" class="btn btn-primary" />
-                                            <input type="text" name="txtAddAnnouncement" value=@k.studentId style="display:none">
-                                        }
-
-                                    </td>
-
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                        }
+                    </tbody>
+                </table>
             </div>
-        </div>
-        @*@if (ViewBag.successfulMessage != " " && ViewBag.successfulMessage != null)
+    @*@if (ViewBag.successfulMessage != " " && ViewBag.successfulMessage != null)
         {
             <div class="alert alert-success">
                 @ViewBag.successfulMessage
@@ -185,7 +184,7 @@
             </div>
         }*@
 
-    </div>
+</div>
 
     <script>
         $(document).ready(function () {

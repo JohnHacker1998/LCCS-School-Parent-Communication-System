@@ -9,14 +9,11 @@
 <link rel="stylesheet" href="https://phpcoder.tech/multiselect/css/jquery.multiselect.css">
 
 
-<style>
-    .container {
-        width: 80%;
-    }
-</style>
+
 <script>
     $(document).ready(function () {
-        $('#tblGroupStructureList').DataTable();
+        $('#tblGroupStructureList').DataTable({"scrollX": true});
+        $('body').find('.dataTables_scrollBody').addClass("scrollbar");
     });
 </script>
 
@@ -125,20 +122,23 @@
 
 
 
-    <div class="container mb-3 mt-4 bg-light border-top border-bottom-0 border-4 rounded-3 ">
-        <h1 class="border-bottom border-5 p-3 mb-4">Group List</h1>
+<div class="container mt-5 bg-white border-top border-bottom border-4 border-white rounded-3">
+    <div class="row title-button">
+        <span class="p-3 title col-md-10">Groups</span>
+    </div>
+    <div class="container mb-3 mt-3">
         <table class="table table-striped table-bordered" id="tblGroupStructureList">
             <thead>
                 <tr>
-                    
+
                     <th scope="col">Group Structure Name</th>
                     <th scope="col">Group Name</th>
                     @for (int x = 1; x <= Model.maxMembers; x++)
                     {
                         <th scope="col">Member @x</th>
                     }
-                    <th scope="col">Min Number of Members</th>
-                    <th scope="col">Max Number of Members</th>
+                    <th scope="col">Minimum Members</th>
+                    <th scope="col">Maximum Members</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -147,7 +147,7 @@
             {
                 <tbody>
                     <tr>
-                        
+
                         <td>@k.groupStructure.groupStructureName</td>
                         <td>@k.groupName</td>
                         @for (int x = 0; x < Model.maxMembers; x++)
@@ -170,13 +170,12 @@
                         }
                         <td>@k.groupStructure.minNumberOfMembers</td>
                         <td>@k.groupStructure.maxNumberOfMembers</td>
-                        <td>
+                        <td class="text-center">
                             @using (Html.BeginForm("classifyGroup", "THome", new { grID = k.groupId.ToString(), skr = k.groupName }, FormMethod.Post))
                             {
                                 @Html.AntiForgeryToken()
-                                @Html.HiddenFor(a => a.groupStructureID);
-                                <input type="submit" name="delete" value="Delete" class="btn btn-danger" />
-
+                                @Html.HiddenFor(a => a.groupStructureID)
+                                <button type="submit" value="Delete" name="delete" class="btn btn-delete rounded-circle border-1 border-danger d-inline"><i class="fas fa-trash-alt fa-lg text-danger"></i></button>
 
                             }
 
@@ -187,11 +186,11 @@
             }
 
         </table>
-
-
-
-
     </div>
+
+
+
+</div>
 
     <script>
     $(document).ready(function () {

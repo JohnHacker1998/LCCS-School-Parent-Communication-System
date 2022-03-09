@@ -15,7 +15,11 @@
 
 
     <link href="~/Areas/Parent/css/styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/fontawesome.min.css" integrity="sha512-8Vtie9oRR62i7vkmVUISvuwOeipGv8Jd+Sur/ORKDD5JiLgTGeBSkI3ISOhc730VGvA5VVQPwKIKlmi+zMZ71w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js" integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js" integrity="sha384-SlE991lGASHoBfWbelyBPLsUlwY1GwNDJo3jSJO04KZ33K2bwfV9YBauFfnzvynJ" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
     <link href="~/Areas/Parent/css/styles.css" rel="stylesheet" />
 
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
@@ -57,17 +61,17 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.0.1/fullcalendar.min.css">
 
-    <style type="text/css">
+    @*<style type="text/css">
 
-          @*  .fc-day-top {
+          .fc-day-top {
                 border-color: solid red 3px;
                 background-color:red;
-            }*@
+            }
 
-           @* .fc-today {
+           .fc-today {
                 background: red !important;
                 color: white;
-            }*@
+            }
 
            .side{
                display:inline-block
@@ -152,12 +156,13 @@
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-red bg-red">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="index.html">Parent</a>
+        <a class="navbar-brand ps-3" href="index.html">
+            <img src="~/image/PSX_20220303_121338.jpg" width="110px" height="50px" />
+        </a>
         <!-- Sidebar Toggle-->
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 bg-custom" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <button class="btn btn-sm order-1 order-lg-0 me-4 me-lg-0 text-white" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
-        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-        </form>
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"></form>
         <!-- Navbar-->
 
 
@@ -232,7 +237,7 @@
                             }
                         }
                         var ikea = gx.Where(ax => ax.viewedStatus == 0).ToList();
-                        if (gx.Count()==0)
+                        if (gx.Count() == 0)
                         {
                             <li>
 
@@ -240,7 +245,7 @@
                                 <button class="dropdown-item container-fluid" id="jj" disabled>
                                     <div class="">
 
-                                        <div class="row" >
+                                        <div class="row">
                                             <h3>No Announcements Yet</h3>
 
 
@@ -277,7 +282,7 @@
 
 
                                         if (k.updateStatus == 0)
-                                                    {
+                                        {
 
                                             <li>
 
@@ -425,7 +430,7 @@
 
                                         }
                                         else
-                        {
+                                        {
                                             <li>
 
                                                 <button class="dropdown-item container-fluid" id="jj">
@@ -490,7 +495,7 @@
             </li>
 
             <li class="nav-item dropdown">
-                <a id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw bg-custom"></i></a>
+                <a class="p-2 shadow rounded-pill" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw bg-custom"></i><span class="p-1 small">@User.Identity.Name</span></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item" href="#!">Profile</a></li>
                     <li><hr class="dropdown-divider" /></li>
@@ -506,72 +511,76 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
 
+                        <h5 id="role" class="p-3">Parent</h5>
                         <a class="nav-link" href="@Url.Action("viewAttendance", "PHome")">
-                            <div class="sb-nav-link-icon pe-4">
-                                <i class="fas fa-calendar "></i>
+                            <div class="sb-nav-link-icon col-1">
+                                <i class="fas fa-calendar fa-lg px-2"></i>
                             </div>
-                            Attendance and Schedule
+                            <div class="px-3">
+                                Calendar
+                            </div>
                         </a>
                         <a class="nav-link" href="@Url.Action("EvidenceManagement", "PHome")">
-                            <div class="sb-nav-link-icon pe-4">
-                                <i class="fas fa-file-upload"></i>
-
-
+                            <div class="sb-nav-link-icon col-1">
+                                <i class="fas fa-file-upload fa-lg px-2"></i>
                             </div>
-                            Evidence
+                            <div class="px-3">
+                                Evidence
+                            </div>
                         </a>
                         <a class="nav-link" href="@Url.Action("WarningList", "PHome")">
-                            <div class="sb-nav-link-icon pe-4">
-                                <i class="fas fa-exclamation-triangle"></i>
+                            <div class="sb-nav-link-icon col-1">
+                                <i class="fas fa-exclamation-triangle fa-lg px-2"></i>
                             </div>
-                            Warning 
-                            @{
-                                LCCS_School_Parent_Communication_System.Identity.ApplicationDbContext context = new LCCS_School_Parent_Communication_System.Identity.ApplicationDbContext();
-                                var user = context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
+                            <div class="px-3">
+                                Warning
+                                @{
+                                    LCCS_School_Parent_Communication_System.Identity.ApplicationDbContext context = new LCCS_School_Parent_Communication_System.Identity.ApplicationDbContext();
+                                    var user = context.Users.Where(u => u.UserName == User.Identity.Name).FirstOrDefault();
 
-                                var parent = context.Parent.Where(p => p.parentId == user.Id).FirstOrDefault();
+                                    var parent = context.Parent.Where(p => p.parentId == user.Id).FirstOrDefault();
 
-                                var warnings = context.Warning.Where(w => w.studentId == parent.studentId && w.WarningReadStatus == "No").ToList();
-                                if (warnings.Count != 0)
-                                {
-                                    <span class="position-absolute end-0 translate-middle badge rounded-pill bg-danger">@warnings.Count</span>
+                                    var warnings = context.Warning.Where(w => w.studentId == parent.studentId && w.WarningReadStatus == "No").ToList();
+                                    if (warnings.Count != 0)
+                                    {
+                                        <span class="position-absolute end-0 translate-middle badge rounded-pill bg-danger">@warnings.Count</span>
+                                    }
                                 }
-                            }
+                            </div>
                         </a>
                         <a class="nav-link" href="@Url.Action("viewAssignment","PHome")">
-                            <div class="sb-nav-link-icon pe-4">
-                                <i class="fas fa-tasks"></i>
-                                </i>
+                            <div class="sb-nav-link-icon col-1">
+                                <i class="fas fa-tasks fa-lg px-2"></i>
                             </div>
-                            Assignment
+                            <div class="px-3">
+                                Assignment
+                            </div>
                         </a>
 
                         <a class="nav-link" href="@Url.Action("ViewResult","PHome")">
-                            <div class="sb-nav-link-icon pe-4">
-                                <i class="fas fa-star  text-white"></i>
-                                </i>
+                            <div class="sb-nav-link-icon col-1">
+                                <i class="fas fa-star fa-lg px-2"></i>
                             </div>
-                            Result
+                            <div class="px-3">
+                                Result
+                            </div>
                         </a>
 
                         <a class="nav-link" href="@Url.Action("GenerateGeneralReport","PHome")">
-                            <div class="sb-nav-link-icon pe-4">
-                                <i class="fas fa-table"></i>
-                                </i>
+                            <div class="sb-nav-link-icon col-1">
+                                <i class="fas fa-table fa-lg px-2"></i>
                             </div>
-                           Report
+                            <div class="px-3">
+                                Report
+                            </div>
                         </a>
 
                     </div>
                 </div>
-                <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    @User.Identity.Name
-                </div>
             </nav>
         </div>
         <div id="layoutSidenav_content">
-            <main class="customise">
+            <main class="customise p-4">
                 @RenderBody()
             </main>
         </div>
@@ -584,9 +593,88 @@
     <script src="js/datatables-simple-demo.js"></script>
 
     <script src="~/Areas/Parent/js/scripts.js"></script>
+
+    <script>
+        $(function () {
+            "use strict";
+            var url = window.location + "";
+            var path = url.replace(window.location.protocol + "//" + window.location.host + "/", "");
+            var element = $('.nav a').filter(function () {
+                return this.href === url || this.href === path;// || url.href.indexOf(this.href) === 0;
+            });
+            element.parentsUntil(".sb-sidenav-menu").each(function (index) {
+                if ($(this).is("a")) {
+                    $(this).addClass("active-nav");
+                    $(this).parent(".nav").length === 0
+                        ? $(this).addClass("active-nav")
+                        : $(this).addClass("selected");
+                }
+                else if ($(this).children("a").length === 0) {
+                    $(this).addClass("selected");
+
+                }
+                else {
+                    $(this).addClass('in');
+                }
+
+            });
+
+            element.addClass("active-nav");
+            $('.nav a').on('click', function (e) {
+
+                if (!$(this).hasClass("active-nav")) {
+                    // hide any open menus and remove all other classes
+                    $(".nav", $(this).parents(".nav:first")).removeClass("in");
+                    $("a", $(this).parents(".nav:first")).removeClass("active-nav");
+
+                    // open our new menu and add the open class
+                    $(this).next(".nav").addClass("in");
+                    $(this).addClass("active-nav");
+
+                }
+                else if ($(this).hasClass("active-nav")) {
+                    $(this).removeClass("active-nav");
+                    $(this).parents(".nav:first").removeClass("active-nav");
+                    $(this).next(".nav").removeClass("in");
+                }
+            })
+            $('.nav >a.has-arrow').on('click', function (e) {
+                e.preventDefault();
+            });
+        });
+    </script>
+    <style>
+        .active-nav {
+            color: #00008b !important;
+            border-left: 5px solid #00008b;
+            background-color: #f7f7ff;
+            font-weight: bold;
+        }
+
+            .active-nav .sb-nav-link-icon {
+                color: #00008b !important;
+                background-color: #f7f7ff; /*#d01c37*/
+                font-weight: bold;
+            }
+
+        .fas .fa-solid {
+            font-weight: 900;
+        }
+
+        .customise {
+            background-color: #f7f7ff;
+        }
+
+        #layoutSidenav_content {
+            background-color: #f7f7ff; /*#fcf3f3*//*#f2f2fe*/
+        }
+
+        #navbarDropdown {
+            text-decoration: none !important;
+            background-color: #00009a; /*#01019e*/ /*#883ed4*/#00009a
+        }
+    </style>
+
 </body>
 </html>
 
-<script>
-    
-</script>

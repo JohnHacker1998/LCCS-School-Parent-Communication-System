@@ -66,54 +66,58 @@
 
 <script>
     $(document).ready(function () {
-        $('#myTable').DataTable();
+        $('#myTable').DataTable({"scrollX": true});
+        $('body').find('.dataTables_scrollBody').addClass("scrollbar");
     });
 </script>
 
-<div class="container bg-light border-top border-bottom border-4 rounded-3">
-    <h1 class="border-bottom border-5 p-3 mb-4">Students</h1>
-    <table class="table table-striped table-bordered" id="myTable">
-        <thead>
-            <tr>
-                <th scope="col">Assesement Date</th>
-                <th scope="col">Student Name</th>
-                <th scope="col">Result For</th>
-                <th scope="col">Result</th>
-                <th scope="col">Feedback</th>
-                <th scope="col" class="text-center">@*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSectionModal" data-url="@Url.Action("RegisterStudent")"><i class="fas fa-plus fa-lg"></i></button>*@</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var list in Model.results)
-            {
-            <tr>
-                @if (list.scheduleId != null)
+<div class="container mt-5 bg-white border-top border-bottom border-4 border-white rounded-3">
+    <div class="row title-button">
+        <span class="p-3 title col-md-10">Students</span>
+    </div>
+    <div class="container mb-3 mt-3">
+        <table class="table table-striped table-bordered" id="myTable">
+            <thead>
+                <tr>
+                    <th scope="col">Assesement Date</th>
+                    <th scope="col">Student Name</th>
+                    <th scope="col">Result For</th>
+                    <th scope="col">Result</th>
+                    <th scope="col">Feedback</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var list in Model.results)
                 {
-                    <td>@list.schedule.scheduleDate.ToShortDateString()</td>
+                    <tr>
+                        @if (list.scheduleId != null)
+                        {
+                            <td>@list.schedule.scheduleDate.ToShortDateString()</td>
+                        }
+                        else
+                        {
+                            <td>@list.assignment.submissionDate.ToShortDateString()</td>
+                        }
+
+                        <td>@list.student.fullName</td>
+                        <td>@list.resultFor</td>
+                        <td>@list.result/@list.percent</td>
+                        <td>@list.feedback</td>
+
+                        <td class="text-center">
+                            <button type="button" class="btn btn-edit rounded-circle border-1 border-dark" data-toggle="modalsession" data-target="#updateSectionModal" data-url="@Url.Action("ResultUpdate")" data-id="@list.resultId"><i class="fas fa-edit fa-lg"></i></button>
+
+                        </td>
+                    </tr>
                 }
-                else
-                {
-                    <td>@list.assignment.submissionDate.ToShortDateString()</td>
-                }
+            </tbody>
+            <tfoot>
 
-                <td>@list.student.fullName</td>
-                <td>@list.resultFor</td>
-                <td>@list.result/@list.percent</td>
-                <td>@list.feedback</td>
+            </tfoot>
 
-                <td class="text-center">
-
-                    <button type="button" class="btn btn-info" data-toggle="modalsession" data-target="#updateSectionModal" data-url="@Url.Action("ResultUpdate")" data-id="@list.resultId"><i class="fas fa-edit fa-lg text-white"></i></button>
-
-                </td>
-            </tr>
-            }
-        </tbody>
-        <tfoot>
-
-        </tfoot>
-
-    </table>
+        </table>
+    </div>
 </div>
 
 <div class="modal" id="myModal" role="dialog" data-backdrop="static" tabindex="-1" data-url="@Url.Action("Register")"></div>
