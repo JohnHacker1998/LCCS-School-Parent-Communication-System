@@ -2140,7 +2140,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult updateAnnouncement(string selectedStudents, string fileName, string update, HttpPostedFileBase file, updateAnnouncementViewModel avm)
+        public ActionResult updateAnnouncement(string fileName, string update, HttpPostedFileBase file, updateAnnouncementViewModel avm)
         {
             ApplicationDbContext db = new ApplicationDbContext();
             Announcement an = new Announcement();
@@ -2154,7 +2154,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             an = db.Announcement.Where(ax => ax.announcementID == avm.announcementID).FirstOrDefault();
             if (update != null)
             {
-                if (ModelState.IsValid)
+                if (ModelState.IsValid==true)
                 {
                     if ((file != null && file.ContentType == "application/pdf") || file == null)
                     { 
@@ -2167,6 +2167,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                         byte[] upload = new byte[length];
                         file.InputStream.Read(upload, 0, length);
                         an.announcementDocument = upload;
+                        an.filName = fileName;
+                         
 
                     }
                     an.updateStatus = 1;
