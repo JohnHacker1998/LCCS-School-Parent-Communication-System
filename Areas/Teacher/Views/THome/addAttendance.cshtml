@@ -16,7 +16,7 @@
 @if (ViewBag.showMessage == false)
 {
     <h1>@DateTime.Now.ToShortDateString()</h1>
-    using (Html.BeginForm("addAttendance", "THome", FormMethod.Post))
+    using(Html.BeginForm("addAttendance", "THome", FormMethod.Post))
     {
         <div class="container  mt-3">
             <div class="row ">
@@ -106,7 +106,19 @@
 
 
 
-    </div>
+ 
+
+}
+else
+{
+
+    <div class="list-group container">
+
+
+        <div class="container text-center">
+            <h4 class="border-2 border-bottom border-top">Attendance cannot be managed today.</h4>
+        </div>
+        </div>
 
 }
 <script>
