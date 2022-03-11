@@ -2,14 +2,12 @@
 @{
     ViewBag.Title = "unitLeaderManagement";
 }
-<script>
-    $(document).ready(function () {
-        $('#tblTeacherList').DataTable();
-        $('#tblUnitLeaderList').DataTable();
-    });
-</script>
-<div class="container mt-5 bg-light border-top border-bottom border-4 rounded-3">
-    <h1 class="border-bottom border-5 p-3 mb-4">Potential Candidates</h1>
+
+<div class="container mt-5 bg-white border-top border-bottom border-4 border-white rounded-3">
+    <div class="row title-button">
+        <span class="p-3 title col-md-10">Potential Candidates</span>
+    </div>
+    
     <div class="container mb-3 mt-3">
         <table class="table table-striped table-bordered" id="tblTeacherList">
             <thead>
@@ -17,7 +15,7 @@
                     <th scope="col">Full Name</th>
                     <th scope="col">Subject</th>
                     <th scope="col">Grade</th>
-                    <th scope="col"></th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,11 +25,13 @@
                         <td>@k.user.fullName</td>
                         <td>@k.subject</td>
                         <td>@k.grade</td>
-                        <td>
+                        <td class="text-center">
                             @using (Html.BeginForm("unitLeaderManagement", "ADHome", new { teacherID = @k.teacherId }, FormMethod.Post))
                             {
                                 @Html.AntiForgeryToken()
-                                <input type="submit" value="Assign" name="assign" class="btn btn-primary bg-green" />
+                                <button type="submit" value="Assign" name="assign" class="btn btn-assign rounded-circle border-1 border-success">
+                                    <i class="fa-solid fa-user-tag fa-lg text-success"></i>
+                                </button>
                             }
                         </td>
                     </tr>
@@ -43,8 +43,11 @@
     </div>
 
 
-<div class="container mt-5 bg-light border-top border-bottom border-4 rounded-3">
-    <h1 class="border-bottom border-5 p-3 mb-4">Unit Leaders List</h1>
+<div class="container mt-5 bg-white border-top border-bottom border-4 border-white rounded-3">
+    <div class="row title-button">
+        <span class="p-3 title col-md-10">Unit Leaders</span>
+    </div>
+    
     <div class="container mb-3 mt-3">
         <table class="table table-striped table-bordered" id="tblUnitLeaderList">
             <thead>
@@ -63,11 +66,11 @@
                         <td>@k.user.fullName</td>
                         <td>@k.subject</td>
                         <td>@k.grade</td>
-                        <td>
+                        <td class="text-center">
                             @using (Html.BeginForm("unitLeaderManagement", "ADHome", new { teacherID = @k.teacherId }, FormMethod.Post))
                             {
                                 @Html.AntiForgeryToken()
-                                <input type="submit" value="Delete" name="delete" class="btn btn-danger" />
+                                <button type="submit" value="Delete" name="delete" class="btn btn-delete rounded-circle border-1 border-danger"><i class="fa-solid fa-rotate-left fa-lg"></i></button>
                             }
                         </td>
 
@@ -77,7 +80,7 @@
 
         </table>
     </div>
-    </div>
+</div>
     @if (ViewBag.Message != " " && ViewBag.Message != null)
     {
         <div class="alert alert-danger" role="alert">
@@ -87,3 +90,10 @@
         </div>
 
     }
+<script>
+    $(document).ready(function () {
+        $('#tblTeacherList').DataTable({"scrollX": true});
+        $('#tblUnitLeaderList').DataTable({"scrollX": true});
+        $('body').find('.dataTables_scrollBody').addClass("scrollbar");
+    });
+</script>

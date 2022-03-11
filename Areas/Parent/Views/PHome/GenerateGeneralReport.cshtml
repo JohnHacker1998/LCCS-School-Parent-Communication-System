@@ -1,113 +1,128 @@
 ﻿@model LCCS_School_Parent_Communication_System.viewModels.ReportViewModel
 
-
-    <h1 class="bg-light p-3" >Result Report</h1>
-<div class="container mb-3">
-    <div class="row text-center border-bottom border-4">
-        <div class="col-7">
-            <h5>Subject</h5>
+    <div class="container mt-5 bg-white border-top border-bottom border-4 border-white rounded-3">
+        <div class="row title-button">
+            <span class="p-3 title col-md-10">Results</span>
         </div>
-        <div class="col-2">
-            <h5>Score</h5>
-        </div>
-    </div>
-    <div class="row text-center border-bottom">
-        @if (Model.subject.Count != 0)
-        {
-            <div class="col-7 align-bottom">
-                @foreach (var report in Model.subject)
+        <div class="container mb-3">
+            <div class="row text-center mt-2 border-bottom border-4">
+                <div class="col-7">
+                    <h5>Subject</h5>
+                </div>
+                <div class="col-2">
+                    <h5>Score</h5>
+                </div>
+            </div>
+            <div class="row text-center border-bottom">
+                @if (Model.subject.Count != 0)
                 {
-                    <h6 class="pt-2">@report</h6>
-                    
+                    <div class="col-7 align-bottom">
+                        @foreach (var report in Model.subject)
+                        {
+                            <h6 class="pt-2">@report</h6>
+
+                        }
+                    </div>
+                    <div class="col-1">
+                        @foreach (var report in Model.score)
+                        {
+                            <h6 class="text-end pt-2">@report</h6>
+
+                        }
+                    </div>
+                    <div class="col-1">
+                        @foreach (var report in Model.outOf)
+                        {
+                            <h6 class="text-start pt-2"><big>/</big>@report</h6>
+
+                        }
+                    </div>
+                }
+
+
+                else if (Model.subject.Count == 0)
+                {
+                    <p class="text-center">No Result Record Yet</p>
                 }
             </div>
-            <div class="col-1">
-                @foreach (var report in Model.score)
-                {
-                    <h6 class="text-end pt-2">@report</h6>
-                    
-                }
-            </div>
-            <div class="col-1">
-                @foreach (var report in Model.outOf)
-                {
-                    <h6 class="text-start pt-2"><big>/</big>@report</h6>
-                    
-                }
-            </div>
-        }
-
-
-        else if (Model.subject.Count == 0)
-        {
-        <p class="text-center">No Result Record Yet</p>
-        }
-    </div>
-</div>
-<h1 class="bg-light p-3">Presence Report</h1>
-<div class="container p-3">
-
-    <div class="row">
-        <div class="col-3">
-            <h5>Absent Days</h5>
-        </div>
-        <div class="col-3">
-            <h5>Reasonable Days</h5>
-        </div>
-        <div class="col-3">
-            <h5>Non-Reasonable Days</h5>
-        </div>
-        <div class="col-3">
-            <h5>Late Days</h5>
         </div>
     </div>
-    <div class="row text-start">
-        <div class="col-3">
-            <h2>@Model.absentDays</h2>
+
+
+    <div class="container mt-5 bg-white border-top border-bottom border-4 border-white rounded-3">
+        <div class="row title-button">
+            <span class="p-3 title col-md-10">Presence</span>
         </div>
-        <div class="col-3">
-            <h2>@Model.reasonable</h2>
-        </div>
-        <div class="col-3">
-            <h2>@Model.nonReasonable</h2>
-        </div>
-        <div class="col-3">
-            <h2>@Model.lateDays</h2>
+        <div class="container p-3">
+
+            <div class="row">
+                <div class="col-3 borde">
+                    <h5>Absent Days</h5>
+                </div>
+                <div class="col-3">
+                    <h5>Reasonable Days</h5>
+                </div>
+                <div class="col-3">
+                    <h5>Non-Reasonable Days</h5>
+                </div>
+                <div class="col-3">
+                    <h5>Late Days</h5>
+                </div>
+            </div>
+            <div class="row text-start">
+                <div class="col-3">
+                    <h2>@Model.absentDays</h2>
+                </div>
+                <div class="col-3">
+                    <h2>@Model.reasonable</h2>
+                </div>
+                <div class="col-3">
+                    <h2>@Model.nonReasonable</h2>
+                </div>
+                <div class="col-3">
+                    <h2>@Model.lateDays</h2>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-    <h1 class="bg-light p-3">Assesement Report</h1>
-    <div class="container p-3">
 
-        <div class="row">
-            <div class="col-3">
-                <h5>Total Assesement</h5>
-            </div>
-            <div class="col-3">
-                <h5>Complete Assesement</h5>
-            </div>
-            <div class="col-3">
-                <h5>Incomplete Assesement</h5>
-            </div>
-            <div class="col-3">
-                <h5>Reassesement</h5>
-            </div>
-        </div>
-        <div class="row text-start">
-            <div class="col-3">
-                <h2>@Model.totalAssesment</h2>
-            </div>
-            <div class="col-3">
-                <h2>@Model.completeAssesment</h2>
-            </div>
-            <div class="col-3">
-                <h2>@Model.incompleteAssesment</h2>
-            </div>
-            <div class="col-3">
-                <h2>@Model.reassesement</h2>
-            </div>
+    <div class="container mt-5 bg-white border-top border-bottom border-4 border-white rounded-3">
+        <div class="row title-button">
+            <span class="p-3 title col-md-10">Assesements</span>
         </div>
 
+        <div class="container p-3">
+
+            <div class="row">
+                <div class="col-3">
+                    <h5>Total Assesement</h5>
+                </div>
+                <div class="col-3">
+                    <h5>Complete Assesement</h5>
+                </div>
+                <div class="col-3">
+                    <h5>Incomplete Assesement</h5>
+                </div>
+                <div class="col-3">
+                    <h5>Reassesement</h5>
+                </div>
+            </div>
+            <div class="row text-start">
+                <div class="col-3">
+                    <h2>@Model.totalAssesment</h2>
+                </div>
+                <div class="col-3">
+                    <h2>@Model.completeAssesment</h2>
+                </div>
+                <div class="col-3">
+                    <h2>@Model.incompleteAssesment</h2>
+                </div>
+                <div class="col-3">
+                    <h2>@Model.reassesement</h2>
+                </div>
+            </div>
+
+        </div>
     </div>
   
     <style>

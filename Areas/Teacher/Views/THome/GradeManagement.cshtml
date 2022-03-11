@@ -66,43 +66,50 @@
 
 <script>
     $(document).ready(function () {
-        $('#myTable').DataTable();
+        $('#myTable').DataTable({"scrollX": true});
+        $('body').find('.dataTables_scrollBody').addClass("scrollbar");
     });
 </script>
 
-<div class="container bg-light border-top border-bottom border-4 rounded-3">
-    <h1 class="border-bottom border-5 p-3 mb-4">Students</h1>
-    <table class="table table-striped table-bordered" id="myTable">
-        <thead>
-            <tr>
-                <th scope="col">Student Name</th>
-                <th scope="col">Section</th>
-                <th scope="col">Academic Year</th>
-                <th scope="col" class="text-center">@*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSectionModal" data-url="@Url.Action("RegisterStudent")"><i class="fas fa-plus fa-lg"></i></button>*@</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var list in Model.student)
-            {
+<div class="container mt-5 bg-white border-top border-bottom border-4 border-white rounded-3">
+    <div class="row title-button">
+        <span class="p-3 title col-md-10">Students</span>
+    </div>
+
+    <div class="container mb-3 mt-3">
+        <table class="table table-striped table-bordered" id="myTable">
+            <thead>
                 <tr>
-                    <td>@list.fullName</td>
-                    <td>@list.sectionName</td>
-                    <td>@list.academicYearId</td>
-                    <td class="text-center">
-
-                        <button type="button" class="btn btn-primary" data-toggle="modalsession" data-target="#updateSectionModal" data-url="@Url.Action("AddGrade")" data-id="@list.studentId"><i class="fas fa-plus fa-lg"></i></button>
-                        <a class="btn btn-info" href="@Url.Action("UpdateResultManagement","THome",new { id = list.studentId })">
-                            <i class="fas fa-edit fa-lg text-white"></i>
-                        </a>
-                    </td>
+                    <th scope="col">Student Name</th>
+                    <th scope="col">Section</th>
+                    <th scope="col">Academic Year</th>
+                    <th scope="col">Action</th>
                 </tr>
-            }
-        </tbody>
-        <tfoot>
+            </thead>
+            <tbody>
+                @foreach (var list in Model.student)
+                {
+                    <tr>
+                        <td>@list.fullName</td>
+                        <td>@list.sectionName</td>
+                        <td>@list.academicYearId</td>
+                        <td class="text-center">
 
-        </tfoot>
+                            <button type="button" class="btn btn-add rounded-circle border-1 border-primary" data-toggle="modalsession" data-target="#updateSectionModal" data-url="@Url.Action("AddGrade")" data-id="@list.studentId"><i class="fas fa-plus fa-sm text-start px-2 text-primary"></i></button>
+                            <a class="btn btn-edit rounded-circle border-1 border-dark d-inline" href="@Url.Action("UpdateResultManagement","THome",new { id = list.studentId })">
+                                <i class="fas fa-edit fa-lg"></i>
+                            </a>
+                            
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
 
-    </table>
+            </tfoot>
+
+        </table>
+    </div>
 </div>
 
 <div class="modal" id="myModal" role="dialog" data-backdrop="static" tabindex="-1" data-url="@Url.Action("Register")"></div>

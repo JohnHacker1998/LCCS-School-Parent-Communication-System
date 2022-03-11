@@ -7,18 +7,15 @@
 
 
 
-<script>
-    $(document).ready(function () {
-        $('#tblAcademicYear').DataTable();
-    });
-</script>
 
-<div class="modal" id="myModal" role="dialog" data-backdrop="static" tabindex="-1" ></div>
+
+<div class="modal" id="myModal" role="dialog" data-backdrop="static" tabindex="-1"></div>
 
 
 <script type="text/javascript">
 
     $(document).ready(function () {
+    
         var view = $('#myModal');
         $('[data-toggle="modal"]').click(function () {
             var url = $(this).data('url');
@@ -54,7 +51,9 @@
         view.on('click', '[data-dismiss="modal"]', function (event) {
             view.modal('hide');
         });
-        view.on('hide.bs.modal', function () {            location.reload();        });
+        view.on('hide.bs.modal', function () {
+            location.reload();
+        });
 
 
         function ValidationForm() {
@@ -68,8 +67,12 @@
     });
 
 </script>
-<div class="container mt-5 bg-light border-top border-bottom border-4 rounded-3">
-    <h1 class="border-bottom border-5 p-3 mb-4">Academic Year</h1>
+<div class="container mt-5 bg-white border-top border-bottom border-4 border-white rounded-3">
+    <div class="row title-button">
+        <span class="p-3 title col-md-10">Academic Year</span>
+        <button type="button" class="btn btn-primary align-content-end register pe-4 my-4 mx-2 w-auto" data-toggle="modal" data-target="#AcademicYearViewModel" data-url="@Url.Action("registerAcademicYear")"><i class="fas fa-plus fa-sm text-start px-2"></i>Add</button>
+    </div>
+    
     <div class="container mb-3 mt-3">
         <table class="table table-striped table-bordered" id="tblAcademicYear">
             <thead>
@@ -85,7 +88,7 @@
                     <th scope="col">Q4 End</th>
                     <th scope="col">Year Start</th>
                     <th scope="col">Year End</th>
-                    <th scope="col"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AcademicYearViewModel" data-url="@Url.Action("registerAcademicYear")">Register</button></th>
+                    <th scope="col">Action</th>
 
                 </tr>
             </thead>
@@ -106,9 +109,9 @@
                         <td>@k.quarterFourEnd.ToShortDateString()</td>
                         <td>@k.durationStart.ToShortDateString()</td>
                         <td>@k.durationEnd.ToShortDateString()</td>
-                        <td>
+                        <td class="text-center">
 
-                            <button type="button" class="btn btn-primary" data-toggle="updateModal" data-target="#AcademicYearViewModel" data-url="@Url.Action("updateAcademicYear")" data-id="@k.academicYearName">Edit</button>
+                            <button type="button" class="btn btn-edit rounded-circle border-1 border-dark" data-toggle="updateModal" data-target="#AcademicYearViewModel" data-url="@Url.Action("updateAcademicYear")" data-id="@k.academicYearName"><i class="fas fa-edit fa-lg"></i></button>
                         </td>
 
                     </tr>
@@ -117,9 +120,73 @@
             </tbody>
         </table>
     </div>
-    </div>
+</div>
 
+<script>
+    $(document).ready(function () {
+        $('#tblAcademicYear').DataTable({"scrollX": true});
+        $('body').find('.dataTables_scrollBody').addClass("scrollbar");
+        //$('body').find('div.col-sm-12.col-md-6').removeClass("col-sm-12 col-md-6").addClass("col-sm-12 col-md-5");
 
+        @*var table = document.getElementById("tblAcademicYear_wrapper").firstChild;
+        const btn = document.createElement('button');
+        btn.setAttribute('type', 'button');
+        btn.setAttribute('class', 'btn btn-primary');
+        btn.setAttribute('data-toggle', 'modal');
+        btn.setAttribute('data-url', '@Url.Action("registerAcademicYear")');
+        btn.innerHTML = 'Register';
+        table.appendChild(btn);*@
+    });
+</script>
+
+<style>
+    .title {        
+        display: inline-block;
+        font-size: 2em;
+        font-weight: bold;
+    }
+
+    .register{
+        border-radius: 46px;
+        background-image: linear-gradient(to top, #00c6fb 0%, #005bea 100%);
+        font-size:18px;
+        text-align:left;
+    }
+    .title-button{
+        border-bottom: 5px solid #d01c37;
+    }
+    .scrollbar::-webkit-scrollbar {
+        height: 7px;
+        border-radius: 10px;
+        background-color: #f4f4f4;
+        -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3);
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+        background-color: #767676;
+    }
+
+    .table-striped {
+        padding-bottom: 3px;
+    }
+
+    .page-item.active .page-link {
+        background-color: #d01c37 !important;
+        border-color: #d01c37 !important;
+    }
+
+    table.dataTable.table-striped>tbody>tr.odd {
+    background-color:#fcf3f3;
+    }
+
+    .btn-edit:hover{
+        background-color:#6c757d;
+        color:white;
+        border-color:white !important;
+    }
+</style>
 
 
 

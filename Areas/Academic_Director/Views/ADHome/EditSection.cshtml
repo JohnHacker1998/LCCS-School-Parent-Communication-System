@@ -35,7 +35,7 @@
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(h => h.ID);
                     <div class="form-group">
-                        <select id="teachers" name="teachers" class="form-control">
+                        <select id="teachers" name="teachers" class="px-1 custom">
                             @foreach (var i in Model.teachers)
                             {
                                 <option value="@i">@i</option>
@@ -56,7 +56,7 @@
 </html>
 <style>
     .row, .row > * {
-        padding: 0 !important;
+        padding: 0;
         margin-right: 0 !important;
         margin-left: 0 !important;
     }

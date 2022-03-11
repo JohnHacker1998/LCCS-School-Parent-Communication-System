@@ -13,14 +13,19 @@
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />*@
 
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/fontawesome.min.css" integrity="sha512-8Vtie9oRR62i7vkmVUISvuwOeipGv8Jd+Sur/ORKDD5JiLgTGeBSkI3ISOhc730VGvA5VVQPwKIKlmi+zMZ71w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js" integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js" integrity="sha384-SlE991lGASHoBfWbelyBPLsUlwY1GwNDJo3jSJO04KZ33K2bwfV9YBauFfnzvynJ" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
 
 
     <link href="~/Areas/Registrar/css/main.css" rel="stylesheet" />
     <link href="~/Areas/Registrar/css/styles.css" rel="stylesheet" />
-    <link href="~/Areas/Registrar/css/styles.css" rel="stylesheet" />
 
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.13.0.min.js"></script>
     <script src="~/Scripts/jquery.validate.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
 
@@ -62,16 +67,17 @@
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-red bg-red">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="index.html">Registrar</a>
+        <a class="navbar-brand ps-3" href="index.html">
+            <img src="~/image/violet LCCS.jpg" width="110px" height="50px" />
+        </a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-sm order-1 order-lg-0 me-4 me-lg-0 bg-custom" id="sidebarToggle" href="#!"><i class="fas fa-bars text-white"></i></button>
         <!-- Navbar Search-->
-        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-        </form>
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"></form>
         <!-- Navbar-->
         <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
             <li class="nav-item dropdown">
-                <a id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw bg-custom"></i></a>
+                <a class="p-2 shadow rounded-pill" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw bg-custom"></i><span class="p-1 small">@User.Identity.Name</span></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item" href="#!">Profile</a></li>
                     <li><hr class="dropdown-divider" /></li>
@@ -86,24 +92,32 @@
             <nav class="sb-sidenav accordion sb-sidenav-red" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <a class="nav-link" href="@Url.Action("StudentManagement","RHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Student Management
+
+                        <h5 id="role" class="p-3">Registrar</h5>
+                        <a class="nav-link first" href="@Url.Action("StudentManagement","RHome")">
+                            <div class="sb-nav-link-icon col-1">
+                                <i class="fas fa-tachometer-alt fa-lg px-2"></i>
+                            </div>
+                            <div class="px-3">
+                                Student
+                            </div>
+
                         </a>
                         <a class="nav-link" href="@Url.Action("parentManagement","RHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Parent Management
+                            <div class="sb-nav-link-icon col-1">
+                                <i class="fas fa-tachometer-alt fa-lg px-2"></i>
+                            </div>
+                            <div class="px-3">
+                                Parent
+                            </div>
                         </a>
                     </div>
                 </div>
-                <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    @User.Identity.Name
-                </div>
+                
             </nav>
         </div>
         <div id="layoutSidenav_content">
-            <main class="customise">
+            <main class="customise p-4">
                 @RenderBody()
             </main>
         </div>
@@ -116,6 +130,94 @@
     <script src="js/datatables-simple-demo.js"></script>
 
     <script src="~/Areas/Registrar/js/scripts.js"></script>
+
+    <script>
+        $(function () {
+            "use strict";
+            var url = window.location + "";            
+            var path = url.replace(window.location.protocol + "//" + window.location.host + "/", "");
+            var element = $('.nav a').filter(function () {
+                return this.href === url || this.href === path; //|| url.href.indexOf(this.href) === 0;
+            });
+            console.log(element.parentsUntil(".sb-sidenav-menu"));
+            if (path == "Registrar/RHome/studentManagement") {
+                element = $('.nav a.first');
+                element.addClass("active-nav");
+            }
+            
+
+            element.parentsUntil(".sb-sidenav-menu").each(function (index) {
+                
+                if ($(this).is("a")) {
+                    $(this).addClass("active-nav");
+                    $(this).parent(".nav").length === 0
+                        ? $(this).addClass("active-nav")
+                        : $(this).addClass("selected");
+                }
+                else if ($(this).children("a").length === 0) {
+                    $(this).addClass("selected");
+
+                }
+                else {
+                    $(this).addClass('in');
+                }
+
+            });
+
+            element.addClass("active-nav");
+            $('.nav a').on('click', function (e) {
+
+                if (!$(this).hasClass("active-nav")) {
+                    // hide any open menus and remove all other classes
+                    $(".nav", $(this).parents(".nav:first")).removeClass("in");
+                    $("a", $(this).parents(".nav:first")).removeClass("active-nav");
+
+                    // open our new menu and add the open class
+                    $(this).next(".nav").addClass("in");
+                    $(this).addClass("active-nav");
+
+                }
+                else if ($(this).hasClass("active-nav")) {
+                    $(this).removeClass("active-nav");
+                    $(this).parents(".nav:first").removeClass("active-nav");
+                    $(this).next(".nav").removeClass("in");
+                }
+            })
+            $('.nav >a.has-arrow').on('click', function (e) {
+                e.preventDefault();
+            });
+        });
+    </script>
+    <style>
+        .active-nav {
+            color: #7f39c8 !important;
+            border-left: 5px solid #7f39c8;
+            background-color: #f4f0ff;
+            font-weight: bold;
+        }
+
+            .active-nav .sb-nav-link-icon {
+                color: #7f39c8 !important;
+                background-color: #f4f0ff;
+                font-weight: bold; /*#a57dfc*/
+            }
+
+        .fas .fa-solid {
+            font-weight: 900;
+        }
+
+        .customise {
+            background-color: #f4f0ff;
+        }
+
+        #layoutSidenav_content {
+            background-color: #f4f0ff;
+        }
+        #navbarDropdown{
+            text-decoration:none !important;
+            background-color:#883ed4; /*#8a3fd8*/ /*#883ed4*/
+        }
+    </style>
 </body>
 </html>
 

@@ -17,8 +17,10 @@
         <link href="~/Areas/Academic_Director/css/main.css" rel="stylesheet" />*@
 
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/fontawesome.min.css" integrity="sha512-8Vtie9oRR62i7vkmVUISvuwOeipGv8Jd+Sur/ORKDD5JiLgTGeBSkI3ISOhc730VGvA5VVQPwKIKlmi+zMZ71w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js" integrity="sha512-yFjZbTYRCJodnuyGlsKamNE/LlEaEAxSUDe5+u61mV8zzqJVFOH7TnULE2/PP/l5vKWpUNnF4VGVkXh3MjgLsg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js" integrity="sha384-SlE991lGASHoBfWbelyBPLsUlwY1GwNDJo3jSJO04KZ33K2bwfV9YBauFfnzvynJ" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
-
     <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
     <link href="~/Areas/Academic_Director/css/main.css" rel="stylesheet" />
     <link href="~/Areas/Academic_Director/css/styles.css" rel="stylesheet" />
@@ -65,22 +67,23 @@
         select.input-validation-error {
             border: 1px solid #CD0A0A;
         }
-       
-      
     </style>
 </head>
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-red bg-red">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="index.html">Academic Director</a>
+        <a class="navbar-brand ps-3" href="index.html">            
+            <img src="~/image/PSX_20220303_121338.jpg" width="110px" height="50px"/>
+        </a>
+
         <!-- Sidebar Toggle-->
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 bg-custom btn-close-white" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
         <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"></form>
         <!-- Navbar-->
         <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
             <li class="nav-item dropdown">
-                <a id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw bg-custom"></i></a>
+                <a class="p-2 shadow rounded-pill" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw bg-custom"></i><span class="p-1 small">@User.Identity.Name</span></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item" href="~/Account/profile">Profile</a></li>
                     <li><hr class="dropdown-divider" /></li>
@@ -96,36 +99,70 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
 
+                        <h5 id="role" class="p-3">Academic Director</h5>
+
                         <a class="nav-link" href="@Url.Action("manageAcademicYear","ADHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Academic Year Management
+                            <div class="sb-nav-link-icon col-1">
+                                <i class="fas fa-calendar-alt fa-lg px-2"></i>
+                            </div>
+                            <div class="px-3">
+                                Academic Year
+                            </div>
+                            
                         </a>
                         <a class="nav-link" href="@Url.Action("RegisterTeacher","ADHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Teacher Management
+                            <div class="sb-nav-link-icon col-1">
+                                <i class="fas fa-chalkboard-teacher fa-lg px-2"></i>
+                            </div>
+
+                            <div class="px-3">
+                                Teacher
+                            </div>
+                            
                         </a>
                         <a class="nav-link" href="@Url.Action("SectionManagement","ADHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Section Management
+                            <div class="sb-nav-link-icon col-1">
+                                <i class="fa-solid fa-sitemap fa-lg px-2"></i>
+                            </div>
+
+                            <div class="px-3">
+                                Section
+                            </div>
+                            
                         </a>
 
                         <a class="nav-link" href="@Url.Action("manageRegistrar","ADHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Registrar Management
+                            <div class="sb-nav-link-icon col-1">
+                                <i class="fa-solid fa-highlighter fa-lg px-2"></i>
+                            </div>
+
+                            <div class="px-3">
+                                Registrar
+                            </div>
                         </a>
 
 
                         <a class="nav-link" href="@Url.Action("unitLeaderManagement","ADHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Unit Leader Designation
+                            <div class="sb-nav-link-icon col-1"><i class="fa-solid fa-user-tie fa-lg px-2"></i></div>
+
+                            <div class="px-3">
+                                Unit Leader
+                            </div>
                         </a>
                         <a class="nav-link" href="@Url.Action("ScheduleManagement","ADHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Schedule Management
+                            <div class="sb-nav-link-icon col-1"><i class="fa-solid fa-clipboard-list fa-lg px-2"></i></div>
+
+                            <div class="px-3">
+                                Schedule
+                            </div>
+                            
                         </a>
                         <a class="nav-link" href="@Url.Action("announcementManagement","ADHome")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Announcement Management
+                            <div class="sb-nav-link-icon col-1"><i class="fa-solid fa-bullhorn fa-lg px-2"></i></div>
+                            
+                            <div class="px-3">
+                                Announcement
+                            </div>  
                         </a>
 
 
@@ -144,7 +181,7 @@
             </nav>
         </div>
         <div id="layoutSidenav_content">
-            <main class="customise">
+            <main class="customise p-4">
                 @RenderBody()
             </main>
         </div>
@@ -157,6 +194,84 @@
     <script src="js/datatables-simple-demo.js"></script>
 
     <script src="~/Areas/Academic_Director/js/scripts.js"></script>
+   <script>
+       $(function() {
+    "use strict";
+     var url = window.location + "";
+        var path = url.replace(window.location.protocol + "//" + window.location.host + "/", "");
+        var element = $('.nav a').filter(function() {
+            return this.href === url || this.href === path;// || url.href.indexOf(this.href) === 0;
+        });
+        element.parentsUntil(".sb-sidenav-menu").each(function (index)
+        {
+            if($(this).is("a"))
+            {
+                $(this).addClass("active-nav");
+                $(this).parent(".nav").length === 0
+                    ? $(this).addClass("active-nav")
+                    : $(this).addClass("selected");
+            }
+            else if($(this).children("a").length === 0)
+            {
+                $(this).addClass("selected");
+                
+            }
+            else{
+                $(this).addClass('in');
+            }
+            
+        });
+
+    element.addClass("active-nav"); 
+    $('.nav a').on('click', function (e) {
+        
+            if (!$(this).hasClass("active-nav")) {
+                // hide any open menus and remove all other classes
+                $(".nav", $(this).parents(".nav:first")).removeClass("in");
+                $("a", $(this).parents(".nav:first")).removeClass("active-nav");
+                
+                // open our new menu and add the open class
+                $(this).next(".nav").addClass("in");
+                $(this).addClass("active-nav");
+                
+            }
+            else if ($(this).hasClass("active-nav")) {
+                $(this).removeClass("active-nav");
+                $(this).parents(".nav:first").removeClass("active-nav");
+                $(this).next(".nav").removeClass("in");
+            }
+    })
+    $('.nav >a.has-arrow').on('click', function (e) {
+        e.preventDefault();
+    });
+    });
+   </script>
+    <style>
+        .active-nav{
+            color: #d01c37 !important;
+            border-left: 5px solid #d01c37;
+            background-color: #fcf3f3;
+            font-weight: bold;
+        }
+        .active-nav .sb-nav-link-icon{
+            color: #d01c37 !important;
+            background-color: #fcf3f3;
+            font-weight: bold;
+        }
+        .fas .fa-solid{
+            font-weight:900;
+        }
+        .customise{
+            background-color:#fcf3f3;
+        }
+        #layoutSidenav_content{
+            background-color:#fcf3f3;
+        }
+        #navbarDropdown{
+            text-decoration:none !important;
+            background-color:#f8473b; /*#44baa3*/ /*#883ed4*/
+        }
+    </style>
     
 </body>
 </html>
