@@ -14,18 +14,12 @@
     });
 </script>
 
-<html>
-<head>
-
-
-</head>
-<body>
 
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-red">
                 <h4 class="modal-title text-white" id="title">Register Academic Year</h4>
-                <button type="button" id="exit" class="close btn bg-red" data-dismiss="modal">
+                <button type="button" id="exit" class="close btn" data-dismiss="modal">
                     <span aria-hidden="true" class="text-white">&times;</span>
                 </button>
             </div>
@@ -116,7 +110,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="save" data-save="modal">Register</button>
+                <button type="button" class="btn btn-outline-primary" id="save" data-save="modal">Register</button>
             </div>
         </div>
     </div>
@@ -128,6 +122,9 @@
         padding: 0;
         margin-right: 0 !important;
         margin-left: 0 !important;
+    }
+    .close{
+        background-color:#ea4236;
     }
 </style>
 

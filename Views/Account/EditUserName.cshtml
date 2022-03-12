@@ -8,7 +8,7 @@
 
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header bg-secondary">
+            <div class="modal-header bg-red">
                 <h4 class="modal-title text-white" id="title">Change UserName</h4>
                 <button type="button" id="exit" class="close btn bg-red" data-dismiss="modal">
                     <span aria-hidden="true" class="text-white">&times;</span>
@@ -39,7 +39,7 @@
                     @Html.AntiForgeryToken()
                     <div class="form-group">
                         @Html.LabelFor(l => l.userName, new { @class = "form-label mt-2" })
-                        <div class="container row">@Html.EditorFor(e => e.userName, new { @class = "form-control" })</div>
+                        <div class="container row">@Html.EditorFor(e => e.userName, new {  htmlAttributes = new { @class = "px-1 custom" } })</div>
                         <div class="container row">@Html.ValidationMessageFor(v => v.userName, null, new { @class = "text-danger" })</div>
 
                         @*@Html.LabelFor(l => l.userName)
@@ -50,7 +50,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="save" data-save="modal">Change</button>
+                <button type="button" class="btn btn-outline-primary" id="save" data-save="modal">Change</button>
             </div>
         </div>
     </div>
@@ -61,7 +61,7 @@
 
 <style>
     .row, .row > * {
-        padding: 0 !important;
+        padding: 0;
         margin-right: 0 !important;
         margin-left: 0 !important;
     }

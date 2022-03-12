@@ -5,8 +5,8 @@
 
 
 <style>
-    .container {
-        width: 65%;
+    .header{
+        box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
     }
 </style>
 
@@ -28,87 +28,98 @@
 </script>
 
    
-<div class="container mb-3 mt-3 bg-light border-top border-bottom-0 border-4 rounded-3 ">
-    <h1 class="border-bottom border-5 p-3 mb-4">Update Assignment</h1>
-    @using (Html.BeginForm("updateAssignment", "THome", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+<div class="container mt-5 bg-white border-top border-bottom border-4 border-white rounded-3 ">
+    <div class="row bg-red header">
+        <span class="p-3 title text-white col-md-10">Update Assignment</span>
+    </div>
+
+    @using (Html.BeginForm("updateAssignment", "THome", FormMethod.Post, new { @enctype = "multipart/form-data", id = "form", autocomplete = "off" }))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(a => a.assignmentID)
-        <div class="row mt-3">
-            <div class="col-lg-4">
+        <div class="mt-4">
+            <div class="row col-12 ps-sm-2 ps-md-5">
                 @Html.LabelFor(a => a.assignmentName, new { htmlAttributes = new { @class = "form-control" } })
             </div>
-            <div class="col-lg-8">
-                <div class="row"> @Html.EditorFor(a => a.assignmentName, new { htmlAttributes = new { @class = "form-control" } })</div>
+            <div class="row col-sm-9 col-md-8 ps-sm-2 ps-md-5">
+                <div class="row"> @Html.EditorFor(a => a.assignmentName, new { htmlAttributes = new { @class = "form-control p-1" } })</div>
                 <div class="row">@Html.ValidationMessageFor(a => a.assignmentName, null, new { @class = "text-danger" })</div>
             </div>
         </div>
-        <div class="row  mt-3">
-            <div class="col-lg-4 ">
+        <div class="mt-2">
+            <div class="row col-12 ps-sm-2 ps-md-5">
                 @Html.LabelFor(a => a.markPercentage)
             </div>
-            <div class="col-lg-8 ">
+            <div class="row col-sm-9 col-md-8 ps-sm-2 ps-md-5">
                 <div class="row">
-                    @Html.EditorFor(a => a.markPercentage, new { htmlAttributes = new { @min = 1, @max = 100, @class = "form-control" } })
+                    @Html.EditorFor(a => a.markPercentage, new { htmlAttributes = new { @min = 1, @max = 100, @class = "form-control p-1" } })
                     <div class="row">@Html.ValidationMessageFor(a => a.markPercentage, null, new { @class = "text-danger" })</div>
                 </div>
             </div>
         </div>
 
 
-        <div class="row mt-3">
-            <div class="col-lg-4 ">
+        <div class="mt-2">
+            <div class="row col-12 ps-sm-2 ps-md-5">
                 @Html.LabelFor(a => a.submissionDate)
             </div>
-            <div class="col-lg-8">
-                <div class="row"> @Html.EditorFor(a => a.submissionDate, new { htmlAttributes = new { @class = "datepicker form-control" } })</div>
+            <div class="row col-sm-9 col-md-8 ps-sm-2 ps-md-5">
+                <div class="row"> @Html.EditorFor(a => a.submissionDate, new { htmlAttributes = new { @class = "datepicker form-control p-1" } })</div>
                 <div class="row">@Html.ValidationMessageFor(a => a.submissionDate, null, new { @class = "text-danger" })</div>
             </div>
 
         </div>
-        <div class="row mt-3">
-            <div class="col-lg-4 ">
+        <div class="mt-2">
+            <div class="row col-12 ps-sm-2 ps-md-5">
                 @Html.LabelFor(a => a.assignmentDocument)
             </div>
-            <div class="col-lg-8">
+            <div class="row col-sm-9 col-md-8 ps-sm-2 ps-md-5">
                 <div class="row">
-                    <input type="file" name="file" class="form-control" />
+                    <input type="file" name="file" class="form-control p-1" />
                 </div>
             </div>
         </div>
 
-        <div class="row mt-5">
-            <div class="col-12"> <div class="row py-2"><input type="submit" name="update" value="UPDATE" class="btn btn-primary" /></div></div>
+        <div class="row mt-4 mb-2 ps-sm-2 ps-md-5">
+            <div class=" col-sm-3 col-md-3">
+                <div class="row py-2">
+                    <button id="sulu" type="submit" name="update" value="Update" class="btn btn-outline-primary py-1 w-50">
+                        <span id="spin" class=" spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Update
+                    </button>
+                </div>
+            </div>
         </div>
+
         <input type="text" name="fileName" id="filName" style="display:none" />
 
 
     }
 
-    @if (ViewBag.OutOfPercentage != " " && ViewBag.OutOfPercentage != null)
+    @if (ViewBag.OutOfPercentage != null)
     {
-        <div class="alert alert-danger">
+        <div id="alert" class="alert alert-danger">
 
             @ViewBag.OutOfPercentage
         </div>
     }
-    @if (ViewBag.tudayerror != " " && ViewBag.tudayerror != null)
+    @if (ViewBag.tudayerror != null)
     {
-        <div class="alert alert-danger">
+        <div id="alert" class="alert alert-danger">
 
             @ViewBag.tudayerror
         </div>
     }
-    @if (ViewBag.AlreadyExists != " " && ViewBag.AlreadyExists != null)
+    @if (ViewBag.AlreadyExists != null)
     {
-        <div class="alert alert-danger">
+        <div id="alert" class="alert alert-danger">
 
             @ViewBag.AlreadyExists
         </div>
     }
-    @if (ViewBag.incorrectFIleType != " " && ViewBag.incorrectFIleType != null)
+    @if (ViewBag.incorrectFIleType != null)
     {
-        <div class="alert alert-danger">
+        <div id="alert" class="alert alert-danger">
 
             @ViewBag.incorrectFIleType
         </div>
@@ -116,3 +127,45 @@
 
 
 </div>
+
+<style>
+    .row, .row > * {
+        padding: 0;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+
+        var spin = document.getElementById("spin");
+        var message = document.getElementById("alert");
+
+        $('#sulu').click(function () {
+            if (ValidationForm()) {
+                spin.classList.add("spinner-border");
+                message.classList.add("d-none");
+            }
+            else {
+                message.classList.add("d-none");
+            }
+
+        });
+
+
+        function ValidationForm() {
+            if ($("#form").valid()) {
+                return true;
+            }
+            else {
+
+                return false;
+
+            }
+        }
+
+
+
+    });
+</script>

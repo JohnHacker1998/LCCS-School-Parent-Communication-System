@@ -628,6 +628,7 @@
     <Content Include="Content\v4-shims.min.css" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
+    <Content Include="image\dark_blue LCCS.jpg" />
     <Content Include="image\LCCS_Green.jpg" />
     <Content Include="image\LCCS_Green2.jpg" />
     <Content Include="image\PSX_20220303_121338.jpg" />

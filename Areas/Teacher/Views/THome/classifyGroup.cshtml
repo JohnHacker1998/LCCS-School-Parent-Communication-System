@@ -17,67 +17,47 @@
     });
 </script>
 
+<style>
+
+    .header {
+        box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+    }
+</style>
    
-<div class="container bg-light border-top border-bottom-0 border-4 rounded-3 ">
-    <h1 class="border-bottom border-5 p-3 mb-4">Classify Group</h1>
-    @if (ViewBag.successMessage != " " && ViewBag.successMessage != null)
-    {
-        <div class="alert alert-success">
-            @ViewBag.successMessage
-        </div>
-    }
-    @if (ViewBag.ErrorExists != " " && ViewBag.ErrorExists != null)
-    {
-        <div class="alert alert-danger">
-
-            @ViewBag.ErrorExists
-        </div>
-    }
-    @if (ViewBag.ErrorMembers != " " && ViewBag.ErrorMembers != null)
-    {
-        <div class="alert alert-danger">
-
-            @ViewBag.ErrorMembers
-        </div>
-    }
-    @if (ViewBag.ErrorExists2 != " " && ViewBag.ErrorExists2 != null)
-    {
-        <div class="alert alert-danger">
-
-            @ViewBag.ErrorExists2
-        </div>
-    }
-    <div class="bg-danger invDan" style="display:none">
-        Please select within the range of values.
+<div class="container mt-5 bg-white border-top border-bottom border-4 border-white rounded-3">
+    <div class="row bg-red header">
+        <span class="p-3 title text-white col-md-10">Classify Group</span>
     </div>
-    @using (Html.BeginForm("classifyGroup", "THome", FormMethod.Post))
+
+
+    @using (Html.BeginForm("classifyGroup", "THome", FormMethod.Post, new { id = "form", autocomplete = "off" }))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(a => a.groupStructureID);
 
-        <div class="row mt-3">
-            <div class="col-lg-4">
+        <div class="mt-4">
+            <div class="row col-12 ps-sm-2 ps-md-5">
                 @Html.LabelFor(a => a.minMembers, new { htmlAttributes = new { @class = "form-control" } })
             </div>
-            <div class="col-lg-8">
-                <div class="row">@Html.EditorFor(a => a.minMembers, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
+            <div class="row col-sm-9 col-md-8 ps-sm-2 ps-md-5">
+                <div class="row">@Html.EditorFor(a => a.minMembers, new { htmlAttributes = new { @readonly = true, @class = "form-control p-1" } })</div>
             </div>
         </div>
 
-        <div class="row mt-3">
-            <div class="col-lg-4">
-                @Html.LabelFor(a => a.maxMembers, new { htmlAttributes = new { @class = "form-control" } })
+        <div class="mt-2">
+            <div class="row col-12 ps-sm-2 ps-md-5">
+                @Html.LabelFor(a => a.minMembers, new { htmlAttributes = new { @class = "form-control" } })
             </div>
-            <div class="col-lg-8">
-                <div class="row">@Html.EditorFor(a => a.maxMembers, new { htmlAttributes = new { @readonly = true, @class = "form-control" } })</div>
+            <div class="row col-sm-9 col-md-8 ps-sm-2 ps-md-5">
+                <div class="row">@Html.EditorFor(a => a.maxMembers, new { htmlAttributes = new { @readonly = true, @class = "form-control p-1" } })</div>
             </div>
         </div>
 
-        <div class="row mt-3">
-            <div class="col-lg-4">
+        <div class="mt-2">
+            <div class="row col-12 ps-sm-2 ps-md-5">
                 @Html.LabelFor(a => a.studentList, new { htmlAttributes = new { @class = "form-control" } })
             </div>
-            <div class="col-lg-8">
+            <div class="row col-sm-9 col-md-8 ps-sm-2 ps-md-5">
                 <div class="row">
                     <select multiple id="cg" class="selectpicker form-control" data-live-search="true">
                         @foreach (var k in Model.studentList)
@@ -89,38 +69,72 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-3">
-            <div class="col-lg-4">
+        <div class="mt-2">
+            <div class="row col-12 ps-sm-2 ps-md-5">
                 @Html.LabelFor(a => a.groupName, new { htmlAttributes = new { @class = "form-control" } })
             </div>
-            <div class="col-lg-8">
-                <div class="row">@Html.EditorFor(a => a.groupName, new { htmlAttributes = new { @class = "form-control" } })</div>
+            <div class="row col-sm-9 col-md-8 ps-sm-2 ps-md-5">
+                <div class="row">@Html.EditorFor(a => a.groupName, new { htmlAttributes = new { @class = "form-control p-1" } })</div>
                 <div class="row">@Html.ValidationMessageFor(a => a.groupName, null, new { @class = "text-danger" })</div>
 
             </div>
         </div>
 
-        <div class="row mt-5">
-            <div class="col-12"> <div class="row py-2"><input type="submit" name="add" value="Submit" id="sulu" class="btn btn-primary"></div></div>
+        
+        <div class="row mt-4 mb-2 ps-sm-2 ps-md-5">
+            <div class=" col-sm-3 col-md-3">
+                <div class="row py-2">
+                    <button id="sulu" type="submit" name="add" value="Submit" class="btn btn-outline-primary py-1 w-50">
+                        <span id="spin" class=" spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Submit
+                    </button>
+                </div>
+            </div>
         </div>
-
 
         <input type="text" id="txtValue" name="txtValue" style="display:none" />
         if (ViewBag.enableMultiGroup == true)
         {
-            <div class="row mt-2">
-                <div class="col-12">
-                    <div class="row py-2">
-                        <input type="submit" name="btnSubmitGrouping" value="Submit Grouping" class="btn btn-primary" id="btnSubmitGrouping1" />
-                    </div>
-                </div>
-            </div>
+<div class="container mt-4 mb-2 ps-sm-2 ps-md-5 d-flex align-content-between rounded-pill finish w-50">
+    
+    <button id="btnSubmitGrouping1" type="submit" name="btnSubmitGrouping" value="Submit Grouping" class="btn btn-outline-secondary py-1 w-auto">
+        <span id="spin1" class=" spinner-border-sm" role="status" aria-hidden="true"></span>
+        Finish Grouping
+    </button>
+</div>
         }
-        else
-        {
-            <input type="submit" name="btnSubmitGrouping" value="Submit Grouping" class="btn btn-primary" id="btnSubmitGrouping1" style="display:none" />
-        }
+        
     }
+    @if (ViewBag.successMessage != null)
+    {
+        <div id="alert" class="alert alert-success">
+            @ViewBag.successMessage
+        </div>
+    }
+    @if (ViewBag.ErrorExists != null)
+    {
+        <div id="alert" class="alert alert-danger">
+
+            @ViewBag.ErrorExists
+        </div>
+    }
+    @if (ViewBag.ErrorMembers != null)
+    {
+        <div id="alert" class="alert alert-danger">
+
+            @ViewBag.ErrorMembers
+        </div>
+    }
+    @if (ViewBag.ErrorExists2 != null)
+    {
+        <div id="alert" class="alert alert-danger">
+
+            @ViewBag.ErrorExists2
+        </div>
+    }
+    <div class="bg-danger invDan" style="display:none">
+        Please select within the range of values.
+    </div>
 </div>
 
 
@@ -220,9 +234,59 @@
 
 
         });
+
+        var spin = document.getElementById("spin");
+        var spin = document.getElementById("spin1");
+        var message = document.getElementById("alert");
+        
+        $('#sulu').click(function () {
+            if (ValidationForm()) {
+                spin.classList.add("spinner-border");
+                message.classList.add("d-none");
+            }
+            else {
+                message.classList.add("d-none");
+            }
+           
+        });
+
+        $('#btnSubmitGrouping1').click(function () {
+            if (ValidationForm()) {
+                spin1.classList.add("spinner-border");
+                message.classList.add("d-none");
+            }
+            else {
+                message.classList.add("d-none");
+            }
+           
+        });
+        
+
+        function ValidationForm() {
+            if ($("#form").valid()) {
+                return true;
+            }
+            else {
+
+                return false;
+               
+            }
+        }
+
             });
 
 
 
     </script>
 
+    <style>
+        .row, .row > * {
+            padding: 0;
+            margin-right: 0 !important;
+            margin-left: 0 !important;
+        }
+
+        .finish{
+
+        }
+    </style>

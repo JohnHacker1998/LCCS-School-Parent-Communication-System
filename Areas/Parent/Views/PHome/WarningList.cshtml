@@ -5,36 +5,61 @@
 }
 
 
-@foreach (var list in Model)
-{
+    <div class="container mt-5 bg-white border-bottom border-white border-4 rounded-3">
+        <div class="row title-button">
+            <span class="p-2 title col-md-10">Warning</span>
+        </div>
+        @if (Model.Count() > 0)
+        {
+            foreach (var list in Model)
+            {
 
-    <div class="btn-group w-50 ">
-        <a href="/Parent/PHome/ViewWarning/@list.warningId" class="list-group-item list-group-item-action">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">@list.warningType Warning</h5>
-                <small>@list.warningDate.ToShortDateString()</small>
-            </div>
-            @{
-                string[] yearQuarter = list.academicYear.Split('-');
-                if (yearQuarter[1] == "Q1")
-                {
-                    <p class="mb-1">Grade @list.grade-Quarter1</p>
-                }
-                else if (yearQuarter[1] == "Q2")
-                {
-                    <p class="mb-1">Grade @list.grade-Quarter2</p>
-                }
-                else if (yearQuarter[1] == "Q3")
-                {
-                    <p class="mb-1">Grade @list.grade-Quarter3</p>
-                }
-                else if (yearQuarter[1] == "Q4")
-                {
-                    <p class="mb-1">Grade @list.grade-Quarter4</p>
-                }
+                <div class="btn-group w-100 shadow mt-1 mb-2 ">
+                    <a href="/Parent/PHome/ViewWarning/@list.warningId" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            @if (@list.warningType == "Atendance")
+                            {
+                                <h5 class="mb-1">Attendance Warning</h5>
+                            }
+                            else
+                            {
+                                <h5 class="mb-1">@list.warningType Warning</h5>
+                            }
+
+                            <small>@list.warningDate.ToShortDateString()</small>
+                        </div>
+                        @{
+                            string[] yearQuarter = list.academicYear.Split('-');
+                            if (yearQuarter[1] == "Q1")
+                            {
+                                <p class="mb-1">Grade @list.grade-Quarter1</p>
+                            }
+                            else if (yearQuarter[1] == "Q2")
+                            {
+                                <p class="mb-1">Grade @list.grade-Quarter2</p>
+                            }
+                            else if (yearQuarter[1] == "Q3")
+                            {
+                                <p class="mb-1">Grade @list.grade-Quarter3</p>
+                            }
+                            else if (yearQuarter[1] == "Q4")
+                            {
+                                <p class="mb-1">Grade @list.grade-Quarter4</p>
+                            }
+                        }
+                    </a>
+                </div>
             }
-        </a>
+        }
+        else
+        {
+            <div class="row py-2" style="color:gray"><h5 style="text-align:center">There is no warning</h5></div>
+        }
     </div>
-}
 
-
+    <style>
+        .title-button {
+            border-top: 4px solid #00008b;
+            border-radius: 5px 5px 0px 0px;
+        }
+    </style>

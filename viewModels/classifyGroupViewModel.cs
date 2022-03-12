@@ -12,13 +12,13 @@ namespace LCCS_School_Parent_Communication_System.viewModels
         [Required(ErrorMessage = "Group Name is required.")]
         [Display(Name = "Group Name")]
         public string groupName { get; set; }
-        [Display(Name = "Minimum Number of Group Members")]
+        [Display(Name = "Minimum Members")]
         public int minMembers { get; set; }
-        [Display(Name = "Maximum Number of Group Members")]
+        [Display(Name = "Maximum Members")]
         public int maxMembers { get; set; }
         
         public int groupStructureID { get; set; }
-        [Display(Name = "StudentList")]
+        [Display(Name = "Student List")]
         public List<Student> studentList { get; set; }
 
         public List<StudentGroupList> groupMembers { get; set; }

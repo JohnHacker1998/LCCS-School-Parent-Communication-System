@@ -18,13 +18,13 @@ namespace LCCS_School_Parent_Communication_System.viewModels
         [Display(Name = "Structure Name")]
         public string groupStructureName { get; set; }
         [Required(ErrorMessage = "Minimum Number of Members is required.")]
-        [Display(Name = "Minimum Member Number")]
+        [Display(Name = "Minimum Members")]
 
         [Range(2,100,
         ErrorMessage = "Value for {0} must be greater than {1}.")]
         public int minNumberOfMembers { get; set; }
         [Required(ErrorMessage = "Maximum Number of Members is required.")]
-        [Display(Name = "Maximum Member Number")]
+        [Display(Name = "Maximum Members")]
         [Range(2, 100,
         ErrorMessage = "Value for {0} must be greater than {1}.")]
         public int maxNumberOfMembers { get; set; }

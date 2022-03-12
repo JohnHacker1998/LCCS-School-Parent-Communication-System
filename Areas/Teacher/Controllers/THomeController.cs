@@ -129,17 +129,6 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
 
             List<Section> s = new List<Section>();
-
-
-            ViewBag.selectedType = " ";
-            ViewBag.selectedSection = " ";
-            ViewBag.successfulMessage = " ";
-            ViewBag.failedMessage = " ";
-            ViewBag.doesntFulfillMessage = " ";
-            ViewBag.assignmentExists = " ";
-            ViewBag.tudayerror = " ";
-            ViewBag.sectionnull = " ";
-            ViewBag.incorrectFIleType = " ";
             int currentSectionID = 0;
             string currentTeacherID = User.Identity.GetUserId();
 
@@ -410,10 +399,6 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             HomeroomTeacherMethod ht = new HomeroomTeacherMethod();
             assignmentViewModel avm2 = new assignmentViewModel();
             Assignment ass = new Assignment();
-            ViewBag.OutOfPercentage = " ";
-            ViewBag.tudayerror = " ";
-            ViewBag.AlreadyExists = " ";
-            ViewBag.incorrectFIleType = " ";
             avm2.listAssignment = new List<Assignment>();
             Models.Teacher t = new Models.Teacher();
             t = db.Teacher.Where(ax => ax.teacherId == teacherID).FirstOrDefault();
@@ -746,8 +731,6 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             List<Section> sec = new List<Section>();
             GroupStructure gs = new GroupStructure();
             gvm.groupList = new List<GroupStructure>();
-            ViewBag.existsMessage = " ";
-            ViewBag.maximumMembers = " ";
             string extractedAcademicYear = gvm.academicQuarter.Substring(0, gvm.academicQuarter.IndexOf('-'));
 
            
@@ -866,11 +849,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         {
             ApplicationDbContext db = new ApplicationDbContext();
             Models.Teacher t = new Models.Teacher();
-            ViewBag.ErrorMembers = " ";
-            ViewBag.successMessage = " ";
-            ViewBag.ErrorExists = " ";
             ViewBag.enableMultiGroup = false;
-            ViewBag.ErrorExists2 = " ";
             Group addableGroup = new Group();
             gvm.groupList = new List<Group>();
             gvm.groupMembers = new List<StudentGroupList>();

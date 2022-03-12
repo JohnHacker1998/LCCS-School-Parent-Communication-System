@@ -95,6 +95,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
                         else
                         {
                             //delete the created user record
+                            var revert1 = context.Teacher.Find(Id);
+                            context.Teacher.Remove(revert1);
                             var revert = context.Users.Find(Id);
                             context.Users.Remove(revert);
                             int result = 0;
@@ -1841,7 +1843,6 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             ApplicationDbContext db = new ApplicationDbContext();
             Announcement ans = new Announcement();
             gradeAnnouncement gans = new gradeAnnouncement();
-            ViewBag.existsMessage = "";
             avm.sectionList = new List<Section>();
             avm.studentList = new List<Student>();
             avm.gradeList = new List<gradeViewModel>();
@@ -1850,7 +1851,6 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             announcementViewModel avm2 = new announcementViewModel();
             avm2.gradeList = new List<gradeViewModel>();
             avm2.announcementList = new List<Announcement>();
-            ViewBag.incorrectFileFormat = " ";
             if (add != null)
             {
                 if (ModelState.IsValid)
@@ -2025,8 +2025,6 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             announcementViewModel avm2 = new announcementViewModel();
             avm2.gradeList= new List<gradeViewModel>();
             avm2.announcementList = new List<Announcement>();
-            ViewBag.existsMessage = "";
-            ViewBag.incorrectFileFormat=" ";
             if (add != null)
             {
                 if (ModelState.IsValid)
@@ -2149,8 +2147,6 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             announcementViewModel avm2 = new announcementViewModel();
             avm2.gradeList = new List<gradeViewModel>();
             avm2.announcementList = new List<Announcement>();
-            ViewBag.errorMessage = " ";
-            ViewBag.incorrectFileFormat = " ";
             an = db.Announcement.Where(ax => ax.announcementID == avm.announcementID).FirstOrDefault();
             if (update != null)
             {
@@ -2420,8 +2416,6 @@ namespace LCCS_School_Parent_Communication_System.Areas.Academic_Director.Contro
             fvm.gradeList = new List<gradeViewModel>();
             fvm.announcementList = new List<Announcement>();
             Announcement ann = new Announcement();
-            ViewBag.ErrorMessage = " ";
-            ViewBag.incorrectFileFormat = " ";
             announcementViewModel avm2 = new announcementViewModel();
             avm2.gradeList = new List<gradeViewModel>();
             avm2.announcementList = new List<Announcement>();

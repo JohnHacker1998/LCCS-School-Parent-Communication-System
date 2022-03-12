@@ -5,16 +5,21 @@
 
 
 <style>
-    .rowx {
-        padding-bottom: 12%
+    .title-button {
+        border-top: 4px solid #00008b;
+        border-radius: 5px 5px 0px 0px;
     }
 </style>
 
 
 
-<div class="container">
-    <div class="row"><div class="col-12 bg-light border-bottom border-top border-4 mb-2"><h2>Announcement Details</h2></div></div>
-    <div class="row gx-4">
+
+<div class="container mt-5 bg-white border-top border-bottom border-4 border-white rounded-3r">
+    <div class="row title-button">
+        <span class="p-2 title col-md-10">Details</span>
+    </div>
+    
+    <div class="row p-4">
         <div class="col-md-4">
             <div class="row">
                 <table class="table">
@@ -37,7 +42,10 @@
                 </table>
             </div>
         </div>
-        <div class="col-md-8 ml-md-3">
+        <div class="col-1">
+
+        </div>
+        <div class="col-md-7 ml-md-3">
             @{
                 var base1 = Convert.ToBase64String(Model.announcementDocument);
                 var src = string.Format("data:application/pdf;base64,{0}", base1);

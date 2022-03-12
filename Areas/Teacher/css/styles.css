@@ -12410,7 +12410,7 @@ body {
 }
 
 .title-button {
-    border-bottom: 5px solid #40b09a;
+    border-bottom: 4px solid #40b09a;
 }
 
 .scrollbar::-webkit-scrollbar {
@@ -12498,4 +12498,11 @@ table.dataTable.table-striped > tbody > tr.odd {
 
 .clock:hover{
     border-color:white !important;
+}
+
+.custom {
+    width: 100%;
+    color: #212529;
+    border: 1px solid #83898f;
+    border-radius: 4px;
 }

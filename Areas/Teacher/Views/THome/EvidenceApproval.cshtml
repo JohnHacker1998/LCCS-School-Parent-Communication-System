@@ -3,8 +3,45 @@
 
 }    
 
-    <div class="container vh-100">
-        <div class="col-12 w-100 text-center">
+<style>
+    .header{
+        box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+    }
+</style>
+<div class="container mt-5 bg-white border-top border-bottom border-4 border-white rounded-3">
+    <div class="row bg-red header">
+        <span class="p-3 title text-white col-md-10">Evidence Approval</span>
+    </div>
+    @using (Html.BeginForm("EvidenceApproval", "THome", FormMethod.Post))
+    {
+        if (ViewBag.view)
+        {
+            <div class="mt-4">
+                <div class="row col-12 ps-sm-2 ps-md-5">
+                    Absent Dates
+                </div>
+
+                <div class=" row col-sm-9 col-md-8 ps-sm-2 ps-md-5">
+                    <div class="row">
+                        @Html.HiddenFor(h => h.Id)
+                        @Html.ListBoxFor(l => l.days, new SelectList(Model.days), new { @id = "days", @class = "w-100 selectpicker", @data_live_search = "true", @data_actions_box = "true" })
+                    </div>
+                    <div class="row mt-4 mb-2">
+                        <div class="col-sm-3 col-md-3">
+                            <div class="row py-2">
+                                <button id="holder" type="submit" name="approve" class="btn btn-outline-primary py-1 w-50">
+                                    <span id="spin" class=" spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    Approve
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+    }
+    @*<div class="col-12 w-100 text-center mt-4">
             @if (ViewBag.view)
             {
                 using (Html.BeginForm("EvidenceApproval", "THome", FormMethod.Post))
@@ -14,52 +51,54 @@
                     @Html.ListBoxFor(l => l.days, new SelectList(Model.days), new { @id = "days", @class = "w-50 selectpicker", @data_live_search = "true", @data_actions_box = "true" })
 
                     <span>
-                        @*<input type="submit"  value="Approve" class="btn btn-primary"  />*@
-                        <button id="holder" type="submit" name="approve" class="btn btn-primary col-2">
+
+                        <button id="holder" type="submit" name="approve" class="btn btn-outline-primary col-2">
                             <span id="spin" class=" spinner-border-sm" role="status" aria-hidden="true"></span>
                             Approve
                         </button>
                     </span>
                 }
             }
-        </div>
-        <div class="col-12 w-75 h-100 mt-4 m-auto">
-            @if (ViewBag.view)
-            {
-                var base1 = Convert.ToBase64String(Model.document);
-                var src = string.Format("data:application/pdf;base64,{0}", base1);
-                <iframe src="@src" class="w-100 h-100"></iframe>
-                //height="800" style="width=" 100%"
-            }
-        </div>
+        </div>*@
 
 
 
-        @if (ViewBag.complete != null)
-        {
-            <script type="text/javascript">
 
-                $(document).ready(function () {
-                    var view = $('#myModal');
+    @if (ViewBag.complete != null)
+    {
+        <script type="text/javascript">
 
-                    var url = "/Teacher/THome/success";
-                    $.get(url).done(function (data) {
-                        view.html(data);
-                        view.modal({ backdrop: 'static', keyboard: false })
-                        view.modal('show');
-                    });
+            $(document).ready(function () {
+                var view = $('#myModal');
 
-                    view.on('click', '[data-save="modal"]', function (event) {
-
-                        window.location.href = "/Teacher/THome/StudentEvidence";
-                    });
-
+                var url = "/Teacher/THome/success";
+                $.get(url).done(function (data) {
+                    view.html(data);
+                    view.modal({ backdrop: 'static', keyboard: false })
+                    view.modal('show');
                 });
-            </script>
-        }
 
-        <div class="modal" id="myModal" role="dialog" data-backdrop="static" tabindex="-1" data-url="@Url.Action("Register")"></div>
+                view.on('click', '[data-save="modal"]', function (event) {
+
+                    window.location.href = "/Teacher/THome/StudentEvidence";
+                });
+
+            });
+        </script>
+    }
+    <div class="col-12 w-100 h-100 mt-4 vh-100">
+        @if (ViewBag.view)
+        {
+            var base1 = Convert.ToBase64String(Model.document);
+            var src = string.Format("data:application/pdf;base64,{0}", base1);
+            <iframe src="@src" class="w-100 h-100"></iframe>
+            //height="800" style="width=" 100%"
+        }
     </div>
+    <div class="modal" id="myModal" role="dialog" data-backdrop="static" tabindex="-1" data-url="@Url.Action("Register")"></div>
+</div>
+
+    
 
 
 <style>
@@ -89,11 +128,13 @@
         $('#days').change(function () {
             if ($('#days :selected').length == 0) {
                 document.getElementById("holder").innerText = "Decline";
-                document.getElementById("holder").style.backgroundColor = 'red';
+                document.getElementById("holder").classList.remove('btn-outline-primary');
+                document.getElementById("holder").classList.add('btn-outline-danger');
             }
             else {
                 document.getElementById("holder").innerText = "Approve";
-                document.getElementById("holder").style.backgroundColor = '#0d6efd';
+                document.getElementById("holder").classList.add('btn-outline-primary');
+                document.getElementById("holder").classList.remove('btn-outline-danger');
             }
         });
         
@@ -101,3 +142,10 @@
 
 
 </script>
+<style>
+    .row, .row > * {
+        padding: 0;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+</style>

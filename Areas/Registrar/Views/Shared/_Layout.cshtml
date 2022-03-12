@@ -75,9 +75,9 @@
         <!-- Navbar Search-->
         <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0"></form>
         <!-- Navbar-->
-        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-            <li class="nav-item dropdown">
-                <a class="p-2 shadow rounded-pill" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw bg-custom"></i><span class="p-1 small">@User.Identity.Name</span></a>
+        <ul class="navbar-nav ms-5 ms-md-0 me-3 me-lg-4">
+            <li class="nav-item dropdown ps-5">
+                <a class="p-2 shadow rounded-pill" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw bg-custom"></i><span class="p-1 small d-none d-sm-inline">@User.Identity.Name</span></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item" href="#!">Profile</a></li>
                     <li><hr class="dropdown-divider" /></li>
@@ -96,7 +96,7 @@
                         <h5 id="role" class="p-3">Registrar</h5>
                         <a class="nav-link first" href="@Url.Action("StudentManagement","RHome")">
                             <div class="sb-nav-link-icon col-1">
-                                <i class="fas fa-tachometer-alt fa-lg px-2"></i>
+                                <i class="fa-solid fa-child fa-lg px-2"></i>
                             </div>
                             <div class="px-3">
                                 Student
@@ -105,7 +105,7 @@
                         </a>
                         <a class="nav-link" href="@Url.Action("parentManagement","RHome")">
                             <div class="sb-nav-link-icon col-1">
-                                <i class="fas fa-tachometer-alt fa-lg px-2"></i>
+                                <i class="fa-solid fa-person fa-lg px-2"></i>
                             </div>
                             <div class="px-3">
                                 Parent

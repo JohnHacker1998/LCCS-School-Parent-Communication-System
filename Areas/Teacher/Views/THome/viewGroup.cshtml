@@ -3,15 +3,16 @@
     ViewBag.Title = "viewGroup";
 }
  
+    
     <div class="container mt-5 bg-white border-top border-bottom border-4 border-white rounded-3">
         <div class="row title-button">
             <span class="p-3 title col-md-10">Groups</span>
         </div>
-        <div class="container mb-3 mt-3">
+        <div class="table-responsive py-2">
             <table class="table table-bordered" id="tblGroupStructureList">
                 <thead>
                     <tr>
-                        
+
                         <th scope="col">Group Structure Name</th>
                         <th scope="col">Group Name</th>
                         @for (int x = 1; x <= Model.maxMembers; x++)
@@ -23,9 +24,10 @@
                     </tr>
                 </thead>
 
-                @foreach (var k in Model.groupList)
-                {
-                    <tbody>
+
+                <tbody>
+                    @foreach (var k in Model.groupList)
+                    {
                         <tr>
                             <td>@k.groupStructure.groupStructureName</td>
                             <td>@k.groupName</td>
@@ -50,9 +52,10 @@
 
 
                         </tr>
-                    </tbody>
+                    }
+                </tbody>
 
-                }
+
 
             </table>
         </div>

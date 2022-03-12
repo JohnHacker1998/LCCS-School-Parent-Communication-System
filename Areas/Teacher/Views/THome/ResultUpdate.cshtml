@@ -40,14 +40,14 @@
                     <div class="form-group">
 
                         @Html.LabelFor(l => l.result, new { @class = "form-label mt-2" })
-                        <div class="container row">@Html.EditorFor(e => e.result, new { htmlAttributes = new { @min = 0, @max = 100 } })</div>
+                        <div class="container row">@Html.EditorFor(e => e.result, new { htmlAttributes = new { @min = 0, @max = 100,@class="px-1 custom" } })</div>
                         <div class="container row">@Html.ValidationMessageFor(v => v.result, null, new { @class = "text-danger" })</div>
                     </div>
 
                     <div class="form-group">
 
                         @Html.LabelFor(l => l.feedback, new { @class = "form-label mt-2" })
-                        <div class="container row">@Html.EditorFor(e => e.feedback)</div>
+                        <div class="container row">@Html.EditorFor(e => e.feedback, new { htmlAttributes = new { @min = 0, @max = 100,@class="px-1 custom" } })</div>
                         <div class="container row">@Html.ValidationMessageFor(v => v.feedback, null, new { @class = "text-danger" })</div>
                     </div>
 
@@ -56,7 +56,7 @@
 
             <div class="modal-footer">
 
-                <button type="button" class="btn btn-primary" id="save" data-save="modal">Update</button>
+                <button type="button" class="btn btn-outline-primary" id="save" data-save="modal">Update</button>
             </div>
         </div>
     </div>
@@ -65,7 +65,7 @@
 </html>
 <style>
     .row, .row > * {
-        padding: 0 !important;
+        padding: 0;
         margin-right: 0 !important;
         margin-left: 0 !important;
     }

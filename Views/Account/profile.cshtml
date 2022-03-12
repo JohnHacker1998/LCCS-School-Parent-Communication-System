@@ -37,20 +37,80 @@
 </head>
 <body>
 
+    @if (this.User.IsInRole("Registrar"))
+    {
+        <style>
+            .bg-red {
+                background-color: #7f39c8 !important;
+            }
+            .fa-user-circle{
+                color: #7f39c8 !important;
+            }
+            .profile{
+                box-shadow: rgba(127, 57, 200, 0.35) 0px -50px 36px -28px inset;
+            }
+        </style>
+    }
+    else if (this.User.IsInRole("Parent"))
+    {
+        <style>
+            .bg-red {
+                background-color: #00008b !important;
+            }
+            .fa-user-circle{
+                color: #00008b !important;
+            }
+            .profile{
+                box-shadow: rgba(0, 0, 139, 0.35) 0px -50px 36px -28px inset;
+            }
+        </style>
+    }
+
+    else if (this.User.IsInRole("Teacher") || this.User.IsInRole("UnitLeader") || this.User.IsInRole("HomeRoom"))
+    {
+        <style>
+            .bg-red {
+                background-color: #40b09a !important;
+            }
+            .fa-user-circle{
+                color: #40b09a !important;
+            }
+            .profile{
+                box-shadow: rgba(64, 176, 154, 0.35) 0px -50px 36px -28px inset;
+            }
+        </style>
+    }
+    else if (this.User.IsInRole("AcademicDirector"))
+    {
+        <style>
+            .bg-red {
+                background-color: #d01c37 !important;
+            }
+            .fa-user-circle{
+                color: #d01c37 !important;
+            }
+            .profile{
+                box-shadow: rgba(208, 28, 55, 0.35) 0px -50px 36px -28px inset;
+            }
+        </style>
+    }
+
+
     <script type="text/javascript">
 
         function back() {
             history.back();
         }
-    </script>
 
-    <div class="bg-secondary text-end">
+/**/</script>
+
+    <div class=" col-sm-12 bg-red text-end">
         <button class="btn text-white p-4" onclick="back()"><i class="fas fa-home fa-2x"></i></button>
     </div>
 
     <div class="container">
         <div class="container text-center">
-            <div><i class="fas fa-user-circle mt-5 fa-10x text-secondary"></i></div>
+            <div><i class="fas fa-user-circle mt-5 fa-10x"></i></div>
 
             <div class="row mt-4">
                 @*@Html.LabelFor(lbl => lbl.fullName)*@
@@ -59,33 +119,55 @@
 
 
 
-            <hr class="col-6 mx-auto" />
+            <hr class="col-sm-7 col-6 mx-auto" />
 
         </div>
-        
-        
-        <div class="row mt-5">
-            <div class="col-3"></div>
-            <h6 class="col-2">@Html.LabelFor(lbl => lbl.fullName, new { @class = "form-label text-secondary" })</h6>
-            
-            <label class="form-label col-4" data-toggle="modal" data-target="#editFullName" data-url="@Url.Action("EditFullName")" data-id="1">@Model.fullName</label>
+      
+        <div class="profile m-auto col-sm-11 col-md-7 rounded-3">
+            <div class="row col-12 py-sm-1 py-sm-0 py-2 pt-3 px-sm-0 px-md-4 ms-sm-0 ms-md-5">
+                <h6 class="col-4 d-sm-inline d-inline">@Html.LabelFor(lbl => lbl.fullName, new { @class = "form-label text-secondary" })</h6>
+                <label class="col-sm-4 col-8 d-sm-inline ps-sm-4 ps-md-0" data-toggle="modal" data-target="#editFullName" data-url="@Url.Action("EditFullName")" data-id="1">@Model.fullName</label>
+            </div>
+
+            <div class="row col-12 py-sm-1 py-sm-0 py-2 pt-3 px-sm-0 px-md-4 ms-sm-0 ms-md-5">
+                <h6 class="col-4 d-sm-inline d-inline">@Html.LabelFor(lbl => lbl.email, new { @class = "form-label text-secondary" })</h6>
+                <label class="col-sm-4 col-8 d-sm-inline ps-sm-4 ps-md-0" data-toggle="modal" data-target="#edit" data-url="@Url.Action("edit")">@Model.email</label>
+            </div>
+            <div class="row col-12 py-sm-1 py-sm-0 py-2 pt-3 px-sm-0 px-md-4 ms-sm-0 ms-md-5">
+                <h6 class="col-4 d-sm-inline d-inline">@Html.LabelFor(lbl => lbl.userName, new { @class = "form-label text-secondary" })</h6>
+                <label class="col-sm-4 col-8 d-sm-inline ps-sm-4 ps-md-0" data-toggle="modal" data-target="#editUserName" data-url="@Url.Action("EditUserName")">@Model.userName</label>
+            </div>
+            <div class="row col-12 py-sm-1 py-sm-0 py-2 pt-3 px-sm-0 px-md-4 ms-sm-0 ms-md-5">
+                <h6 class="col-4 d-sm-inline d-inline"><lable class="form-label text-secondary">PASSWORD</lable></h6>
+                <label class="col-sm-4 col-8 d-sm-inline pb-5 ps-sm-4 ps-md-0" data-toggle="modal" data-target="#editPassword" data-url="@Url.Action("EditPassword")">••••••••</label>
+            </div>
         </div>
-        
-        <div class="row mt-3">
-            <div class="col-3"></div>
-            <h6 class="col-2">@Html.LabelFor(lbl => lbl.email, new { @class = "form-label text-secondary" })</h6>
-            <label class="form-label col-4" data-toggle="modal" data-target="#edit" data-url="@Url.Action("edit")">@Model.email</label>
-        </div>
-        <div class="row mt-3">
-            <div class="col-3"></div>
-            <h6 class="col-2">@Html.LabelFor(lbl => lbl.userName, new { @class = "form-label text-secondary" })</h6>
-            <label class="form-label col-4" data-toggle="modal" data-target="#editUserName" data-url="@Url.Action("EditUserName")">@Model.userName</label>
-        </div>
-        <div class="row mt-3">
-            <div class="col-3"></div>
-            <h6 class="col-2"><lable class="form-label text-secondary">PASSWORD</lable></h6>
-            <label class="form-label col-4" data-toggle="modal" data-target="#editPassword" data-url="@Url.Action("EditPassword")">••••••••</label>
-        </div>
+
+       
+        @*<div class="container text-center">
+            <div class="row mt-5 shadow">
+                <div class="col-3"></div>
+                <h6 class="col-2">@Html.LabelFor(lbl => lbl.fullName, new { @class = "form-label text-secondary" })</h6>
+
+                <label class="form-label col-3" data-toggle="modal" data-target="#editFullName" data-url="@Url.Action("EditFullName")" data-id="1">@Model.fullName</label>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-3"></div>
+                <h6 class="col-2">@Html.LabelFor(lbl => lbl.email, new { @class = "form-label text-secondary" })</h6>
+                <label class="form-label col-4" data-toggle="modal" data-target="#edit" data-url="@Url.Action("edit")">@Model.email</label>
+            </div>
+            <div class="row mt-3">
+                <div class="col-3"></div>
+                <h6 class="col-2">@Html.LabelFor(lbl => lbl.userName, new { @class = "form-label text-secondary" })</h6>
+                <label class="form-label col-4" data-toggle="modal" data-target="#editUserName" data-url="@Url.Action("EditUserName")">@Model.userName</label>
+            </div>
+            <div class="row mt-3">
+                <div class="col-3"></div>
+                <h6 class="col-2"><lable class="form-label text-secondary">PASSWORD</lable></h6>
+                <label class="form-label col-4" data-toggle="modal" data-target="#editPassword" data-url="@Url.Action("EditPassword")">••••••••</label>
+            </div>
+        </div>*@
         <div class="modal" id="myModal" role="dialog" data-url="@Url.Action("edit")"></div>
 
     </div>
@@ -156,4 +238,15 @@
     body{
         padding-top:0 !important;
     }
+    .custom {
+    width: 100%;
+    color: #212529;
+    border: 1px solid #83898f;
+    border-radius: 4px;
+}
+    .custom:focus{
+        border: 2px solid black;
+    }
+    
+    
 </style>

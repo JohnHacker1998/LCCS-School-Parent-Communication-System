@@ -12482,3 +12482,10 @@ table.dataTable.table-striped > tbody > tr.odd {
 .btn-add:hover .fa-user-plus {
     color: white !important;
 }
+
+.custom {
+    width: 100%;
+    color: #212529;
+    border: 1px solid #83898f;
+    border-radius: 4px;
+}

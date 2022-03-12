@@ -48,25 +48,25 @@
                     @Html.AntiForgeryToken()
                     <div class="form-group" style="display:none">
                         @Html.LabelFor(a => a.studentId, new { @class = "form-label mt-2" })
-                        <div class="container row">@Html.TextBoxFor(a => a.studentId, new { @readonly = true, htmlAttributes = new { } })</div>
+                        <div class="container row">@Html.TextBoxFor(a => a.studentId, new { @readonly = true})</div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(a => a.studentFullName, new { @class = "form-label mt-2" })
-                        <div class="container row">@Html.TextBoxFor(a => a.studentFullName, new { @readonly = true, htmlAttributes = new { } })</div>
+                        <div class="container row">@Html.TextBoxFor(a => a.studentFullName, new { @readonly = true, @class="px-1 form-control"  })</div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(a => a.fullName, new { @class = "form-label mt-2" })
-                        <div class="container row">@Html.EditorFor(a => a.fullName, new { htmlAttributes = new { @class = "form-control" } })</div>
+                        <div class="container row">@Html.EditorFor(a => a.fullName, new { htmlAttributes = new { @class = "px-1 custom" } })</div>
                         <div class="container row">@Html.ValidationMessageFor(a => a.fullName, "", new { @class = "text-danger" })</div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(a => a.email, new { @class = "form-label mt-2" })
-                        <div class="container row">@Html.EditorFor(a => a.email, new { htmlAttributes = new { @class = "form-control" } })</div>
+                        <div class="container row">@Html.EditorFor(a => a.email, new { htmlAttributes = new { @class = "px-1 custom" } })</div>
                         <div class="container row">@Html.ValidationMessageFor(a => a.email, "", new { @class = "text-danger" })</div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(a => a.phoneNumber, new { @class = "form-label mt-2" })
-                        <div class="container row">@Html.EditorFor(a => a.phoneNumber, new { htmlAttributes = new { @class = "form-control" } })</div>
+                        <div class="container row">@Html.EditorFor(a => a.phoneNumber, new { htmlAttributes = new { @class = "px-1 custom" } })</div>
                         <div class="container row">@Html.ValidationMessageFor(a => a.phoneNumber, "", new { @class = "text-danger" })</div>
                     </div>
 
@@ -74,7 +74,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="save" data-save="modal">Register</button>
+                <button type="button" class="btn btn-outline-primary" id="save" data-save="modal">Register</button>
             </div>
         </div>
     </div>
@@ -83,7 +83,7 @@
 </html>
 <style>
     .row, .row > * {
-        padding: 0 !important;
+        padding: 0;
         margin-right: 0 !important;
         margin-left: 0 !important;
     }
@@ -121,6 +121,7 @@
                 return true;
             }
         }
+
     });
 
 </script>

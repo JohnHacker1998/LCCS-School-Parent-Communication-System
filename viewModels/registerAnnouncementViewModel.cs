@@ -35,6 +35,7 @@ namespace LCCS_School_Parent_Communication_System.viewModels
     
         public string academicYear { get; set; }
         public int studentId { get; set; }
+        [Display(Name = "Student Name")]
         public string studentName { get; set; }
     }
 }

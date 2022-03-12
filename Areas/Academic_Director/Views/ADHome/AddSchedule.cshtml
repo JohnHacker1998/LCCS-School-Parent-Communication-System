@@ -17,7 +17,7 @@
         <div class="modal-content">
             <div class="modal-header bg-red">
                 <h4 class="modal-title text-white" id="title">Add Schedule</h4>
-                <button type="button" id="exit" class="close btn bg-red" data-dismiss="modal">
+                <button type="button" id="exit" class="close btn" data-dismiss="modal">
                     <span aria-hidden="true" class="text-white">&times;</span>
                 </button>
             </div>
@@ -50,7 +50,7 @@
                         @*<div class="container row">*@
 
                         @Html.LabelFor(a => a.scheduleDate, new { @class = "form-label mt-2" })
-                        <div class="container row"> @Html.TextBoxFor(e => e.scheduleDate, new { @class = "datepicker px-1 rounded-1", @id = "inputs" })</div>
+                        <div class="container row"> @Html.TextBoxFor(e => e.scheduleDate, new { @class = "datepicker px-1 custom", @id = "inputs" })</div>
                         <div class="container row">@Html.ValidationMessageFor(v => v.scheduleDate, null, new { @class = "text-danger", @id = "message" })</div>
 
                         @*</div>*@
@@ -60,7 +60,7 @@
 
                         <div class="col-12">
                             @Html.LabelFor(l => l.scheduleFor, new { @class = "form-label mt-2" })
-                            <div class="container row">@Html.DropDownListFor(tb => tb.scheduleFor, new SelectList(Model.scheduleFor), "Select Schedule Reason", new { @class = "px-1 rounded-1", onchange = "bothDisabled()" })</div>
+                            <div class="container row">@Html.DropDownListFor(tb => tb.scheduleFor, new SelectList(Model.scheduleFor), "Select Schedule Reason", new { @class = "px-1 custom", onchange = "bothDisabled()" })</div>
                             <div class="container row">@Html.ValidationMessageFor(v => v.scheduleFor, "", new { @class = "text-danger" })</div>
                         </div>
                     </div>
@@ -68,7 +68,7 @@
 
                     <div class="form-group">
                         @Html.LabelFor(l => l.subject, new { @class = "form-label mt-2" })
-                        <div class="container row">@Html.EditorFor(e => e.subject, new {htmlAttributes = new { @class = "px-1 rounded-1" } })</div>
+                        <div class="container row">@Html.EditorFor(e => e.subject, new {htmlAttributes = new { @class = "px-1 custom" } })</div>
                         <div class="container row">@Html.ValidationMessageFor(v => v.subject, null, new { @class = "text-danger" })</div>
                     </div>
 
@@ -94,7 +94,7 @@
 
             <div class="modal-footer">
 
-                <button type="button" class="btn btn-primary" id="save" data-save="modal">Add</button>
+                <button type="button" class="btn btn-outline-primary" id="save" data-save="modal">Add</button>
             </div>
         </div>
     </div>
@@ -103,9 +103,12 @@
 </html>
 <style>
     .row, .row > * {
-        padding: 0 !important;
+        padding: 0 ;
         margin-right: 0 !important;
         margin-left: 0 !important;
+    }
+    .close{
+        background-color:#ea4236;
     }
 </style>
 

@@ -12411,7 +12411,7 @@ body {
 }
 
 .title-button {
-    border-bottom: 5px solid #d01c37;
+    border-bottom: 4px solid #d01c37;
 }
 
 .scrollbar::-webkit-scrollbar {
@@ -12481,7 +12481,7 @@ table.dataTable.table-striped > tbody > tr.odd {
 }
 .custom {
     width: 100%;
-    color: black;
-    border: 1px solid black;
+    color: #212529;
+    border: 1px solid #83898f;
     border-radius: 4px;
 }

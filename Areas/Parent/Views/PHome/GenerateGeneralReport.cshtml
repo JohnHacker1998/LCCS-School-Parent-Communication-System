@@ -56,33 +56,37 @@
         <div class="container p-3">
 
             <div class="row">
-                <div class="col-3 borde">
-                    <h5>Absent Days</h5>
-                </div>
-                <div class="col-3">
-                    <h5>Reasonable Days</h5>
-                </div>
-                <div class="col-3">
-                    <h5>Non-Reasonable Days</h5>
-                </div>
-                <div class="col-3">
-                    <h5>Late Days</h5>
-                </div>
-            </div>
-            <div class="row text-start">
-                <div class="col-3">
+                <div class="col-sm-1 col-md-3">
+                    <span class="d-sm-inline">Absent Days</span>
                     <h2>@Model.absentDays</h2>
                 </div>
-                <div class="col-3">
+                <div class="col-sm-1 col-md-3">
+                    <span>Reasonable Days</span>
                     <h2>@Model.reasonable</h2>
                 </div>
-                <div class="col-3">
+                <div class="col-sm-3 col-md-3">
+                    <span>Non-Reasonable Days</span>
                     <h2>@Model.nonReasonable</h2>
                 </div>
-                <div class="col-3">
+                <div class="col-sm-3 col-md-3">
+                    <span>Late Days</span>
                     <h2>@Model.lateDays</h2>
                 </div>
             </div>
+            @*<div class="row text-start">
+                <div class="col-sm-3 col-md-3">
+                    <h2>@Model.absentDays</h2>
+                </div>
+                <div class="col-sm-3 col-md-3">
+                    <h2>@Model.reasonable</h2>
+                </div>
+                <div class="col-sm-3 col-md-3">
+                    <h2>@Model.nonReasonable</h2>
+                </div>
+                <div class="col-sm-3 col-md-3">
+                    <h2>@Model.lateDays</h2>
+                </div>
+            </div>*@
         </div>
     </div>
 
@@ -94,20 +98,24 @@
         <div class="container p-3">
 
             <div class="row">
-                <div class="col-3">
-                    <h5>Total Assesement</h5>
+                <div class="col-sm-1 col-md-3">
+                    <span>Total Assesement</span>
+                    <h2>@Model.totalAssesment</h2>
                 </div>
-                <div class="col-3">
-                    <h5>Complete Assesement</h5>
+                <div class="col-sm-1 col-md-3">
+                    <span>Completed</span>
+                    <h2>@Model.completeAssesment</h2>
                 </div>
-                <div class="col-3">
-                    <h5>Incomplete Assesement</h5>
+                <div class="col-sm-1 col-md-3">
+                    <span>Missed</span>
+                    <h2>@Model.incompleteAssesment</h2>
                 </div>
-                <div class="col-3">
-                    <h5>Reassesement</h5>
+                <div class="col-sm-1 col-md-3">
+                    <span>Reassesement</span>
+                    <h2>@Model.reassesement</h2>
                 </div>
             </div>
-            <div class="row text-start">
+            @*<div class="row text-start">
                 <div class="col-3">
                     <h2>@Model.totalAssesment</h2>
                 </div>
@@ -120,7 +128,7 @@
                 <div class="col-3">
                     <h2>@Model.reassesement</h2>
                 </div>
-            </div>
+            </div>*@
 
         </div>
     </div>

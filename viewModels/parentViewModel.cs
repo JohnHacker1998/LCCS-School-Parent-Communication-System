@@ -19,7 +19,7 @@ namespace LCCS_School_Parent_Communication_System.viewModels
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public String email { get; set; }
         [Required(ErrorMessage ="please enter phonenumber")]
-        [Display(Name = "phoneNumber")]        
+        [Display(Name = "Phone Number")]        
         [RegularExpression(@"[0-9]{4}[0-9]{6}", ErrorMessage = "Phone number isnot valid.")]
         public String phoneNumber { get; set; }
         [Required(ErrorMessage = "Please enter Full Name")]

@@ -8,36 +8,41 @@
 
 
 <style>
-    h1 {
-        margin-left: 40%
+    .date{
+        border-color:#40b09a !important;
+        border-width: 4px !important;
+        color:#575f67;
+        background-color:#daefeb;
     }
 </style>
-<h1>@DateTime.Now.ToShortDateString()</h1>
+<div class="w-100 d-flex justify-content-end mb-5">
+    <span class="px-3 rounded-3 date fw-bold border-top">Date: @DateTime.Now.ToShortDateString()</span>
+</div>
+
 @using (Html.BeginForm("addAttendance", "THome", FormMethod.Post))
 {
-    <div class="container  mt-3">
-        <div class="row ">
+<div class="container mt-3">
+    
+    <div class="row d-flex justify-content-center">
 
-            <div class="col-8">
-                <select id="groupsList1" name="groupsList" class="form-control selectpicker" multiple data-live-search="true">
-                    @foreach (var i in Model.studentList)
-                    {
+        <div class="col-8">
+            <select id="groupsList1" name="groupsList" class="form-control selectpicker" multiple data-live-search="true">
+                @foreach (var i in Model.studentList)
+                {
 
-                        <option value=@i.studentId>@i.fullName</option>
+                    <option value=@i.studentId>@i.fullName</option>
 
-                    }
-                </select>
+                }
+            </select>
 
-                <input type="text" name="selectedStudents" id="txtSelectedGroups" style="display:none" />
-            </div>
-            <div class="col-4">
-                <div class="row">
-                    <input type="submit" name="submit" value="Submit" class="btn btn-primary w-75" id="sulu" />
-                </div>
-            </div>
+            <input type="text" name="selectedStudents" id="txtSelectedGroups" style="display:none" />
         </div>
-
+        <div class="col-3">
+                <input type="submit" name="submit" value="Submit" class="btn btn-outline-primary  w-100" id="sulu" />
+        </div>
     </div>
+
+</div>
 
 
 }
@@ -70,7 +75,7 @@
                         <td>@k.recordDate.ToShortDateString()</td>
                         <td>@k.student.fullName</td>
                         <td>@k.count</td>
-                        <td>
+                        <td class="text-center">
                             @using (Html.BeginForm("addAttendance", "THome", new { gsId = k.recordId.ToString() }, FormMethod.Post))
                             {
 
