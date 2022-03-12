@@ -125,6 +125,31 @@
         #greame{
             margin-left:-1.5em;
         }
+        #smallerDrop {
+          width:400px;
+        }
+        @@media screen and (max-width: 290px) {
+            #smallerDrop {
+                width: 195px;
+            }
+        }
+        @@media screen and (max-width: 360px) and (min-width: 290px) {
+            #smallerDrop {
+                width: 270px;
+            }
+        }
+        @@media screen and (max-width: 415px) and (min-width: 370px) {
+            #smallerDrop {
+                width: 280px;
+            }
+        }
+        @@media screen and (max-width: 500px) and (min-width: 420px) {
+            #smallerDrop {
+                width: 350px;
+            }
+        }
+      
+
     </style>
 
 </head>
@@ -144,9 +169,9 @@
         <ul class="navbar-nav ms-auto ms-md-0 me-sm-0 me-lg-4 gx-4">
 
 
-            <li class="nav-item dropdown px-md-2">
-                <a class="me-2" id="navbarDropdown1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> <i class="fa fa-bell" style="color:white"></i><span class="badge" id="arxr"></span></a>
-                <ul class="dropdown-menu dropdown-menu-end ak" aria-labelledby="navbarDropdown1" style="width:400px">
+            <li class="nav-item dropdown pe-4">
+                <a id="navbarDropdown1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> <i class="fa fa-bell" style="color:white"></i><span class="badge" id="arxr"></span></a>
+                <ul class="dropdown-menu dropdown-menu-end ak" id="smallerDrop" aria-labelledby="navbarDropdown1" >
                     @{
                         LCCS_School_Parent_Communication_System.Identity.ApplicationDbContext db = new LCCS_School_Parent_Communication_System.Identity.ApplicationDbContext();
                         List<LCCS_School_Parent_Communication_System.Models.Announcement> gx = new List<LCCS_School_Parent_Communication_System.Models.Announcement>();
@@ -242,18 +267,19 @@
                             });
                                 </script>
                             </li>
+                                        int i = 1;
+                                        foreach (var k in gx)
+                                        {
 
-                            foreach (var k in gx)
-                            {
+                                            if (x < gx.Count())
+                                            {
+                                                using (Html.BeginForm("viewAnnouncementDetails", "PHome", new
+                                                {
+                                                    annId = k.announcementID
+                                                }, FormMethod.Post))
+                                                {
+                                                    @Html.AntiForgeryToken()
 
-                                if (x < gx.Count())
-                                {
-                                    using (Html.BeginForm("viewAnnouncementDetails", "PHome", new
-                                    {
-                                        annId = k.announcementID
-                                    }, FormMethod.Post))
-                                    {
-                                        @Html.AntiForgeryToken()
 
                                         if (k.updateStatus == 0)
                                         {
@@ -262,9 +288,9 @@
 
 
                                                 <button class="dropdown-item container-fluid" id="jj">
-                                                    <div class="">
+                                                    <div class="" >
 
-                                                        <div class="row" id="xrd1">
+                                                        <div class="row" id="@i">
                                                             <div class="col-1">
                                                                 <h1></h1>
                                                             </div>
@@ -286,10 +312,10 @@
                                                             $(document).ready(function () {
                                                                 $("#navbarDropdown1").click(function () {
                                         if (@k.viewedStatus == 0) {
-                                                                    $('#xrd1').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                    $('#@i').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
                                         }
                                         else {
-                                                                    $('#xrd1').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                    $('#@i').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
                                         }
                                     });
 
@@ -309,7 +335,7 @@
 
                                                 <button class="dropdown-item container-fluid" id="jj">
                                                     <div class="">
-                                                        <div class="row" id="xrd1">
+                                                        <div class="row" id="@i">
                                                             <div class="col-1  mt-3 ">
                                                                 <h1></h1>
                                                             </div>
@@ -325,19 +351,20 @@
                                                                 </div>
                                                             </div>
 
+
                                                             <script>
 
                                                             $(document).ready(function () {
                                                                 $("#navbarDropdown1").click(function () {
-                                    if (@k.viewedStatus == 0) {
-                                                                    $('#xrd1').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
-                                    }
-                                    else {
-                                                                    $('#xrd1').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
-                                    }
-                                });
+                                        if (@k.viewedStatus == 0) {
+                                                                    $('#@i').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                        }
+                                        else {
+                                                                    $('#@i').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                        }
+                                    });
 
-                            });
+                                });
 
                                                             </script>
                                                         </div>
@@ -345,59 +372,60 @@
                                                 </button>
                                             </li>
                                             <li><hr class="dropdown-divider" /></li>
-                                        }
-                                    }
-                                }
-                                else
+                                                    }
+                                                }
+                                            }
+                                            else
+                        {
+                            using (Html.BeginForm("viewAnnouncementDetails", "PHome", new
+                            {
+                                annId = k.announcementID
+                            }, FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                                    if (k.updateStatus == 0)
                                 {
-                                    using (Html.BeginForm("viewAnnouncementDetails", "PHome", new
-                                    {
-                                        annId = k.announcementID
-                                    }, FormMethod.Post))
-                                    {
-                                        @Html.AntiForgeryToken()
-                                        if (k.updateStatus == 0)
-                                        {
-                                            <li>
+                <li>
 
-                                                <button class="dropdown-item container-fluid" id="jj">
-                                                    <div class="">
-                                                        <div class="row" id="xrd1">
-                                                            <div class="col-1  mt-3 ">
-                                                                <h1></h1>
-                                                            </div>
-                                                            <div class="col-9" id="greame">
-                                                                <div class="row"><h4>@k.announcementTitle</h4></div>
-                                                                <div class="row">
-                                                                    <div class="col-8 mt-3 ">
-                                                                        @k.postDate.ToShortDateString()
-                                                                    </div>
-                                                                    <div class="col-4 mt-3" id="kali" style="display:none">
-                                                                        Updated
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                    <button class="dropdown-item container-fluid" id="jj">
+                        <div class="">
+                            <div class="row" id="@i">
+                                <div class="col-1  mt-3 ">
+                                    <h1></h1>
+                                </div>
+                                <div class="col-9" id="greame">
+                                    <div class="row"><h4>@k.announcementTitle</h4></div>
+                                    <div class="row">
+                                        <div class="col-8 mt-3 ">
+                                            @k.postDate.ToShortDateString()
+                                        </div>
+                                        <div class="col-4 mt-3" id="kali" style="display:none">
+                                            Updated
+                                        </div>
+                                    </div>
+                                </div>
 
 
-                                                        </div>
-                                                    </div>
-                                                </button>
-                                                <script>
+                            </div>
+                        </div>
+                    </button>
+
+                    <script>
 
                                                             $(document).ready(function () {
                                                                 $("#navbarDropdown1").click(function () {
                                         if (@k.viewedStatus == 0) {
-                                                                    $('#xrd1').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                    $('#@i').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
                                         }
                                         else {
-                                                                    $('#xrd1').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                                                    $('#@i').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
                                         }
                                     });
 
                                 });
 
-                                                </script>
-                                            </li>
+                    </script>
+                </li>
 
 
                                         }
@@ -407,7 +435,7 @@
 
                                                 <button class="dropdown-item container-fluid" id="jj">
                                                     <div class="">
-                                                        <div class="row " id="xrd1">
+                                                        <div class="row " id="@i">
                                                             <div class="col-1  mt-3">
                                                                 <h1></h1>
                                                             </div>
@@ -426,19 +454,20 @@
 
 
 
+
                                                             <script>
 
                                                             $(document).ready(function () {
                                                                 $("#navbarDropdown1").click(function () {
-                                    if (@k.viewedStatus == 0) {
-                                                                    $('#xrd1').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
-                                    }
-                                    else {
-                                                                    $('#xrd1').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
-                                    }
-                                });
+                                        if (@k.viewedStatus == 0) {
+                                                                    $('#@i').addClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                        }
+                                        else {
+                                                                    $('#@i').removeClass('border border-danger border-5 border-end-0 border-bottom-0 border-top-0');
+                                        }
+                                    });
 
-                            });
+                                });
 
                                                             </script>
 
@@ -452,6 +481,7 @@
                                     }
                                 }
                                 x++;
+                                i++;
                             }
                         }
 

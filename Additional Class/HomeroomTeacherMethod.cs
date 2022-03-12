@@ -57,7 +57,7 @@ namespace LCCS_School_Parent_Communication_System.Additional_Class
                     {
                         if (DateTime.Compare(DateTime.Now.Date, checkSuspended.endDate.Date)<=0)
                         {
-                            studentLS.Remove(k);
+                            studentLS.Add(k);
                         }
                         else
                         {

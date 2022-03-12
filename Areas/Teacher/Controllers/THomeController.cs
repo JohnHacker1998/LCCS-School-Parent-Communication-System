@@ -20,8 +20,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         {
             return View();
         }
-        [Authorize(Roles ="Teacher,HomeRoom,UnitLeader")]
-        
+        [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
+
         public ActionResult addAssignment()
         {
             //declaration
@@ -38,7 +38,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             List<Section> s = new List<Section>();
             avm.listAssignment = new List<Assignment>();
             avm.listAssignment = db.Assignment.ToList();
-            
+
             avm.sectionList = new List<string>();
             t = db.Teacher.Where(a => a.teacherId == currentID).FirstOrDefault();
             string teacherGrade = t.grade.ToString();
@@ -58,7 +58,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             string quarter = ht.whichQuarter(currentAcademicYearName);
             //checking the current days appearance on the quarters time span
             //adding the active sections of the teacher existing on the current academic year
-           if (quarter == "Q1" || quarter == "Q2" || quarter == "Q3" || quarter == "Q4") {
+            if (quarter == "Q1" || quarter == "Q2" || quarter == "Q3" || quarter == "Q4") {
                 var currentSections = db.Section.Where(a => a.academicYearId == currentAcademicYearName && a.sectionName.StartsWith(teacherGrade)).ToList();
                 foreach (var k in currentSections)
                 {
@@ -67,14 +67,14 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                 avm.studentList = db.Student.Where(a => a.academicYearId == currentAcademicYearName).ToList();
                 string acQuarter = currentAcademicYearName + "-" + quarter;
 
-                
+
             }
             else
             {
                 //error message for the view
-                ViewBag.cannothaveSections="This date doesn't exist in the current Academic Year";
+                ViewBag.cannothaveSections = "This date doesn't exist in the current Academic Year";
             }
-            
+
 
             return View(avm);
         }
@@ -83,23 +83,23 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         {
             //declaring variables and objects
             ApplicationDbContext db = new ApplicationDbContext();
-            List <Assignment> listAssignment= new List<Assignment>();
+            List<Assignment> listAssignment = new List<Assignment>();
             var theTeacher = db.Teacher.Where(ax => ax.teacherId == teacherID).FirstOrDefault();
             listAssignment = db.Assignment.Where(ax => ax.yearlyQuarter == yearlyQuarter && ax.sectionID == sectionID && ax.teacherId == teacherID).ToList();
             List<Schedule> sch = new List<Schedule>();
             sch = db.Schedule.Where(ax => ax.academicYear == yearlyQuarter && ax.grade == theTeacher.grade && ax.subject == theTeacher.subject).ToList();
             int sum = 0;
             //adding the mark percentage of the assignments existing on the academic quarter of the teacher 
-            if (listAssignment != null) { 
-            foreach(var k in listAssignment)
-            {
+            if (listAssignment != null) {
+                foreach (var k in listAssignment)
+                {
                     sum += k.markPercentage;
-            }
+                }
             }
             //adding up the scheduled assignments mark percentage
             if (sch != null)
             {
-                foreach(var k in sch)
+                foreach (var k in sch)
                 {
                     sum += k.percentage;
                 }
@@ -142,59 +142,59 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                     break;
                 }
             }
-            if (sectionName != null) { 
-            var theSection = db.Section.Where(g => g.sectionId == currentSectionID).FirstOrDefault();
-            string currentQuarter = ht.whichQuarter(theSection.academicYearId);
-            if (ModelState.IsValid) {
-                if (currentSectionID != 0 && ht.beforeQuarterEnd(Convert.ToDateTime(avm.submissionDate), theSection.academicYearId) && (currentQuarter == "Q1" || currentQuarter == "Q2" || currentQuarter == "Q3" || currentQuarter == "Q4") && fulfillsPercentage(theSection.academicYearId + "-" + currentQuarter, currentSectionID, currentTeacherID, avm.markPercentage) && file.ContentType== "application/pdf")
-                {
-                    a.sectionID = currentSectionID;
-                    a.assignmentType = "Individual";
-                    a.datePosted = DateTime.Now.Date;
-                    a.submissionDate = Convert.ToDateTime(avm.submissionDate).Date;
-                    a.yearlyQuarter = theSection.academicYearId + "-" + currentQuarter;
-                    int length = file.ContentLength;
-                    byte[] upload = new byte[length];
-                    file.InputStream.Read(upload, 0, length);
-                    a.assignmentDocument = upload;
-                    a.assignmentName = avm.assignmentName;
-                    a.markPercentage = avm.markPercentage;
-                    a.teacherId = currentTeacherID;
-                    a.fileName = fileName;
-                    var assx = db.Assignment.Where(ax => ax.yearlyQuarter == a.yearlyQuarter && ax.assignmentType == "Individual" && ax.sectionID == a.sectionID && ax.assignmentName == a.assignmentName).ToList();
-                    if (assx.Count() == 0)
+            if (sectionName != null) {
+                var theSection = db.Section.Where(g => g.sectionId == currentSectionID).FirstOrDefault();
+                string currentQuarter = ht.whichQuarter(theSection.academicYearId);
+                if (ModelState.IsValid) {
+                    if (currentSectionID != 0 && ht.beforeQuarterEnd(Convert.ToDateTime(avm.submissionDate), theSection.academicYearId) && (currentQuarter == "Q1" || currentQuarter == "Q2" || currentQuarter == "Q3" || currentQuarter == "Q4") && fulfillsPercentage(theSection.academicYearId + "-" + currentQuarter, currentSectionID, currentTeacherID, avm.markPercentage) && file.ContentType == "application/pdf")
                     {
-                        db.Assignment.Add(a);
-                        db.SaveChanges();
-                        ViewBag.successfulMessage = "Assignment added Successfully.";
-                        avm2.listAssignment = db.Assignment.Where(x => x.teacherId == currentTeacherID && x.yearlyQuarter == a.yearlyQuarter).ToList();
-                        avm2.gsList = db.GroupStructure.Where(x => x.teacherId == currentTeacherID && x.academicQuarter == a.yearlyQuarter && x.completeStatus == 1).ToList();
-                        return View("assignmentManagement", avm2);
+                        a.sectionID = currentSectionID;
+                        a.assignmentType = "Individual";
+                        a.datePosted = DateTime.Now.Date;
+                        a.submissionDate = Convert.ToDateTime(avm.submissionDate).Date;
+                        a.yearlyQuarter = theSection.academicYearId + "-" + currentQuarter;
+                        int length = file.ContentLength;
+                        byte[] upload = new byte[length];
+                        file.InputStream.Read(upload, 0, length);
+                        a.assignmentDocument = upload;
+                        a.assignmentName = avm.assignmentName;
+                        a.markPercentage = avm.markPercentage;
+                        a.teacherId = currentTeacherID;
+                        a.fileName = fileName;
+                        var assx = db.Assignment.Where(ax => ax.yearlyQuarter == a.yearlyQuarter && ax.assignmentType == "Individual" && ax.sectionID == a.sectionID && ax.assignmentName == a.assignmentName).ToList();
+                        if (assx.Count() == 0)
+                        {
+                            db.Assignment.Add(a);
+                            db.SaveChanges();
+                            ViewBag.successfulMessage = "Assignment added Successfully.";
+                            avm2.listAssignment = db.Assignment.Where(x => x.teacherId == currentTeacherID && x.yearlyQuarter == a.yearlyQuarter).ToList();
+                            avm2.gsList = db.GroupStructure.Where(x => x.teacherId == currentTeacherID && x.academicQuarter == a.yearlyQuarter && x.completeStatus == 1).ToList();
+                            return View("assignmentManagement", avm2);
+                        }
+                        else
+                        {
+                            ViewBag.assignmentExists = "Assignment already exists";
+                        }
                     }
                     else
                     {
-                        ViewBag.assignmentExists = "Assignment already exists";
-                    }
-                }
-                else
-                {
-                    if (currentQuarter == "no")
-                    {
-                        ViewBag.failedMessage = "Quarter doesn't exist";
+                        if (currentQuarter == "no")
+                        {
+                            ViewBag.failedMessage = "Quarter doesn't exist";
 
-                    }
-                    if (currentQuarter == "gap")
-                    {
-                        ViewBag.failedMessage = "Current timespan is a gap";
-                    }
-                    if (fulfillsPercentage(theSection.academicYearId + "-" + currentQuarter, currentSectionID, currentTeacherID, avm.markPercentage) == false)
-                    {
-                        ViewBag.doesntFulfillMessage = "Mark Percentage sum is above 100";
-                    }
-                    if (ht.beforeQuarterEnd(Convert.ToDateTime(avm.submissionDate), theSection.academicYearId) == false)
-                    {
-                        ViewBag.tudayerror = "Submission Date is out of academic quarter";
-                    }
+                        }
+                        if (currentQuarter == "gap")
+                        {
+                            ViewBag.failedMessage = "Current timespan is a gap";
+                        }
+                        if (fulfillsPercentage(theSection.academicYearId + "-" + currentQuarter, currentSectionID, currentTeacherID, avm.markPercentage) == false)
+                        {
+                            ViewBag.doesntFulfillMessage = "Mark Percentage sum is above 100";
+                        }
+                        if (ht.beforeQuarterEnd(Convert.ToDateTime(avm.submissionDate), theSection.academicYearId) == false)
+                        {
+                            ViewBag.tudayerror = "Submission Date is out of academic quarter";
+                        }
                         if (file.ContentType != "application/pdf")
                         {
                             ViewBag.incorrectFIleType = "Invalid file format, please upload pdf file.";
@@ -202,8 +202,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
 
                     }
+                }
             }
-        }
             else
             {
                 ViewBag.sectionnull = "Sections don't exist";
@@ -235,16 +235,16 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         }
         [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpGet]
-        public ActionResult addGroupAssignment(string gsId,string txtAdd)
+        public ActionResult addGroupAssignment(string gsId, string txtAdd)
         {
             ApplicationDbContext db = new ApplicationDbContext();
             addGroupAssignmentViewModel avm = new addGroupAssignmentViewModel();
             avm.groupList = new List<Group>();
             int gsId1 = int.Parse(txtAdd);
             GroupStructure gs = new GroupStructure();
-            gs = db.GroupStructure.Where(ax=>ax.groupStructureId==gsId1).FirstOrDefault();
-           
-            avm.groupList= db.Group.Where(ax=>ax.groupStrId==gsId1).ToList();
+            gs = db.GroupStructure.Where(ax => ax.groupStructureId == gsId1).FirstOrDefault();
+
+            avm.groupList = db.Group.Where(ax => ax.groupStrId == gsId1).ToList();
             avm.groupStructureId = gs.groupStructureId;
 
             return View(avm);
@@ -252,7 +252,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult addGroupAssignment(string selectedStudents,addGroupAssignmentViewModel avm, string add, HttpPostedFileBase file,string fileName)
+        public ActionResult addGroupAssignment(string selectedStudents, addGroupAssignmentViewModel avm, string add, HttpPostedFileBase file, string fileName)
         {
             ApplicationDbContext db = new ApplicationDbContext();
             GroupStructure gs = new GroupStructure();
@@ -272,7 +272,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             string teacherID = User.Identity.GetUserId();
             Models.Teacher t = new Models.Teacher();
             t = db.Teacher.Where(ax => ax.teacherId == teacherID).FirstOrDefault();
-           
+
             gs = db.GroupStructure.Where(ax => ax.groupStructureId == avm.groupStructureId).FirstOrDefault();
             string[] arr = new string[1];
             arr = gs.academicQuarter.Split('-');
@@ -282,25 +282,25 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
             if (add != null)
             {
-                if (ModelState.IsValid) { 
+                if (ModelState.IsValid) {
 
-                if (fulfillsPercentage(gs.academicQuarter, gs.sectionId, teacherID, avm.markPercentage) == true && ht.beforeQuarterEnd(Convert.ToDateTime(avm.submissionDate), aYear) && (currentQuarter == "Q1" || currentQuarter == "Q2" || currentQuarter == "Q3" || currentQuarter == "Q4") && file.ContentType== "application/pdf")
-                {
-                    ass.datePosted = DateTime.Now.Date;
-                    ass.yearlyQuarter = gs.academicQuarter;
-                    ass.assignmentType = "Group";
-                    ass.sectionID = gs.sectionId;
-                    ass.submissionDate = Convert.ToDateTime(avm.submissionDate).Date;
-                    ass.assignmentName = avm.assignmentName;
-                    ass.teacherId = User.Identity.GetUserId();
-                    int length = file.ContentLength;
-                    byte[] upload = new byte[length];
-                    file.InputStream.Read(upload, 0, length);
-                    ass.assignmentDocument = upload;
-                    ass.fileName = fileName;
-                    ass.markPercentage = avm.markPercentage;
+                    if (fulfillsPercentage(gs.academicQuarter, gs.sectionId, teacherID, avm.markPercentage) == true && ht.beforeQuarterEnd(Convert.ToDateTime(avm.submissionDate), aYear) && (currentQuarter == "Q1" || currentQuarter == "Q2" || currentQuarter == "Q3" || currentQuarter == "Q4") && file.ContentType == "application/pdf")
+                    {
+                        ass.datePosted = DateTime.Now.Date;
+                        ass.yearlyQuarter = gs.academicQuarter;
+                        ass.assignmentType = "Group";
+                        ass.sectionID = gs.sectionId;
+                        ass.submissionDate = Convert.ToDateTime(avm.submissionDate).Date;
+                        ass.assignmentName = avm.assignmentName;
+                        ass.teacherId = User.Identity.GetUserId();
+                        int length = file.ContentLength;
+                        byte[] upload = new byte[length];
+                        file.InputStream.Read(upload, 0, length);
+                        ass.assignmentDocument = upload;
+                        ass.fileName = fileName;
+                        ass.markPercentage = avm.markPercentage;
                         var assx = db.Assignment.Where(ax => ax.yearlyQuarter == ass.yearlyQuarter && ax.assignmentType == "Group" && ax.sectionID == ass.sectionID && ax.assignmentName == ass.assignmentName).ToList();
-                        if (assx.Count()==0)
+                        if (assx.Count() == 0)
                         {
                             db.Assignment.Add(ass);
                             db.SaveChanges();
@@ -346,15 +346,15 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                         {
                             ViewBag.assignmentExists = "Assignment already exists";
                         }
-                 
-                }
+
+                    }
                     else
                     {
-                        if(fulfillsPercentage(gs.academicQuarter, gs.sectionId, teacherID, avm.markPercentage) == false)
+                        if (fulfillsPercentage(gs.academicQuarter, gs.sectionId, teacherID, avm.markPercentage) == false)
                         {
                             ViewBag.OutOfPercentage = "Mark Percentage sum is above 100";
                         }
-                        if(ht.beforeQuarterEnd(Convert.ToDateTime(avm.submissionDate), aYear) == false)
+                        if (ht.beforeQuarterEnd(Convert.ToDateTime(avm.submissionDate), aYear) == false)
                         {
                             ViewBag.tudayerror = "Submission Date is out of academic quarter";
                         }
@@ -362,9 +362,9 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                         {
                             ViewBag.incorrectFIleType = "Invalid file format, please upload pdf file.";
                         }
-             
+
                     }
-            }
+                }
             }
             avm.groupList = db.Group.Where(ax => ax.groupStrId == gs.groupStructureId).ToList();
             avm.groupStructureId = gs.groupStructureId;
@@ -381,12 +381,12 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             Assignment ass = new Assignment();
             ass = db.Assignment.Where(ax => ax.assignmentId == assId1).FirstOrDefault();
             updateAssignmentViewModel avm = new updateAssignmentViewModel();
-           
+
             avm.assignmentID = ass.assignmentId;
             avm.assignmentName = ass.assignmentName;
             avm.markPercentage = ass.markPercentage;
             avm.submissionDate = ass.submissionDate.ToShortDateString();
-            
+
             return View(avm);
         }
         [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
@@ -409,40 +409,40 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             arr = ass.yearlyQuarter.Split('-');
             string aYear = arr[0];
             if (ModelState.IsValid) {
-                int currentSum = 0; 
-                if (avm.markPercentage != ass.markPercentage) { 
-                 currentSum = avm.markPercentage-ass.markPercentage;
+                int currentSum = 0;
+                if (avm.markPercentage != ass.markPercentage) {
+                    currentSum = avm.markPercentage - ass.markPercentage;
                 }
                 else
                 {
                     currentSum = 0;
                 }
-                if (fulfillsPercentage(ass.yearlyQuarter, ass.sectionID, ass.teacherId, currentSum) == true && ht.beforeQuarterEnd(Convert.ToDateTime(avm.submissionDate), aYear) && ((file!=null && file.ContentType== "application/pdf") || file==null))
-            {
-                ass.assignmentName = avm.assignmentName;
-                ass.submissionDate = Convert.ToDateTime(avm.submissionDate).Date;
-                ass.markPercentage = avm.markPercentage;
-                if (fileName != null && fileName != "")
+                if (fulfillsPercentage(ass.yearlyQuarter, ass.sectionID, ass.teacherId, currentSum) == true && ht.beforeQuarterEnd(Convert.ToDateTime(avm.submissionDate), aYear) && ((file != null && file.ContentType == "application/pdf") || file == null))
                 {
-                    int length = file.ContentLength;
-                    byte[] upload = new byte[length];
-                    file.InputStream.Read(upload, 0, length);
-                    ass.assignmentDocument = upload;
-                    ass.fileName = fileName;
-                       
+                    ass.assignmentName = avm.assignmentName;
+                    ass.submissionDate = Convert.ToDateTime(avm.submissionDate).Date;
+                    ass.markPercentage = avm.markPercentage;
+                    if (fileName != null && fileName != "")
+                    {
+                        int length = file.ContentLength;
+                        byte[] upload = new byte[length];
+                        file.InputStream.Read(upload, 0, length);
+                        ass.assignmentDocument = upload;
+                        ass.fileName = fileName;
+
                     }
-              /*  var assx = db.Assignment.Where(ax => ax.yearlyQuarter == ass.yearlyQuarter && ax.assignmentType == "Group" && ax.sectionID == ass.sectionID && ax.assignmentName == ass.assignmentName && ax.markPercentage==ass.markPercentage).ToList();
-                if (assx.Count() == 0) {*/
+                    /*  var assx = db.Assignment.Where(ax => ax.yearlyQuarter == ass.yearlyQuarter && ax.assignmentType == "Group" && ax.sectionID == ass.sectionID && ax.assignmentName == ass.assignmentName && ax.markPercentage==ass.markPercentage).ToList();
+                      if (assx.Count() == 0) {*/
                     db.SaveChanges();
                     avm2.gsList = db.GroupStructure.Where(ax => ax.teacherId == teacherID && ax.academicQuarter == ass.yearlyQuarter && ax.completeStatus == 1 && ax.section.sectionName.StartsWith(teacherGrade)).ToList();
                     avm2.listAssignment = db.Assignment.Where(ax => ax.teacherId == teacherID && ax.yearlyQuarter == ass.yearlyQuarter).ToList();
                     return View("assignmentManagement", avm2);
-              
 
-            }
+
+                }
                 else
                 {
-                    if (fulfillsPercentage(ass.yearlyQuarter, ass.sectionID, ass.teacherId,currentSum) == false)
+                    if (fulfillsPercentage(ass.yearlyQuarter, ass.sectionID, ass.teacherId, currentSum) == false)
                     {
                         ViewBag.OutOfPercentage = "Mark Percentage sum is above 100";
                     }
@@ -456,16 +456,16 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                     }
 
                 }
-        }
+            }
 
             return View(avm);
         }
         [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         public ActionResult assignmentManagement()
         {
-           
+
             HomeroomTeacherMethod ht = new HomeroomTeacherMethod();
-            ApplicationDbContext db = new ApplicationDbContext();           
+            ApplicationDbContext db = new ApplicationDbContext();
             assignmentViewModel avm = new assignmentViewModel();
             avm.gsList = new List<GroupStructure>();
             string currentID = User.Identity.GetUserId();
@@ -477,7 +477,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             avm.listAssignment = new List<Assignment>();
             s = db.Section.Where(a => a.sectionName.StartsWith(teacherGrade)).ToList();
             string currentAcademicYearName = "";
-            
+
             foreach (var k in s)
             {
                 if (ht.isInAcademicYear(k.academicYearId))
@@ -488,19 +488,19 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             }
             temp = db.AcademicYear.Where(a => a.academicYearName == currentAcademicYearName).FirstOrDefault();
             string quarter = ht.whichQuarter(currentAcademicYearName);
-            
+
             if (quarter == "Q1" || quarter == "Q2" || quarter == "Q3" || quarter == "Q4")
             {
                 string academicQuarter = currentAcademicYearName + "-" + quarter;
                 avm.gsList = db.GroupStructure.Where(gr => gr.academicQuarter == academicQuarter && gr.section.sectionName.StartsWith(teacherGrade) && gr.completeStatus == 1).ToList();
                 avm.listAssignment = db.Assignment.Where(ax => ax.yearlyQuarter == academicQuarter && ax.teacherId == currentID).ToList();
             }
-            
-            
-            
 
 
-                return View(avm);
+
+
+
+            return View(avm);
         }
         [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
 
@@ -534,39 +534,39 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
             if (delete != null)
             {
-                if(!(Object.ReferenceEquals(a, null))) { 
-                
-                if (a.assignmentType == "Individual")
-                {
-                    db.Assignment.Remove(a);
-                    db.SaveChanges();
-                }
-                else
-                {
-                    List<GroupAssignment> gaList = new List<GroupAssignment>();
-                    gaList = db.GroupAssignment.Where(ax => ax.assignmentId == assId1).ToList();
-                    List<GroupStructureAssignment> gsaList = new List<GroupStructureAssignment>();
-                    gsaList = db.GroupStructureAssignment.Where(ax => ax.assignmentId == assId1).ToList();
-                    if (gaList != null)
-                    {
-                        foreach(var k in gaList)
-                        {
-                            db.GroupAssignment.Remove(k);
-                            db.SaveChanges();
-                        }
-                    }
-                    if (gsaList != null)
-                    {
-                        foreach(var k in gsaList)
-                        {
-                            db.GroupStructureAssignment.Remove(k);
-                            db.SaveChanges();
-                        }
-                    }
-                    db.Assignment.Remove(a);
-                    db.SaveChanges();
+                if (!(Object.ReferenceEquals(a, null))) {
 
-                }
+                    if (a.assignmentType == "Individual")
+                    {
+                        db.Assignment.Remove(a);
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        List<GroupAssignment> gaList = new List<GroupAssignment>();
+                        gaList = db.GroupAssignment.Where(ax => ax.assignmentId == assId1).ToList();
+                        List<GroupStructureAssignment> gsaList = new List<GroupStructureAssignment>();
+                        gsaList = db.GroupStructureAssignment.Where(ax => ax.assignmentId == assId1).ToList();
+                        if (gaList != null)
+                        {
+                            foreach (var k in gaList)
+                            {
+                                db.GroupAssignment.Remove(k);
+                                db.SaveChanges();
+                            }
+                        }
+                        if (gsaList != null)
+                        {
+                            foreach (var k in gsaList)
+                            {
+                                db.GroupStructureAssignment.Remove(k);
+                                db.SaveChanges();
+                            }
+                        }
+                        db.Assignment.Remove(a);
+                        db.SaveChanges();
+
+                    }
                 }
 
             }
@@ -583,15 +583,15 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             }
             temp1 = db.AcademicYear.Where(ax => ax.academicYearName == currentAcademicYearName).FirstOrDefault();
             string quarter = ht.whichQuarter(currentAcademicYearName);
-           
+
             if (quarter == "Q1" || quarter == "Q2" || quarter == "Q3" || quarter == "Q4")
             {
                 string academicQuarter = currentAcademicYearName + "-" + quarter;
                 avm.gsList = db.GroupStructure.Where(ax => ax.teacherId == teacherID && ax.academicQuarter == academicQuarter && ax.completeStatus == 1 && ax.section.sectionName.StartsWith(teacherGrade)).ToList();
                 avm.listAssignment = db.Assignment.Where(ax => ax.teacherId == teacherID && ax.yearlyQuarter == academicQuarter).ToList();
             }
-            
-           
+
+
 
             return View(avm);
         }
@@ -633,7 +633,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             }
             if (quarter == "Q1" || quarter == "Q2" || quarter == "Q3" || quarter == "Q4") {
                 string acQuarter = currentAcademicYearName + "-" + quarter;
-                gsvm.groupList = db.GroupStructure.Where(ax => ax.academicQuarter == acQuarter && ax.section.sectionName.StartsWith(teacherGrade) &&  ax.teacherId==currentID).ToList();
+                gsvm.groupList = db.GroupStructure.Where(ax => ax.academicQuarter == acQuarter && ax.section.sectionName.StartsWith(teacherGrade) && ax.teacherId == currentID).ToList();
             }
             return View(gsvm);
         }
@@ -649,31 +649,31 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             int idX1 = int.Parse(grId);
             GroupStructure gs = new GroupStructure();
             Models.Teacher t = new Models.Teacher();
-            t = db.Teacher.Where(ax=>ax.teacherId==teacherId).FirstOrDefault();
+            t = db.Teacher.Where(ax => ax.teacherId == teacherId).FirstOrDefault();
             string teacherGrade = t.grade.ToString();
             groupStructureViewModel gsvm = new groupStructureViewModel();
             gsvm.groupList = new List<GroupStructure>();
 
             gs = db.GroupStructure.Where(ax => ax.groupStructureId == idX1).FirstOrDefault();
-            
+
             if (delete != null)
-            {               
-             GroupStructureAssignment gsa = new GroupStructureAssignment();
+            {
+                GroupStructureAssignment gsa = new GroupStructureAssignment();
                 if (!(Object.ReferenceEquals(gs, null)))
-                { 
-                    gsa = db.GroupStructureAssignment.Where(ax=>ax.groupStructureId==gs.groupStructureId).FirstOrDefault();
-                if (gsa == null)
                 {
-                   
-                    db.GroupStructure.Remove(gs);
-                    db.SaveChanges();
-                  
-                }
-                else
-                {
-                    ViewBag.cannotDelete = "Cannot Delete the record";
-                }
-                gsvm.groupList = db.GroupStructure.Where(ax => ax.academicQuarter == gs.academicQuarter && ax.section.sectionName.StartsWith(teacherGrade) && ax.teacherId==teacherId ).ToList();
+                    gsa = db.GroupStructureAssignment.Where(ax => ax.groupStructureId == gs.groupStructureId).FirstOrDefault();
+                    if (gsa == null)
+                    {
+
+                        db.GroupStructure.Remove(gs);
+                        db.SaveChanges();
+
+                    }
+                    else
+                    {
+                        ViewBag.cannotDelete = "Cannot Delete the record";
+                    }
+                    gsvm.groupList = db.GroupStructure.Where(ax => ax.academicQuarter == gs.academicQuarter && ax.section.sectionName.StartsWith(teacherGrade) && ax.teacherId == teacherId).ToList();
                 }
             }
             return View(gsvm);
@@ -733,35 +733,35 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             gvm.groupList = new List<GroupStructure>();
             string extractedAcademicYear = gvm.academicQuarter.Substring(0, gvm.academicQuarter.IndexOf('-'));
 
-           
+
             if (ModelState.IsValid) {
 
                 s = db.Section.Where(a => a.sectionName == selectSections && a.academicYearId == extractedAcademicYear).FirstOrDefault();
 
                 int std = db.Student.Where(ax => ax.sectionName == s.sectionName && ax.academicYearId == s.academicYearId).Count();
-                if (gvm.maxNumberOfMembers <= std && gvm.minNumberOfMembers<=std && gvm.minNumberOfMembers<=gvm.maxNumberOfMembers) { 
-                gs.academicQuarter = gvm.academicQuarter;
-                gs.groupStructureName = gvm.groupStructureName;
-                gs.maxNumberOfMembers = gvm.maxNumberOfMembers;
-                gs.minNumberOfMembers = gvm.minNumberOfMembers;
-                gs.sectionId = s.sectionId;
-                gs.teacherId = currentID;
-                var grS = db.GroupStructure.Where(ax => ax.academicQuarter == gs.academicQuarter && ax.groupStructureName == gs.groupStructureName && ax.minNumberOfMembers==gs.minNumberOfMembers && ax.maxNumberOfMembers==gs.maxNumberOfMembers).FirstOrDefault();
-                if (grS == null) {
-                    db.GroupStructure.Add(gs);
-                    db.SaveChanges();
-                    gvm.groupList = db.GroupStructure.Where(gr => gr.academicQuarter == gvm.academicQuarter && gr.section.sectionName.StartsWith(teacherGrade) && gr.teacherId == currentID).ToList();
-                    return View("manageGroup", gvm);
+                if (gvm.maxNumberOfMembers <= std && gvm.minNumberOfMembers <= std && gvm.minNumberOfMembers <= gvm.maxNumberOfMembers) {
+                    gs.academicQuarter = gvm.academicQuarter;
+                    gs.groupStructureName = gvm.groupStructureName;
+                    gs.maxNumberOfMembers = gvm.maxNumberOfMembers;
+                    gs.minNumberOfMembers = gvm.minNumberOfMembers;
+                    gs.sectionId = s.sectionId;
+                    gs.teacherId = currentID;
+                    var grS = db.GroupStructure.Where(ax => ax.academicQuarter == gs.academicQuarter && ax.groupStructureName == gs.groupStructureName && ax.minNumberOfMembers == gs.minNumberOfMembers && ax.maxNumberOfMembers == gs.maxNumberOfMembers).FirstOrDefault();
+                    if (grS == null) {
+                        db.GroupStructure.Add(gs);
+                        db.SaveChanges();
+                        gvm.groupList = db.GroupStructure.Where(gr => gr.academicQuarter == gvm.academicQuarter && gr.section.sectionName.StartsWith(teacherGrade) && gr.teacherId == currentID).ToList();
+                        return View("manageGroup", gvm);
+                    }
+                    else
+                    {
+                        ViewBag.existsMessage = "Similar group structure exists";
+                    }
                 }
                 else
                 {
-                    ViewBag.existsMessage = "Similar group structure exists";
-                }
-                }
-                else
-                {
-                    if (gvm.maxNumberOfMembers >std) { 
-                    ViewBag.maximumMembers = "The max number of members is out of bounds";
+                    if (gvm.maxNumberOfMembers > std) {
+                        ViewBag.maximumMembers = "The max number of members is out of bounds";
                     }
                     if (gvm.minNumberOfMembers > std)
                     {
@@ -786,11 +786,11 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         }
         [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpGet]
-        public ActionResult classifyGroup(string grIdOne,string txtImportant)
+        public ActionResult classifyGroup(string grIdOne, string txtImportant)
         {
             ApplicationDbContext db = new ApplicationDbContext();
             classifyGroupViewModel gvm = new classifyGroupViewModel();
-           int grId1 = int.Parse(txtImportant);
+            int grId1 = int.Parse(txtImportant);
             GroupStructure gs = new GroupStructure();
             gvm.groupMembers = new List<StudentGroupList>();
             ViewBag.enableMultiGroup = false;
@@ -800,21 +800,21 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             extractingAcademicYear = gs.academicQuarter.Split('-');
             gvm.studentList = new List<Student>();
             string acadYear = extractingAcademicYear[0];
-           var stdList = db.Student.Where(a => a.sectionName == gs.section.sectionName && a.academicYearId == acadYear).ToList();
-            foreach(var ks in stdList)
+            var stdList = db.Student.Where(a => a.sectionName == gs.section.sectionName && a.academicYearId == acadYear).ToList();
+            foreach (var ks in stdList)
             {
                 var tempGroupMember = db.StudentGroupList.Where(a => a.studentId == ks.studentId).ToList();
 
-                
+
                 if (tempGroupMember == null)
                 {
-                    
+
                     gvm.studentList.Add(ks);
                 }
                 else if (tempGroupMember != null)
                 {
                     int count = 0;
-                    foreach(var n in tempGroupMember)
+                    foreach (var n in tempGroupMember)
                     {
                         var x = db.Group.Where(ax => ax.groupId == n.groupId && ax.groupStrId == gs.groupStructureId).FirstOrDefault();
                         if (x == null)
@@ -825,12 +825,12 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
                     }
                     if (count == tempGroupMember.Count()) {
-                    gvm.studentList.Add(ks);
+                        gvm.studentList.Add(ks);
                     }
                 }
-             
+
             }
-            
+
             if (gvm.studentList.Count() == 0)
             {
                 ViewBag.enableMultiGroup = true;
@@ -845,7 +845,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult classifyGroup(string grID,string skr,classifyGroupViewModel gvm, string txtValue,string add,string delete, string btnSubmitGrouping)
+        public ActionResult classifyGroup(string grID, string skr, classifyGroupViewModel gvm, string txtValue, string add, string delete, string btnSubmitGrouping)
         {
             ApplicationDbContext db = new ApplicationDbContext();
             Models.Teacher t = new Models.Teacher();
@@ -858,79 +858,94 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             string teacherID = User.Identity.GetUserId();
             t = db.Teacher.Where(ax => ax.teacherId == teacherID).FirstOrDefault();
             Group g = new Group();
-           
+
             GroupStructure gs = new GroupStructure();
             gs = db.GroupStructure.Where(a => a.groupStructureId == gvm.groupStructureID).FirstOrDefault();
-            if (add != null)
+
+            if (btnSubmitGrouping != null)
             {
-                if (ModelState.IsValid) { 
-
-                var tempG = db.Group.Where(a => a.groupName == gvm.groupName && a.groupStrId == gs.groupStructureId).FirstOrDefault();
-                if (tempG == null && txtValue!="*") {
-                    
-                    String firstSeries = txtValue.Substring(1, txtValue.Length - 2);
-
-                    
-                    List<string> memList = new List<string>();
-                    memList = firstSeries.Split('-').ToList();
-                    if (memList.Count <= gvm.maxMembers && memList.Count >= gvm.minMembers)
-                    {
-                        addableGroup.groupName = gvm.groupName;
-                addableGroup.groupStrId = gvm.groupStructureID;
-                db.Group.Add(addableGroup);
+                ModelState.Remove("groupName");
+                gs.completeStatus = 1;
                 db.SaveChanges();
-
-              
-               
-                    foreach (var k in memList)
-                    {
-                        StudentGroupList sgl = new StudentGroupList();
-                        std = db.Student.Where(a => a.fullName == k).FirstOrDefault();
-                        var tempGroup = db.Group.Where(a => a.groupName == addableGroup.groupName && a.groupStrId == addableGroup.groupStrId).FirstOrDefault();
-                        sgl.groupId = tempGroup.groupId;
-                        sgl.studentId = std.studentId;
-                        db.StudentGroupList.Add(sgl);
-                        db.SaveChanges();
-                        ViewBag.successMessage = "Group Added Successfully";
-                    }
-                }
-
-                else
-                {
-                    ViewBag.ErrorMembers = "The number of members isn't valid";
-                }
+                string teacherGrade = t.grade.ToString();
+                groupStructureViewModel gsvm = new groupStructureViewModel();
+                gsvm.groupList = new List<GroupStructure>();
+                gsvm.sectionList = new List<string>();
+                gsvm.studentList = new List<Student>();
+                gsvm.groupList = db.GroupStructure.Where(ax => ax.academicQuarter == gs.academicQuarter && ax.section.sectionName.StartsWith(teacherGrade) && ax.teacherId == teacherID).ToList();
+                return View("manageGroup", gsvm);
             }
-                else
-                {
+
+            else if (add != null)
+            {
+                if (ModelState.IsValid) {
+
+                    var tempG = db.Group.Where(a => a.groupName == gvm.groupName && a.groupStrId == gs.groupStructureId).FirstOrDefault();
+                    if (tempG == null && txtValue != "*") {
+
+                        String firstSeries = txtValue.Substring(1, txtValue.Length - 2);
+
+
+                        List<string> memList = new List<string>();
+                        memList = firstSeries.Split('-').ToList();
+                        if (memList.Count <= gvm.maxMembers && memList.Count >= gvm.minMembers)
+                        {
+                            addableGroup.groupName = gvm.groupName;
+                            addableGroup.groupStrId = gvm.groupStructureID;
+                            db.Group.Add(addableGroup);
+                            db.SaveChanges();
+
+
+
+                            foreach (var k in memList)
+                            {
+                                StudentGroupList sgl = new StudentGroupList();
+                                std = db.Student.Where(a => a.fullName == k).FirstOrDefault();
+                                var tempGroup = db.Group.Where(a => a.groupName == addableGroup.groupName && a.groupStrId == addableGroup.groupStrId).FirstOrDefault();
+                                sgl.groupId = tempGroup.groupId;
+                                sgl.studentId = std.studentId;
+                                db.StudentGroupList.Add(sgl);
+                                db.SaveChanges();
+                                ViewBag.successMessage = "Group Added Successfully";
+                            }
+                        }
+
+                        else
+                        {
+                            ViewBag.ErrorMembers = "The number of members isn't valid";
+                        }
+                    }
+                    else
+                    {
                         if (tempG != null)
                         {
                             ViewBag.ErrorExists = "Group Name Exists.";
                         }
-                    
-                    if(txtValue == "*")
+
+                        if (txtValue == "*")
                         {
                             ViewBag.ErrorExists2 = "Please select students to add";
                         }
+                    }
                 }
             }
-        }
             else if (delete != null)
             {
                 int grID1 = int.Parse(grID);
                 g = db.Group.Where(gr => gr.groupId == grID1).FirstOrDefault();
-                if(!(Object.ReferenceEquals(g, null))) { 
-                var grList = db.StudentGroupList.Where(a => a.groupId == g.groupId).ToList();
-                foreach(var k in grList)
-                {
-                    db.StudentGroupList.Remove(k);
-                    db.SaveChanges(); 
-                }
-                db.Group.Remove(g);
-                db.SaveChanges();
-                ViewBag.successMessage = "Group Deleted Successfully";
+                if (!(Object.ReferenceEquals(g, null))) {
+                    var grList = db.StudentGroupList.Where(a => a.groupId == g.groupId).ToList();
+                    foreach (var k in grList)
+                    {
+                        db.StudentGroupList.Remove(k);
+                        db.SaveChanges();
+                    }
+                    db.Group.Remove(g);
+                    db.SaveChanges();
+                    ViewBag.successMessage = "Group Deleted Successfully";
                 }
             }
-            else if (btnSubmitGrouping != null)
+            /*else if (btnSubmitGrouping != null)
             {
                 gs.completeStatus = 1;
                 db.SaveChanges();
@@ -941,14 +956,14 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                 gsvm.studentList = new List<Student>();
                 gsvm.groupList = db.GroupStructure.Where(ax => ax.academicQuarter == gs.academicQuarter && ax.section.sectionName.StartsWith(teacherGrade)).ToList();
                 return View("manageGroup", gsvm);
-            }
+            }*/
             string[] extractingAcademicYear = new string[1];
             extractingAcademicYear = gs.academicQuarter.Split('-');
             string acadYear = extractingAcademicYear[0];
 
             Section s = new Section();
             s = db.Section.Where(xr => xr.sectionId == gs.sectionId).FirstOrDefault();
-            var tempStudentList = db.Student.Where(a => a.sectionName == s.sectionName && a.academicYearId== acadYear).ToList();
+            var tempStudentList = db.Student.Where(a => a.sectionName == s.sectionName && a.academicYearId == acadYear).ToList();
             foreach (var ks in tempStudentList)
             {
                 var tempGroupMember = db.StudentGroupList.Where(a => a.studentId == ks.studentId).ToList();
@@ -977,9 +992,9 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                         gvm.studentList.Add(ks);
                     }
                 }
-            
+
             }
-            
+
             gvm.groupMembers = db.StudentGroupList.Where(a => a.group.groupStrId == gvm.groupStructureID).ToList();
             gvm.groupList = db.Group.Where(a => a.groupStrId == gvm.groupStructureID).ToList();
             if (gvm.studentList.Count() == 0)
@@ -1016,8 +1031,8 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                     gvm.studentList.Add(ks);
                 }
             }
-         
-           
+
+
             gvm.groupList = db.Group.Where(a => a.groupStrId == gs.groupStructureId).ToList();
             gvm.groupMembers = db.StudentGroupList.ToList();
             gvm.maxMembers = gs.maxNumberOfMembers;
@@ -1057,7 +1072,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                             foreach (var getSection in listOfSections)
                             {
                                 //get students in that section
-                                var studentinSection = context.Student.Where(s=>s.sectionName==getSection.sectionName && s.academicYearId==getAcadamicYear.academicYearName).ToList();
+                                var studentinSection = context.Student.Where(s => s.sectionName == getSection.sectionName && s.academicYearId == getAcadamicYear.academicYearName).ToList();
 
                                 if (studentinSection.Count != 0)
                                 {
@@ -1067,39 +1082,39 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
                                         //check student is absent on assesement date without reason
                                         var quarter = homeroomTeacherMethod.whichQuarter(getAcadamicYear.academicYearName);
-                                        var absentCheck = context.AbsenceRecord.Where(a=>a.studentId==getStudents.studentId && a.academicPeriod==getAcadamicYear.academicYearName+"-"+quarter && a.evidenceFlag==null).ToList();
+                                        var absentCheck = context.AbsenceRecord.Where(a => a.studentId == getStudents.studentId && a.academicPeriod == getAcadamicYear.academicYearName + "-" + quarter && a.evidenceFlag == null).ToList();
 
-                                        if (absentCheck.Count!=0)
+                                        if (absentCheck.Count != 0)
                                         {
                                             foreach (var getAbsent in absentCheck)
                                             {
                                                 //get schedule and assignment record informations
-                                                var schedules = context.Schedule.Where(s => s.academicYear == getAcadamicYear.academicYearName + "-" + quarter && s.subject == teacher.subject && s.grade == teacher.grade && s.scheduleDate==getAbsent.recordDate.Date).FirstOrDefault();
+                                                var schedules = context.Schedule.Where(s => s.academicYear == getAcadamicYear.academicYearName + "-" + quarter && s.subject == teacher.subject && s.grade == teacher.grade && s.scheduleDate == getAbsent.recordDate.Date).FirstOrDefault();
                                                 var assignments = context.Assignment.Where(a => a.yearlyQuarter == getAcadamicYear.academicYearName + "-" + quarter && a.teacher.subject == teacher.subject && a.teacher.grade == teacher.grade && a.submissionDate == getAbsent.recordDate.Date).FirstOrDefault();
 
                                                 //check if absence exist on scheduled assesement date
-                                                if (schedules!=null)
+                                                if (schedules != null)
                                                 {
                                                     //check if it is non evidence absence
                                                     getAbsent.recordDate = getAbsent.recordDate.Add(TimeSpan.FromDays(1));
 
-                                                    if (DateTime.Compare(DateTime.Now.Date,getAbsent.recordDate.Date)>0)
+                                                    if (DateTime.Compare(DateTime.Now.Date, getAbsent.recordDate.Date) > 0)
                                                     {
                                                         AbsenceRecord present = new AbsenceRecord();
                                                         int count = 0;
 
                                                         do
                                                         {
-                                                            present = context.AbsenceRecord.Where(a=>a.recordDate==getAbsent.recordDate.Date).FirstOrDefault();
+                                                            present = context.AbsenceRecord.Where(a => a.recordDate == getAbsent.recordDate.Date).FirstOrDefault();
                                                             getAbsent.recordDate = getAbsent.recordDate.Add(TimeSpan.FromDays(1));
-                                                            if(present == null)
+                                                            if (present == null)
                                                             {
                                                                 count++;
                                                             }
                                                         }
-                                                        while (present!=null && DateTime.Compare(DateTime.Now.Date, getAbsent.recordDate.Date) > 0);
+                                                        while (present != null && DateTime.Compare(DateTime.Now.Date, getAbsent.recordDate.Date) > 0);
 
-                                                        if(count==1 && DateTime.Compare(DateTime.Now.Date, getAbsent.recordDate.Date) >= 0)
+                                                        if (count == 1 && DateTime.Compare(DateTime.Now.Date, getAbsent.recordDate.Date) >= 0)
                                                         {
                                                             //give the student zero for that assesement
                                                             var resultDuplicate = context.Result.Where(r => r.studentId == getStudents.studentId && r.scheduleId == schedules.scheduleId).FirstOrDefault();
@@ -1126,7 +1141,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                                                 }
                                                 if (assignments != null)
                                                 {
-                                                    
+
                                                     getAbsent.recordDate = getAbsent.recordDate.Add(TimeSpan.FromDays(1));
 
                                                     //get absent dates
@@ -1149,7 +1164,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                                                         if (count == 1 && DateTime.Compare(DateTime.Now.Date, getAbsent.recordDate.Date) >= 0)
                                                         {
                                                             //save data here
-                                                            var resultDuplicate = context.Result.Where(r => r.studentId == getStudents.studentId && r.assignmentId==assignments.assignmentId).FirstOrDefault();
+                                                            var resultDuplicate = context.Result.Where(r => r.studentId == getStudents.studentId && r.assignmentId == assignments.assignmentId).FirstOrDefault();
                                                             if (resultDuplicate == null)
                                                             {
                                                                 //populate result
@@ -1168,16 +1183,16 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                                                                 contextResult.Result.Add(result);
                                                                 int success = contextResult.SaveChanges();
                                                             }
-                                                            
-                                                       }
+
+                                                        }
                                                     }
                                                 }
                                             }
-                                            
+
                                         }
                                     }
-                                }                                
-          
+                                }
+
                             }
                         }
                     }
@@ -1224,14 +1239,14 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
             //get acadamic year and quarter
             var getYear = context.AcademicYear.Find(identifyYear.academicYearId);
             var quarter = homeroomTeacherMethod.whichQuarter(identifyYear.academicYearId);
-            
-            var schedules = context.Schedule.Where(s=>s.academicYear==getYear.academicYearName+"-"+quarter && (s.subject==teacher.subject || s.subject=="All") && s.grade==teacher.grade).ToList();
+
+            var schedules = context.Schedule.Where(s => s.academicYear == getYear.academicYearName + "-" + quarter && (s.subject == teacher.subject || s.subject == "All") && s.grade == teacher.grade).ToList();
 
             if (schedules.Count != 0)
             {
-                foreach(var getSchedule in schedules)
+                foreach (var getSchedule in schedules)
                 {
-                    var checkReassesement = context.AbsenceRecord.Where(a => a.studentId == addGradeModal.studentId && a.recordDate == getSchedule.scheduleDate.Date && a.evidenceFlag== "AcceptableReason").FirstOrDefault();
+                    var checkReassesement = context.AbsenceRecord.Where(a => a.studentId == addGradeModal.studentId && a.recordDate == getSchedule.scheduleDate.Date && a.evidenceFlag == "AcceptableReason").FirstOrDefault();
                     if (checkReassesement != null)
                     {
                         count++;
@@ -1245,9 +1260,9 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                     {
                         var duplicate = context.Result.Where(r => r.scheduleId == getSchedule.scheduleId && r.studentId == addGradeModal.studentId).FirstOrDefault();
                         var attendance = context.AbsenceRecord.Where(a => a.studentId == addGradeModal.studentId && a.recordDate == getSchedule.scheduleDate.Date).FirstOrDefault();
-                        if (duplicate == null && attendance==null)
+                        if (duplicate == null && attendance == null)
                         {
-                            if (getSchedule.scheduleFor!= "Reassessment")
+                            if (getSchedule.scheduleFor != "Reassessment")
                             {
                                 addGradeModal.dates.Add(getSchedule.scheduleDate.ToShortDateString() + "-" + getSchedule.scheduleFor);
                             }
@@ -1258,11 +1273,11 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                                     addGradeModal.dates.Add(getSchedule.scheduleDate.ToShortDateString() + "-" + getSchedule.scheduleFor);
                                 }
                             }
-                            
+
                         }
-                        
+
                     }
-                    
+
                 }
             }
 
@@ -1275,25 +1290,25 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                     if (DateTime.Compare(DateTime.Now.Date, getAssignments.submissionDate.Date) > 0)
                     {
                         var duplicate = context.Result.Where(r => r.assignmentId == getAssignments.assignmentId && r.studentId == addGradeModal.studentId).FirstOrDefault();
-                        var attendance = context.AbsenceRecord.Where(a => a.studentId == addGradeModal.studentId && a.recordDate == getAssignments.submissionDate.Date && a.evidenceFlag==null).FirstOrDefault();
-                        if (duplicate == null && attendance==null)
+                        var attendance = context.AbsenceRecord.Where(a => a.studentId == addGradeModal.studentId && a.recordDate == getAssignments.submissionDate.Date && a.evidenceFlag == null).FirstOrDefault();
+                        if (duplicate == null && attendance == null)
                         {
                             addGradeModal.dates.Add(getAssignments.submissionDate.ToShortDateString() + "-" + getAssignments.assignmentType);
                         }
-                        
+
                     }
 
                 }
             }
 
 
-            return PartialView("AddGrade",addGradeModal);
+            return PartialView("AddGrade", addGradeModal);
         }
         [Authorize(Roles = "Teacher,HomeRoom,UnitLeader")]
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddGrade(AddGradeModal addGradeModal,string dates)
+        public ActionResult AddGrade(AddGradeModal addGradeModal, string dates)
         {
 
             //object declaration
@@ -1309,9 +1324,9 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
             //result for Continious Assessment Test & Final Exam
 
-            if (dateTaken[1]== "Continious Assessment Test" || dateTaken[1]== "Final Exam")
+            if (dateTaken[1] == "Continious Assessment Test" || dateTaken[1] == "Final Exam")
             {
-                var schedule = context.Schedule.Where(s=>s.scheduleDate==date && s.grade==teacher.grade && s.subject==teacher.subject).FirstOrDefault();
+                var schedule = context.Schedule.Where(s => s.scheduleDate == date && s.grade == teacher.grade && s.subject == teacher.subject).FirstOrDefault();
                 var duplicate = context.Result.Where(r => r.scheduleId == schedule.scheduleId && r.studentId == addGradeModal.studentId).FirstOrDefault();
 
                 if (duplicate == null)
@@ -1353,12 +1368,12 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                     //error message duplicate
                     ViewBag.error = "Result Already Exist!!";
                 }
-                    
+
             }
-            else if (dateTaken[1]=="Group" || dateTaken[1]=="Individual")
+            else if (dateTaken[1] == "Group" || dateTaken[1] == "Individual")
             {
-                var assignment = context.Assignment.Where(a=>a.submissionDate==date && a.teacher.grade==teacher.grade && a.teacher.subject==teacher.subject).FirstOrDefault();
-                var attendance = context.AbsenceRecord.Where(a => a.studentId == addGradeModal.studentId && a.recordDate == date && a.evidenceFlag==null).FirstOrDefault();
+                var assignment = context.Assignment.Where(a => a.submissionDate == date && a.teacher.grade == teacher.grade && a.teacher.subject == teacher.subject).FirstOrDefault();
+                var attendance = context.AbsenceRecord.Where(a => a.studentId == addGradeModal.studentId && a.recordDate == date && a.evidenceFlag == null).FirstOrDefault();
                 var duplicate = context.Result.Where(r => r.assignmentId == assignment.assignmentId && r.studentId == addGradeModal.studentId).FirstOrDefault();
 
                 if (duplicate == null)
@@ -1400,9 +1415,9 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                     //error message duplicate
                     ViewBag.error = "Result Already Exist!!";
                 }
-                
+
             }
-            else if (dateTaken[1]== "Reassessment")
+            else if (dateTaken[1] == "Reassessment")
             {
                 //get all miss by subject
                 var allAcadamicYears = context.AcademicYear.ToList();
@@ -1425,7 +1440,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                 int sum = 0;
 
                 var reassessment = context.Schedule.Where(s => s.scheduleDate == date && s.scheduleFor == "Reassessment").FirstOrDefault();
-                var schedule = context.Schedule.Where(s=>s.academicYear==getYear.academicYearName+"-"+quarter && s.grade==teacher.grade && s.subject==teacher.subject).ToList();
+                var schedule = context.Schedule.Where(s => s.academicYear == getYear.academicYearName + "-" + quarter && s.grade == teacher.grade && s.subject == teacher.subject).ToList();
                 var duplicate = context.Result.Where(r => r.scheduleId == reassessment.scheduleId && r.studentId == addGradeModal.studentId).FirstOrDefault();
 
                 if (duplicate == null)
@@ -1487,7 +1502,7 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
                     //error message duplicate
                     ViewBag.error = "Result Already Exist!!";
                 }
-                
+
 
             }
 
@@ -1598,34 +1613,13 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
         [Authorize(Roles = "HomeRoom")]
         public ActionResult addAttendance()
         {
+          
             HomeroomTeacherMethod htm = new HomeroomTeacherMethod();
             ApplicationDbContext db = new ApplicationDbContext();
             AbsenceRecordViewMoel av = new AbsenceRecordViewMoel();
             AcademicYear ay = new AcademicYear();
-
-            av.absenceList = new List<AbsenceRecord>();
-            ViewBag.messageSuccessStatus = " ";
-            //finding the logged on teacher ID
             string currentUserId = User.Identity.GetUserId();
-            av.studentList = new List<Student>();
-            //finding the student list of where the teacher is homeroom for
-            var tempStdList = htm.getList(currentUserId);
-            //counting number of students in the retrieved list
-            if (tempStdList != null)
-            {
-                DateTime ks = DateTime.Now.Date;
-                foreach (var k in tempStdList)
-                {
-                    AbsenceRecord abs = new AbsenceRecord();
-                    abs = db.AbsenceRecord.Where(ax => ax.recordDate == ks && ax.studentId == k.studentId).FirstOrDefault();
-                    if (abs == null)
-                    {
-                        av.studentList.Add(k);
-                    }
-                }
-            }
-            int a = av.studentList.Count();
-            //creating an array with the size of the list of the students list to hold the selection on listbox
+
             DateTime recordDate1 = DateTime.Now.Date;
             Section s = new Section();
 
@@ -1640,6 +1634,68 @@ namespace LCCS_School_Parent_Communication_System.Areas.Teacher.Controllers
 
             ViewBag.Message = false;
             string academicRecord1 = s.academicYearId + "-" + status;
+            if ((status == "Q1" || status == "Q2" || status== "Q3" || status== "Q4") && (DateTime.Today.DayOfWeek != DayOfWeek.Saturday && DateTime.Today.DayOfWeek != DayOfWeek.Sunday))
+            {
+                ViewBag.showmessage = false;
+            }
+            else
+            {
+                ViewBag.showMessage = true;
+            }
+
+            av.absenceList = new List<AbsenceRecord>();
+            ViewBag.messageSuccessStatus = " ";
+            //finding the logged on teacher ID
+           
+            av.studentList = new List<Student>();
+            //finding the student list of where the teacher is homeroom for
+            var tempStdList = htm.getList(currentUserId);
+            //counting number of students in the retrieved list
+            if (tempStdList != null)
+            {
+                List<Suspension> spList = new List<Suspension>();
+                spList = db.Suspension.ToList();
+                foreach(var k in spList)
+                {
+                    foreach(var j in tempStdList)
+                    {
+                        if (j.studentId == k.studentId)
+                        {
+                            if (status == "Q1" || status == "Q2" || status == "Q3" || status == "Q4")
+                            {
+                                AbsenceRecord abs = new AbsenceRecord();
+
+                                abs.academicPeriod = academicRecord1;
+                                abs.recordDate = DateTime.Now.Date;
+                                abs.studentId = j.studentId;
+
+                                int count = htm.manageCount(abs.academicPeriod, abs.studentId);
+                                abs.count = count + 1;
+                                var record = db.AbsenceRecord.Where(ax => ax.academicPeriod == abs.academicPeriod && ax.recordDate == DateTime.Now.Date && ax.studentId == abs.studentId).FirstOrDefault();
+                                if (record != null) { 
+                                db.AbsenceRecord.Add(abs);
+                                db.SaveChanges();
+                                }
+
+                            }
+                        }
+                    }
+                }
+                DateTime ks = DateTime.Now.Date;
+                foreach (var k in tempStdList)
+                {
+                    AbsenceRecord abs = new AbsenceRecord();
+                    abs = db.AbsenceRecord.Where(ax => ax.recordDate == ks && ax.studentId == k.studentId).FirstOrDefault();
+                    if (abs == null)
+                    {
+                        av.studentList.Add(k);
+                    }
+                }
+
+            }
+            int a = av.studentList.Count();
+            //creating an array with the size of the list of the students list to hold the selection on listbox
+           
 
             //recording the current date as a short date string
             DateTime d = DateTime.Now.Date;
